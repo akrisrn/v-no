@@ -28,17 +28,15 @@
         }
 
         public markdown = '';
+        // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
-            highlight: function(str, lang) {
+            highlight(str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
-                    try {
-                        return hljs.highlight(lang, str).value;
-                    } catch (__) {
-                    }
+                    return hljs.highlight(lang, str).value;
                 }
 
                 return '';
-            }
+            },
         });
 
         // noinspection JSUnusedLocalSymbols
