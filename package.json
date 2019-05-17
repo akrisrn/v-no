@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
     "github-markdown-css": "^3.0.1",
+    "highlight.js": "^9.15.6",
     "markdown-it": "^8.4.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
+    "@types/highlight.js": "^9.12.3",
     "@types/markdown-it": "0.0.7",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.7.0",

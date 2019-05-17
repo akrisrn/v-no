@@ -8,6 +8,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';
+    import hljs from 'highlight.js';
     import resource from '@/resource';
     import {error2markdown} from '@/utils';
     // @ts-ignore
@@ -27,7 +28,18 @@
         }
 
         public markdown = '';
-        public markdownIt = new MarkdownIt();
+        public markdownIt = new MarkdownIt({
+            highlight: function(str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(lang, str).value;
+                    } catch (__) {
+                    }
+                }
+
+                return '';
+            }
+        });
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
@@ -65,6 +77,7 @@
 </script>
 
 <style>@import '~github-markdown-css/github-markdown.css';</style>
+<style>@import '~highlight.js/styles/github.css';</style>
 
 <style lang="stylus">
     main
