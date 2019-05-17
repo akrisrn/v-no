@@ -64,7 +64,7 @@
     }
 </script>
 
-<style>@import '~github-markdown-css';</style>
+<style>@import '~github-markdown-css/github-markdown.css';</style>
 
 <style lang="stylus">
     main
