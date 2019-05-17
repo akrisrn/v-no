@@ -34,10 +34,9 @@
                 if (lang && hljs.getLanguage(lang)) {
                     return hljs.highlight(lang, str).value;
                 }
-
                 return '';
             },
-            linkify: true
+            linkify: true,
         });
 
         // noinspection JSUnusedLocalSymbols
