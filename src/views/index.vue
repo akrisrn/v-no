@@ -37,6 +37,7 @@
 
                 return '';
             },
+            linkify: true
         });
 
         // noinspection JSUnusedLocalSymbols
