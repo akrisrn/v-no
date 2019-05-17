@@ -30,13 +30,15 @@
         public markdown = '';
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
+            html: true,
+            breaks: true,
+            linkify: true,
             highlight(str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
                     return hljs.highlight(lang, str).value;
                 }
                 return '';
             },
-            linkify: true,
         });
 
         // noinspection JSUnusedLocalSymbols
