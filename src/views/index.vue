@@ -39,7 +39,7 @@
                 }
                 return '';
             },
-        });
+        }).use(require('markdown-it-ins'));
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
