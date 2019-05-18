@@ -103,21 +103,21 @@
             margin-left 16px
             margin-right 16px
 
-    footer
-        font-size 14px
-        border-top 1px solid #e4e4e4
-        padding-top 8px
-        margin-top 16px
+        footer
+            font-size 14px
+            border-top 1px solid #e4e4e4
+            padding-top 8px
+            margin-top 16px
 
-        a.home
-            color #0366d6
-            text-decoration none
-            cursor pointer
+            a.home
+                color #0366d6
+                text-decoration none
+                cursor pointer
 
-            &:hover
-                text-decoration underline
+                &:hover
+                    text-decoration underline
 
-        .date
-            float right
-            color darkgray
+            .date
+                float right
+                color darkgray
 </style>
