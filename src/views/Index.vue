@@ -44,7 +44,12 @@
         }
 
         public get date() {
-            const match = this.$route.params.pathMatch.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
+            return this.getDate(this.$route.params.pathMatch);
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public getDate(path: string) {
+            const match = path.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
             return match ? new Date(match[0]).toDateString() : '';
         }
 
