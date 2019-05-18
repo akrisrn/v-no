@@ -1,15 +1,17 @@
 <template>
-    <article class="markdown-body" v-html="markdown"></article>
+    <article class="markdown-body" :class="{index: isIndex}" v-html="markdown"></article>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import MarkdownIt from 'markdown-it';
     import hljs from 'highlight.js';
+    import {getDate} from '@/utils';
 
     @Component
     export default class Markdown extends Vue {
         @Prop() public data!: string;
+        @Prop() public isIndex!: boolean;
 
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
@@ -31,6 +33,9 @@
             // 规避 mount 后仍然可以查询到旧节点的问题。
             setTimeout(() => {
                 this.updateFootnote();
+                if (this.isIndex) {
+                    this.updateIndexList();
+                }
             }, 0);
         }
 
@@ -48,6 +53,19 @@
                         window.scrollTo(0, fnref.offsetTop);
                     });
                     backref.removeAttribute('href');
+                }
+            });
+        }
+
+        public updateIndexList() {
+            document.querySelectorAll('li').forEach((li) => {
+                const link = li.querySelector('a');
+                const path = link ? link.href : '';
+                if (path) {
+                    const date = document.createElement('div');
+                    date.classList.add('date');
+                    date.innerText = getDate(path);
+                    li.append(date);
                 }
             });
         }
@@ -106,4 +124,15 @@
 
             .footnote-backref
                 font-family serif
+
+    .index
+        ul
+            padding-left 0
+
+            li
+                list-style none
+
+                &:before
+                    content '»'
+                    padding-right 8px
 </style>

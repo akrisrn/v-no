@@ -1,7 +1,7 @@
 <template>
     <transition name="slide-fade">
         <main v-if="show">
-            <Markdown :data="data"></Markdown>
+            <Markdown :data="data" :isIndex="isIndex"></Markdown>
             <footer v-if="!isIndex">
                 <a class="home" v-on:click="returnHome">« Return to home</a>
                 <div v-if="!isError" class="date">{{ date }}</div>
@@ -14,7 +14,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
     import resource from '@/resource';
-    import {error2markdown} from '@/utils';
+    import {error2markdown, getDate} from '@/utils';
     import Markdown from '@/components/Markdown.vue';
     // @ts-ignore
     // noinspection TypeScriptPreferShortImport
@@ -44,13 +44,7 @@
         }
 
         public get date() {
-            return this.getDate(this.$route.params.pathMatch);
-        }
-
-        // noinspection JSMethodCanBeStatic
-        public getDate(path: string) {
-            const match = path.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
-            return match ? new Date(match[0]).toDateString() : '';
+            return getDate(this.$route.params.pathMatch);
         }
 
         public returnHome() {
@@ -122,7 +116,7 @@
                 &:hover
                     text-decoration underline
 
-            .date
-                float right
-                color darkgray
+        .date
+            float right
+            color darkgray
 </style>
