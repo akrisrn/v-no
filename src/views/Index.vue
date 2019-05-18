@@ -1,6 +1,8 @@
 <template>
     <main>
-        <Markdown :data="data"></Markdown>
+        <transition name="slide-fade">
+            <Markdown v-if="show" :data="data"></Markdown>
+        </transition>
     </main>
 </template>
 
@@ -18,10 +20,12 @@
     @Component({components: {Markdown}})
     export default class Index extends Vue {
         public data = '';
+        public show = false;
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
         public onRouteChanged(to: any, from: any) {
+            this.show = false;
             this.updateData(to.path);
         }
 
@@ -40,15 +44,20 @@
             return false;
         }
 
+        public setData(data: string) {
+            this.show = true;
+            this.data = data;
+        }
+
         public updateData(path: string) {
             if (this.isAllowedRender(path)) {
                 axios.get(path).then((response) => {
-                    this.data = response.data;
+                    this.setData(response.data);
                 }).catch((error) => {
-                    this.data = error2markdown(error);
+                    this.setData(error2markdown(error));
                 });
             } else {
-                this.data = resource.notAllowedRender;
+                this.setData(resource.notAllowedRender);
             }
         }
     }
@@ -58,6 +67,16 @@
     main
         max-width 700px
         margin 24px auto
+
+        .slide-fade-enter-active
+            transition all .3s ease
+
+        .slide-fade-leave-active
+            transition all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+        .slide-fade-enter, .slide-fade-leave-to
+            transform translateX(10px)
+            opacity 0
 
         @media screen and (max-width: 750px)
             margin-left 16px
