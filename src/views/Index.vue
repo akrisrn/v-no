@@ -16,9 +16,6 @@
     import resource from '@/resource';
     import {error2markdown, getDate} from '@/utils';
     import Markdown from '@/components/Markdown.vue';
-    // @ts-ignore
-    // noinspection TypeScriptPreferShortImport
-    import {INDEX_FILE, ALLOWED_SUFFIXES} from '../../app.config.js';
 
     // noinspection JSUnusedGlobalSymbols
     @Component({components: {Markdown}})
@@ -47,7 +44,7 @@
         }
 
         public get isIndex() {
-            return this.$route.params.pathMatch === '/' + INDEX_FILE;
+            return this.$route.params.pathMatch === '/' + process.env.VUE_APP_INDEX_FILE;
         }
 
         public get date() {
@@ -60,7 +57,7 @@
 
         // noinspection JSMethodCanBeStatic
         public isAllowedRender(path: string) {
-            for (const allowedSuffix of ALLOWED_SUFFIXES) {
+            for (const allowedSuffix of process.env.VUE_APP_ALLOWED_SUFFIXES.split(',')) {
                 if (path.endsWith(allowedSuffix)) {
                     return true;
                 }

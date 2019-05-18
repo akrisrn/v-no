@@ -1,8 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-// @ts-ignore
-// noinspection TypeScriptPreferShortImport
-import {INDEX_FILE} from '../app.config.js';
 
 Vue.use(Router);
 
@@ -11,7 +8,7 @@ export default new Router({
         {
             path: '/',
             name: 'root',
-            redirect: INDEX_FILE,
+            redirect: process.env.VUE_APP_INDEX_FILE,
         }, {
             path: '*',
             name: 'index',
