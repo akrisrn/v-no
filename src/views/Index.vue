@@ -4,7 +4,7 @@
             <Markdown :data="data"></Markdown>
             <footer v-if="!isIndex">
                 <a class="home" href="/">« Return to home</a>
-                <div class="date">{{ date }}</div>
+                <div v-if="!isError" class="date">{{ date }}</div>
             </footer>
         </main>
     </transition>
@@ -25,6 +25,7 @@
     export default class Index extends Vue {
         public data = '';
         public show = false;
+        public isError = false;
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
@@ -67,9 +68,11 @@
                 axios.get(path).then((response) => {
                     this.setData(response.data);
                 }).catch((error) => {
+                    this.isError = true;
                     this.setData(error2markdown(error));
                 });
             } else {
+                this.isError = true;
                 this.setData(resource.notAllowedRender);
             }
         }
