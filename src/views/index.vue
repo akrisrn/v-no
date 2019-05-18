@@ -41,7 +41,7 @@
             },
         }).use(require('markdown-it-ins')).use(require('markdown-it-sub')).use(require('markdown-it-sup'))
             .use(require('markdown-it-footnote')).use(require('markdown-it-deflist')).use(require('markdown-it-abbr'))
-            .use(require('markdown-it-emoji'));
+            .use(require('markdown-it-emoji')).use(require('markdown-it-mark'));
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
@@ -114,6 +114,11 @@
 
         h1, h2
             border-bottom 1px solid #e4e4e4
+
+        mark
+            border-radius 3px
+            background-color rgba(255, 235, 59, 0.5)
+            box-shadow 0.25em 0 0 rgba(255, 235, 59, 0.5), -0.25em 0 0 rgba(255, 235, 59, 0.5)
 
         .footnotes
             font-size 14px
