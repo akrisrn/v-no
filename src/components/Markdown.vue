@@ -42,10 +42,12 @@
                         e.preventDefault();
                         window.scrollTo(0, backref.offsetTop);
                     });
+                    fnref.removeAttribute('href');
                     backref.addEventListener('click', (e) => {
                         e.preventDefault();
                         window.scrollTo(0, fnref.offsetTop);
                     });
+                    backref.removeAttribute('href');
                 }
             });
         }
@@ -80,6 +82,14 @@
             border-radius 3px
             background-color rgba(255, 235, 59, 0.5)
             box-shadow 0.25em 0 0 rgba(255, 235, 59, 0.5), -0.25em 0 0 rgba(255, 235, 59, 0.5)
+
+        .footnote-ref > a, a.footnote-backref
+            color #0366d6
+            text-decoration none
+            cursor pointer
+
+            &:hover
+                text-decoration underline
 
         .footnotes-sep
             margin-bottom 16px
