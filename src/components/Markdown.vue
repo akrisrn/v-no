@@ -81,9 +81,18 @@
             background-color rgba(255, 235, 59, 0.5)
             box-shadow 0.25em 0 0 rgba(255, 235, 59, 0.5), -0.25em 0 0 rgba(255, 235, 59, 0.5)
 
+        .footnotes-sep
+            margin-bottom 16px
+
         .footnotes
             font-size 14px
             color dimgray
+
+            &:before
+                content 'Footnotes:'
+
+            ol
+                margin-bottom -8px
 
             .footnote-backref
                 font-family serif
