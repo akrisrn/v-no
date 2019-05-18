@@ -39,7 +39,8 @@
                 }
                 return '';
             },
-        }).use(require('markdown-it-ins')).use(require('markdown-it-sub')).use(require('markdown-it-sup'));
+        }).use(require('markdown-it-ins')).use(require('markdown-it-sub')).use(require('markdown-it-sup'))
+            .use(require('markdown-it-footnote'));
 
         // noinspection JSUnusedLocalSymbols
         @Watch('$route')
@@ -97,4 +98,12 @@
 
         h1, h2
             border-bottom 1px solid #e4e4e4
+
+        .footnotes
+            font-size 14px
+            color dimgray
+
+            .footnote-backref
+                font-family serif
+
 </style>
