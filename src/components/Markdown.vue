@@ -33,6 +33,7 @@
             // 规避 mount 后仍然可以查询到旧节点的问题。
             setTimeout(() => {
                 this.updateFootnote();
+                this.updateLinkPath();
                 if (this.isIndex) {
                     this.updateIndexList();
                 }
@@ -66,6 +67,14 @@
                     date.classList.add('date');
                     date.innerText = getDate(path);
                     li.append(date);
+                }
+            });
+        }
+
+        public updateLinkPath() {
+            document.querySelectorAll('a').forEach((a) => {
+                if (a.href.endsWith('#')) {
+                    a.href = '#' + new URL(a.href).pathname;
                 }
             });
         }
