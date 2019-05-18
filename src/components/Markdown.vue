@@ -129,7 +129,7 @@
                 content 'Footnotes:'
 
             ol
-                margin-bottom -8px
+                margin-bottom -12px
 
             .footnote-backref
                 font-family serif
