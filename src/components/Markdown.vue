@@ -1,33 +1,16 @@
 <template>
-    <main>
-        <article class="markdown-body" v-html="markdown"></article>
-    </main>
+    <article class="markdown-body" v-html="markdown"></article>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import axios from 'axios';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
     import MarkdownIt from 'markdown-it';
     import hljs from 'highlight.js';
-    import resource from '@/resource';
-    import {error2markdown} from '@/utils';
-    // @ts-ignore
-    // noinspection TypeScriptPreferShortImport
-    import {ALLOWED_SUFFIXES} from '../../app.config.js';
 
-    // noinspection JSUnusedGlobalSymbols
     @Component
-    export default class Index extends Vue {
-        public static isAllowedRender(path: string) {
-            for (const allowedSuffix of ALLOWED_SUFFIXES) {
-                if (path.endsWith(allowedSuffix)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    export default class Markdown extends Vue {
+        @Prop() public data!: string;
 
-        public markdown = '';
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
             html: true,
@@ -43,19 +26,12 @@
             .use(require('markdown-it-deflist')).use(require('markdown-it-abbr')).use(require('markdown-it-emoji'))
             .use(require('markdown-it-ins')).use(require('markdown-it-mark'));
 
-        // noinspection JSUnusedLocalSymbols
-        @Watch('$route')
-        public onRouteChanged(to: any, from: any) {
-            this.updateMarkdown(to.path);
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-        public created() {
-            this.updateMarkdown(this.$route.params.pathMatch);
-        }
-
         // noinspection JSUnusedGlobalSymbols
         public updated() {
+            this.updateFootnote();
+        }
+
+        public updateFootnote() {
             document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
                 const fnref = document.getElementById(`fnref${i + 1}`) as HTMLLinkElement;
                 fnref.addEventListener('click', (e) => {
@@ -69,26 +45,14 @@
             });
         }
 
-        public setTitle(data: string) {
-            document.title = data.startsWith('# ') ? data.split('\n')[0].substr(2).trim() :
+        public setTitle() {
+            document.title = this.data.startsWith('# ') ? this.data.split('\n')[0].substr(2).trim() :
                 this.$route.params.pathMatch.substr(1);
-            return data;
         }
 
-        public setMarkdown(data: string) {
-            this.markdown = this.markdownIt.render(this.setTitle(data));
-        }
-
-        public updateMarkdown(path: string) {
-            if (Index.isAllowedRender(path)) {
-                axios.get(path).then((response) => {
-                    this.setMarkdown(response.data);
-                }).catch((error) => {
-                    this.setMarkdown(error2markdown(error));
-                });
-            } else {
-                this.setMarkdown(resource.notAllowedRender);
-            }
+        public get markdown() {
+            this.setTitle();
+            return this.markdownIt.render(this.data);
         }
     }
 </script>
@@ -97,14 +61,6 @@
 <style>@import '~highlight.js/styles/idea.css';</style>
 
 <style lang="stylus">
-    main
-        max-width 700px
-        margin 24px auto
-
-        @media screen and (max-width: 750px)
-            margin-left 16px
-            margin-right 16px
-
     .markdown-body
         line-height 2
         color #4a4a4a
@@ -126,5 +82,4 @@
 
             .footnote-backref
                 font-family serif
-
 </style>
