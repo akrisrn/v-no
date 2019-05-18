@@ -34,25 +34,6 @@
             this.updateData(this.$route.params.pathMatch);
         }
 
-        // noinspection JSUnusedGlobalSymbols
-        public updated() {
-            this.updateFootnote();
-        }
-
-        public updateFootnote() {
-            document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
-                const fnref = document.getElementById(`fnref${i + 1}`) as HTMLLinkElement;
-                fnref.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.scrollTo(0, backref.offsetTop);
-                });
-                backref.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.scrollTo(0, fnref.offsetTop);
-                });
-            });
-        }
-
         // noinspection JSMethodCanBeStatic
         public isAllowedRender(path: string) {
             for (const allowedSuffix of ALLOWED_SUFFIXES) {

@@ -26,6 +26,28 @@
             .use(require('markdown-it-deflist')).use(require('markdown-it-abbr')).use(require('markdown-it-emoji'))
             .use(require('markdown-it-ins')).use(require('markdown-it-mark'));
 
+        // noinspection JSUnusedGlobalSymbols
+        public mounted() {
+            // 规避 mount 后仍然可以查询到旧节点的问题。
+            setTimeout(() => {
+                this.updateFootnote();
+            }, 0);
+        }
+
+        public updateFootnote() {
+            document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
+                const fnref = document.getElementById(`fnref${i + 1}`) as HTMLLinkElement;
+                fnref.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, backref.offsetTop);
+                });
+                backref.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, fnref.offsetTop);
+                });
+            });
+        }
+
         public setTitle() {
             document.title = this.data.startsWith('# ') ? this.data.split('\n')[0].substr(2).trim() :
                 this.$route.params.pathMatch.substr(1);
