@@ -1,9 +1,13 @@
 <template>
-    <main>
-        <transition name="slide-fade">
-            <Markdown v-if="show" :data="data"></Markdown>
-        </transition>
-    </main>
+    <transition name="slide-fade">
+        <main v-if="show">
+            <Markdown :data="data"></Markdown>
+            <footer v-if="!isIndex">
+                <a class="home" href="/">« Return to home</a>
+                <div class="date">{{ date }}</div>
+            </footer>
+        </main>
+    </transition>
 </template>
 
 <script lang="ts">
@@ -14,7 +18,7 @@
     import Markdown from '@/components/Markdown.vue';
     // @ts-ignore
     // noinspection TypeScriptPreferShortImport
-    import {ALLOWED_SUFFIXES} from '../../app.config.js';
+    import {INDEX_FILE, ALLOWED_SUFFIXES} from '../../app.config.js';
 
     // noinspection JSUnusedGlobalSymbols
     @Component({components: {Markdown}})
@@ -32,6 +36,15 @@
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData(this.$route.params.pathMatch);
+        }
+
+        public get isIndex() {
+            return this.$route.params.pathMatch === '/' + INDEX_FILE;
+        }
+
+        public get date() {
+            const match = this.$route.params.pathMatch.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
+            return match ? new Date(match[0]).toDateString() : '';
         }
 
         // noinspection JSMethodCanBeStatic
@@ -64,21 +77,38 @@
 </script>
 
 <style lang="stylus">
+    .slide-fade-enter-active
+        transition all .3s ease
+
+    .slide-fade-leave-active
+        transition all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+    .slide-fade-enter, .slide-fade-leave-to
+        transform translateX(10px)
+        opacity 0
+
     main
         max-width 700px
         margin 24px auto
 
-        .slide-fade-enter-active
-            transition all .3s ease
-
-        .slide-fade-leave-active
-            transition all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
-
-        .slide-fade-enter, .slide-fade-leave-to
-            transform translateX(10px)
-            opacity 0
-
         @media screen and (max-width: 750px)
             margin-left 16px
             margin-right 16px
+
+    footer
+        font-size 14px
+        border-top 1px solid #e4e4e4
+        padding-top 8px
+        margin-top 16px
+
+        .home
+            color: #0366d6;
+            text-decoration: none;
+
+            &:hover
+                text-decoration: underline;
+
+        .date
+            float right
+            color darkgray
 </style>
