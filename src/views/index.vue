@@ -84,6 +84,10 @@
         max-width 700px
         margin 24px auto
 
+        @media screen and (max-width: 750px)
+            margin-left 16px
+            margin-right 16px
+
     .markdown-body
         line-height 2
         color #4a4a4a
