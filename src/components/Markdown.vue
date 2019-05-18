@@ -36,15 +36,17 @@
 
         public updateFootnote() {
             document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
-                const fnref = document.getElementById(`fnref${i + 1}`) as HTMLLinkElement;
-                fnref.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.scrollTo(0, backref.offsetTop);
-                });
-                backref.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.scrollTo(0, fnref.offsetTop);
-                });
+                const fnref = document.getElementById(`fnref${i + 1}`);
+                if (fnref) {
+                    fnref.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.scrollTo(0, backref.offsetTop);
+                    });
+                    backref.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.scrollTo(0, fnref.offsetTop);
+                    });
+                }
             });
         }
 
