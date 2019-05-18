@@ -34,6 +34,13 @@
             this.updateData(to.path);
         }
 
+        @Watch('show')
+        public onShowChanged() {
+            if (this.show) {
+                window.scrollTo(0, 0);
+            }
+        }
+
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData(this.$route.params.pathMatch);
@@ -49,7 +56,6 @@
 
         public returnHome() {
             this.$router.push('/');
-            window.scrollTo(0, 0);
         }
 
         // noinspection JSMethodCanBeStatic
