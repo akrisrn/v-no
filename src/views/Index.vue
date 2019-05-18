@@ -3,7 +3,7 @@
         <main v-if="show">
             <Markdown :data="data"></Markdown>
             <footer v-if="!isIndex">
-                <a class="home" href="/">« Return to home</a>
+                <a class="home" v-on:click="returnHome">« Return to home</a>
                 <div v-if="!isError" class="date">{{ date }}</div>
             </footer>
         </main>
@@ -46,6 +46,11 @@
         public get date() {
             const match = this.$route.params.pathMatch.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
             return match ? new Date(match[0]).toDateString() : '';
+        }
+
+        public returnHome() {
+            this.$router.push('/');
+            window.scrollTo(0, 0);
         }
 
         // noinspection JSMethodCanBeStatic
@@ -107,6 +112,7 @@
         .home
             color #0366d6
             text-decoration none
+            cursor pointer
 
             &:hover
                 text-decoration underline
