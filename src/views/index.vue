@@ -94,4 +94,7 @@
 
         h1, h2, h3, h4, h5, h6
             color #24292e
+
+        h1, h2
+            border-bottom 1px solid #e4e4e4
 </style>
