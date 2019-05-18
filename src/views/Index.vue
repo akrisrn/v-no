@@ -109,7 +109,7 @@
         padding-top 8px
         margin-top 16px
 
-        .home
+        a.home
             color #0366d6
             text-decoration none
             cursor pointer
