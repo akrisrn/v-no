@@ -53,6 +53,21 @@
             this.updateMarkdown(this.$route.params.pathMatch);
         }
 
+        // noinspection JSUnusedGlobalSymbols
+        public updated() {
+            document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
+                const fnref = document.getElementById(`fnref${i + 1}`) as HTMLLinkElement;
+                fnref.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, backref.offsetTop);
+                });
+                backref.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, fnref.offsetTop);
+                });
+            });
+        }
+
         public setTitle(data: string) {
             document.title = data.startsWith('# ') ? data.split('\n')[0].substr(2).trim() :
                 this.$route.params.pathMatch.substr(1);
