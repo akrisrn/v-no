@@ -105,11 +105,11 @@
         margin-top 16px
 
         .home
-            color: #0366d6;
-            text-decoration: none;
+            color #0366d6
+            text-decoration none
 
             &:hover
-                text-decoration: underline;
+                text-decoration underline
 
         .date
             float right
