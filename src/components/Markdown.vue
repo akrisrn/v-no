@@ -5,7 +5,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import MarkdownIt from 'markdown-it';
-    import hljs from 'highlight.js';
+    import Prism from 'prismjs';
     import {getDate} from '@/utils';
 
     @Component
@@ -19,8 +19,8 @@
             breaks: true,
             linkify: false,
             highlight(str, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    return hljs.highlight(lang, str).value;
+                if (lang && Prism.languages[lang]) {
+                    return Prism.highlight(str, Prism.languages[lang], lang);
                 }
                 return '';
             },
@@ -92,7 +92,6 @@
 </script>
 
 <style>@import '~github-markdown-css/github-markdown.css';</style>
-<style>@import '~highlight.js/styles/idea.css';</style>
 
 <style lang="stylus">
     .markdown-body
