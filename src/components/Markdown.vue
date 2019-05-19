@@ -17,7 +17,7 @@
         public markdownIt = new MarkdownIt({
             html: true,
             breaks: true,
-            linkify: true,
+            linkify: false,
             highlight(str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
                     return hljs.highlight(lang, str).value;
