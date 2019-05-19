@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
-    "@types/highlight.js": "^9.12.3",
     "@types/markdown-it": "0.0.7",
     "@types/mocha": "^5.2.4",
     "@types/prismjs": "^1.16.0",
