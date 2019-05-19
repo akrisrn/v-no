@@ -6,9 +6,9 @@ module.exports = {
         [
             'prismjs',
             {
-                languages: ['bash', 'python'],
-                plugins: [],
-                theme: 'default',
+                languages: process.env.PRISM_LANGUAGES.split(','),
+                plugins: process.env.PRISM_PLUGINS.split(','),
+                theme: process.env.PRISM_THEME,
                 css: true
             }
         ]
