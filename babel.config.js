@@ -6,8 +6,8 @@ module.exports = {
         [
             'prismjs',
             {
-                languages: ['javascript', 'css', 'markup'],
-                plugins: ['line-numbers'],
+                languages: ['bash', 'python'],
+                plugins: [],
                 theme: 'default',
                 css: true
             }
