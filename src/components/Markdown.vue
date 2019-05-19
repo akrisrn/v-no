@@ -84,6 +84,7 @@
                 this.$route.params.pathMatch.substr(1);
         }
 
+        // noinspection JSUnusedGlobalSymbols
         public get markdown() {
             this.setTitle();
             return this.markdownIt.render(this.data);
