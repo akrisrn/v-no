@@ -110,6 +110,20 @@
             background-color rgba(255, 235, 59, 0.5)
             box-shadow 0.25em 0 0 rgba(255, 235, 59, 0.5), -0.25em 0 0 rgba(255, 235, 59, 0.5)
 
+        dl
+            dt
+                font-style normal
+                font-weight normal
+
+            dd
+                color dimgray
+                padding 0
+                font-size 14px
+
+                &:before
+                    content '»'
+                    margin-right 8px
+
         .footnote-ref > a, a.footnote-backref
             color #0366d6
             text-decoration none
