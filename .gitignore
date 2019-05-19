@@ -21,3 +21,5 @@ yarn-error.log*
 *.sw?
 
 public/**/*.md
+public/articles
+public/uploads
