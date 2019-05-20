@@ -155,9 +155,6 @@
             .footnote-backref
                 font-family serif
 
-        .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string
-            background none
-
     .index
         ul
             padding-left 0
