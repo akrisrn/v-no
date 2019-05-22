@@ -96,6 +96,7 @@
 
 <style lang="stylus">
     .markdown-body
+        font-size 14px
         line-height 2
         color #4a4a4a
 
@@ -122,7 +123,6 @@
             dd
                 color dimgray
                 padding 0
-                font-size 14px
 
                 &:before
                     content '»'
@@ -139,18 +139,15 @@
             &:hover
                 text-decoration underline
 
-        .footnotes-sep
-            margin-bottom 16px
-
         .footnotes
-            font-size 14px
             color dimgray
 
             &:before
                 content 'Footnotes:'
 
             ol
-                margin-bottom -12px
+                margin-top -8px
+                margin-bottom -8px
 
             .footnote-backref
                 font-family serif
