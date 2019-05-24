@@ -143,7 +143,8 @@
             color dimgray
 
             &:before
-                content 'Footnotes:'
+                content 'Footnotes'
+                font-weight bold
 
             ol
                 margin-top -8px
