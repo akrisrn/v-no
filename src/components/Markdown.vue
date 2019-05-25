@@ -96,7 +96,7 @@
 
 <style lang="stylus">
     .markdown-body
-        font-size 14px
+        font-size 15px
         line-height 2
         color #4a4a4a
 
@@ -121,6 +121,7 @@
                 font-weight normal
 
             dd
+                font-size 14px
                 color dimgray
                 padding 0
 
