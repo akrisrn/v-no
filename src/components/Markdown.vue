@@ -28,6 +28,11 @@
             .use(require('markdown-it-task-lists'));
 
         // noinspection JSUnusedGlobalSymbols
+        public created() {
+            this.markdownIt.linkify.tlds();
+        }
+
+        // noinspection JSUnusedGlobalSymbols
         public mounted() {
             // 规避 mount 后仍然可以查询到旧节点的问题。
             setTimeout(() => {
