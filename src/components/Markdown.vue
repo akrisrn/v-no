@@ -29,7 +29,7 @@
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
-            this.markdownIt.linkify.tlds();
+            this.markdownIt.linkify.tlds([], false);
         }
 
         // noinspection JSUnusedGlobalSymbols
