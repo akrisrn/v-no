@@ -58,7 +58,7 @@
         // noinspection JSMethodCanBeStatic
         public isAllowedRender(path: string) {
             for (const allowedSuffix of process.env.VUE_APP_ALLOWED_SUFFIXES.split(',')) {
-                if (path.endsWith(allowedSuffix)) {
+                if (allowedSuffix && path.endsWith(allowedSuffix)) {
                     return true;
                 }
             }
