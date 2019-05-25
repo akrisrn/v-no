@@ -17,16 +17,15 @@
         public markdownIt = new MarkdownIt({
             html: true,
             breaks: true,
-            linkify: false,
+            linkify: true,
             highlight(str, lang) {
                 if (lang && Prism.languages[lang]) {
                     return Prism.highlight(str, Prism.languages[lang], lang);
                 }
                 return '';
             },
-        }).use(require('markdown-it-sub')).use(require('markdown-it-sup')).use(require('markdown-it-footnote'))
-            .use(require('markdown-it-deflist')).use(require('markdown-it-abbr')).use(require('markdown-it-emoji'))
-            .use(require('markdown-it-ins')).use(require('markdown-it-mark'));
+        }).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
+            .use(require('markdown-it-task-lists'));
 
         // noinspection JSUnusedGlobalSymbols
         public mounted() {
