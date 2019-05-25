@@ -38,6 +38,7 @@
             setTimeout(() => {
                 this.updateFootnote();
                 this.updateLinkPath();
+                this.updateImagePath();
                 if (this.isIndex) {
                     this.updateIndexList();
                 }
@@ -79,6 +80,16 @@
             document.querySelectorAll('a').forEach((a) => {
                 if (a.href.endsWith('#')) {
                     a.href = '#' + new URL(a.href).pathname;
+                }
+            });
+        }
+
+        public updateImagePath() {
+            document.querySelectorAll('img').forEach((img) => {
+                const match = img.src.match(/#(\d+)$/);
+                if (match) {
+                    img.width = parseInt(match[1], 0);
+                    img.src = new URL(img.src).pathname;
                 }
             });
         }
