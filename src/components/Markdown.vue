@@ -131,7 +131,8 @@
 
                 &:before
                     content '»'
-                    margin-right 8px
+                    padding-right 8px
+                    font-family sans-serif
 
         pre
             background-color #2d2d2d
@@ -168,4 +169,5 @@
                 &:before
                     content '»'
                     padding-right 8px
+                    font-family sans-serif
 </style>

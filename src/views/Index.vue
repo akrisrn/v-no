@@ -3,7 +3,7 @@
         <main v-if="show">
             <Markdown :data="data" :isIndex="isIndex"></Markdown>
             <footer class="markdown-body" v-if="!isIndex">
-                <a class="home" v-on:click="returnHome">« Return to home</a>
+                <a class="home" v-on:click="returnHome">Return to home</a>
                 <div v-if="!isError" class="date">{{ date }}</div>
             </footer>
         </main>
@@ -114,6 +114,10 @@
                 color #0366d6
                 text-decoration none
                 cursor pointer
+
+                &:before
+                    content '« '
+                    font-family sans-serif
 
                 &:hover
                     text-decoration underline
