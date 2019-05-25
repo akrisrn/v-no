@@ -155,7 +155,7 @@
                 font-family serif
 
     .index
-        ul
+        ul:first-of-type
             padding-left 0
 
             li
