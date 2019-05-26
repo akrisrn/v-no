@@ -86,9 +86,14 @@
 
         public updateImagePath() {
             document.querySelectorAll('img').forEach((img) => {
-                const match = img.src.match(/#(\d+)$/);
+                const match = img.src.match(/#(.+)$/);
                 if (match) {
-                    img.width = parseInt(match[1], 0);
+                    const width = parseInt(match[1], 0);
+                    if (isNaN(width)) {
+                        img.setAttribute('style', match[1]);
+                    } else {
+                        img.width = width;
+                    }
                     img.src = new URL(img.src).pathname;
                 }
             });
