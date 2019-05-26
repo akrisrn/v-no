@@ -6,6 +6,7 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
+    import axios from 'axios';
     import {getDate} from '@/utils';
 
     @Component
@@ -80,6 +81,10 @@
             document.querySelectorAll('a').forEach((a) => {
                 if (a.href.endsWith('#')) {
                     a.href = '#' + new URL(a.href).pathname;
+                } else if (a.href.endsWith('#+')) {
+                    axios.get(a.href).then((response) => {
+                        a.parentElement!.outerHTML = this.markdownIt.render(response.data);
+                    });
                 }
             });
         }
