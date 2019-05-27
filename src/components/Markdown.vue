@@ -79,10 +79,11 @@
 
         public updateLinkPath() {
             document.querySelectorAll('a').forEach((a) => {
+                const path = new URL(a.href).pathname;
                 if (a.href.endsWith('#')) {
-                    a.href = '#' + new URL(a.href).pathname;
+                    a.href = '#' + path;
                 } else if (a.href.endsWith('#+')) {
-                    axios.get(a.href).then((response) => {
+                    axios.get(path).then((response) => {
                         a.parentElement!.outerHTML = this.markdownIt.render(response.data);
                     });
                 }
