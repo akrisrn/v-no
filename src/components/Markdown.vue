@@ -86,6 +86,11 @@
                     axios.get(path).then((response) => {
                         a.parentElement!.outerHTML = this.markdownIt.render(response.data);
                     });
+                } else if (a.href.endsWith('#*')) {
+                    const script = document.createElement('script');
+                    script.src = path;
+                    document.head.appendChild(script);
+                    a.parentElement!.remove();
                 }
             });
         }
