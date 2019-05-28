@@ -78,7 +78,7 @@
         }
 
         public updateLinkPath() {
-            document.querySelectorAll('a').forEach((a) => {
+            document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 const path = new URL(a.href).pathname;
                 if (a.href.endsWith('#')) {
                     a.href = '#' + path;
