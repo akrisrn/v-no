@@ -90,6 +90,12 @@
                     script.src = a.href;
                     document.head.appendChild(script);
                     a.parentElement!.remove();
+                } else if (a.innerText === '$') {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = a.href;
+                    document.head.appendChild(link);
+                    a.parentElement!.remove();
                 }
             });
         }
