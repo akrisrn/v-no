@@ -79,16 +79,15 @@
 
         public updateLinkPath() {
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
-                const path = new URL(a.href).pathname;
                 if (a.href.endsWith('#')) {
-                    a.href = '#' + path;
-                } else if (a.href.endsWith('#+')) {
-                    axios.get(path).then((response) => {
+                    a.href = '#' + new URL(a.href).pathname;
+                } else if (a.innerText === '+') {
+                    axios.get(a.href).then((response) => {
                         a.parentElement!.outerHTML = this.markdownIt.render(response.data);
                     });
-                } else if (a.href.endsWith('#*')) {
+                } else if (a.innerText === '*') {
                     const script = document.createElement('script');
-                    script.src = path;
+                    script.src = a.href;
                     document.head.appendChild(script);
                     a.parentElement!.remove();
                 }
