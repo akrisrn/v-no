@@ -45,6 +45,7 @@
         public mounted() {
             // 规避 mount 后仍然可以查询到旧节点的问题。
             setTimeout(() => {
+                this.updateToc();
                 this.updateFootnote();
                 this.updateLinkPath();
                 this.updateImagePath();
@@ -63,12 +64,11 @@
                     if (!firstHeader) {
                         firstHeader = tocMatch[1];
                     }
-                    if (tocMatch[1] === firstHeader) {
-                        tocMatch[1] = '-';
-                    } else {
-                        tocMatch[1] = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
+                    let prefix = '-';
+                    if (tocMatch[1] !== firstHeader) {
+                        prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
                     }
-                    toc += `${tocMatch[1]} [${tocMatch[2]}]()\n`;
+                    toc += `${prefix} [${tocMatch[2]}](h${tocMatch[1].length})\n`;
                 }
                 const jsExpMatch = line.match(Markdown.getWrapRegExp('\\$'));
                 if (jsExpMatch) {
@@ -85,6 +85,21 @@
             }).join('\n');
             data = data.replace(/\[toc]/i, `<div id="toc">${this.markdownIt.render(toc)}</div>`);
             return this.markdownIt.render(data);
+        }
+
+        public updateToc() {
+            document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const selector = new URL(a.href).pathname.substr(1);
+                    for (const h of document.querySelectorAll<HTMLHeadingElement>(selector)) {
+                        if (h.innerText === a.innerText) {
+                            window.scrollTo(0, h.offsetTop);
+                            break;
+                        }
+                    }
+                });
+            });
         }
 
         public updateFootnote() {
