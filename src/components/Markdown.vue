@@ -47,6 +47,20 @@
         }
 
         public renderMD(data: string) {
+            data = data.split('\n').map((line) => {
+                const lineMatch = line.match(/\$\s*(.+?)\s*\$/);
+                if (lineMatch) {
+                    let result = '';
+                    try {
+                        // tslint:disable-next-line:no-eval
+                        result = eval(lineMatch[1]);
+                    } catch (e) {
+                        result = `<span style="color:red">${e.message}</span>`;
+                    }
+                    return line.replace(lineMatch[0], result);
+                }
+                return line;
+            }).join('\n');
             return this.markdownIt.render(data);
         }
 
