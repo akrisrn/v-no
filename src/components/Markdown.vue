@@ -12,7 +12,7 @@
     @Component
     export default class Markdown extends Vue {
         public static getErrorText(message: string) {
-            return `<span style="color:red">${message}</span>`;
+            return `<span class="error">${message}</span>`;
         }
 
         public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft) {
@@ -237,6 +237,10 @@
 
             .footnote-backref
                 font-family serif
+
+        .error
+            color red
+            border 1px solid
 
     .index
         ul:first-of-type
