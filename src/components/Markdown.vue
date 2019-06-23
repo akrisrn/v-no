@@ -163,8 +163,8 @@
         }
 
         public setTitle() {
-            document.title = this.data.startsWith('# ') ? this.data.split('\n')[0].substr(2).trim() :
-                this.$route.params.pathMatch.substr(1);
+            const titleMatch = this.data.match(Markdown.getWrapRegExp('^#', '\n'));
+            document.title = titleMatch ? titleMatch[1] : this.$route.params.pathMatch.substr(1);
         }
 
         // noinspection JSUnusedGlobalSymbols
