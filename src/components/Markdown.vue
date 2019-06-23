@@ -89,10 +89,11 @@
 
         public updateToc() {
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
+                a.setAttribute('h', new URL(a.href).pathname.substr(1));
+                a.removeAttribute('href');
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const selector = new URL(a.href).pathname.substr(1);
-                    for (const h of document.querySelectorAll<HTMLHeadingElement>(selector)) {
+                    for (const h of document.querySelectorAll<HTMLHeadingElement>(a.getAttribute('h')!)) {
                         if (h.innerText === a.innerText) {
                             window.scrollTo(0, h.offsetTop);
                             break;
@@ -246,7 +247,7 @@
         pre
             background-color #2d2d2d
 
-        .footnote-ref > a, a.footnote-backref
+        .footnote-ref > a, a.footnote-backref, #toc a
             color #0366d6
             text-decoration none
             cursor pointer
