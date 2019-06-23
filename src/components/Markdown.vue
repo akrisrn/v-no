@@ -46,6 +46,10 @@
             }, 0);
         }
 
+        public renderMD(data: string) {
+            return this.markdownIt.render(data);
+        }
+
         public updateFootnote() {
             document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
                 const fnref = document.getElementById(`fnref${i + 1}`);
@@ -105,7 +109,7 @@
                             }
                             return line;
                         }).join('\n');
-                        a.parentElement!.outerHTML = this.markdownIt.render(data);
+                        a.parentElement!.outerHTML = this.renderMD(data);
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
@@ -145,7 +149,7 @@
         // noinspection JSUnusedGlobalSymbols
         public get markdown() {
             this.setTitle();
-            return this.markdownIt.render(this.data);
+            return this.renderMD(this.data);
         }
     }
 </script>
