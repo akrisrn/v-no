@@ -81,9 +81,31 @@
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 if (a.href.endsWith('#')) {
                     a.href = '#' + new URL(a.href).pathname;
-                } else if (a.innerText === '+') {
+                } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
+                    const params: any = {};
+                    const match = a.innerText.match(/#(.+)$/);
+                    if (match) {
+                        match[1].split('&').forEach((seg, i) => {
+                            let param = seg;
+                            const segMatch = seg.match(/(.+?)=(.+)/);
+                            if (segMatch) {
+                                param = segMatch[2];
+                                params[segMatch[1]] = param;
+                            }
+                            params[i + 1] = param;
+                        });
+                    }
                     axios.get(a.href).then((response) => {
-                        a.parentElement!.outerHTML = this.markdownIt.render(response.data);
+                        const data = (response.data as string).split('\n').map((line) => {
+                            const lineMatch = line.match(/{{\s*(.*?)\s*}}/);
+                            if (lineMatch) {
+                                const param = params[lineMatch[1]];
+                                return line.replace(lineMatch[0],
+                                    param ? param : `<span style="color:red">${param}</span>`);
+                            }
+                            return line;
+                        }).join('\n');
+                        a.parentElement!.outerHTML = this.markdownIt.render(data);
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
