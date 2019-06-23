@@ -70,16 +70,16 @@
                     }
                     toc += `${tocMatch[1]} [${tocMatch[2]}]()\n`;
                 }
-                const lineMatch = line.match(Markdown.getWrapRegExp('\\$'));
-                if (lineMatch) {
+                const jsExpMatch = line.match(Markdown.getWrapRegExp('\\$'));
+                if (jsExpMatch) {
                     let result = '';
                     try {
                         // tslint:disable-next-line:no-eval
-                        result = eval(lineMatch[1]);
+                        result = eval(jsExpMatch[1]);
                     } catch (e) {
                         result = Markdown.getErrorText(`${e.name}: ${e.message}`);
                     }
-                    return line.replace(lineMatch[0], result);
+                    return line.replace(jsExpMatch[0], result);
                 }
                 return line;
             }).join('\n');
@@ -128,20 +128,20 @@
                     if (match) {
                         match[1].split('&').forEach((seg, i) => {
                             let param = seg;
-                            const segMatch = seg.match(/(.+?)=(.+)/);
-                            if (segMatch) {
-                                param = segMatch[2];
-                                params[segMatch[1]] = param;
+                            const paramMatch = seg.match(/(.+?)=(.+)/);
+                            if (paramMatch) {
+                                param = paramMatch[2];
+                                params[paramMatch[1]] = param;
                             }
                             params[i + 1] = param;
                         });
                     }
                     axios.get(a.href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
-                            const lineMatch = line.match(Markdown.getWrapRegExp('{{', '}}'));
-                            if (lineMatch) {
-                                const param = params[lineMatch[1]];
-                                return line.replace(lineMatch[0], param ? param : Markdown.getErrorText(param));
+                            const paramMatch = line.match(Markdown.getWrapRegExp('{{', '}}'));
+                            if (paramMatch) {
+                                const param = params[paramMatch[1]];
+                                return line.replace(paramMatch[0], param ? param : Markdown.getErrorText(param));
                             }
                             return line;
                         }).join('\n');
