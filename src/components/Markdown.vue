@@ -15,6 +15,10 @@
             return `<span style="color:red">${message}</span>`;
         }
 
+        public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft) {
+            return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`);
+        }
+
         @Prop() public data!: string;
         @Prop() public isIndex!: boolean;
 
@@ -52,7 +56,7 @@
 
         public renderMD(data: string) {
             data = data.split('\n').map((line) => {
-                const lineMatch = line.match(/\$\s*(.+?)\s*\$/);
+                const lineMatch = line.match(Markdown.getWrapRegExp('\\$'));
                 if (lineMatch) {
                     let result = '';
                     try {
@@ -119,7 +123,7 @@
                     }
                     axios.get(a.href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
-                            const lineMatch = line.match(/{{\s*(.+?)\s*}}/);
+                            const lineMatch = line.match(Markdown.getWrapRegExp('{{', '}}'));
                             if (lineMatch) {
                                 const param = params[lineMatch[1]];
                                 return line.replace(lineMatch[0], param ? param : Markdown.getErrorText(param));
