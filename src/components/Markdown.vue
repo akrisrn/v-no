@@ -63,7 +63,7 @@
                         // tslint:disable-next-line:no-eval
                         result = eval(lineMatch[1]);
                     } catch (e) {
-                        result = Markdown.getErrorText(e.message);
+                        result = Markdown.getErrorText(`${e.name}: ${e.message}`);
                     }
                     return line.replace(lineMatch[0], result);
                 }
