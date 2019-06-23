@@ -11,6 +11,10 @@
 
     @Component
     export default class Markdown extends Vue {
+        public static getErrorText(message: string) {
+            return `<span style="color:red">${message}</span>`;
+        }
+
         @Prop() public data!: string;
         @Prop() public isIndex!: boolean;
 
@@ -55,7 +59,7 @@
                         // tslint:disable-next-line:no-eval
                         result = eval(lineMatch[1]);
                     } catch (e) {
-                        result = this.getErrorText(e.message);
+                        result = Markdown.getErrorText(e.message);
                     }
                     return line.replace(lineMatch[0], result);
                 }
@@ -118,7 +122,7 @@
                             const lineMatch = line.match(/{{\s*(.+?)\s*}}/);
                             if (lineMatch) {
                                 const param = params[lineMatch[1]];
-                                return line.replace(lineMatch[0], param ? param : this.getErrorText(param));
+                                return line.replace(lineMatch[0], param ? param : Markdown.getErrorText(param));
                             }
                             return line;
                         }).join('\n');
@@ -157,10 +161,6 @@
         public setTitle() {
             document.title = this.data.startsWith('# ') ? this.data.split('\n')[0].substr(2).trim() :
                 this.$route.params.pathMatch.substr(1);
-        }
-
-        public getErrorText(message: string) {
-            return `<span style="color:red">${message}</span>`;
         }
 
         // noinspection JSUnusedGlobalSymbols
