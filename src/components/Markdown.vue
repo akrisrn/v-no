@@ -101,7 +101,7 @@
                     }
                     axios.get(a.href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
-                            const lineMatch = line.match(/{{\s*(.*?)\s*}}/);
+                            const lineMatch = line.match(/{{\s*(.+?)\s*}}/);
                             if (lineMatch) {
                                 const param = params[lineMatch[1]];
                                 return line.replace(lineMatch[0],
