@@ -55,7 +55,21 @@
         }
 
         public renderMD(data: string) {
+            let toc = '';
+            let firstHeader = '';
             data = data.split('\n').map((line) => {
+                const tocMatch = line.match(Markdown.getWrapRegExp('^(##+)', '$'));
+                if (tocMatch) {
+                    if (!firstHeader) {
+                        firstHeader = tocMatch[1];
+                    }
+                    if (tocMatch[1] === firstHeader) {
+                        tocMatch[1] = '-';
+                    } else {
+                        tocMatch[1] = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
+                    }
+                    toc += `${tocMatch[1]} [${tocMatch[2]}]()\n`;
+                }
                 const lineMatch = line.match(Markdown.getWrapRegExp('\\$'));
                 if (lineMatch) {
                     let result = '';
@@ -69,6 +83,7 @@
                 }
                 return line;
             }).join('\n');
+            data = data.replace(/\[toc]/i, `<div id="toc">${this.markdownIt.render(toc)}</div>`);
             return this.markdownIt.render(data);
         }
 
