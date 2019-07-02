@@ -135,6 +135,12 @@
         }
 
         public updateLinkPath() {
+            // 匹配模式：
+            // 1. 链接地址以 # 结尾：将链接转换成站内路由形式
+            // 2. text 为 +，或形如 +#a=1&b=2&3：将链接引入为片段模板，后者为传参写法
+            //      #a=1&b=2&3 会被转化成 {1: 1, 2: 2, 3: 3, a: 1, b: 2}
+            // 3. text 为 *：将链接引入为 JavaScript 文件引用
+            // 4. text 为 $：将链接引入为 CSS 文件引用
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 if (a.href.endsWith('#')) {
                     a.href = '#' + new URL(a.href).pathname;
