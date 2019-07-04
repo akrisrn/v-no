@@ -45,6 +45,7 @@
         public mounted() {
             // 规避 mount 后仍然可以查询到旧节点的问题。
             setTimeout(() => {
+                this.updateDD();
                 this.updateToc();
                 this.updateFootnote();
                 this.updateLinkPath();
@@ -102,6 +103,18 @@
             tocHtml += '</div>';
             data = data.replace(/\[toc]/i, tocHtml);
             return this.markdownIt.render(data);
+        }
+
+        public updateDD() {
+            document.querySelectorAll('p').forEach((p) => {
+                if (p.innerText.startsWith(': ')) {
+                    const dl = document.createElement('dl');
+                    const dd = document.createElement('dd');
+                    dl.append(dd);
+                    dd.innerText = p.innerText.substr(2);
+                    p.outerHTML = dl.outerHTML;
+                }
+            });
         }
 
         public updateToc() {
