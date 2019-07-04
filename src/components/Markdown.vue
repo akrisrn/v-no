@@ -70,6 +70,7 @@
                     }
                     toc += `${prefix} [${tocMatch[2]}](h${tocMatch[1].length})\n`;
                 }
+                // 将被 $ 包围的部分作为 JavaScript 表达式执行
                 const jsExpMatch = line.match(Markdown.getWrapRegExp('\\$'));
                 if (jsExpMatch) {
                     let result = '';
