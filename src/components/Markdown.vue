@@ -56,7 +56,7 @@
         }
 
         public renderMD(data: string) {
-            let toc = '';
+            const toc: string[] = [];
             let firstHeader = '';
             data = data.split('\n').map((line) => {
                 const tocMatch = line.match(Markdown.getWrapRegExp('^(##+)', '$'));
@@ -68,7 +68,7 @@
                     if (tocMatch[1] !== firstHeader) {
                         prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
                     }
-                    toc += `${prefix} [${tocMatch[2]}](h${tocMatch[1].length})\n`;
+                    toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
                 }
                 // 将被 $ 包围的部分作为 JavaScript 表达式执行
                 const jsExpMatch = line.match(Markdown.getWrapRegExp('\\$'));
@@ -84,7 +84,7 @@
                 }
                 return line;
             }).join('\n');
-            data = data.replace(/\[toc]/i, `<div id="toc">${this.markdownIt.render(toc)}</div>`);
+            data = data.replace(/\[toc]/i, `<div id="toc">${this.markdownIt.render(toc.join('\n'))}</div>`);
             return this.markdownIt.render(data);
         }
 
