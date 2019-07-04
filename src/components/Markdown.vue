@@ -254,7 +254,7 @@
                     } else {
                         img.width = width;
                     }
-                    img.src = new URL(img.src).pathname;
+                    img.src = img.src.replace(/#(.+)$/, '');
                 }
             });
         }
