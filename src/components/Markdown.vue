@@ -254,6 +254,9 @@
         pre
             background-color #2d2d2d
 
+        kbd
+            margin-bottom 3px
+
         #toc
             font-size 14px
 
