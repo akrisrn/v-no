@@ -105,7 +105,10 @@
             if (uls.length === 2) {
                 uls.forEach((ul) => {
                     ul.style.display = 'inline-table';
+                    ul.style.maxWidth = '350px';
                 });
+                uls[0].style.marginBottom = '.25em';
+                uls[1].style.marginBottom = '0';
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
                 a.setAttribute('h', new URL(a.href).pathname.substr(1));
@@ -277,6 +280,7 @@
 
         #toc
             font-size 14px
+            margin-bottom 16px
 
         .footnote-ref > a, a.footnote-backref, #toc a
             color #0366d6
