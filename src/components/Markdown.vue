@@ -115,6 +115,13 @@
                     p.outerHTML = dl.outerHTML;
                 }
             });
+            document.querySelectorAll('dt').forEach((dt) => {
+                if (dt.innerText.startsWith(': ')) {
+                    const dd = document.createElement('dd');
+                    dd.innerText = dt.innerText.substr(2);
+                    dt.outerHTML = dd.outerHTML;
+                }
+            });
         }
 
         public updateToc() {
@@ -302,6 +309,9 @@
                     content '»'
                     padding-right 8px
                     font-family sans-serif
+
+                + dd
+                    margin-top -16px
 
         pre
             background-color #2d2d2d
