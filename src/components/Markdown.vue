@@ -190,8 +190,18 @@
                             if (paramMatches) {
                                 paramMatches.forEach((paramMatch) => {
                                     const m = paramMatch.match(Markdown.getWrapRegExp('{{', '}}'))!;
+                                    let defaultValue;
+                                    [m[1], defaultValue] = m[1].split('|');
                                     const param = params[m[1]];
-                                    line = line.replace(m[0], param ? param : Markdown.getErrorText(param));
+                                    let result = '';
+                                    if (param !== undefined) {
+                                        result = param;
+                                    } else if (defaultValue !== undefined) {
+                                        result = defaultValue;
+                                    } else {
+                                        result = Markdown.getErrorText(param);
+                                    }
+                                    line = line.replace(m[0], result);
                                 });
                                 return line;
                             }
