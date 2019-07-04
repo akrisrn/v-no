@@ -254,6 +254,9 @@
         pre
             background-color #2d2d2d
 
+        #toc
+            font-size 14px
+
         .footnote-ref > a, a.footnote-backref, #toc a
             color #0366d6
             text-decoration none
