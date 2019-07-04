@@ -84,11 +84,29 @@
                 }
                 return line;
             }).join('\n');
-            data = data.replace(/\[toc]/i, `<div id="toc">${this.markdownIt.render(toc.join('\n'))}</div>`);
+            let tocHtml = '<div id="toc">';
+            if (toc.length > 7) {
+                let mid = Math.ceil(toc.length / 2);
+                while (toc[mid] && !toc[mid].startsWith('-')) {
+                    mid += 1;
+                }
+                tocHtml += this.markdownIt.render(toc.slice(0, mid).join('\n')) +
+                    this.markdownIt.render(toc.slice(mid, toc.length).join('\n'));
+            } else {
+                tocHtml += this.markdownIt.render(toc.join('\n'));
+            }
+            tocHtml += '</div>';
+            data = data.replace(/\[toc]/i, tocHtml);
             return this.markdownIt.render(data);
         }
 
         public updateToc() {
+            const uls = document.querySelectorAll<HTMLUListElement>('#toc > ul');
+            if (uls.length === 2) {
+                uls.forEach((ul) => {
+                    ul.style.display = 'inline-table';
+                });
+            }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
                 a.setAttribute('h', new URL(a.href).pathname.substr(1));
                 a.removeAttribute('href');
