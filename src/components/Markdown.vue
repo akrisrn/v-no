@@ -111,14 +111,14 @@
                     const dl = document.createElement('dl');
                     const dd = document.createElement('dd');
                     dl.append(dd);
-                    dd.innerText = p.innerText.substr(2);
+                    dd.innerHTML = p.innerHTML.substr(2);
                     p.outerHTML = dl.outerHTML;
                 }
             });
             document.querySelectorAll('dt').forEach((dt) => {
                 if (dt.innerText.startsWith(': ')) {
                     const dd = document.createElement('dd');
-                    dd.innerText = dt.innerText.substr(2);
+                    dd.innerHTML = dt.innerHTML.substr(2);
                     dt.outerHTML = dd.outerHTML;
                 }
             });
