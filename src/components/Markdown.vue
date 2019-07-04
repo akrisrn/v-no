@@ -15,8 +15,8 @@
             return `<span class="error">${message}</span>`;
         }
 
-        public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft) {
-            return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`);
+        public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
+            return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
         }
 
         @Prop() public data!: string;
@@ -71,16 +71,20 @@
                     toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
                 }
                 // 将被 $ 包围的部分作为 JavaScript 表达式执行
-                const jsExpMatch = line.match(Markdown.getWrapRegExp('\\$'));
-                if (jsExpMatch) {
-                    let result = '';
-                    try {
-                        // tslint:disable-next-line:no-eval
-                        result = eval(jsExpMatch[1]);
-                    } catch (e) {
-                        result = Markdown.getErrorText(`${e.name}: ${e.message}`);
-                    }
-                    return line.replace(jsExpMatch[0], result);
+                const jsExpMatches = line.match(Markdown.getWrapRegExp('\\$', '\\$', 'g'));
+                if (jsExpMatches) {
+                    jsExpMatches.forEach((jsExpMatch) => {
+                        const m = jsExpMatch.match(Markdown.getWrapRegExp('\\$', '\\$'))!;
+                        let result = '';
+                        try {
+                            // tslint:disable-next-line:no-eval
+                            result = eval(m[1]);
+                        } catch (e) {
+                            result = Markdown.getErrorText(`${e.name}: ${e.message}`);
+                        }
+                        line = line.replace(m[0], result);
+                    });
+                    return line;
                 }
                 return line;
             }).join('\n');
@@ -182,10 +186,14 @@
                     }
                     axios.get(a.href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
-                            const paramMatch = line.match(Markdown.getWrapRegExp('{{', '}}'));
-                            if (paramMatch) {
-                                const param = params[paramMatch[1]];
-                                return line.replace(paramMatch[0], param ? param : Markdown.getErrorText(param));
+                            const paramMatches = line.match(Markdown.getWrapRegExp('{{', '}}', 'g'));
+                            if (paramMatches) {
+                                paramMatches.forEach((paramMatch) => {
+                                    const m = paramMatch.match(Markdown.getWrapRegExp('{{', '}}'))!;
+                                    const param = params[m[1]];
+                                    line = line.replace(m[0], param ? param : Markdown.getErrorText(param));
+                                });
+                                return line;
                             }
                             return line;
                         }).join('\n');
