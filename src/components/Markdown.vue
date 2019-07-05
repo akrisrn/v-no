@@ -330,6 +330,9 @@
         kbd
             margin-bottom 3px
 
+        em > small
+            color dimgray
+
         #toc
             font-size 14px
             margin-bottom 16px
