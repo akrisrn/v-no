@@ -232,6 +232,9 @@
                             return line;
                         }).join('\n');
                         a.parentElement!.outerHTML = this.renderMD(data, true);
+                        this.updateDD();
+                        this.updateLinkPath();
+                        this.updateImagePath();
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
