@@ -56,20 +56,22 @@
             }, 0);
         }
 
-        public renderMD(data: string) {
+        public renderMD(data: string, noToc = false) {
             const toc: string[] = [];
             let firstHeader = '';
             data = data.split('\n').map((line) => {
-                const tocMatch = line.match(Markdown.getWrapRegExp('^(##+)', '$'));
-                if (tocMatch) {
-                    if (!firstHeader) {
-                        firstHeader = tocMatch[1];
+                if (!noToc) {
+                    const tocMatch = line.match(Markdown.getWrapRegExp('^(##+)', '$'));
+                    if (tocMatch) {
+                        if (!firstHeader) {
+                            firstHeader = tocMatch[1];
+                        }
+                        let prefix = '-';
+                        if (tocMatch[1] !== firstHeader) {
+                            prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
+                        }
+                        toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
                     }
-                    let prefix = '-';
-                    if (tocMatch[1] !== firstHeader) {
-                        prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
-                    }
-                    toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
                 }
                 // 将被 $ 包围的部分作为 JavaScript 表达式执行
                 const jsExpMatches = line.match(Markdown.getWrapRegExp('\\$', '\\$', 'g'));
@@ -89,19 +91,21 @@
                 }
                 return line;
             }).join('\n');
-            let tocHtml = '<div id="toc">';
-            if (toc.length > 7) {
-                let mid = Math.ceil(toc.length / 2);
-                while (toc[mid] && !toc[mid].startsWith('-')) {
-                    mid += 1;
+            if (!noToc) {
+                let tocHtml = '<div id="toc">';
+                if (toc.length > 7) {
+                    let mid = Math.ceil(toc.length / 2);
+                    while (toc[mid] && !toc[mid].startsWith('-')) {
+                        mid += 1;
+                    }
+                    tocHtml += this.markdownIt.render(toc.slice(0, mid).join('\n')) +
+                        this.markdownIt.render(toc.slice(mid, toc.length).join('\n'));
+                } else {
+                    tocHtml += this.markdownIt.render(toc.join('\n'));
                 }
-                tocHtml += this.markdownIt.render(toc.slice(0, mid).join('\n')) +
-                    this.markdownIt.render(toc.slice(mid, toc.length).join('\n'));
-            } else {
-                tocHtml += this.markdownIt.render(toc.join('\n'));
+                tocHtml += '</div>';
+                data = data.replace(/\[toc]/i, tocHtml);
             }
-            tocHtml += '</div>';
-            data = data.replace(/\[toc]/i, tocHtml);
             return this.markdownIt.render(data);
         }
 
@@ -227,7 +231,7 @@
                             }
                             return line;
                         }).join('\n');
-                        a.parentElement!.outerHTML = this.renderMD(data);
+                        a.parentElement!.outerHTML = this.renderMD(data, true);
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
