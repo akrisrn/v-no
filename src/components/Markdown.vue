@@ -184,7 +184,7 @@
             });
         }
 
-        public updateLinkPath() {
+        public updateLinkPath(updatedLinks: string[] = []) {
             // 匹配模式：
             // 1. 链接地址以 # 结尾：将链接转换成站内路由形式
             // 2. text 为 +，或形如 +#a=1&b=2&3：将链接引入为片段模板，后者为传参写法
@@ -195,6 +195,9 @@
                 if (a.href.endsWith('#')) {
                     a.href = '#' + new URL(a.href).pathname;
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
+                    if (updatedLinks.includes(a.href)) {
+                        return;
+                    }
                     const params: any = {};
                     const match = a.innerText.match(/#(.+)$/);
                     if (match) {
@@ -233,7 +236,8 @@
                         }).join('\n');
                         a.parentElement!.outerHTML = this.renderMD(data, true);
                         this.updateDD();
-                        this.updateLinkPath();
+                        updatedLinks.push(a.href);
+                        this.updateLinkPath(updatedLinks);
                         this.updateImagePath();
                     });
                 } else if (a.innerText === '*') {
