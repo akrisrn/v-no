@@ -123,6 +123,7 @@
                     text-decoration underline
 
         .date
+            font-family SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace
             float right
             color darkgray
 </style>

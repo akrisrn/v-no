@@ -180,7 +180,7 @@
                     const date = document.createElement('div');
                     date.classList.add('date');
                     date.innerText = getDateString(path);
-                    li.insertBefore(date, link!.nextSibling);
+                    li.insertBefore(date, link);
                     item.time = getTime(path);
                 }
                 lis.push(item);
@@ -372,6 +372,9 @@
 
             li
                 list-style none
+                overflow hidden
+                text-overflow ellipsis
+                white-space nowrap
 
                 &:before
                     content '»'
@@ -381,10 +384,11 @@
                 blockquote
                     border-left none
                     margin-bottom 0
+                    white-space normal
 
-                    &:before
-                        content '#'
-
-                    p
-                        display inline
+        .date
+            float none
+            display inline
+            font-size 14px
+            margin-right 8px
 </style>
