@@ -376,4 +376,15 @@
                     content '»'
                     padding-right 8px
                     font-family sans-serif
+
+                blockquote
+                    display inline-block
+                    border-left none
+                    margin-bottom 0
+
+                    &:before
+                        content '#'
+
+                    p
+                        display inline
 </style>
