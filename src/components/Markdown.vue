@@ -11,10 +11,6 @@
 
     @Component
     export default class Markdown extends Vue {
-        public static getErrorText(message: string) {
-            return `<span class="error">${message}</span>`;
-        }
-
         public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
             return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
         }
@@ -83,7 +79,7 @@
                             // tslint:disable-next-line:no-eval
                             result = eval(m[1]);
                         } catch (e) {
-                            result = Markdown.getErrorText(`${e.name}: ${e.message}`);
+                            result = `${e.name}: ${e.message}`;
                         }
                         line = line.replace(m[0], result);
                     });
@@ -226,7 +222,7 @@
                                     } else if (defaultValue !== undefined) {
                                         result = defaultValue;
                                     } else {
-                                        result = Markdown.getErrorText(param);
+                                        result = param;
                                     }
                                     line = line.replace(m[0], result);
                                 });
@@ -358,10 +354,6 @@
 
             .footnote-backref
                 font-family serif
-
-        .error
-            color red
-            border 1px solid
 
     .index
         ul:first-of-type
