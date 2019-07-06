@@ -135,7 +135,7 @@
                 uls[1].style.marginBottom = '0';
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
-                a.setAttribute('h', new URL(a.href).pathname.substr(1));
+                a.setAttribute('h', a.getAttribute('href')!);
                 a.removeAttribute('href');
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -175,7 +175,7 @@
                     time: 0,
                 };
                 const link = li.querySelector('a');
-                const path = link ? link.href : '';
+                const path = link ? link.getAttribute('href') : '';
                 if (path) {
                     const date = document.createElement('div');
                     date.classList.add('date');
@@ -198,10 +198,11 @@
             // 3. text 为 *：将链接引入为 JavaScript 文件引用
             // 4. text 为 $：将链接引入为 CSS 文件引用
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
-                if (a.href.endsWith('#')) {
-                    a.href = '#' + new URL(a.href).pathname;
+                const href = a.getAttribute('href')!;
+                if (href.endsWith('#')) {
+                    a.href = '#/' + href.substr(0, href.length - 1);
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
-                    if (updatedLinks.includes(a.href)) {
+                    if (updatedLinks.includes(href)) {
                         return;
                     }
                     const params: any = {};
@@ -217,7 +218,7 @@
                             params[i + 1] = param;
                         });
                     }
-                    axios.get(a.href).then((response) => {
+                    axios.get(href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
                             const paramMatches = line.match(Markdown.getWrapRegExp('{{', '}}', 'g'));
                             if (paramMatches) {
@@ -242,19 +243,19 @@
                         }).join('\n');
                         a.parentElement!.outerHTML = this.renderMD(data, true);
                         this.updateDD();
-                        updatedLinks.push(a.href);
+                        updatedLinks.push(href);
                         this.updateLinkPath(updatedLinks);
                         this.updateImagePath();
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
-                    script.src = a.href;
+                    script.src = href;
                     document.head.appendChild(script);
                     a.parentElement!.remove();
                 } else if (a.innerText === '$') {
                     const link = document.createElement('link');
                     link.rel = 'stylesheet';
-                    link.href = a.href;
+                    link.href = href;
                     document.head.appendChild(link);
                     a.parentElement!.remove();
                 }
