@@ -385,6 +385,7 @@
                     border-left none
                     margin-bottom 0
                     white-space normal
+                    font-size 14px
 
         .date
             float none
