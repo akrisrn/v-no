@@ -7,7 +7,7 @@
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
     import axios from 'axios';
-    import {getDateString} from '@/utils';
+    import {getDateString, getTime} from '@/utils';
 
     @Component
     export default class Markdown extends Vue {
@@ -168,7 +168,12 @@
         }
 
         public updateIndexList() {
-            document.querySelectorAll('li').forEach((li) => {
+            const lis: any[] = [];
+            document.querySelectorAll('ul:first-of-type>li').forEach((li) => {
+                const item = {
+                    node: li,
+                    time: 0,
+                };
                 const link = li.querySelector('a');
                 const path = link ? link.href : '';
                 if (path) {
@@ -176,8 +181,13 @@
                     date.classList.add('date');
                     date.innerText = getDateString(path);
                     li.append(date);
+                    item.time = getTime(path);
                 }
+                lis.push(item);
             });
+            document.querySelector('ul')!.innerHTML = lis.sort((a, b) => b.time - a.time).map((item) => {
+                return item.node.outerHTML;
+            }).join('');
         }
 
         public updateLinkPath(updatedLinks: string[] = []) {
