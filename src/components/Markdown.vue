@@ -180,7 +180,7 @@
                     const date = document.createElement('div');
                     date.classList.add('date');
                     date.innerText = getDateString(path);
-                    li.append(date);
+                    li.insertBefore(date, link!.nextSibling);
                     item.time = getTime(path);
                 }
                 lis.push(item);
@@ -378,7 +378,6 @@
                     font-family sans-serif
 
                 blockquote
-                    display inline-block
                     border-left none
                     margin-bottom 0
 
