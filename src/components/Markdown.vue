@@ -384,12 +384,11 @@
                 blockquote
                     border-left none
                     margin-bottom 0
+                    padding-left 16px
+                    padding-right 0
                     white-space normal
                     font-size 14px
 
-        .date
-            float none
-            display inline
-            font-size 14px
-            margin-right 8px
+                .date
+                    margin-left 8px
 </style>
