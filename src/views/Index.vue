@@ -14,7 +14,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
     import resource from '@/resource';
-    import {error2markdown, getDate} from '@/utils';
+    import {error2markdown, getDateString} from '@/utils';
     import Markdown from '@/components/Markdown.vue';
 
     // noinspection JSUnusedGlobalSymbols
@@ -48,7 +48,7 @@
         }
 
         public get date() {
-            return getDate(this.$route.params.pathMatch);
+            return getDateString(this.$route.params.pathMatch);
         }
 
         public returnHome() {

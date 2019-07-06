@@ -7,7 +7,7 @@
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
     import axios from 'axios';
-    import {getDate} from '@/utils';
+    import {getDateString} from '@/utils';
 
     @Component
     export default class Markdown extends Vue {
@@ -174,7 +174,7 @@
                 if (path) {
                     const date = document.createElement('div');
                     date.classList.add('date');
-                    date.innerText = getDate(path);
+                    date.innerText = getDateString(path);
                     li.append(date);
                 }
             });
