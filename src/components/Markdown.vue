@@ -200,7 +200,7 @@
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 const href = a.getAttribute('href')!;
                 if (href.endsWith('#')) {
-                    a.href = '#/' + href.substr(0, href.length - 1);
+                    a.href = '#' + new URL(a.href).pathname;
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
                     if (updatedLinks.includes(href)) {
                         return;
