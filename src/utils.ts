@@ -7,8 +7,14 @@ export function error2markdown(error: AxiosError) {
 
 export function getDate(path: string) {
     if (path) {
-        const match = path.split('/').reverse()[0].match(/^\d{4}-\d{2}-\d{2}/);
-        return match ? new Date(match[0]) : null;
+        let match = path.split('/').reverse()[0].match(/^(\d{4}-\d{2}-\d{2})-/);
+        if (!match) {
+            match = path.match(/\/(\d{4}\/\d{2}\/\d{2})\//);
+            if (!match) {
+                return null;
+            }
+        }
+        return new Date(match[1]);
     } else {
         return null;
     }
