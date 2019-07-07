@@ -104,7 +104,7 @@
                     tocHtml += this.markdownIt.render(toc.join('\n'));
                 }
                 tocHtml += '</div>';
-                tocHtml = tocHtml.replace('<ul>', '<ul class="toc">');
+                tocHtml = tocHtml.replace(/<ul>/g, '<ul class="toc">');
                 data = data.replace(/\[toc]/i, tocHtml);
             }
             return this.markdownIt.render(data);
