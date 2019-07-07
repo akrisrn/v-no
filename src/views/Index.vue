@@ -3,7 +3,7 @@
         <main v-if="show">
             <!--suppress JSUnresolvedVariable -->
             <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Markdown>
-            <footer class="markdown-body" v-if="!isIndex">
+            <footer class="markdown-body" v-if="!isIndex || isCategory">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <div v-if="!isError" class="date">{{ date }}</div>
             </footer>

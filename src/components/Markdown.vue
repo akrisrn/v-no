@@ -400,7 +400,7 @@
                 margin-bottom -8px
 
             .footnote-backref
-                font-family serif
+                font-family sans-serif
 
     .index
         ul:not(.toc)
@@ -430,10 +430,8 @@
                     background none
                     padding 0
 
-                    &:first-of-type
-                        margin-left 8px
-
                     &:before
+                        font-family sans-serif
                         content '#'
                         margin-right 2px
 
