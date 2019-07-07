@@ -301,7 +301,7 @@
                             tagDict[tag].push(`- [${m[1]}](${m[2]})`);
                         });
                     });
-                    this.markdownData += '\n' + Object.keys(tagDict).map((key) => {
+                    this.markdownData += '\n' + Object.keys(tagDict).sort().map((key) => {
                         return `###### ${key}\n\n${tagDict[key].join('\n')}`;
                     }).join('\n\n');
                     setTimeout(() => {
