@@ -17,6 +17,7 @@
 
         @PropSync('data') public markdownData!: string;
         @Prop() public isIndex!: boolean;
+        @Prop() public isCategory!: boolean;
 
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
@@ -48,6 +49,9 @@
                 this.updateImagePath();
                 if (this.isIndex) {
                     this.updateIndexList();
+                }
+                if (this.isCategory) {
+                    this.updateCategoryList();
                 }
             }, 0);
         }
@@ -277,6 +281,35 @@
                 ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((item) => {
                     return item.node.outerHTML;
                 }).join('');
+            });
+        }
+
+        public updateCategoryList() {
+            axios.get(process.env.VUE_APP_INDEX_FILE).then((response) => {
+                const matches = (response.data as string).match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
+                if (matches) {
+                    const tagDict: any = {};
+                    matches.forEach((match) => {
+                        const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
+                        const tags = m[3].split(/`\s+`/).map((seg) => {
+                            return seg.replace(/`/g, '');
+                        });
+                        tags.forEach((tag) => {
+                            if (tagDict[tag] === undefined) {
+                                tagDict[tag] = [];
+                            }
+                            tagDict[tag].push(`- [${m[1]}](${m[2]})`);
+                        });
+                    });
+                    this.markdownData += '\n' + Object.keys(tagDict).map((key) => {
+                        return `###### ${key}\n\n${tagDict[key].join('\n')}`;
+                    }).join('\n\n');
+                    setTimeout(() => {
+                        this.updateLinkPath();
+                        this.updateIndexList();
+                        this.updateToc();
+                    }, 0);
+                }
             });
         }
 
