@@ -168,31 +168,6 @@
             });
         }
 
-        public updateIndexList() {
-            document.querySelectorAll('ul').forEach((ul) => {
-                const lis: any[] = [];
-                ul.querySelectorAll('li').forEach((li) => {
-                    const item = {
-                        node: li,
-                        time: 0,
-                    };
-                    const link = li.querySelector('a');
-                    const path = link ? link.getAttribute('href') : '';
-                    if (path) {
-                        const date = document.createElement('div');
-                        date.classList.add('date');
-                        date.innerText = getDateString(path);
-                        li.insertBefore(date, link);
-                        item.time = getTime(path);
-                    }
-                    lis.push(item);
-                });
-                ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((item) => {
-                    return item.node.outerHTML;
-                }).join('');
-            });
-        }
-
         public updateLinkPath(updatedLinks: string[] = []) {
             // 匹配模式：
             // 1. 链接地址以 # 结尾：将链接转换成站内路由形式
@@ -277,6 +252,31 @@
                     }
                     img.src = img.src.replace(/#(.+)$/, '');
                 }
+            });
+        }
+
+        public updateIndexList() {
+            document.querySelectorAll('ul').forEach((ul) => {
+                const lis: any[] = [];
+                ul.querySelectorAll('li').forEach((li) => {
+                    const item = {
+                        node: li,
+                        time: 0,
+                    };
+                    const link = li.querySelector('a');
+                    const path = link ? link.getAttribute('href') : '';
+                    if (path) {
+                        const date = document.createElement('div');
+                        date.classList.add('date');
+                        date.innerText = getDateString(path);
+                        li.insertBefore(date, link);
+                        item.time = getTime(path);
+                    }
+                    lis.push(item);
+                });
+                ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((item) => {
+                    return item.node.outerHTML;
+                }).join('');
             });
         }
 
