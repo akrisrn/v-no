@@ -1,7 +1,8 @@
 <template>
     <transition name="slide-fade">
         <main v-if="show">
-            <Markdown :data="data" :isIndex="isIndex"></Markdown>
+            <!--suppress JSUnresolvedVariable -->
+            <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Markdown>
             <footer class="markdown-body" v-if="!isIndex">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <div v-if="!isError" class="date">{{ date }}</div>

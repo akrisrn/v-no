@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
     import axios from 'axios';
@@ -15,7 +15,7 @@
             return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
         }
 
-        @Prop() public data!: string;
+        @PropSync('data') public markdownData!: string;
         @Prop() public isIndex!: boolean;
 
         // noinspection JSUnusedGlobalSymbols
@@ -281,14 +281,14 @@
         }
 
         public setTitle() {
-            const titleMatch = this.data.match(Markdown.getWrapRegExp('^#', '\n'));
+            const titleMatch = this.markdownData.match(Markdown.getWrapRegExp('^#', '\n'));
             document.title = titleMatch ? titleMatch[1] : this.$route.params.pathMatch.substr(1);
         }
 
         // noinspection JSUnusedGlobalSymbols
         public get markdown() {
             this.setTitle();
-            return this.renderMD(this.data);
+            return this.renderMD(this.markdownData);
         }
     }
 </script>
