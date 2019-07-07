@@ -45,8 +45,7 @@
 
         public get isIndex() {
             const path = this.$route.params.pathMatch.substr(1);
-            return path === process.env.VUE_APP_INDEX_FILE || path.startsWith(process.env.VUE_APP_CATEGORY_DIR);
-
+            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(path);
         }
 
         public get date() {
