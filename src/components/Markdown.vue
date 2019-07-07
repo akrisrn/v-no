@@ -100,6 +100,7 @@
                     tocHtml += this.markdownIt.render(toc.join('\n'));
                 }
                 tocHtml += '</div>';
+                tocHtml = tocHtml.replace('<ul>', '<ul class="toc">');
                 data = data.replace(/\[toc]/i, tocHtml);
             }
             return this.markdownIt.render(data);
@@ -369,7 +370,7 @@
                 font-family serif
 
     .index
-        ul
+        ul:not(.toc)
             padding-left 0
 
             li
