@@ -392,6 +392,19 @@
                     white-space normal
                     font-size 14px
 
+                code
+                    color dimgray
+                    background none
+                    padding 0
+
+                    &:first-of-type
+                        margin-left 8px
+
+                    &:before
+                        content '#'
+                        margin-right 2px
+
+
                 .date
                     margin-left 8px
 </style>
