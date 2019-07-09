@@ -142,10 +142,15 @@
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
                 a.setAttribute('h', a.getAttribute('href')!);
                 a.removeAttribute('href');
+                let innerText = a.innerText;
+                const nextSibling = a.nextElementSibling as HTMLElement;
+                if (nextSibling && nextSibling.classList.value === 'count') {
+                    innerText += nextSibling.innerText;
+                }
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
                     for (const h of document.querySelectorAll<HTMLHeadingElement>(a.getAttribute('h')!)) {
-                        if (h.innerText === a.innerText) {
+                        if (h.innerText === innerText) {
                             window.scrollTo(0, h.offsetTop);
                             break;
                         }
