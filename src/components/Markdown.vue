@@ -304,12 +304,20 @@
                         });
                     });
                     this.markdownData += '\n' + Object.keys(tagDict).sort().map((key) => {
-                        return `###### ${key}\n\n${tagDict[key].join('\n')}`;
+                        const count = `<span class="count">（${tagDict[key].length}）</span>`;
+                        return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
                     }).join('\n\n');
                     setTimeout(() => {
                         this.updateLinkPath();
                         this.updateIndexList();
                         this.updateToc();
+                        document.querySelectorAll('#toc li > a').forEach((a) => {
+                            const count = a.querySelector('span.count');
+                            if (count) {
+                                a.removeChild(count);
+                                a.parentElement!.append(count);
+                            }
+                        });
                     }, 0);
                 }
             });
