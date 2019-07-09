@@ -140,7 +140,8 @@
                 uls[1].style.marginBottom = '0';
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
-                a.setAttribute('h', a.getAttribute('href')!);
+                const href = a.getAttribute('href')!;
+                a.setAttribute('h', href);
                 a.removeAttribute('href');
                 let innerText = a.innerText;
                 const nextSibling = a.nextElementSibling as HTMLElement;
@@ -149,7 +150,7 @@
                 }
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    for (const h of document.querySelectorAll<HTMLHeadingElement>(a.getAttribute('h')!)) {
+                    for (const h of document.querySelectorAll<HTMLHeadingElement>(href)) {
                         if (h.innerText === innerText) {
                             window.scrollTo(0, h.offsetTop);
                             break;
