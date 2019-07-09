@@ -270,7 +270,7 @@
                     const link = li.querySelector('a');
                     const path = link ? link.getAttribute('href') : '';
                     if (path) {
-                        const date = document.createElement('div');
+                        const date = document.createElement('span');
                         date.classList.add('date');
                         date.innerText = getDateString(path);
                         li.insertBefore(date, link);
