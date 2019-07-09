@@ -1,5 +1,5 @@
 <template>
-    <article class="markdown-body" :class="{index: isIndex}" v-html="markdown"></article>
+    <article :class="{index: isIndex}" class="markdown-body" v-html="markdown"></article>
 </template>
 
 <script lang="ts">
