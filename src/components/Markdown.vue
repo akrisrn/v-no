@@ -268,13 +268,15 @@
                         time: 0,
                     };
                     const link = li.querySelector('a');
-                    const path = link ? link.getAttribute('href') : '';
-                    if (path) {
-                        const date = document.createElement('span');
-                        date.classList.add('date');
-                        date.innerText = getDateString(path);
-                        li.insertBefore(date, link);
-                        item.time = getTime(path);
+                    if (link) {
+                        const dateString = getDateString(link.href);
+                        if (dateString) {
+                            const date = document.createElement('span');
+                            date.classList.add('date');
+                            date.innerText = dateString;
+                            li.insertBefore(date, link);
+                            item.time = getTime(link.href);
+                        }
                     }
                     lis.push(item);
                 });
