@@ -286,14 +286,17 @@
                     }
                     lis.push(item);
                 });
-                const maxLength = 10;
+                let maxSize = process.env.VUE_APP_MAX_SIZE_OF_LIST;
+                if (this.isCategory) {
+                    maxSize = 5;
+                }
                 ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li, i) => {
-                    if (i >= maxLength) {
+                    if (i >= maxSize) {
                         li.node.classList.add('hidden');
                     }
                     return li.node.outerHTML;
                 }).join('');
-                if (lis.length > maxLength) {
+                if (lis.length > maxSize) {
                     const more = document.createElement('div');
                     more.classList.add('more');
                     const moreSpan = document.createElement('span');
