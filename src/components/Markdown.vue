@@ -286,9 +286,27 @@
                     }
                     lis.push(item);
                 });
-                ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((item) => {
-                    return item.node.outerHTML;
+                const maxLength = 10;
+                ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li, i) => {
+                    if (i >= maxLength) {
+                        li.node.classList.add('hidden');
+                    }
+                    return li.node.outerHTML;
                 }).join('');
+                if (lis.length > maxLength) {
+                    const more = document.createElement('div');
+                    more.classList.add('more');
+                    const moreSpan = document.createElement('span');
+                    moreSpan.innerText = 'More';
+                    moreSpan.addEventListener('click', () => {
+                        ul.querySelectorAll('li.hidden').forEach((li) => {
+                            li.classList.remove('hidden');
+                        });
+                        more.classList.add('hidden');
+                    });
+                    more.append(moreSpan);
+                    ul.append(more);
+                }
             });
         }
 
@@ -453,4 +471,30 @@
 
                 .date
                     margin-left 8px
+
+            .hidden
+                display none
+
+            .more
+                font-size 14px
+                color darkgray
+                border-top 1px dashed
+                margin-top 16px
+                height 8px
+
+                span
+                    background #f1f1f1
+                    transition color 0.5s
+                    position relative
+                    top -16px
+                    padding-right 8px
+                    cursor pointer
+
+                    &:hover
+                        color dimgray
+
+                    &:before
+                        font-family sans-serif
+                        content '#'
+                        margin-right 2px
 </style>
