@@ -451,7 +451,6 @@
                         content '#'
                         margin-right 2px
 
-
                 .date
                     margin-left 8px
 </style>
