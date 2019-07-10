@@ -266,7 +266,7 @@
         }
 
         public updateIndexList() {
-            document.querySelectorAll('ul').forEach((ul) => {
+            document.querySelectorAll('ul:not(.toc)').forEach((ul) => {
                 const lis: any[] = [];
                 ul.querySelectorAll('li').forEach((li) => {
                     const item = {
