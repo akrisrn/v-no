@@ -14,29 +14,29 @@
     "github-markdown-css": "^3.0.1",
     "markdown-it": "^8.4.2",
     "markdown-it-deflist": "^2.0.3",
-    "markdown-it-footnote": "^3.0.1",
+    "markdown-it-footnote": "^3.0.2",
     "markdown-it-task-lists": "^2.1.1",
     "prismjs": "^1.16.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.2.1",
-    "vue-router": "^3.0.3"
+    "vue-router": "^3.0.7"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
     "@types/markdown-it": "0.0.7",
     "@types/mocha": "^5.2.7",
     "@types/prismjs": "^1.16.0",
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-plugin-typescript": "^3.8.1",
-    "@vue/cli-plugin-unit-mocha": "^3.8.0",
-    "@vue/cli-service": "^3.8.4",
+    "@vue/cli-plugin-babel": "^3.9.2",
+    "@vue/cli-plugin-typescript": "^3.9.0",
+    "@vue/cli-plugin-unit-mocha": "^3.9.0",
+    "@vue/cli-service": "^3.9.2",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-plugin-prismjs": "^1.0.2",
     "chai": "^4.1.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "typescript": "^3.5.2",
+    "typescript": "^3.5.3",
     "vue-template-compiler": "^2.5.21"
   }
 }
