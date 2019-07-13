@@ -82,10 +82,10 @@
         }
 
         public get path() {
-            if (this.$route.params.pathMatch === '/') {
+            if (this.$route.path === '/') {
                 return '/' + process.env.VUE_APP_INDEX_FILE;
             }
-            return this.$route.params.pathMatch;
+            return this.$route.path;
         }
 
         public get date() {
