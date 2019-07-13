@@ -2,7 +2,8 @@
     <transition name="slide-fade">
         <main v-if="show">
             <!--suppress JSUnresolvedVariable -->
-            <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Markdown>
+            <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
+                      @update:data="data = $event"></Markdown>
             <footer class="markdown-body" v-if="!isIndex || isCategory">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
@@ -29,7 +30,7 @@
         @Watch('$route')
         public onRouteChanged(to: any, from: any) {
             this.show = false;
-            this.updateData(to.path);
+            this.updateData();
         }
 
         @Watch('show')
@@ -41,21 +42,28 @@
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
-            this.updateData(this.$route.params.pathMatch);
+            this.updateData();
         }
 
         public get isIndex() {
-            const path = this.$route.params.pathMatch.substr(1);
+            const path = this.path.substr(1);
             return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(path);
         }
 
         public get isCategory() {
-            const path = this.$route.params.pathMatch.substr(1);
+            const path = this.path.substr(1);
             return path === process.env.VUE_APP_CATEGORY_FILE;
         }
 
         public get date() {
-            return getDateString(this.$route.params.pathMatch);
+            return getDateString(this.path);
+        }
+
+        public get path() {
+            if (this.$route.params.pathMatch === '/') {
+                return '/' + process.env.VUE_APP_INDEX_FILE;
+            }
+            return this.$route.params.pathMatch;
         }
 
         public returnHome() {
@@ -77,9 +85,9 @@
             this.data = data;
         }
 
-        public updateData(path: string) {
-            if (this.isAllowedRender(path)) {
-                axios.get(path).then((response) => {
+        public updateData() {
+            if (this.isAllowedRender(this.path)) {
+                axios.get(this.path).then((response) => {
                     this.setData(response.data);
                 }).catch((error) => {
                     this.isError = true;

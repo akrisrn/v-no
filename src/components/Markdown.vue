@@ -18,6 +18,7 @@
         @PropSync('data') public markdownData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
+        @Prop() public path!: string;
 
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
@@ -356,7 +357,7 @@
 
         public setTitle() {
             const titleMatch = this.markdownData.match(Markdown.getWrapRegExp('^#', '\n'));
-            document.title = titleMatch ? titleMatch[1] : this.$route.params.pathMatch.substr(1);
+            document.title = titleMatch ? titleMatch[1] : this.path.substr(1);
         }
 
         // noinspection JSUnusedGlobalSymbols
