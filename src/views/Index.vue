@@ -19,6 +19,10 @@
     import {error2markdown, getDateString} from '@/utils';
     import Markdown from '@/components/Markdown.vue';
 
+    Component.registerHooks([
+        'beforeRouteUpdate',
+    ]);
+
     // noinspection JSUnusedGlobalSymbols
     @Component({components: {Markdown}})
     export default class Index extends Vue {
@@ -26,9 +30,8 @@
         public show = false;
         public isError = false;
 
-        // noinspection JSUnusedLocalSymbols
-        @Watch('$route')
-        public onRouteChanged(to: any, from: any) {
+        public beforeRouteUpdate(to: any, from: any, next: any) {
+            next();
             this.show = false;
             this.updateData();
         }
