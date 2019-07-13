@@ -195,8 +195,11 @@
             // 4. text 为 $：将链接引入为 CSS 文件引用
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 const href = a.getAttribute('href')!;
+                const pathname = new URL(a.href).pathname;
                 if (href.endsWith('#')) {
-                    a.href = '#' + new URL(a.href).pathname;
+                    a.href = '/#' + pathname;
+                } else if (href.endsWith('#/')) {
+                    a.href = pathname.replace(/\.md$/, '/');
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
                     if (updatedLinks.includes(href)) {
                         return;

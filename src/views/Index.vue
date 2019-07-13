@@ -72,10 +72,20 @@
         }
 
         public get path() {
-            if (this.$route.path === '/') {
+            let path = this.$route.path;
+            if (path === '/') {
+                if (this.$route.hash.startsWith('#/')) {
+                    path = this.$route.hash.substr(1);
+                    if (path !== '/') {
+                        return path;
+                    }
+                }
                 return '/' + process.env.VUE_APP_INDEX_FILE;
             }
-            return this.$route.path;
+            if (path.endsWith('/')) {
+                return path.replace(/\/$/, '.md');
+            }
+            return path;
         }
 
         public get date() {
