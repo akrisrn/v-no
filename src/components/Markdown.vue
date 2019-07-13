@@ -145,9 +145,12 @@
                 uls[1].style.marginBottom = '0';
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
-                const href = a.getAttribute('href')!;
-                a.setAttribute('h', href);
-                a.removeAttribute('href');
+                let href = a.getAttribute('h')!;
+                if (href === null) {
+                    href = a.getAttribute('href')!;
+                    a.setAttribute('h', href);
+                    a.removeAttribute('href');
+                }
                 let innerText = a.innerText;
                 const nextSibling = a.nextElementSibling as HTMLElement;
                 if (nextSibling && nextSibling.classList.value === 'count') {
@@ -278,15 +281,18 @@
                         node: li,
                         time: 0,
                     };
-                    const link = li.querySelector('a');
-                    if (link) {
-                        const dateString = getDateString(link.href);
-                        if (dateString) {
-                            const date = document.createElement('span');
-                            date.classList.add('date');
-                            date.innerText = dateString;
-                            li.insertBefore(date, link);
-                            item.time = getTime(link.href);
+                    let date = li.querySelector<HTMLSpanElement>('span.date');
+                    if (!date) {
+                        const link = li.querySelector('a');
+                        if (link) {
+                            const dateString = getDateString(link.href);
+                            if (dateString) {
+                                date = document.createElement('span');
+                                date.classList.add('date');
+                                date.innerText = dateString;
+                                li.insertBefore(date, link);
+                                item.time = getTime(link.href);
+                            }
                         }
                     }
                     lis.push(item);
