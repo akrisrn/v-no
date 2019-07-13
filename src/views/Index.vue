@@ -52,23 +52,13 @@
             this.$router.push('/');
         }
 
-        // noinspection JSMethodCanBeStatic
-        public isAllowedRender(path: string) {
-            for (const allowedSuffix of process.env.VUE_APP_ALLOWED_SUFFIXES.split(',')) {
-                if (allowedSuffix && path.endsWith(allowedSuffix)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public setData(data: string) {
             this.show = true;
             this.data = data;
         }
 
         public updateData() {
-            if (this.isAllowedRender(this.path)) {
+            if (this.path.endsWith('.md')) {
                 axios.get(this.path).then((response) => {
                     this.setData(response.data);
                 }).catch((error) => {
