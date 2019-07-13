@@ -1,5 +1,4 @@
 export default {
-    notAllowedRender: '# Error\nThis file isn\'t allowed to render here, ' +
-        'please remove "#/" in the path in order to get the raw content.',
+    notAllowedRender: '# Error\nThis file isn\'t allowed to render here.',
     pageError: 'There is something wrong with this page.',
 };
