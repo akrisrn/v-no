@@ -45,27 +45,6 @@
             this.updateData();
         }
 
-        public get isIndex() {
-            const path = this.path.substr(1);
-            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(path);
-        }
-
-        public get isCategory() {
-            const path = this.path.substr(1);
-            return path === process.env.VUE_APP_CATEGORY_FILE;
-        }
-
-        public get date() {
-            return getDateString(this.path);
-        }
-
-        public get path() {
-            if (this.$route.params.pathMatch === '/') {
-                return '/' + process.env.VUE_APP_INDEX_FILE;
-            }
-            return this.$route.params.pathMatch;
-        }
-
         public returnHome() {
             this.$router.push('/');
         }
@@ -97,6 +76,27 @@
                 this.isError = true;
                 this.setData(resource.notAllowedRender);
             }
+        }
+
+        public get path() {
+            if (this.$route.params.pathMatch === '/') {
+                return '/' + process.env.VUE_APP_INDEX_FILE;
+            }
+            return this.$route.params.pathMatch;
+        }
+
+        public get date() {
+            return getDateString(this.path);
+        }
+
+        public get isIndex() {
+            const path = this.path.substr(1);
+            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(path);
+        }
+
+        public get isCategory() {
+            const path = this.path.substr(1);
+            return path === process.env.VUE_APP_CATEGORY_FILE;
         }
     }
 </script>
