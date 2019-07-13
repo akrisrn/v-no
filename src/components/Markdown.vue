@@ -278,7 +278,7 @@
                         time: 0,
                     };
                     const link = li.querySelector('a');
-                    if (link) {
+                    if (link && link.href.endsWith('.md')) {
                         const dateString = getDateString(link.href);
                         if (dateString) {
                             const date = document.createElement('span');
