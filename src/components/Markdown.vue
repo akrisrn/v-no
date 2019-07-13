@@ -1,5 +1,5 @@
 <template>
-    <article :class="{index: isIndex}" class="markdown-body" v-html="markdown"></article>
+    <article :class="classObject" v-html="markdown"></article>
 </template>
 
 <script lang="ts">
@@ -32,6 +32,10 @@
             },
         }).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
             .use(require('markdown-it-task-lists'));
+
+        public classObject = [{
+            index: this.isIndex,
+        }, 'markdown-body'];
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
