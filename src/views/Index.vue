@@ -25,8 +25,8 @@
     // noinspection JSUnusedGlobalSymbols
     @Component({components: {Article}})
     export default class Index extends Vue {
-        public data = '';
         public show = false;
+        public data = '';
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
