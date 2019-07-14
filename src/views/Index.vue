@@ -49,7 +49,11 @@
         }
 
         public returnHome() {
-            this.$router.push('/');
+            let home = '/';
+            if (this.isIndexPath) {
+                home += process.env.VUE_APP_INDEX_PATH;
+            }
+            this.$router.push(home);
         }
 
         public setData(data: string) {
@@ -73,6 +77,9 @@
 
         public get path() {
             let path = this.$route.path;
+            if (this.isIndexPath) {
+                path = '/';
+            }
             if (path === '/') {
                 if (this.$route.hash.startsWith('#/')) {
                     path = this.$route.hash.substr(1);
@@ -100,6 +107,10 @@
         public get isCategory() {
             const path = this.path.substr(1);
             return path === process.env.VUE_APP_CATEGORY_FILE;
+        }
+
+        public get isIndexPath() {
+            return this.$route.path === '/' + process.env.VUE_APP_INDEX_PATH;
         }
     }
 </script>
