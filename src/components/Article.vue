@@ -416,6 +416,7 @@
         background-color white
         background-size cover
         background-attachment fixed
+        background-position 0
         box-shadow img-box-shadow
 
     .markdown-body
