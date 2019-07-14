@@ -95,8 +95,8 @@
             return path;
         }
 
-        public get date() {
-            return getDateString(this.path);
+        public get isIndexPath() {
+            return this.$route.path === '/' + process.env.VUE_APP_INDEX_PATH;
         }
 
         public get isIndex() {
@@ -109,8 +109,8 @@
             return path === process.env.VUE_APP_CATEGORY_FILE;
         }
 
-        public get isIndexPath() {
-            return this.$route.path === '/' + process.env.VUE_APP_INDEX_PATH;
+        public get date() {
+            return getDateString(this.path);
         }
     }
 </script>
