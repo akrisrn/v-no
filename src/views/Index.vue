@@ -73,8 +73,8 @@
                 this.setData(error2markdown({
                     response: {
                         status: 404,
-                        statusText: 'Not Found'
-                    }
+                        statusText: 'Not Found',
+                    },
                 } as any));
             }
         }
