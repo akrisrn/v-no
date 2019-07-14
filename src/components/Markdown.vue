@@ -160,7 +160,7 @@
                     e.preventDefault();
                     for (const h of document.querySelectorAll<HTMLHeadingElement>(href)) {
                         if (h.innerText === innerText) {
-                            window.scrollTo(0, h.offsetTop);
+                            window.scrollTo(0, h.offsetTop - 10);
                             break;
                         }
                     }
@@ -174,12 +174,12 @@
                 if (fnref) {
                     fnref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        window.scrollTo(0, backref.offsetTop);
+                        window.scrollTo(0, backref.offsetTop - 10);
                     });
                     fnref.removeAttribute('href');
                     backref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        window.scrollTo(0, fnref.offsetTop);
+                        window.scrollTo(0, fnref.offsetTop - 10);
                     });
                     backref.removeAttribute('href');
                 }
