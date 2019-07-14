@@ -188,11 +188,12 @@
 
         public updateLinkPath(updatedLinks: string[] = []) {
             // 匹配模式：
-            // 1. 链接地址以 # 结尾：将链接转换成站内路由形式
-            // 2. text 为 +，或形如 +#a=1|b=2|3：将链接引入为片段模板，后者为传参写法
+            // 1. 链接地址以 # 结尾：将链接转换成 hash 路由形式
+            // 2. 链接地址以 #/ 结尾：将链接转换成 history 路由 / 预渲染形式
+            // 3. text 为 +，或形如 +#a=1|b=2|3：将链接引入为片段模板，后者为传参写法
             //      #a=1|b=2|3 会被转化成 {1: 1, 2: 2, 3: 3, a: 1, b: 2}
-            // 3. text 为 *：将链接引入为 JavaScript 文件引用
-            // 4. text 为 $：将链接引入为 CSS 文件引用
+            // 4. text 为 *：将链接引入为 JavaScript 文件引用
+            // 5. text 为 $：将链接引入为 CSS 文件引用
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 const href = a.getAttribute('href')!;
                 const pathname = new URL(a.href).pathname;
