@@ -47,6 +47,7 @@
                 this.updateToc();
                 this.updateFootnote();
                 this.updateImagePath();
+                this.updateHeaderIcon();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -198,6 +199,15 @@
                     img.src = new URL(img.src).pathname;
                 }
             });
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public updateHeaderIcon() {
+            const icon = document.querySelector<HTMLImageElement>('img.icon');
+            if (icon) {
+                const header = document.querySelector('header')!;
+                header.insertBefore(icon, header.childNodes[0]);
+            }
         }
 
         public updateLinkPath(updatedLinks: string[] = []) {
@@ -376,6 +386,10 @@
 <style>@import '~github-markdown-css/github-markdown.css';</style>
 
 <style lang="stylus">
+    header > img.icon
+        height 24px
+        margin-right 8px
+
     .markdown-body
         font-size 15px
         line-height 2
