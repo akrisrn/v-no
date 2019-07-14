@@ -77,7 +77,7 @@
 
         public get path() {
             let path = this.$route.path;
-            let hash = this.$route.hash;
+            const hash = this.$route.hash;
             if (this.isIndexPath) {
                 path = '/';
             }
