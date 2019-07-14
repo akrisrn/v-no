@@ -211,9 +211,12 @@
         public updateHeaderIcon() {
             const icon = document.querySelector<HTMLImageElement>('img.icon');
             if (icon) {
-                icon.parentElement!.remove();
+                const img = document.createElement('img');
+                img.id = 'icon';
+                img.src = icon.getAttribute('src')!;
                 const header = document.querySelector('header')!;
-                header.insertBefore(icon, header.childNodes[0]);
+                header.insertBefore(img, header.childNodes[0]);
+                icon.parentElement!.remove();
             }
         }
 
@@ -405,11 +408,11 @@
 <style>@import '~github-markdown-css/github-markdown.css';</style>
 
 <style lang="stylus">
-    header > img.icon
+    img-box-shadow = 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+
+    #icon
         height 40px
         margin-right 16px
-
-    img-box-shadow = 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
 
     #cover
         height 200px
