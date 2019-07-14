@@ -216,6 +216,7 @@
                 } else if (href.endsWith('.md#/')) {
                     a.href = pathname.replace(/\.md$/, '.html');
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
+                    a.classList.add('snippet');
                     if (updatedLinks.includes(href)) {
                         return;
                     }
@@ -260,6 +261,8 @@
                         this.updateImagePath();
                         updatedLinks.push(href);
                         this.updateLinkPath(updatedLinks);
+                    }).catch((error) => {
+                        a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
