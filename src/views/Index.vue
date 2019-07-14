@@ -77,12 +77,13 @@
 
         public get path() {
             let path = this.$route.path;
+            let hash = this.$route.hash;
             if (this.isIndexPath) {
                 path = '/';
             }
             if (path === '/') {
-                if (this.$route.hash.startsWith('#/')) {
-                    path = this.$route.hash.substr(1);
+                if (hash.startsWith('#/')) {
+                    path = hash.substr(1);
                     if (path !== '/') {
                         return path;
                     }
