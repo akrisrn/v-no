@@ -101,13 +101,11 @@
         }
 
         public get isIndex() {
-            const path = this.path.substr(1);
-            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(path);
+            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE].includes(this.path.substr(1));
         }
 
         public get isCategory() {
-            const path = this.path.substr(1);
-            return path === process.env.VUE_APP_CATEGORY_FILE;
+            return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
         }
 
         public get date() {
