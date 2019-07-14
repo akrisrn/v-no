@@ -205,6 +205,7 @@
         public updateHeaderIcon() {
             const icon = document.querySelector<HTMLImageElement>('img.icon');
             if (icon) {
+                icon.parentElement!.remove();
                 const header = document.querySelector('header')!;
                 header.insertBefore(icon, header.childNodes[0]);
             }
