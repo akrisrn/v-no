@@ -387,8 +387,8 @@
 
 <style lang="stylus">
     header > img.icon
-        height 24px
-        margin-right 8px
+        height 40px
+        margin-right 16px
 
     .markdown-body
         font-size 15px
