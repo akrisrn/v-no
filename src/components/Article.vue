@@ -48,6 +48,7 @@
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateHeaderIcon();
+                this.updateCover();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -208,6 +209,18 @@
                 icon.parentElement!.remove();
                 const header = document.querySelector('header')!;
                 header.insertBefore(icon, header.childNodes[0]);
+            }
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public updateCover() {
+            const cover = document.querySelector<HTMLImageElement>('img.cover');
+            if (cover) {
+                const div = document.createElement('div');
+                div.id = 'cover';
+                div.style.backgroundImage = `url(${cover.getAttribute('src')})`;
+                document.body.insertBefore(div, document.querySelector('main'));
+                cover.parentElement!.remove();
             }
         }
 
@@ -391,6 +404,15 @@
         height 40px
         margin-right 16px
 
+    img-box-shadow = 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+
+    #cover
+        height 200px
+        background-color white
+        background-size cover
+        background-attachment fixed
+        box-shadow img-box-shadow
+
     .markdown-body
         font-size 15px
         line-height 2
@@ -403,7 +425,7 @@
             border-bottom-color #e4e4e4
 
         img
-            box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+            box-shadow img-box-shadow
             background-color transparent
 
         mark
