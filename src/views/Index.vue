@@ -1,6 +1,6 @@
 <template>
     <transition name="slide-fade">
-        <main v-if="show">
+        <main v-if="show" :class="{error: isError}">
             <!--suppress JSUnresolvedVariable -->
             <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
                       @update:data="data = $event"></Markdown>
