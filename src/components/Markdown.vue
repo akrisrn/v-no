@@ -50,13 +50,12 @@
                 this.updateDD();
                 this.updateToc();
                 this.updateFootnote();
-                this.updateLinkPath();
                 this.updateImagePath();
-                if (this.isIndex) {
-                    this.updateIndexList();
-                }
+                this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
+                } else if (this.isIndex) {
+                    this.updateIndexList();
                 }
             }, 0);
         }
@@ -186,6 +185,21 @@
             });
         }
 
+        public updateImagePath() {
+            document.querySelectorAll('img').forEach((img) => {
+                const match = img.src.match(/#(.+)$/);
+                if (match) {
+                    const width = parseInt(match[1], 0);
+                    if (isNaN(width)) {
+                        img.setAttribute('style', match[1]);
+                    } else {
+                        img.width = width;
+                    }
+                    img.src = new URL(img.src).pathname;
+                }
+            });
+        }
+
         public updateLinkPath(updatedLinks: string[] = []) {
             // 匹配模式：
             // 1. 链接地址以 # 结尾：将链接转换成 hash 路由形式
@@ -243,9 +257,9 @@
                         }).join('\n');
                         a.parentElement!.outerHTML = this.renderMD(data, true);
                         this.updateDD();
+                        this.updateImagePath();
                         updatedLinks.push(href);
                         this.updateLinkPath(updatedLinks);
-                        this.updateImagePath();
                     });
                 } else if (a.innerText === '*') {
                     const script = document.createElement('script');
@@ -258,21 +272,6 @@
                     link.href = href;
                     document.head.appendChild(link);
                     a.parentElement!.remove();
-                }
-            });
-        }
-
-        public updateImagePath() {
-            document.querySelectorAll('img').forEach((img) => {
-                const match = img.src.match(/#(.+)$/);
-                if (match) {
-                    const width = parseInt(match[1], 0);
-                    if (isNaN(width)) {
-                        img.setAttribute('style', match[1]);
-                    } else {
-                        img.width = width;
-                    }
-                    img.src = img.src.replace(/#(.+)$/, '');
                 }
             });
         }
@@ -350,9 +349,9 @@
                         return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
                     }).join('\n\n');
                     setTimeout(() => {
+                        this.updateToc();
                         this.updateLinkPath();
                         this.updateIndexList();
-                        this.updateToc();
                         document.querySelectorAll('#toc li > a').forEach((a) => {
                             const count = a.querySelector('span.count');
                             if (count) {
