@@ -90,8 +90,8 @@
                 }
                 return '/' + process.env.VUE_APP_INDEX_FILE;
             }
-            if (path.endsWith('/')) {
-                return path.replace(/\/$/, '.md');
+            if (path.endsWith('.html')) {
+                return path.replace(/\.html$/, '.md');
             }
             return path;
         }

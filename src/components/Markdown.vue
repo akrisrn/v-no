@@ -214,7 +214,7 @@
                 if (href.endsWith('.md#')) {
                     a.href = '#' + pathname;
                 } else if (href.endsWith('.md#/')) {
-                    a.href = pathname.replace(/\.md$/, '/');
+                    a.href = pathname.replace(/\.md$/, '.html');
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
                     if (updatedLinks.includes(href)) {
                         return;
