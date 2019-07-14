@@ -7,14 +7,10 @@
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
     import axios from 'axios';
-    import {getDateString, getTime} from '@/utils';
+    import {getDateString, getTime, getWrapRegExp} from '@/utils';
 
     @Component
     export default class Article extends Vue {
-        public static getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
-            return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
-        }
-
         @PropSync('data') public markdownData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
@@ -65,7 +61,7 @@
             let firstHeader = '';
             data = data.split('\n').map((line) => {
                 if (!noToc) {
-                    const tocMatch = line.match(Article.getWrapRegExp('^(##+)', '$'));
+                    const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
                     if (tocMatch) {
                         if (!firstHeader) {
                             firstHeader = tocMatch[1];
@@ -78,10 +74,10 @@
                     }
                 }
                 // 将被 $ 包围的部分作为 JavaScript 表达式执行
-                const jsExpMatches = line.match(Article.getWrapRegExp('\\$', '\\$', 'g'));
+                const jsExpMatches = line.match(getWrapRegExp('\\$', '\\$', 'g'));
                 if (jsExpMatches) {
                     jsExpMatches.forEach((jsExpMatch) => {
-                        const m = jsExpMatch.match(Article.getWrapRegExp('\\$', '\\$'))!;
+                        const m = jsExpMatch.match(getWrapRegExp('\\$', '\\$'))!;
                         let result = '';
                         try {
                             // tslint:disable-next-line:no-eval
@@ -235,10 +231,10 @@
                     }
                     axios.get(href).then((response) => {
                         const data = (response.data as string).split('\n').map((line) => {
-                            const paramMatches = line.match(Article.getWrapRegExp('{{', '}}', 'g'));
+                            const paramMatches = line.match(getWrapRegExp('{{', '}}', 'g'));
                             if (paramMatches) {
                                 paramMatches.forEach((paramMatch) => {
-                                    const m = paramMatch.match(Article.getWrapRegExp('{{', '}}'))!;
+                                    const m = paramMatch.match(getWrapRegExp('{{', '}}'))!;
                                     let defaultValue;
                                     [m[1], defaultValue] = m[1].split('|');
                                     const param = params[m[1]];
@@ -368,7 +364,7 @@
         }
 
         public setTitle() {
-            const titleMatch = this.markdownData.match(Article.getWrapRegExp('^#', '\n'));
+            const titleMatch = this.markdownData.match(getWrapRegExp('^#', '\n'));
             document.title = titleMatch ? titleMatch[1] : this.path.substr(1);
         }
 

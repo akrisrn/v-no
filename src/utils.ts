@@ -32,3 +32,7 @@ export function getTime(path: string) {
     const date = getDate(path);
     return date ? date.getTime() : 0;
 }
+
+export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
+    return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
+}
