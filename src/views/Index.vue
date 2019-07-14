@@ -15,7 +15,6 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
-    import resource from '@/resource';
     import {error2markdown, getDateString} from '@/utils';
     import Markdown from '@/components/Markdown.vue';
 
@@ -71,7 +70,12 @@
                 });
             } else {
                 this.isError = true;
-                this.setData(resource.notAllowedRender);
+                this.setData(error2markdown({
+                    response: {
+                        status: 404,
+                        statusText: 'Not Found'
+                    }
+                } as any));
             }
         }
 
