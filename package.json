@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prerender": "node prerender.js"
   },
   "dependencies": {
     "axios": "^0.18.1",
@@ -28,6 +29,8 @@
     "@vue/cli-plugin-typescript": "^3.9.0",
     "@vue/cli-service": "^3.9.2",
     "babel-plugin-prismjs": "^1.0.2",
+    "dotenv": "^8.0.0",
+    "puppeteer": "^1.18.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.5.3",
