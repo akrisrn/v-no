@@ -20,6 +20,10 @@
         @Prop() public isCategory!: boolean;
         @Prop() public path!: string;
 
+        public classObject = [{
+            index: this.isIndex,
+        }, 'markdown-body'];
+
         // noinspection JSUnusedGlobalSymbols
         public markdownIt = new MarkdownIt({
             html: true,
@@ -33,10 +37,6 @@
             },
         }).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
             .use(require('markdown-it-task-lists'));
-
-        public classObject = [{
-            index: this.isIndex,
-        }, 'markdown-body'];
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
