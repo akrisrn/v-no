@@ -4,7 +4,7 @@
             <!--suppress JSUnresolvedVariable -->
             <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
                       @update:data="data = $event"></Markdown>
-            <footer class="markdown-body" v-if="!isIndex || isCategory">
+            <footer v-if="!isIndex || isCategory">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
             </footer>
@@ -137,7 +137,10 @@
             margin-left 16px
             margin-right 16px
 
-        footer.markdown-body
+        footer
+            font-size 15px
+            line-height 2
+            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             border-top 1px solid #e4e4e4
             margin-top 16px
             padding-top 8px
