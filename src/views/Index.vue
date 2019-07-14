@@ -2,8 +2,8 @@
     <transition name="slide-fade">
         <main v-if="show" :class="{error: isError}">
             <!--suppress JSUnresolvedVariable -->
-            <Markdown :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
-                      @update:data="data = $event"></Markdown>
+            <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
+                     @update:data="data = $event"></Article>
             <footer v-if="!isIndex || isCategory">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
@@ -16,14 +16,14 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
     import {error2markdown, getDateString} from '@/utils';
-    import Markdown from '@/components/Markdown.vue';
+    import Article from '@/components/Article.vue';
 
     Component.registerHooks([
         'beforeRouteUpdate',
     ]);
 
     // noinspection JSUnusedGlobalSymbols
-    @Component({components: {Markdown}})
+    @Component({components: {Article}})
     export default class Index extends Vue {
         public data = '';
         public show = false;
