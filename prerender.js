@@ -14,7 +14,7 @@ const dotenv = require('dotenv');
 const host = url.resolve(process.env.PRERENDER_HOST, process.env.VUE_APP_INDEX_PATH);
 
 function getAbspath(filepath) {
-    return path.join(__dirname, filepath)
+    return path.join(process.env.PRERENDER_DIR, filepath)
 }
 
 function writeHtml(filepath, html) {
