@@ -198,7 +198,7 @@
                 const href = a.getAttribute('href')!;
                 const pathname = new URL(a.href).pathname;
                 if (href.endsWith('#')) {
-                    a.href = '/#' + pathname;
+                    a.href = '#' + pathname;
                 } else if (href.endsWith('#/')) {
                     a.href = pathname.replace(/\.md$/, '/');
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
