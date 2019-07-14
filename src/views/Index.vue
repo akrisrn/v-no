@@ -15,7 +15,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import axios from 'axios';
-    import {error2markdown, getDateString} from '@/utils';
+    import {error2markdown, getDateString, getWrapRegExp} from '@/utils';
     import Article from '@/components/Article.vue';
 
     Component.registerHooks([
@@ -55,9 +55,15 @@
             this.$router.push(home);
         }
 
+        public setTitle() {
+            const titleMatch = this.data.match(getWrapRegExp('^#', '\n'));
+            document.title = titleMatch ? titleMatch[1] : this.path.substr(1);
+        }
+
         public setData(data: string) {
             this.show = true;
             this.data = data;
+            this.setTitle();
         }
 
         public updateData() {

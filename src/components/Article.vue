@@ -363,14 +363,7 @@
             });
         }
 
-        public setTitle() {
-            const titleMatch = this.markdownData.match(getWrapRegExp('^#', '\n'));
-            document.title = titleMatch ? titleMatch[1] : this.path.substr(1);
-        }
-
-        // noinspection JSUnusedGlobalSymbols
         public get markdown() {
-            this.setTitle();
             return this.renderMD(this.markdownData);
         }
     }
