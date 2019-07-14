@@ -185,7 +185,8 @@
 
         public updateImagePath() {
             document.querySelectorAll('img').forEach((img) => {
-                const match = img.src.match(/#(.+)$/);
+                const src = img.getAttribute('src')!;
+                const match = src.match(/#(.+)$/);
                 if (match) {
                     const width = parseInt(match[1], 0);
                     if (isNaN(width)) {
@@ -197,7 +198,11 @@
                     } else {
                         img.width = width;
                     }
-                    img.src = new URL(img.src).pathname;
+                    if (src.startsWith('http')) {
+                        img.src = src.replace(/#(.+)$/, '');
+                    } else {
+                        img.src = new URL(img.src).pathname;
+                    }
                 }
             });
         }
