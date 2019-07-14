@@ -187,7 +187,11 @@
                 if (match) {
                     const width = parseInt(match[1], 0);
                     if (isNaN(width)) {
-                        img.setAttribute('style', match[1]);
+                        if (match[1].startsWith('.')) {
+                            img.classList.add(match[1].substr(1));
+                        } else {
+                            img.setAttribute('style', match[1]);
+                        }
                     } else {
                         img.width = width;
                     }
