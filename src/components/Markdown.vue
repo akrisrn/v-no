@@ -211,9 +211,9 @@
             document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
                 const href = a.getAttribute('href')!;
                 const pathname = new URL(a.href).pathname;
-                if (href.endsWith('#')) {
+                if (href.endsWith('.md#')) {
                     a.href = '#' + pathname;
-                } else if (href.endsWith('#/')) {
+                } else if (href.endsWith('.md#/')) {
                     a.href = pathname.replace(/\.md$/, '/');
                 } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
                     if (updatedLinks.includes(href)) {
