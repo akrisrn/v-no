@@ -1,6 +1,7 @@
 <template>
     <transition name="slide-fade">
         <main v-if="show" :class="{error: isError}">
+            <header>{{ title }}</header>
             <!--suppress JSUnresolvedVariable -->
             <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
                      @update:data="data = $event"></Article>
@@ -27,6 +28,7 @@
     export default class Index extends Vue {
         public show = false;
         public data = '';
+        public title = '';
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
@@ -57,7 +59,13 @@
 
         public setTitle() {
             const titleMatch = this.data.match(getWrapRegExp('^#', '\n'));
-            document.title = titleMatch ? titleMatch[1] : this.path.substr(1);
+            if (titleMatch) {
+                this.title = titleMatch[1];
+                this.data = this.data.replace(titleMatch[0], '');
+            } else {
+                this.title = this.path.substr(1);
+            }
+            document.title = this.title;
         }
 
         public setData(data: string) {
@@ -135,6 +143,8 @@
         transform translateX(10px)
         opacity 0
 
+    md-font-family = -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
+
     main
         max-width 700px
         margin 24px auto
@@ -143,10 +153,17 @@
             margin-left 16px
             margin-right 16px
 
+        header
+            font-family md-font-family
+            font-size 30px
+            font-weight 600
+            color #24292e
+            margin-bottom 16px
+
         footer
             font-size 15px
             line-height 2
-            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
+            font-family md-font-family
             border-top 1px solid #e4e4e4
             margin-top 16px
             padding-top 8px
