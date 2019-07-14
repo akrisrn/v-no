@@ -145,6 +145,9 @@
 
     md-font-family = -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
 
+    body
+        margin 0
+
     main
         max-width 700px
         margin 24px auto
