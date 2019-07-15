@@ -1,6 +1,6 @@
 <template>
     <transition name="slide-fade">
-        <main v-if="show" :class="{error: isError}">
+        <main :class="{error: isError}" v-if="show">
             <header>{{ title }}</header>
             <!--suppress JSUnresolvedVariable -->
             <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
