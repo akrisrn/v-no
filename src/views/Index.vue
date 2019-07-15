@@ -162,6 +162,7 @@
             font-family md-font-family
             font-size 30px
             font-weight 600
+            text-align center
             line-height 1.25
             margin-bottom 16px
             padding-bottom 8px
