@@ -3,8 +3,7 @@
         <main :class="{error: isError}" v-if="show">
             <header>{{ title }}</header>
             <!--suppress JSUnresolvedVariable -->
-            <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
-                     @update:data="data = $event"></Article>
+            <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Article>
             <footer v-if="!isIndex || isCategory">
                 <a class="home" v-on:click="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>

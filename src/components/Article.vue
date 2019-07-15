@@ -14,7 +14,6 @@
         @PropSync('data') public markdownData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
-        @Prop() public path!: string;
 
         public classObject = [{
             index: this.isIndex,
