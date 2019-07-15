@@ -183,7 +183,7 @@
         }
 
         public updateImagePath() {
-            document.querySelectorAll('img').forEach((img) => {
+            document.querySelectorAll<HTMLImageElement>('.markdown-body img').forEach((img) => {
                 let parent = img.parentElement!;
                 if (parent.tagName === 'DT') {
                     parent = parent.parentElement!;
