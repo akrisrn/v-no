@@ -44,10 +44,6 @@ async function getHtmlAndFiles(page, urlPath) {
         if (document.querySelector('main.error')) {
             return [null, null]
         }
-        const home = document.querySelector('a.home');
-        if (home) {
-            home.href = '/'
-        }
         const files = [];
         document.querySelectorAll('a').forEach((a) => {
             const href = a.getAttribute('href');

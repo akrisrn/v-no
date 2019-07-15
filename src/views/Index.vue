@@ -5,7 +5,7 @@
             <!--suppress JSUnresolvedVariable -->
             <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Article>
             <footer v-if="!isIndex || isCategory">
-                <a class="home" v-on:click="returnHome">Return to home</a>
+                <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
             </footer>
         </main>
