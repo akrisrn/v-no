@@ -142,8 +142,6 @@
         transform translateX(10px)
         opacity 0
 
-    md-font-family = -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-
     body
         margin 0
 
@@ -157,7 +155,7 @@
 
         header
             color #4a4a4a
-            font-family md-font-family
+            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 30px
             font-weight 600
             text-align center
