@@ -12,6 +12,8 @@
     @Component
     export default class Article extends Vue {
         @PropSync('data') public markdownData!: string;
+        @PropSync('cover') public coverUrl!: string;
+        @PropSync('icon') public iconUrl!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
 
@@ -213,34 +215,18 @@
 
         // noinspection JSMethodCanBeStatic
         public updateHeaderIcon() {
-            let icon = document.querySelector<HTMLImageElement>('#icon');
+            const icon = document.querySelector<HTMLImageElement>('article img.icon');
             if (icon) {
-                icon.remove();
-            }
-            icon = document.querySelector<HTMLImageElement>('img.icon');
-            if (icon) {
-                const img = document.createElement('img');
-                img.id = 'icon';
-                img.alt = icon.alt;
-                img.src = icon.getAttribute('src')!;
-                const header = document.querySelector('header')!;
-                header.insertBefore(img, header.childNodes[0]);
+                this.iconUrl = icon.getAttribute('src')!;
                 icon.parentElement!.remove();
             }
         }
 
         // noinspection JSMethodCanBeStatic
         public updateCover() {
-            let cover = document.querySelector('#cover');
+            const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
-                cover.remove();
-            }
-            cover = document.querySelector<HTMLImageElement>('img.cover');
-            if (cover) {
-                const div = document.createElement('div');
-                div.id = 'cover';
-                div.style.backgroundImage = `url(${cover.getAttribute('src')})`;
-                document.body.insertBefore(div, document.querySelector('main'));
+                this.coverUrl = cover.getAttribute('src')!;
                 cover.parentElement!.remove();
             }
         }
@@ -421,24 +407,6 @@
 <style>@import '~github-markdown-css/github-markdown.css';</style>
 
 <style lang="stylus">
-    img-box-shadow = 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
-
-    #icon
-        height 40px
-        margin-right 16px
-
-    #cover
-        height 250px
-        background-color white
-        background-size 100%
-        background-attachment fixed
-        box-shadow img-box-shadow
-        border-bottom 1px solid gray
-        transition height 1s ease
-
-        @media screen and (max-width: 750px)
-            height 150px
-
     .markdown-body
         font-size 15px
         line-height 2
@@ -451,7 +419,7 @@
             border-bottom-color #e4e4e4
 
         img
-            box-shadow img-box-shadow
+            box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
             background-color transparent
 
             &.no-shadow

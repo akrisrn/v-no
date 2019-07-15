@@ -1,15 +1,20 @@
 <template>
-    <transition name="slide-fade">
-        <main :class="{error: isError}" v-if="show">
-            <header>{{ title }}</header>
-            <!--suppress JSUnresolvedVariable -->
-            <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Article>
-            <footer class="markdown-body" v-if="!isIndex || isCategory">
-                <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
-                <span class="date" v-if="!isError">{{ date }}</span>
-            </footer>
-        </main>
-    </transition>
+    <div>
+        <div :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
+        <transition name="slide-fade">
+            <main :class="{error: isError}" v-if="show">
+                <header><img :src="icon" alt id="icon" v-if="icon"/>{{ title }}</header>
+                <!--suppress JSUnresolvedVariable -->
+                <Article :cover="cover" :data="data" :icon="icon" :isCategory="isCategory" :isIndex="isIndex"
+                         @update:cover="cover = $event" @update:data="data = $event" @update:icon="icon = $event">
+                </Article>
+                <footer class="markdown-body" v-if="!isIndex || isCategory">
+                    <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
+                    <span class="date" v-if="!isError">{{ date }}</span>
+                </footer>
+            </main>
+        </transition>
+    </div>
 </template>
 
 <script lang="ts">
@@ -27,6 +32,8 @@
     export default class Index extends Vue {
         public show = false;
         public data = '';
+        public cover = '';
+        public icon = '';
         public title = '';
         public isError = false;
 
@@ -173,4 +180,20 @@
         .date
             float right
             color darkgray
+
+    #icon
+        height 40px
+        margin-right 16px
+
+    #cover
+        height 250px
+        background-color white
+        background-size 100%
+        background-attachment fixed
+        box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+        border-bottom 1px solid gray
+        transition height 1s ease
+
+        @media screen and (max-width: 750px)
+            height 150px
 </style>
