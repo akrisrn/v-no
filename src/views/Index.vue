@@ -158,22 +158,22 @@
             margin-right 16px
 
         header
+            color #24292e
             font-family md-font-family
             font-size 30px
             font-weight 600
-            color #24292e
+            line-height 1.25
             margin-bottom 16px
             padding-bottom 8px
             border-bottom 1px solid #e4e4e4
-            line-height 1.25
 
         footer
+            font-family md-font-family
             font-size 15px
             line-height 2
-            font-family md-font-family
-            border-top 1px solid #e4e4e4
             margin-top 16px
             padding-top 8px
+            border-top 1px solid #e4e4e4
 
             a.home
                 color #0366d6
