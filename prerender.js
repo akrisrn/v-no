@@ -77,7 +77,7 @@ async function loadPages(browser, files) {
                 writeHtml(filepath.replace(/\.md$/, '.html'), html);
                 await loadPages(browser, newFiles)
             } else {
-                console.error('error', urlPath);
+                console.error('error:', urlPath);
             }
         }));
     }
@@ -93,7 +93,7 @@ async function loadPages(browser, files) {
         writeHtml('index.html', html);
         await loadPages(browser, files);
     } else {
-        console.error('error', host);
+        console.error('error:', host);
     }
 
     await browser.close();
