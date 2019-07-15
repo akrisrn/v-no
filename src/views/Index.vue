@@ -163,7 +163,7 @@
             font-weight 600
             color #24292e
             margin-bottom 16px
-            padding-bottom 9px
+            padding-bottom 8px
             border-bottom 1px solid #e4e4e4
             line-height 1.25
 
