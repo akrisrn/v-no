@@ -177,7 +177,6 @@
             a.home
                 color #0366d6
                 text-decoration none
-                cursor pointer
 
                 &:before
                     content '« '
