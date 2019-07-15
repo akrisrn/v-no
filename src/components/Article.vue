@@ -188,7 +188,7 @@
                 if (parent.tagName === 'DT') {
                     parent = parent.parentElement!;
                 }
-                parent.style.textAlign = 'center';
+                parent.classList.add('center');
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
                 if (match) {
@@ -474,6 +474,9 @@
                 + dd
                     margin-top -16px
 
+            &.center dd:before
+                content none
+
         pre
             background-color #2d2d2d
 
@@ -508,6 +511,9 @@
 
             .footnote-backref
                 font-family sans-serif
+
+        .center
+            text-align center
 
     .index
         ul:not(.toc)
