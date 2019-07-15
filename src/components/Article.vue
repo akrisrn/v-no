@@ -433,7 +433,7 @@
         background-size 100%
         background-attachment fixed
         box-shadow img-box-shadow
-        border-bottom 1px solid dimgray
+        border-bottom 1px solid gray
         transition height 1s ease
 
         @media screen and (max-width: 750px)
@@ -469,7 +469,7 @@
 
             dd
                 font-size 14px
-                color dimgray
+                color gray
                 padding 0
 
                 &:before
@@ -490,7 +490,7 @@
             margin-bottom 3px
 
         em > small
-            color dimgray
+            color gray
 
         #toc
             font-size 14px
@@ -505,7 +505,7 @@
                 text-decoration underline
 
         .footnotes
-            color dimgray
+            color gray
 
             &:before
                 content 'Footnotes'
@@ -545,7 +545,7 @@
                     font-size 14px
 
                 code
-                    color dimgray
+                    color gray
                     background none
                     padding 0
 
@@ -576,7 +576,7 @@
                     cursor pointer
 
                     &:hover
-                        color dimgray
+                        color gray
 
                     &:before
                         font-family sans-serif
