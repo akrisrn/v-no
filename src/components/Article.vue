@@ -199,7 +199,7 @@
                         img.width = width;
                     }
                     if (src.startsWith('http')) {
-                        img.src = src.replace(/#(.+)$/, '');
+                        img.src = src.replace(/#.+$/, '');
                     } else {
                         img.src = new URL(img.src).pathname;
                     }
