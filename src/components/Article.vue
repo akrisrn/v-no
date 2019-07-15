@@ -184,6 +184,11 @@
 
         public updateImagePath() {
             document.querySelectorAll('img').forEach((img) => {
+                let parent = img.parentElement!;
+                if (parent.tagName === 'DT') {
+                    parent = parent.parentElement!;
+                }
+                parent.style.textAlign = 'center';
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
                 if (match) {
