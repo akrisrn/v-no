@@ -40,6 +40,8 @@
         public beforeRouteUpdate(to: any, from: any, next: any) {
             next();
             this.show = false;
+            this.cover = '';
+            this.icon = '';
             this.updateData();
         }
 
