@@ -417,9 +417,8 @@
     #cover
         height 200px
         background-color white
-        background-size cover
+        background-size 100%
         background-attachment fixed
-        background-position 0
         box-shadow img-box-shadow
 
     .markdown-body
