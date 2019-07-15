@@ -64,9 +64,7 @@
             } else {
                 this.title = this.path.substr(1);
             }
-            if (!document.title) {
-                document.title = this.title;
-            }
+            document.title = this.title;
         }
 
         public setData(data: string) {
