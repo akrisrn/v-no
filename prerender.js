@@ -5,16 +5,24 @@ const fs = require('fs');
 const dotenv = require('dotenv');
 
 ['.env', '.env.local', '.env.production.local'].forEach((filename) => {
-    const config = dotenv.parse(fs.readFileSync(filename));
-    Object.keys(config).forEach((key) => {
-        process.env[key] = config[key]
-    });
+    try {
+        const config = dotenv.parse(fs.readFileSync(filename));
+        Object.keys(config).forEach((key) => {
+            process.env[key] = config[key]
+        });
+    } catch (e) {
+    }
 });
 
-const host = url.resolve(process.env.PRERENDER_HOST, process.env.VUE_APP_INDEX_PATH);
+let host = process.env.PRERENDER_HOST;
+const dir = process.env.PRERENDER_DIR;
+
+if (!host || !dir) return;
+
+host = url.resolve(host, process.env.VUE_APP_INDEX_PATH);
 
 function getAbspath(filepath) {
-    return path.join(process.env.PRERENDER_DIR, filepath)
+    return path.join(dir, filepath)
 }
 
 function writeHtml(filepath, html) {
