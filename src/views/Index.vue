@@ -156,7 +156,7 @@
             margin-right 16px
 
         header
-            color #24292e
+            color #4a4a4a
             font-family md-font-family
             font-size 30px
             font-weight 600

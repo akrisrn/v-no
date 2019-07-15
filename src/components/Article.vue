@@ -431,9 +431,6 @@
         line-height 2
         color #4a4a4a
 
-        h1, h2, h3, h4, h5
-            color #24292e
-
         h1, h2
             border-bottom-color #e4e4e4
 
