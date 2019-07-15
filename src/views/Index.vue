@@ -161,10 +161,7 @@
             font-size 30px
             font-weight 600
             text-align center
-            line-height 1.25
-            margin-bottom 16px
-            padding-bottom 8px
-            border-bottom 1px solid #e4e4e4
+            margin-bottom 24px
 
         footer
             margin-top 16px
