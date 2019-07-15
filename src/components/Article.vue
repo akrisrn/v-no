@@ -212,6 +212,7 @@
             if (icon) {
                 const img = document.createElement('img');
                 img.id = 'icon';
+                img.alt = icon.alt;
                 img.src = icon.getAttribute('src')!;
                 const header = document.querySelector('header')!;
                 header.insertBefore(img, header.childNodes[0]);
