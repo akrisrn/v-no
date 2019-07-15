@@ -48,8 +48,8 @@
                 this.updateToc();
                 this.updateFootnote();
                 this.updateImagePath();
-                this.updateIcon();
                 this.updateCover();
+                this.updateIcon();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -214,20 +214,20 @@
         }
 
         // noinspection JSMethodCanBeStatic
-        public updateIcon() {
-            const icon = document.querySelector<HTMLImageElement>('article img.icon');
-            if (icon) {
-                this.iconUrl = icon.getAttribute('src')!;
-                icon.parentElement!.remove();
-            }
-        }
-
-        // noinspection JSMethodCanBeStatic
         public updateCover() {
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
                 this.coverUrl = cover.getAttribute('src')!;
                 cover.parentElement!.remove();
+            }
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public updateIcon() {
+            const icon = document.querySelector<HTMLImageElement>('article img.icon');
+            if (icon) {
+                this.iconUrl = icon.getAttribute('src')!;
+                icon.parentElement!.remove();
             }
         }
 

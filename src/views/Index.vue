@@ -183,10 +183,6 @@
             float right
             color darkgray
 
-    #icon
-        height 40px
-        margin-right 16px
-
     #cover
         height 250px
         background-color white
@@ -198,4 +194,9 @@
 
         @media screen and (max-width: 750px)
             height 150px
+
+    #icon
+        height 40px
+        margin-right 16px
+
 </style>
