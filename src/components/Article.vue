@@ -112,7 +112,7 @@
         }
 
         public updateDD() {
-            document.querySelectorAll('p').forEach((p) => {
+            document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
                 if (p.innerText.startsWith(': ')) {
                     const dl = document.createElement('dl');
                     const dd = document.createElement('dd');
@@ -121,7 +121,7 @@
                     p.outerHTML = dl.outerHTML;
                 }
             });
-            document.querySelectorAll('dt').forEach((dt) => {
+            document.querySelectorAll<HTMLDetailsElement>('article dt').forEach((dt) => {
                 if (dt.innerText.startsWith(': ')) {
                     const dd = document.createElement('dd');
                     dd.innerHTML = dt.innerHTML.substr(2);
@@ -154,7 +154,7 @@
                 }
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
-                    for (const h of document.querySelectorAll<HTMLHeadingElement>(href)) {
+                    for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
                         if (h.innerText === innerText) {
                             window.scrollTo(0, h.offsetTop - 10);
                             break;
@@ -165,7 +165,7 @@
         }
 
         public updateFootnote() {
-            document.querySelectorAll<HTMLLinkElement>('.footnote-backref').forEach((backref, i) => {
+            document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach((backref, i) => {
                 const fnref = document.getElementById(`fnref${i + 1}`);
                 if (fnref) {
                     fnref.addEventListener('click', (e) => {
@@ -183,7 +183,7 @@
         }
 
         public updateImagePath() {
-            document.querySelectorAll<HTMLImageElement>('.markdown-body img').forEach((img) => {
+            document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 let parent = img.parentElement!;
                 if (parent.tagName === 'DT') {
                     parent = parent.parentElement!;
@@ -253,7 +253,7 @@
             //      #a=1|b=2|3 会被转化成 {1: 1, 2: 2, 3: 3, a: 1, b: 2}
             // 4. text 为 *：将链接引入为 JavaScript 文件引用
             // 5. text 为 $：将链接引入为 CSS 文件引用
-            document.querySelectorAll<HTMLLinkElement>('a[href]').forEach((a) => {
+            document.querySelectorAll<HTMLLinkElement>('article a[href]').forEach((a) => {
                 const href = a.getAttribute('href')!;
                 const pathname = new URL(a.href).pathname;
                 if (href.endsWith('.md#')) {
@@ -325,7 +325,7 @@
         }
 
         public updateIndexList() {
-            document.querySelectorAll('ul:not(.toc)').forEach((ul) => {
+            document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
                 const lis: any[] = [];
                 ul.querySelectorAll('li').forEach((li) => {
                     const item = {
