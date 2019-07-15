@@ -4,7 +4,7 @@
             <header>{{ title }}</header>
             <!--suppress JSUnresolvedVariable -->
             <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Article>
-            <footer v-if="!isIndex || isCategory" class="markdown-body">
+            <footer class="markdown-body" v-if="!isIndex || isCategory">
                 <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
             </footer>
