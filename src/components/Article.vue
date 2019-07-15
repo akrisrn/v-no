@@ -239,12 +239,7 @@
             if (cover) {
                 const div = document.createElement('div');
                 div.id = 'cover';
-                const image = new Image();
-                image.src = cover.getAttribute('src')!;
-                image.onload = () => {
-                    div.style.backgroundImage = `url(${image.getAttribute('src')})`;
-                    div.style.height = '200px';
-                };
+                div.style.backgroundImage = `url(${cover.getAttribute('src')})`;
                 document.body.insertBefore(div, document.querySelector('main'));
                 cover.parentElement!.remove();
             }
@@ -433,12 +428,16 @@
         margin-right 16px
 
     #cover
-        height 0
+        height 250px
         background-color white
         background-size 100%
         background-attachment fixed
         box-shadow img-box-shadow
+        border-bottom 1px solid dimgray
         transition height 1s ease
+
+        @media screen and (max-width: 750px)
+            height 150px
 
     .markdown-body
         font-size 15px
