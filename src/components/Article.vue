@@ -213,7 +213,11 @@
 
         // noinspection JSMethodCanBeStatic
         public updateHeaderIcon() {
-            const icon = document.querySelector<HTMLImageElement>('img.icon');
+            let icon = document.querySelector<HTMLImageElement>('#icon');
+            if (icon) {
+                icon.remove();
+            }
+            icon = document.querySelector<HTMLImageElement>('img.icon');
             if (icon) {
                 const img = document.createElement('img');
                 img.id = 'icon';
@@ -227,7 +231,11 @@
 
         // noinspection JSMethodCanBeStatic
         public updateCover() {
-            const cover = document.querySelector<HTMLImageElement>('img.cover');
+            let cover = document.querySelector('#cover');
+            if (cover) {
+                cover.remove();
+            }
+            cover = document.querySelector<HTMLImageElement>('img.cover');
             if (cover) {
                 const div = document.createElement('div');
                 div.id = 'cover';
