@@ -48,7 +48,7 @@
                 this.updateToc();
                 this.updateFootnote();
                 this.updateImagePath();
-                this.updateHeaderIcon();
+                this.updateIcon();
                 this.updateCover();
                 this.updateLinkPath();
                 if (this.isCategory) {
@@ -214,7 +214,7 @@
         }
 
         // noinspection JSMethodCanBeStatic
-        public updateHeaderIcon() {
+        public updateIcon() {
             const icon = document.querySelector<HTMLImageElement>('article img.icon');
             if (icon) {
                 this.iconUrl = icon.getAttribute('src')!;
