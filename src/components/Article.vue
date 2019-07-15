@@ -444,12 +444,18 @@
         line-height 2
         color #4a4a4a
 
+        > :first-child dt:first-of-type
+            margin-top 0
+
         h1, h2
             border-bottom-color #e4e4e4
 
         img
             box-shadow img-box-shadow
             background-color transparent
+
+            &.no-shadow
+                box-shadow none
 
         mark
             border-radius 3px
