@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
+    import {getDateString, getTime, getWrapRegExp} from '@/utils';
+    import axios from 'axios';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
-    import axios from 'axios';
-    import {getDateString, getTime, getWrapRegExp} from '@/utils';
+    import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
 
     @Component
     export default class Article extends Vue {

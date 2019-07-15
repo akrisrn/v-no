@@ -13,10 +13,10 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import axios from 'axios';
-    import {error2markdown, getDateString, getWrapRegExp} from '@/utils';
     import Article from '@/components/Article.vue';
+    import {error2markdown, getDateString, getWrapRegExp} from '@/utils';
+    import axios from 'axios';
+    import {Component, Vue, Watch} from 'vue-property-decorator';
 
     Component.registerHooks([
         'beforeRouteUpdate',
