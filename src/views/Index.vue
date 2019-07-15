@@ -4,7 +4,7 @@
             <header>{{ title }}</header>
             <!--suppress JSUnresolvedVariable -->
             <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" @update:data="data = $event"></Article>
-            <footer v-if="!isIndex || isCategory">
+            <footer v-if="!isIndex || isCategory" class="markdown-body">
                 <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
                 <span class="date" v-if="!isError">{{ date }}</span>
             </footer>
@@ -167,23 +167,13 @@
             border-bottom 1px solid #e4e4e4
 
         footer
-            font-family md-font-family
-            font-size 15px
-            line-height 2
             margin-top 16px
             padding-top 8px
             border-top 1px solid #e4e4e4
 
-            a.home
-                color #0366d6
-                text-decoration none
-
-                &:before
-                    content '« '
-                    font-family sans-serif
-
-                &:hover
-                    text-decoration underline
+            a.home:before
+                content '« '
+                font-family sans-serif
 
         .date
             float right
