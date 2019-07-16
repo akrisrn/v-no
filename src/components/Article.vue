@@ -414,8 +414,9 @@
         line-height 2
         color #4a4a4a
 
-        > :first-child dt:first-of-type
-            margin-top 0
+        > :first-child
+            > :first-child, > :first-child > :first-child
+                margin-top 0 !important
 
         h1, h2
             border-bottom-color #e4e4e4
@@ -426,6 +427,9 @@
 
             &.no-shadow
                 box-shadow none
+
+        p > img, dt > img
+            margin-top 8px
 
         mark
             border-radius 3px
@@ -438,7 +442,7 @@
                 font-weight normal
 
             dd
-                font-size 14px
+                font-size 13px
                 color gray
                 padding 0
 
@@ -463,7 +467,7 @@
             color gray
 
         #toc
-            font-size 14px
+            font-size 13px
             margin-bottom 16px
 
         .footnote-ref > a, a.footnote-backref, #toc a
@@ -512,7 +516,7 @@
                     padding-left 16px
                     padding-right 0
                     white-space normal
-                    font-size 14px
+                    font-size 13px
 
                 code
                     color gray
@@ -531,7 +535,7 @@
                 display none
 
             .more
-                font-size 14px
+                font-size 13px
                 color darkgray
                 border-top 1px dashed
                 margin-top 16px
