@@ -11,9 +11,9 @@
 
     @Component
     export default class Article extends Vue {
-        @PropSync('data') public markdownData!: string;
-        @PropSync('cover') public coverUrl!: string;
-        @PropSync('icon') public iconUrl!: string;
+        @PropSync('data') public syncData!: string;
+        @PropSync('cover') public syncCover!: string;
+        @PropSync('icon') public syncIcon!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
 
@@ -227,10 +227,10 @@
         public updateCover() {
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
-                this.coverUrl = cover.getAttribute('src')!;
+                this.syncCover = cover.getAttribute('src')!;
                 cover.parentElement!.remove();
             } else {
-                this.coverUrl = '';
+                this.syncCover = '';
             }
         }
 
@@ -238,10 +238,10 @@
         public updateIcon() {
             const icon = document.querySelector<HTMLImageElement>('article img.icon');
             if (icon) {
-                this.iconUrl = icon.getAttribute('src')!;
+                this.syncIcon = icon.getAttribute('src')!;
                 icon.parentElement!.remove();
             } else {
-                this.iconUrl = '';
+                this.syncIcon = '';
             }
         }
 
@@ -392,7 +392,7 @@
                             tagDict[tag].push(`- [${m[1]}](${m[2]})`);
                         });
                     });
-                    this.markdownData += '\n' + Object.keys(tagDict).sort().map((key) => {
+                    this.syncData += '\n' + Object.keys(tagDict).sort().map((key) => {
                         const count = `<span class="count">（${tagDict[key].length}）</span>`;
                         return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
                     }).join('\n\n');
@@ -413,7 +413,7 @@
         }
 
         public get markdown() {
-            return this.renderMD(this.markdownData);
+            return this.renderMD(this.syncData);
         }
     }
 </script>
