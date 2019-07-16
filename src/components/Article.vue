@@ -191,6 +191,14 @@
                     parent = parent.parentElement!;
                 }
                 parent.classList.add('center');
+
+                const skeleton = document.createElement('div');
+                skeleton.classList.add('skeleton');
+                img.parentElement!.append(skeleton);
+                img.onload = () => {
+                    skeleton.remove();
+                };
+
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
                 if (match) {
@@ -495,6 +503,11 @@
 
         .center
             text-align center
+
+        .skeleton
+            max-width 700px
+            height 300px
+            background-color white
 
     .index
         ul:not(.toc)
