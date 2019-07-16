@@ -14,8 +14,8 @@
         @PropSync('data') public syncData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
-        @Prop() public setCover!: Function;
-        @Prop() public setIcon!: Function;
+        @Prop() public setCover!: (url: string) => void;
+        @Prop() public setIcon!: (url: string) => void;
 
         public classObject = [{
             index: this.isIndex,

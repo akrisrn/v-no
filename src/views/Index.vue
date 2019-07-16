@@ -56,6 +56,7 @@
             this.updateData();
         }
 
+        // noinspection JSUnusedGlobalSymbols
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
@@ -65,6 +66,7 @@
             }
         }
 
+        // noinspection JSUnusedGlobalSymbols
         public setIcon(url: string) {
             this.icon = url;
         }
