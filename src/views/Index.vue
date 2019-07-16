@@ -60,7 +60,11 @@
         public returnHome() {
             let home = '/';
             if (this.isIndexPath) {
-                home += process.env.VUE_APP_INDEX_PATH;
+                let indexPath = process.env.VUE_APP_INDEX_PATH;
+                if (indexPath.endsWith('index.html')) {
+                    indexPath = indexPath.replace(/index\.html$/, '');
+                }
+                home += indexPath;
             }
             this.$router.push(home);
         }
