@@ -188,12 +188,16 @@
                 }
                 parent.classList.add('center');
 
-                const skeleton = document.createElement('div');
-                skeleton.classList.add('skeleton');
-                img.parentElement!.append(skeleton);
-                img.onload = () => {
-                    skeleton.remove();
-                };
+                if (!img.complete) {
+                    const skeleton = document.createElement('div');
+                    skeleton.classList.add('skeleton');
+                    img.parentElement!.append(skeleton);
+                    img.classList.add('hide');
+                    img.onload = () => {
+                        img.classList.remove('hide');
+                        skeleton.remove();
+                    };
+                }
 
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
@@ -436,6 +440,9 @@
             &.no-shadow
                 box-shadow none
 
+            &.hide
+                display none
+
         mark
             border-radius 3px
             background-color rgba(255, 235, 59, 0.5)
@@ -513,6 +520,7 @@
         .skeleton
             max-width 700px
             height 300px
+            margin-top 8px
             background-color white
 
     .index
