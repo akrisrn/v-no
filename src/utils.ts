@@ -1,5 +1,5 @@
-import {AxiosError} from 'axios';
 import resource from '@/resource';
+import {AxiosError} from 'axios';
 
 export function error2markdown(error: AxiosError) {
     return `# ${error.response!.status} ${error.response!.statusText}\n${resource.pageError}`;
