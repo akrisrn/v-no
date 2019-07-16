@@ -5,9 +5,8 @@
             <main :class="{error: isError}" v-if="show">
                 <header><img :src="icon" alt id="icon" v-if="icon"/>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
-                <Article :cover="cover" :data="data" :icon="icon" :isCategory="isCategory" :isIndex="isIndex"
-                         :setCover="setCover" @update:cover="cover = $event" @update:data="data = $event"
-                         @update:icon="icon = $event">
+                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
+                         :setIcon="setIcon" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory">
                     <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
@@ -57,8 +56,17 @@
             this.updateData();
         }
 
-        public setCover(show: boolean) {
-            this.isCoverShow = show;
+        public setCover(url: string) {
+            if (url === '') {
+                this.isCoverShow = false;
+            } else {
+                this.isCoverShow = true;
+                this.cover = url;
+            }
+        }
+
+        public setIcon(url: string) {
+            this.icon = url;
         }
 
         public returnHome() {

@@ -12,11 +12,10 @@
     @Component
     export default class Article extends Vue {
         @PropSync('data') public syncData!: string;
-        @PropSync('cover') public syncCover!: string;
-        @PropSync('icon') public syncIcon!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
         @Prop() public setCover!: Function;
+        @Prop() public setIcon!: Function;
 
         public classObject = [{
             index: this.isIndex,
@@ -228,11 +227,10 @@
         public updateCover() {
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
-                this.setCover(true);
-                this.syncCover = cover.getAttribute('src')!;
+                this.setCover(cover.getAttribute('src')!);
                 cover.parentElement!.remove();
             } else {
-                this.setCover(false);
+                this.setCover('');
             }
         }
 
@@ -240,10 +238,10 @@
         public updateIcon() {
             const icon = document.querySelector<HTMLImageElement>('article img.icon');
             if (icon) {
-                this.syncIcon = icon.getAttribute('src')!;
+                this.setIcon(icon.getAttribute('src')!);
                 icon.parentElement!.remove();
             } else {
-                this.syncIcon = '';
+                this.setIcon('');
             }
         }
 
