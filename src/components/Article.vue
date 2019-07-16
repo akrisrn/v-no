@@ -135,12 +135,8 @@
         public updateToc() {
             const uls = document.querySelectorAll<HTMLUListElement>('#toc > ul');
             if (uls.length === 2) {
-                uls.forEach((ul) => {
-                    ul.style.display = 'inline-table';
-                    ul.style.maxWidth = '350px';
-                });
-                uls[0].style.marginBottom = '.25em';
-                uls[1].style.marginBottom = '0';
+                uls[0].classList.add('ul-a');
+                uls[1].classList.add('ul-b');
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
                 let href = a.getAttribute('h')!;
@@ -478,6 +474,16 @@
         #toc
             font-size 13px
             margin-bottom 16px
+
+            .ul-a, .ul-b
+                display inline-table
+                max-width 350px
+
+            .ul-a
+                margin-bottom .25em
+
+            .ul-b
+                margin-bottom 0
 
         .footnote-ref > a, a.footnote-backref, #toc a
             color #0366d6
