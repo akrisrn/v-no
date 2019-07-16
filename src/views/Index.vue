@@ -123,7 +123,11 @@
         }
 
         public get isIndexPath() {
-            return this.$route.path === '/' + process.env.VUE_APP_INDEX_PATH;
+            let path = this.$route.path;
+            if (path.endsWith('/')) {
+                path += 'index.html';
+            }
+            return path === '/' + process.env.VUE_APP_INDEX_PATH;
         }
 
         public get isIndex() {
