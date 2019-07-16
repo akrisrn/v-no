@@ -198,5 +198,4 @@
     #icon
         height 40px
         margin-right 16px
-
 </style>
