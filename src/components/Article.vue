@@ -414,9 +414,8 @@
         line-height 2
         color #4a4a4a
 
-        > :first-child
-            > :first-child, > :first-child > :first-child
-                margin-top 0 !important
+        > :first-child dt:first-of-type
+            margin-top 0 !important
 
         h1, h2
             border-bottom-color #e4e4e4
