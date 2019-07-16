@@ -221,6 +221,8 @@
             if (cover) {
                 this.coverUrl = cover.getAttribute('src')!;
                 cover.parentElement!.remove();
+            } else {
+                this.coverUrl = '';
             }
         }
 
@@ -230,6 +232,8 @@
             if (icon) {
                 this.iconUrl = icon.getAttribute('src')!;
                 icon.parentElement!.remove();
+            } else {
+                this.iconUrl = '';
             }
         }
 
