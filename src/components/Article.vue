@@ -16,6 +16,7 @@
         @PropSync('icon') public syncIcon!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
+        @Prop() public setCover!: Function;
 
         public classObject = [{
             index: this.isIndex,
@@ -227,10 +228,11 @@
         public updateCover() {
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
+                this.setCover(true);
                 this.syncCover = cover.getAttribute('src')!;
                 cover.parentElement!.remove();
             } else {
-                this.syncCover = '';
+                this.setCover(false);
             }
         }
 

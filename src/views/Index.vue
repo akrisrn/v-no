@@ -1,12 +1,13 @@
 <template>
     <div>
-        <div :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
+        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
                 <header><img :src="icon" alt id="icon" v-if="icon"/>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :cover="cover" :data="data" :icon="icon" :isCategory="isCategory" :isIndex="isIndex"
-                         @update:cover="cover = $event" @update:data="data = $event" @update:icon="icon = $event">
+                         :setCover="setCover" @update:cover="cover = $event" @update:data="data = $event"
+                         @update:icon="icon = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory">
                     <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
@@ -33,6 +34,7 @@
         public show = false;
         public data = '';
         public cover = '';
+        public isCoverShow = true;
         public icon = '';
         public title = '';
         public isError = false;
@@ -53,6 +55,10 @@
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData();
+        }
+
+        public setCover(show: boolean) {
+            this.isCoverShow = show;
         }
 
         public returnHome() {
@@ -197,6 +203,9 @@
         box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
         border-bottom 1px solid gray
         transition height 1s ease
+
+        &.hide
+            height 0
 
         @media screen and (max-width: 750px)
             height 150px
