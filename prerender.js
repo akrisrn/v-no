@@ -35,6 +35,14 @@ function writeHtml(filepath, html) {
 
 async function getHtmlAndFiles(page, urlPath) {
     console.log('load:', urlPath);
+    await page.setRequestInterception(true);
+    page.on('request', request => {
+        if (request.resourceType() === 'image') {
+            request.abort();
+        } else {
+            request.continue();
+        }
+    });
     await page.goto(urlPath);
     await page.waitForSelector('main:not(.slide-fade-enter-active)');
     await page.waitForSelector('a.snippet', {
