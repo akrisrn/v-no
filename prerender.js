@@ -17,6 +17,7 @@ const dotenv = require('dotenv');
 let host = process.env.PRERENDER_HOST;
 const dir = process.env.PRERENDER_DIR;
 const indexPath = process.env.VUE_APP_INDEX_PATH;
+const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
 
 if (!host || !dir) return;
 
@@ -49,6 +50,9 @@ async function getHtmlAndFiles(page, urlPath) {
     await page.waitForSelector('a.snippet', {
         hidden: true
     });
+    if (urlPath.endsWith('#/' + categoryFile)) {
+        await page.waitForSelector('ul');
+    }
     return await page.evaluate(() => {
         if (document.querySelector('main.error')) {
             return [null, null]
