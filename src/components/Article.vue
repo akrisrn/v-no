@@ -496,19 +496,16 @@
             &:hover
                 text-decoration underline
 
-        .footnotes-sep
-            margin-bottom 16px
-
         .footnotes
+            font-size 13px
             color gray
-
-            &:before
-                content 'Footnotes'
-                font-size 13px
 
             ol
                 margin-top -8px
-                margin-bottom -8px
+                margin-bottom -16px
+
+                li + li p
+                    margin-top 0
 
             .footnote-backref
                 font-family sans-serif
