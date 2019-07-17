@@ -227,7 +227,6 @@
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {
                 this.setCover(cover.getAttribute('src')!);
-                cover.parentElement!.remove();
             } else {
                 this.setCover('');
             }
