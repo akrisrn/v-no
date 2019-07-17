@@ -500,12 +500,15 @@
             &:hover
                 text-decoration underline
 
+        .footnotes-sep
+            margin-bottom 16px
+
         .footnotes
             color gray
 
             &:before
                 content 'Footnotes'
-                font-weight bold
+                font-size 13px
 
             ol
                 margin-top -8px
@@ -522,6 +525,10 @@
             height 300px
             margin-top 8px
             background-color white
+            transition height 1s ease
+
+            @media screen and (max-width: 750px)
+                height 200px
 
     .index
         ul:not(.toc)
@@ -550,6 +557,7 @@
                     color gray
                     background none
                     padding 0
+                    font-size 12px
 
                     &:before
                         font-family sans-serif
