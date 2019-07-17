@@ -444,6 +444,15 @@
             &.no-shadow
                 box-shadow none
 
+            &.w400
+                max-width 400px
+
+            &.w500
+                max-width 500px
+
+            &.w600
+                max-width 600px
+
         mark
             border-radius 3px
             background-color rgba(255, 235, 59, 0.5)
