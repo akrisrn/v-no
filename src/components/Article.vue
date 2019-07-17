@@ -182,7 +182,7 @@
 
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
-                let parent = img.parentElement!;
+                const parent = img.parentElement!;
                 parent.classList.add('hide');
                 if (img.naturalWidth === 0) {
                     img.onload = () => {
