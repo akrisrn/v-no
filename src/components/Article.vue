@@ -204,7 +204,7 @@
                     const width = parseInt(match[1], 0);
                     if (isNaN(width)) {
                         if (match[1].startsWith('.')) {
-                            match[1].substr(1).split(',').forEach((cls) => {
+                            match[1].substr(1).split('.').forEach((cls) => {
                                 img.classList.add(cls.trim());
                             });
                         } else {
