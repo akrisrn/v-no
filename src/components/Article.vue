@@ -183,23 +183,6 @@
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 let parent = img.parentElement!;
-                let skeleton = parent.querySelector('span.skeleton');
-                if (!skeleton) {
-                    skeleton = document.createElement('span');
-                    skeleton.classList.add('skeleton');
-                    parent.append(skeleton);
-                    img.classList.add('hide');
-                }
-                const showImg = () => {
-                    img.classList.remove('hide');
-                    skeleton!.remove();
-                };
-                if (img.naturalWidth === 0) {
-                    img.onload = showImg;
-                } else {
-                    showImg();
-                }
-
                 if (parent.tagName === 'DT') {
                     parent = parent.parentElement!;
                 }
@@ -525,17 +508,6 @@
 
         .center
             text-align center
-
-        .skeleton
-            display block
-            max-width 700px
-            height 300px
-            margin-top 8px
-            background-color white
-            transition height 1s ease
-
-            @media screen and (max-width: 750px)
-                height 200px
 
     .index
         ul:not(.toc)
