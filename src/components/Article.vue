@@ -189,13 +189,17 @@
                 parent.classList.add('center');
 
                 if (!img.complete) {
-                    const skeleton = document.createElement('div');
-                    skeleton.classList.add('skeleton');
-                    img.parentElement!.append(skeleton);
-                    img.classList.add('hide');
+                    const parent = img.parentElement!;
+                    let skeleton = parent.querySelector('span.skeleton');
+                    if (!skeleton) {
+                        skeleton = document.createElement('span');
+                        skeleton.classList.add('skeleton');
+                        parent.append(skeleton);
+                        img.classList.add('hide');
+                    }
                     img.onload = () => {
                         img.classList.remove('hide');
-                        skeleton.remove();
+                        skeleton!.remove();
                     };
                 }
 
@@ -521,6 +525,7 @@
             text-align center
 
         .skeleton
+            display block
             max-width 700px
             height 300px
             margin-top 8px
