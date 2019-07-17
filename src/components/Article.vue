@@ -183,25 +183,27 @@
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 let parent = img.parentElement!;
+                let skeleton = parent.querySelector('span.skeleton');
+                if (!skeleton) {
+                    skeleton = document.createElement('span');
+                    skeleton.classList.add('skeleton');
+                    parent.append(skeleton);
+                    img.classList.add('hide');
+                }
+                const showImg = () => {
+                    img.classList.remove('hide');
+                    skeleton!.remove();
+                };
+                if (img.naturalWidth === 0) {
+                    img.onload = showImg;
+                } else {
+                    showImg();
+                }
+
                 if (parent.tagName === 'DT') {
                     parent = parent.parentElement!;
                 }
                 parent.classList.add('center');
-
-                if (!img.complete) {
-                    const parent = img.parentElement!;
-                    let skeleton = parent.querySelector('span.skeleton');
-                    if (!skeleton) {
-                        skeleton = document.createElement('span');
-                        skeleton.classList.add('skeleton');
-                        parent.append(skeleton);
-                        img.classList.add('hide');
-                    }
-                    img.onload = () => {
-                        img.classList.remove('hide');
-                        skeleton!.remove();
-                    };
-                }
 
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
