@@ -16,10 +16,11 @@ const dotenv = require('dotenv');
 
 let host = process.env.PRERENDER_HOST;
 const dir = process.env.PRERENDER_DIR;
+const indexPath = process.env.VUE_APP_INDEX_PATH;
 
 if (!host || !dir) return;
 
-host = url.resolve(host, process.env.VUE_APP_INDEX_PATH);
+host = url.resolve(host, indexPath);
 
 function getAbspath(filepath) {
     return path.join(dir, filepath)
