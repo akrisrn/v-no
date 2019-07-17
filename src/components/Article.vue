@@ -428,8 +428,13 @@
         > :first-child dt:first-of-type
             margin-top 0 !important
 
+        hr
+            height 1px
+            background-color transparent
+            border-bottom 3px double darkgray
+
         h1, h2
-            border-bottom-color #e4e4e4
+            border-bottom-color lightgray
 
         img
             margin-top 8px
@@ -451,7 +456,7 @@
 
             dd
                 font-size 13px
-                color gray
+                color darkgray
                 padding 0
 
                 &:before
@@ -472,7 +477,7 @@
             margin-bottom 3px
 
         em > small
-            color gray
+            color darkgray
 
         #toc
             font-size 13px
@@ -540,7 +545,7 @@
                     font-size 13px
 
                 code
-                    color gray
+                    color darkgray
                     background none
                     padding 0
                     font-size 12px
