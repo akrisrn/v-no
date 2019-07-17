@@ -183,10 +183,20 @@
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 let parent = img.parentElement!;
-                if (parent.tagName === 'DT') {
-                    parent = parent.parentElement!;
+                parent.classList.add('hide');
+                if (img.naturalWidth === 0) {
+                    img.onload = () => {
+                        parent.classList.remove('hide');
+                    };
+                } else {
+                    parent.classList.remove('hide');
                 }
-                parent.classList.add('center');
+
+                if (parent.tagName === 'DT') {
+                    parent.parentElement!.classList.add('center');
+                } else {
+                    parent.classList.add('center');
+                }
 
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
@@ -429,9 +439,6 @@
             &.no-shadow
                 box-shadow none
 
-            &.hide
-                display none
-
         mark
             border-radius 3px
             background-color rgba(255, 235, 59, 0.5)
@@ -508,6 +515,9 @@
 
         .center
             text-align center
+
+        .hide
+            display none
 
     .index
         ul:not(.toc)
