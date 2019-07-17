@@ -375,7 +375,7 @@
         }
 
         public updateCategoryList() {
-            axios.get(process.env.VUE_APP_INDEX_FILE).then((response) => {
+            axios.get('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
                 const matches = (response.data as string).match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
                 if (matches) {
                     const tagDict: any = {};
