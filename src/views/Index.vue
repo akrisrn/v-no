@@ -1,9 +1,10 @@
 <template>
     <div>
-        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
+        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`, height: `${coverHeight}px`}"
+             id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
-                <header :class="{float: isHeaderFloat}">{{ title }}</header>
+                <header :class="{float: isHeaderFloat}" :style="{top: `${headerTop}px`}">{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
                          @update:data="data = $event">
@@ -34,6 +35,8 @@
         public data = '';
         public cover = '';
         public title = '';
+        public coverHeight = 250;
+        public headerTop = 20;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -64,9 +67,12 @@
             if (url === '') {
                 this.isCoverShow = false;
                 this.isHeaderFloat = false;
+                this.headerTop = 20;
             } else {
                 this.isCoverShow = true;
                 this.isHeaderFloat = true;
+                const scrollHeight = document.querySelector('header')!.scrollHeight;
+                this.headerTop = -(this.coverHeight + (scrollHeight - 200) / 2);
                 this.cover = url;
             }
         }
@@ -176,9 +182,6 @@
     body
         margin 0
 
-    cover-height = 250px
-    cover-min-height = cover-height - 100
-
     main
         max-width 700px
         margin 24px auto
@@ -191,11 +194,10 @@
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 30px
-            font-weight 600
+            font-weight bold
             text-align center
             margin-bottom 24px
             position relative
-            top 20px
             left 50%
             transform translate(-50%, -50%)
             transition color 1s ease, font-size 1s ease, top 1s ease
@@ -206,11 +208,9 @@
                 text-shadow 3px 3px 3px #2d2d2d
                 font-size 40px
                 margin-bottom 0
-                top (-(cover-height / 2) - 80)
 
                 @media screen and (max-width: 750px)
                     font-size 30px
-                    top (-(cover-min-height / 2) - 65)
 
         footer
             margin-top 16px
@@ -226,7 +226,6 @@
             color darkgray
 
     #cover
-        height cover-height
         filter brightness(0.7) blur(3px)
         background-color white
         background-size cover
@@ -234,8 +233,5 @@
         transition height 1s ease
 
         &.hide
-            height 0
-
-        @media screen and (max-width: 750px)
-            height cover-min-height
+            height 0 !important
 </style>
