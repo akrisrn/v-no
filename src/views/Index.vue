@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`, height: `${coverHeight}px`}"
+        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}"
              id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
@@ -35,7 +35,6 @@
         public data = '';
         public cover = '';
         public title = '';
-        public coverHeight = 250;
         public headerTop = 20;
         public isCoverShow = true;
         public isHeaderFloat = false;
@@ -72,7 +71,7 @@
                 this.isCoverShow = true;
                 this.isHeaderFloat = true;
                 const scrollHeight = document.querySelector('header')!.scrollHeight;
-                this.headerTop = -(this.coverHeight + (scrollHeight - 200) / 2);
+                this.headerTop = -(250 + (scrollHeight - 200) / 2);
                 this.cover = url;
             }
         }
@@ -226,6 +225,7 @@
             color darkgray
 
     #cover
+        height 250px
         filter brightness(0.7) blur(3px)
         background-color white
         background-size cover
@@ -233,5 +233,5 @@
         transition height 1s ease
 
         &.hide
-            height 0 !important
+            height 0
 </style>
