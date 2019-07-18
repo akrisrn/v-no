@@ -3,7 +3,7 @@
         <div :class="{hide: !isCoverShow}" id="header">
             <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover"
                  v-if="cover"></div>
-            <header :class="{float: isCoverShow}">{{ title }}</header>
+            <header :class="{float: isHeaderFloat}">{{ title }}</header>
         </div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
@@ -38,6 +38,7 @@
         public cover = '';
         public title = '';
         public isCoverShow = true;
+        public isHeaderFloat = false;
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
@@ -65,8 +66,10 @@
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
+                this.isHeaderFloat = false;
             } else {
                 this.isCoverShow = true;
+                this.isHeaderFloat = true;
                 this.cover = url;
             }
         }
@@ -204,8 +207,6 @@
                 height 150px
 
         header
-            max-width 1000px
-            margin 0 auto
             padding-top 24px
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
@@ -215,7 +216,7 @@
             position relative
             top 50%
             transform translateY(-50%)
-            transition padding-top 1s ease, color 1s ease, font-size 1s ease
+            transition padding-top 1s ease, color 1s ease, font-size 1s ease, text-shadow 1s ease
 
             &.float
                 padding-top 0
