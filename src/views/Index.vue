@@ -3,7 +3,7 @@
         <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
-                <header :class="{float: isHeaderFloat}" :style="{top: `${headerTop}px`}">{{ title }}</header>
+                <header :class="{float: isHeaderFloat}">{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
                          @update:data="data = $event">
@@ -34,7 +34,6 @@
         public data = '';
         public cover = '';
         public title = '';
-        public headerTop = 20;
         public resizeTimeout = -1;
         public isCoverShow = true;
         public isHeaderFloat = false;
@@ -70,7 +69,6 @@
             if (url === '') {
                 this.isCoverShow = false;
                 this.isHeaderFloat = false;
-                this.headerTop = 20;
             } else {
                 this.isCoverShow = true;
                 this.isHeaderFloat = true;
@@ -88,13 +86,16 @@
                         if (window.innerWidth < 750) {
                             coverHeight -= 50;
                         }
-                        let headerHeight = document.querySelector('header')!.scrollHeight;
-                        if (headerHeight % 40 === 0) {
-                            headerHeight += (headerHeight / 40) * 13;
+                        const header = document.querySelector('header')!;
+                        let headerHeight = header.scrollHeight;
+                        if (headerHeight >= 80) {
+                            headerHeight = 53 * 2;
+                        } else {
+                            headerHeight = 53;
                         }
-                        this.headerTop = -(coverHeight + headerHeight / 2 - 100);
+                        header.style.top = `${-(coverHeight + headerHeight / 2 - 100)}px`;
                     }
-                }, this.resizeTimeout === -1 ? 0 : 500);
+                }, this.resizeTimeout === -1 ? 200 : 500);
             }
         }
 
@@ -219,6 +220,7 @@
             text-align center
             margin-bottom 24px
             position relative
+            top 20px
             left 50%
             transform translate(-50%, -50%)
             transition color 1s ease, font-size 1s ease, top 1s ease
