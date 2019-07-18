@@ -35,6 +35,7 @@
         public cover = '';
         public title = '';
         public headerTop = 20;
+        public headerHeight = 0;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -61,6 +62,14 @@
         }
 
         // noinspection JSUnusedGlobalSymbols
+        public mounted() {
+            setTimeout(() => {
+                this.headerHeight = document.querySelector('header')!.scrollHeight;
+                window.addEventListener('resize', this.setHeaderTop);
+            }, 0);
+        }
+
+        // noinspection JSUnusedGlobalSymbols
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
@@ -69,10 +78,17 @@
             } else {
                 this.isCoverShow = true;
                 this.isHeaderFloat = true;
-                const scrollHeight = document.querySelector('header')!.scrollHeight;
-                this.headerTop = -(250 + (scrollHeight - 200) / 2);
+                this.setHeaderTop();
                 this.cover = url;
             }
+        }
+
+        public setHeaderTop() {
+            let coverHeight = 250;
+            if (window.innerWidth < 750) {
+                coverHeight = 200;
+            }
+            this.headerTop = -(coverHeight + (this.headerHeight - 200) / 2);
         }
 
         public returnHome() {
@@ -233,4 +249,7 @@
 
         &.hide
             height 0
+
+        @media screen and (max-width: 750px)
+            height 150px
 </style>
