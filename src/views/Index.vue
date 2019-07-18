@@ -3,7 +3,7 @@
         <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
-                <header>{{ title }}</header>
+                <header :class="{float: isHeaderFloat}">{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
                          @update:data="data = $event">
@@ -35,6 +35,7 @@
         public cover = '';
         public title = '';
         public isCoverShow = true;
+        public isHeaderFloat = false;
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
@@ -62,8 +63,10 @@
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
+                this.isHeaderFloat = false;
             } else {
                 this.isCoverShow = true;
+                this.isHeaderFloat = true;
                 this.cover = url;
             }
         }
@@ -191,6 +194,23 @@
             font-weight 600
             text-align center
             margin-bottom 24px
+            position relative
+            top 20px
+            left 50%
+            transform translate(-50%, -50%)
+            transition color 1s ease, font-size 1s ease, top 1s ease
+
+            &.float
+                height 0
+                color #f1f1f1
+                text-shadow 3px 3px 3px #2d2d2d
+                font-size 40px
+                margin-bottom 0
+                top (-(cover-height / 2) - 80)
+
+                @media screen and (max-width: 750px)
+                    font-size 30px
+                    top (-(cover-min-height / 2) - 65)
 
         footer
             margin-top 16px
