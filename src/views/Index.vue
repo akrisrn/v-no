@@ -33,9 +33,9 @@
         public show = false;
         public data = '';
         public cover = '';
-        public isCoverShow = true;
         public icon = '';
         public title = '';
+        public isCoverShow = true;
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
