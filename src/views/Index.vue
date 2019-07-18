@@ -1,7 +1,6 @@
 <template>
     <div>
-        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}"
-             id="cover" v-if="cover"></div>
+        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
                 <header :class="{float: isHeaderFloat}" :style="{top: `${headerTop}px`}">{{ title }}</header>
