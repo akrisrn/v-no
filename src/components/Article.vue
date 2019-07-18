@@ -15,7 +15,6 @@
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
         @Prop() public setCover!: (url: string) => void;
-        @Prop() public setIcon!: (url: string) => void;
 
         public classObject = [{
             index: this.isIndex,
@@ -49,7 +48,6 @@
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateCover();
-                this.updateIcon();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -229,17 +227,6 @@
                 this.setCover(cover.getAttribute('src')!);
             } else {
                 this.setCover('');
-            }
-        }
-
-        // noinspection JSMethodCanBeStatic
-        public updateIcon() {
-            const icon = document.querySelector<HTMLImageElement>('article img.icon');
-            if (icon) {
-                this.setIcon(icon.getAttribute('src')!);
-                icon.parentElement!.remove();
-            } else {
-                this.setIcon('');
             }
         }
 

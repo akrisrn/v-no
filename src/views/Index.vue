@@ -3,10 +3,10 @@
         <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
-                <header><img :src="icon" alt id="icon" v-if="icon"/>{{ title }}</header>
+                <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
-                         :setIcon="setIcon" @update:data="data = $event">
+                         @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory">
                     <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
@@ -33,7 +33,6 @@
         public show = false;
         public data = '';
         public cover = '';
-        public icon = '';
         public title = '';
         public isCoverShow = true;
         public isError = false;
@@ -67,11 +66,6 @@
                 this.isCoverShow = true;
                 this.cover = url;
             }
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-        public setIcon(url: string) {
-            this.icon = url;
         }
 
         public returnHome() {
@@ -222,8 +216,4 @@
 
         @media screen and (max-width: 750px)
             height 150px
-
-    #icon
-        height 40px
-        margin-right 16px
 </style>
