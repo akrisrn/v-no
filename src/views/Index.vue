@@ -34,7 +34,7 @@
         public data = '';
         public cover = '';
         public title = '';
-        public resizeTimeout = -1;
+        public resizeTimeout = 0;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -43,9 +43,6 @@
             next();
             if (!this.cover) {
                 this.cover = ' ';
-            }
-            if (this.resizeTimeout === 0) {
-                this.resizeTimeout = -1;
             }
             this.show = false;
             this.updateData();
@@ -78,7 +75,7 @@
         }
 
         public setHeaderTop() {
-            if (this.resizeTimeout <= 0) {
+            if (this.resizeTimeout === 0) {
                 this.resizeTimeout = setTimeout(() => {
                     this.resizeTimeout = 0;
                     if (this.isCoverShow) {
@@ -95,7 +92,7 @@
                         }
                         header.style.top = `${-(coverHeight + headerHeight / 2 - 100)}px`;
                     }
-                }, this.resizeTimeout === -1 ? 200 : 500);
+                }, 200);
             }
         }
 
