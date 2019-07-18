@@ -83,15 +83,17 @@
             if (this.resizeTimeout <= 0) {
                 this.resizeTimeout = setTimeout(() => {
                     this.resizeTimeout = 0;
-                    let coverHeight = 250;
-                    if (window.innerWidth < 750) {
-                        coverHeight = 200;
+                    if (this.isCoverShow) {
+                        let coverHeight = 250;
+                        if (window.innerWidth < 750) {
+                            coverHeight = 200;
+                        }
+                        let headerHeight = document.querySelector('header')!.scrollHeight;
+                        if (headerHeight % 40 === 0) {
+                            headerHeight += (headerHeight / 40) * 13;
+                        }
+                        this.headerTop = -(coverHeight + headerHeight / 2 - 100);
                     }
-                    let headerHeight = document.querySelector('header')!.scrollHeight;
-                    if (headerHeight % 40 === 0) {
-                        headerHeight += (headerHeight / 40) * 13;
-                    }
-                    this.headerTop = -(coverHeight + headerHeight / 2 - 100);
                 }, this.resizeTimeout === -1 ? 0 : 500);
             }
         }
