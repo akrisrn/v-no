@@ -1,9 +1,12 @@
 <template>
     <div>
-        <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover" v-if="cover"></div>
+        <div :class="{hide: !isCoverShow}" id="header">
+            <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover"
+                 v-if="cover"></div>
+            <header :class="{float: isCoverShow}">{{ title }}</header>
+        </div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
-                <header :class="{float: isHeaderFloat}">{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
                          @update:data="data = $event">
@@ -34,9 +37,7 @@
         public data = '';
         public cover = '';
         public title = '';
-        public resizeTimeout = 0;
         public isCoverShow = true;
-        public isHeaderFloat = false;
         public isError = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
@@ -58,41 +59,15 @@
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData();
-            window.addEventListener('resize', this.setHeaderTop, false);
         }
 
         // noinspection JSUnusedGlobalSymbols
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
-                this.isHeaderFloat = false;
             } else {
                 this.isCoverShow = true;
-                this.isHeaderFloat = true;
-                this.setHeaderTop();
                 this.cover = url;
-            }
-        }
-
-        public setHeaderTop() {
-            if (this.resizeTimeout === 0) {
-                this.resizeTimeout = setTimeout(() => {
-                    this.resizeTimeout = 0;
-                    if (this.isCoverShow) {
-                        let coverHeight = 250;
-                        if (window.innerWidth < 750) {
-                            coverHeight -= 55;
-                        }
-                        const header = document.querySelector('header')!;
-                        let headerHeight = header.scrollHeight;
-                        if (headerHeight >= 80) {
-                            headerHeight = 53 * 2;
-                        } else {
-                            headerHeight = 53;
-                        }
-                        header.style.top = `${-(coverHeight + headerHeight / 2 - 100)}px`;
-                    }
-                }, 200);
             }
         }
 
@@ -201,6 +176,56 @@
     body
         margin 0
 
+    #header
+        height 250px
+        transition height 1s ease
+
+        &.hide
+            height 64px
+
+        @media screen and (max-width: 750px)
+            height 150px
+
+        #cover
+            width 100%
+            height 250px
+            filter brightness(0.7) blur(3px)
+            background-color darkgray
+            background-size cover
+            background-attachment fixed
+            position absolute
+            z-index -1
+            transition height 1s ease
+
+            &.hide
+                height 0
+
+            @media screen and (max-width: 750px)
+                height 150px
+
+        header
+            max-width 1000px
+            margin 0 auto
+            padding-top 24px
+            color #4a4a4a
+            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
+            font-size 30px
+            font-weight bold
+            text-align center
+            position relative
+            top 50%
+            transform translateY(-50%)
+            transition padding-top 1s ease, color 1s ease, font-size 1s ease
+
+            &.float
+                padding-top 0
+                color #f1f1f1
+                font-size 40px
+                text-shadow 3px 3px 3px #2d2d2d
+
+                @media screen and (max-width: 750px)
+                    font-size 30px
+
     main
         max-width 700px
         margin 24px auto
@@ -208,29 +233,6 @@
         @media screen and (max-width: 750px)
             margin-left 16px
             margin-right 16px
-
-        header
-            color #4a4a4a
-            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-            font-size 30px
-            font-weight bold
-            text-align center
-            margin-bottom 24px
-            position relative
-            top 20px
-            left 50%
-            transform translate(-50%, -50%)
-            transition color 1s ease, font-size 1s ease, top 1s ease
-
-            &.float
-                height 0
-                color #f1f1f1
-                text-shadow 3px 3px 3px #2d2d2d
-                font-size 40px
-                margin-bottom 0
-
-                @media screen and (max-width: 750px)
-                    font-size 30px
 
         footer
             margin-top 16px
@@ -244,18 +246,4 @@
         .date
             float right
             color darkgray
-
-    #cover
-        height 250px
-        filter brightness(0.7) blur(3px)
-        background-color white
-        background-size cover
-        background-attachment fixed
-        transition height 1s ease
-
-        &.hide
-            height 0
-
-        @media screen and (max-width: 750px)
-            height 150px
 </style>
