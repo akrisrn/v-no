@@ -88,7 +88,7 @@
             if (window.innerWidth < 750) {
                 coverHeight = 200;
             }
-            this.headerTop = -(coverHeight + (this.headerHeight - 200) / 2);
+            this.headerTop = -(coverHeight + this.headerHeight / 2 - 100);
         }
 
         public returnHome() {
