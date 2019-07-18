@@ -210,7 +210,7 @@
 
     #cover
         height 250px
-        filter brightness(0.7)
+        filter brightness(0.7) blur(1px)
         background-color white
         background-size cover
         background-attachment fixed
