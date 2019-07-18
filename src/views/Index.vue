@@ -36,6 +36,7 @@
         public title = '';
         public headerTop = 20;
         public headerHeight = 0;
+        public resizeTimeout = 0;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -59,7 +60,7 @@
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData();
-            window.addEventListener('resize', this.setHeaderTop);
+            window.addEventListener('resize', this.setHeaderTop, false);
         }
 
         // noinspection JSUnusedGlobalSymbols
@@ -77,16 +78,21 @@
         }
 
         public setHeaderTop() {
-            let coverHeight = 250;
-            if (window.innerWidth < 750) {
-                coverHeight = 200;
+            if (this.resizeTimeout === 0) {
+                this.resizeTimeout = setTimeout(() => {
+                    this.resizeTimeout = 0;
+                    let coverHeight = 250;
+                    if (window.innerWidth < 750) {
+                        coverHeight = 200;
+                    }
+                    let headerHeight = this.headerHeight;
+                    if (headerHeight === 0) {
+                        headerHeight = document.querySelector('header')!.scrollHeight;
+                        this.headerHeight = headerHeight;
+                    }
+                    this.headerTop = -(coverHeight + headerHeight / 2 - 100);
+                }, 100);
             }
-            let headerHeight = this.headerHeight;
-            if (headerHeight === 0) {
-                headerHeight = document.querySelector('header')!.scrollHeight;
-                this.headerHeight = headerHeight;
-            }
-            this.headerTop = -(coverHeight + headerHeight / 2 - 100);
         }
 
         public returnHome() {
