@@ -86,7 +86,7 @@
                     if (this.isCoverShow) {
                         let coverHeight = 250;
                         if (window.innerWidth < 750) {
-                            coverHeight = 200;
+                            coverHeight -= 50;
                         }
                         let headerHeight = document.querySelector('header')!.scrollHeight;
                         if (headerHeight % 40 === 0) {
