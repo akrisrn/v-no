@@ -59,14 +59,7 @@
         // noinspection JSUnusedGlobalSymbols
         public created() {
             this.updateData();
-        }
-
-        // noinspection JSUnusedGlobalSymbols
-        public mounted() {
-            setTimeout(() => {
-                this.headerHeight = document.querySelector('header')!.scrollHeight;
-                window.addEventListener('resize', this.setHeaderTop);
-            }, 0);
+            window.addEventListener('resize', this.setHeaderTop);
         }
 
         // noinspection JSUnusedGlobalSymbols
@@ -88,7 +81,12 @@
             if (window.innerWidth < 750) {
                 coverHeight = 200;
             }
-            this.headerTop = -(coverHeight + this.headerHeight / 2 - 100);
+            let headerHeight = this.headerHeight;
+            if (headerHeight === 0) {
+                headerHeight = document.querySelector('header')!.scrollHeight;
+                this.headerHeight = headerHeight;
+            }
+            this.headerTop = -(coverHeight + headerHeight / 2 - 100);
         }
 
         public returnHome() {
