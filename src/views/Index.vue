@@ -35,8 +35,7 @@
         public cover = '';
         public title = '';
         public headerTop = 20;
-        public headerHeight = 0;
-        public resizeTimeout = 0;
+        public resizeTimeout = -1;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -45,6 +44,9 @@
             next();
             if (!this.cover) {
                 this.cover = ' ';
+            }
+            if (this.resizeTimeout === 0) {
+                this.resizeTimeout = -1;
             }
             this.show = false;
             this.updateData();
@@ -78,20 +80,19 @@
         }
 
         public setHeaderTop() {
-            if (this.resizeTimeout === 0) {
+            if (this.resizeTimeout <= 0) {
                 this.resizeTimeout = setTimeout(() => {
                     this.resizeTimeout = 0;
                     let coverHeight = 250;
                     if (window.innerWidth < 750) {
                         coverHeight = 200;
                     }
-                    let headerHeight = this.headerHeight;
-                    if (headerHeight === 0) {
-                        headerHeight = document.querySelector('header')!.scrollHeight;
-                        this.headerHeight = headerHeight;
+                    let headerHeight = document.querySelector('header')!.scrollHeight;
+                    if (headerHeight % 40 === 0) {
+                        headerHeight += (headerHeight / 40) * 13;
                     }
                     this.headerTop = -(coverHeight + headerHeight / 2 - 100);
-                }, 100);
+                }, this.resizeTimeout === -1 ? 0 : 500);
             }
         }
 
