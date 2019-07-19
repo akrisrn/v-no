@@ -1,8 +1,9 @@
 <template>
     <div>
         <div :class="{hide: !isCoverShow}" id="header">
-            <div :class="{hide: !isCoverShow}" :style="{backgroundImage: `url(${cover})`}" id="cover"
-                 v-if="cover"></div>
+            <div :class="{hide: !isCoverShow}" id="cover" v-if="cover">
+                <div :style="{backgroundImage: `url(${cover})`}"></div>
+            </div>
             <header :class="{float: isHeaderFloat}">{{ title }}</header>
         </div>
         <transition name="slide-fade">
@@ -192,16 +193,18 @@
         #cover
             width 100%
             height 250px
-            filter brightness(0.7) blur(3px)
             background-color darkgray
-            background-size cover
-            background-attachment fixed
             position absolute
-            z-index -1
             transition height 1s ease
 
             &.hide
                 height 0
+
+            div
+                height 100%
+                filter brightness(0.7) blur(3px)
+                background-size cover
+                background-attachment fixed
 
             @media screen and (max-width: 750px)
                 height 150px
