@@ -94,7 +94,7 @@
             }).join('\n');
             if (!noToc) {
                 let tocHtml = '<div id="toc">';
-                if (toc.length > 7) {
+                if (toc.length > 7 && !this.isCategory) {
                     let mid = Math.ceil(toc.length / 2);
                     while (toc[mid] && !toc[mid].startsWith('-')) {
                         mid += 1;
@@ -105,7 +105,7 @@
                     tocHtml += this.markdownIt.render(toc.join('\n'));
                 }
                 tocHtml += '</div>';
-                tocHtml = tocHtml.replace(/<ul>/g, '<ul class="toc">');
+                tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${this.isCategory ? ' tags' : ''}">`);
                 data = data.replace(/\[toc]/i, tocHtml);
             }
             return this.markdownIt.render(data);
@@ -527,6 +527,16 @@
             display none
 
     .index
+        ul.toc.tags
+            padding-left 0
+
+            li
+                display inline
+
+                + li:before
+                    content '|'
+                    margin-right 8px
+
         ul:not(.toc)
             padding-left 0
 
