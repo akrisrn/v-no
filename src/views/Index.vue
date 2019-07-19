@@ -4,7 +4,9 @@
             <div :class="{hide: !isCoverShow}" id="cover" v-if="cover">
                 <div :style="{backgroundImage: `url(${cover})`}"></div>
             </div>
-            <header :class="{float: isHeaderFloat}">{{ title }}</header>
+            <transition name="slide-fade">
+                <header :class="{float: isHeaderFloat}" v-if="show">{{ title }}</header>
+            </transition>
         </div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="show">
@@ -168,14 +170,14 @@
 
 <style lang="stylus">
     .slide-fade-enter-active
-        transition all 0.5s
+        transition all 0.5s !important
 
     .slide-fade-leave-active
-        transition all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+        transition all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0) !important
 
     .slide-fade-enter, .slide-fade-leave-to
-        transform translateY(10px)
-        opacity 0
+        transform translateY(10px) !important
+        opacity 0 !important
 
     body
         margin 0
@@ -202,7 +204,7 @@
 
             div
                 height 100%
-                filter brightness(0.7) blur(3px)
+                filter brightness(0.8) blur(3px)
                 background-size cover
                 background-attachment fixed
 
@@ -219,13 +221,13 @@
             position relative
             top 50%
             transform translateY(-50%)
-            transition padding-top 1s, color 1s, font-size 1s, text-shadow 1s
 
             &.float
                 padding-top 0
                 color #f1f1f1
                 font-size 40px
                 text-shadow 3px 3px 3px #2d2d2d
+                transition font-size 1s
 
                 @media screen and (max-width: 750px)
                     font-size 30px
