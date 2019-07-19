@@ -182,12 +182,23 @@
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 const parent = img.parentElement!;
                 parent.classList.add('hide');
+                let loadings = parent.previousElementSibling;
+                if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
+                    loadings = document.createElement('div');
+                    loadings.classList.add('lds-ellipsis');
+                    for (let i = 0; i < 4; i++) {
+                        loadings.append(document.createElement('div'));
+                    }
+                    parent.parentElement!.insertBefore(loadings, parent);
+                }
                 if (img.naturalWidth === 0) {
                     img.onload = () => {
                         parent.classList.remove('hide');
+                        loadings!.remove();
                     };
                 } else {
                     parent.classList.remove('hide');
+                    loadings.remove();
                 }
 
                 if (parent.tagName === 'DT') {
@@ -578,4 +589,57 @@
                         font-family sans-serif
                         content '#'
                         margin-right 2px
+
+    .lds-ellipsis
+        position relative
+        width 50px
+        height 100px
+        margin 0 auto
+
+        div
+            position absolute
+            top 45px
+            width 10px
+            height 10px
+            border-radius 50%
+            background darkgray
+            animation-timing-function cubic-bezier(0, 1, 1, 0)
+
+            &:nth-child(1)
+                animation lds-ellipsis1 1s infinite
+
+            &:nth-child(2)
+                animation lds-ellipsis2 1s infinite
+
+            &:nth-child(3)
+                left 20px
+                animation lds-ellipsis2 1s infinite
+
+            &:nth-child(4)
+                left 40px
+                animation lds-ellipsis3 1s infinite
+
+    @keyframes lds-ellipsis1
+        from {
+            transform scale(0)
+        }
+        to {
+            transform scale(1)
+        }
+
+    @keyframes lds-ellipsis2
+        from {
+            transform translate(0, 0)
+        }
+        to {
+            transform translate(20px, 0)
+        }
+
+    @keyframes lds-ellipsis3
+        from {
+            transform scale(1)
+        }
+        to {
+            transform scale(0)
+        }
 </style>
