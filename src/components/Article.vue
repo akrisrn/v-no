@@ -619,27 +619,27 @@
                 left 40px
                 animation lds-ellipsis3 1s infinite
 
-    @keyframes lds-ellipsis1
-        from {
-            transform scale(0)
-        }
-        to {
-            transform scale(1)
-        }
+            @keyframes lds-ellipsis1
+                from {
+                    transform scale(0)
+                }
+                to {
+                    transform scale(1)
+                }
 
-    @keyframes lds-ellipsis2
-        from {
-            transform translate(0, 0)
-        }
-        to {
-            transform translate(20px, 0)
-        }
+            @keyframes lds-ellipsis2
+                from {
+                    transform translate(0, 0)
+                }
+                to {
+                    transform translate(20px, 0)
+                }
 
-    @keyframes lds-ellipsis3
-        from {
-            transform scale(1)
-        }
-        to {
-            transform scale(0)
-        }
+            @keyframes lds-ellipsis3
+                from {
+                    transform scale(1)
+                }
+                to {
+                    transform scale(0)
+                }
 </style>
