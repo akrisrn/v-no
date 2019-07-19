@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cd THIS_PROJECT_ROOT_PATH && yarn run prerender
