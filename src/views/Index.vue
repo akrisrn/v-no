@@ -187,7 +187,12 @@
         transition height 1s
 
         &.hide
-            height 64px
+            height 100px
+
+            header
+                max-width 700px
+                margin 0 auto
+                padding-top 16px
 
         @media screen and (max-width: 750px)
             height 150px
@@ -212,7 +217,6 @@
                 height 150px
 
         header
-            padding-top 24px
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 30px
@@ -223,7 +227,6 @@
             transform translateY(-50%)
 
             &.float
-                padding-top 0
                 color #f1f1f1
                 font-size 40px
                 text-shadow 3px 3px 3px #2d2d2d
