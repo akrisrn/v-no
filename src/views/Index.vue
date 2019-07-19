@@ -168,7 +168,7 @@
 
 <style lang="stylus">
     .slide-fade-enter-active
-        transition all 0.5s ease
+        transition all 0.5s
 
     .slide-fade-leave-active
         transition all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0)
@@ -182,7 +182,7 @@
 
     #header
         height 250px
-        transition height 1s ease
+        transition height 1s
 
         &.hide
             height 64px
@@ -195,7 +195,7 @@
             height 250px
             background-color darkgray
             position absolute
-            transition height 1s ease
+            transition height 1s
 
             &.hide
                 height 0
@@ -219,7 +219,7 @@
             position relative
             top 50%
             transform translateY(-50%)
-            transition padding-top 1s ease, color 1s ease, font-size 1s ease, text-shadow 1s ease
+            transition padding-top 1s, color 1s, font-size 1s, text-shadow 1s
 
             &.float
                 padding-top 0
