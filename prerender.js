@@ -21,7 +21,7 @@ const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
 
 if (!host || !dir) return;
 
-host = url.resolve(host, indexPath);
+const index = url.resolve(host, indexPath);
 
 function getAbspath(filepath) {
     return path.join(dir, filepath)
@@ -87,7 +87,7 @@ async function loadPages(browser, files) {
             continue
         }
         hasLoaded.push(filepath);
-        const urlPath = url.resolve(host, '#' + filepath);
+        const urlPath = url.resolve(index, '#' + filepath);
         pages.push(browser.newPage().then(async (page) => {
             const [html, newFiles] = await getHtmlAndFiles(page, urlPath);
             if (html !== null) {
@@ -105,12 +105,12 @@ async function loadPages(browser, files) {
     const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
-    const [html, files] = await getHtmlAndFiles(page, host);
+    const [html, files] = await getHtmlAndFiles(page, index);
     if (html !== null) {
         writeHtml('index.html', html);
         await loadPages(browser, files);
     } else {
-        console.error('error:', host);
+        console.error('error:', index);
     }
 
     await browser.close();
