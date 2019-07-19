@@ -441,14 +441,13 @@
             &.no-shadow
                 box-shadow none
 
-            &.w400
-                max-width 400px
+            for i in 3..6
+                {'&.w' + i * 100}
+                    max-width i * 100px
 
-            &.w500
-                max-width 500px
-
-            &.w600
-                max-width 600px
+            for i in 1..4
+                {'&.h' + i * 100}
+                    height i * 100px
 
         mark
             border-radius 3px
