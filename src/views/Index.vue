@@ -187,12 +187,14 @@
         transition height 1s
 
         &.hide
-            height 100px
+            height 120px
 
             header
                 max-width 700px
                 margin 0 auto
-                padding-top 16px
+
+            + main
+                margin-top 0
 
         @media screen and (max-width: 750px)
             height 150px
