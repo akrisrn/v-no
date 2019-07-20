@@ -219,7 +219,12 @@
                     if (isNaN(width)) {
                         if (match[1].startsWith('.')) {
                             match[1].substr(1).split('.').forEach((cls) => {
-                                img.classList.add(cls.trim());
+                                cls = cls.trim();
+                                if (cls === 'hidden') {
+                                    parent.classList.add(cls);
+                                } else {
+                                    img.classList.add(cls);
+                                }
                             });
                         } else {
                             img.setAttribute('style', match[1]);
