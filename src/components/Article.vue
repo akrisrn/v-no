@@ -58,6 +58,7 @@
         }
 
         public renderMD(data: string, noToc = false) {
+            let article: HTMLElement;
             const toc: string[] = [];
             let firstHeader = '';
             data = data.split('\n').map((line) => {
@@ -81,8 +82,12 @@
                         const m = jsExpMatch.match(getWrapRegExp('\\$', '\\$'))!;
                         let result = '';
                         try {
+                            if (!article) {
+                                article = document.createElement('article');
+                                article.innerHTML = this.markdownIt.render(data);
+                            }
                             // tslint:disable-next-line:no-eval
-                            result = eval(m[1]);
+                            result = eval(`(function(article){${m[1]}})`)(article);
                         } catch (e) {
                             result = `${e.name}: ${e.message}`;
                         }
