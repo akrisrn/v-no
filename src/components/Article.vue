@@ -186,32 +186,6 @@
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 const parent = img.parentElement!;
-                parent.classList.add('hidden');
-                let loadings = parent.previousElementSibling;
-                if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
-                    loadings = document.createElement('div');
-                    loadings.classList.add('lds-ellipsis');
-                    for (let i = 0; i < 4; i++) {
-                        loadings.append(document.createElement('div'));
-                    }
-                    parent.parentElement!.insertBefore(loadings, parent);
-                }
-                if (img.naturalWidth === 0) {
-                    img.onload = () => {
-                        parent.classList.remove('hidden');
-                        loadings!.remove();
-                    };
-                } else {
-                    parent.classList.remove('hidden');
-                    loadings.remove();
-                }
-
-                if (parent.tagName === 'DT') {
-                    parent.parentElement!.classList.add('center');
-                } else {
-                    parent.classList.add('center');
-                }
-
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
                 if (match) {
@@ -237,6 +211,34 @@
                     } else {
                         img.src = new URL(img.src).pathname;
                     }
+                }
+
+                let loadings = parent.previousElementSibling;
+                if (!parent.classList.contains('hidden') || (loadings && loadings.classList.contains('lds-ellipsis'))) {
+                    parent.classList.add('hidden');
+                    if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
+                        loadings = document.createElement('div');
+                        loadings.classList.add('lds-ellipsis');
+                        for (let i = 0; i < 4; i++) {
+                            loadings.append(document.createElement('div'));
+                        }
+                        parent.parentElement!.insertBefore(loadings, parent);
+                    }
+                    if (img.naturalWidth === 0) {
+                        img.onload = () => {
+                            parent.classList.remove('hidden');
+                            loadings!.remove();
+                        };
+                    } else {
+                        parent.classList.remove('hidden');
+                        loadings.remove();
+                    }
+                }
+
+                if (parent.tagName === 'DT') {
+                    parent.parentElement!.classList.add('center');
+                } else {
+                    parent.classList.add('center');
                 }
             });
         }
