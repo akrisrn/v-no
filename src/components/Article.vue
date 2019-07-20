@@ -186,7 +186,7 @@
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
                 const parent = img.parentElement!;
-                parent.classList.add('hide');
+                parent.classList.add('hidden');
                 let loadings = parent.previousElementSibling;
                 if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
                     loadings = document.createElement('div');
@@ -198,11 +198,11 @@
                 }
                 if (img.naturalWidth === 0) {
                     img.onload = () => {
-                        parent.classList.remove('hide');
+                        parent.classList.remove('hidden');
                         loadings!.remove();
                     };
                 } else {
-                    parent.classList.remove('hide');
+                    parent.classList.remove('hidden');
                     loadings.remove();
                 }
 
@@ -528,7 +528,7 @@
         .center
             text-align center
 
-        .hide
+        .hidden
             display none
 
     .index
@@ -577,9 +577,6 @@
 
                 .date
                     margin-left 8px
-
-            .hidden
-                display none
 
             .more
                 font-size 13px

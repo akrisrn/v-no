@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div :class="{hide: !isCoverShow}" id="header">
-            <div :class="{hide: !isCoverShow}" id="cover" v-if="cover">
+        <div :class="{hidden: !isCoverShow}" id="header">
+            <div :class="{hidden: !isCoverShow}" id="cover" v-if="cover">
                 <div :style="{backgroundImage: `url(${cover})`}"></div>
             </div>
             <transition name="slide-fade">
@@ -186,7 +186,7 @@
         height 250px
         transition height 1s
 
-        &.hide
+        &.hidden
             height 120px
 
             header
@@ -206,7 +206,7 @@
             position absolute
             transition height 1s
 
-            &.hide
+            &.hidden
                 height 0
 
             div
