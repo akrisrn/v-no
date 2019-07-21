@@ -45,6 +45,7 @@
             setTimeout(() => {
                 this.updateDD();
                 this.updateToc();
+                this.updateTable();
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateCover();
@@ -162,6 +163,25 @@
                         }
                     }
                 });
+            });
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public updateTable() {
+            document.querySelectorAll('article table').forEach((table) => {
+                const thead = table.querySelector('thead');
+                if (thead) {
+                    let isTheadEmpty = true;
+                    for (const th of thead.querySelectorAll('th')) {
+                        if (th.innerText) {
+                            isTheadEmpty = false;
+                            break;
+                        }
+                    }
+                    if (isTheadEmpty) {
+                        thead.remove();
+                    }
+                }
             });
         }
 
