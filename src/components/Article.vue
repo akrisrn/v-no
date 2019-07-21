@@ -495,8 +495,13 @@
 
         table
             thead tr
-                border-top none
                 border-bottom 2px solid #c6cbd1
+
+            tr
+                border-top none
+
+            tr + tr
+                border-top 1px solid #c6cbd1
 
             tr, tr:nth-child(2n)
                 background-color transparent
@@ -504,9 +509,11 @@
             td, th
                 border none
 
+            td + td, th + th
+                border-left 1px solid #c6cbd1
+
             th
                 text-align left
-
 
         #toc
             font-size 13px
