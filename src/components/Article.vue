@@ -473,7 +473,7 @@
 
             dd
                 font-size 13px
-                color darkgray
+                color gray
                 padding 0
 
                 &:before
@@ -493,8 +493,20 @@
         kbd
             margin-bottom 3px
 
-        em > small
-            color darkgray
+        table
+            thead tr
+                border-top none
+                border-bottom 2px solid #c6cbd1
+
+            tr, tr:nth-child(2n)
+                background-color transparent
+
+            td, th
+                border none
+
+            th
+                text-align left
+
 
         #toc
             font-size 13px
