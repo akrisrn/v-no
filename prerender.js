@@ -18,6 +18,7 @@ const spawn = require('cross-spawn');
 let host = process.env.PRERENDER_HOST;
 const dir = process.env.PRERENDER_DIR;
 const indexPath = process.env.VUE_APP_INDEX_PATH;
+const indexFile = process.env.VUE_APP_INDEX_FILE;
 const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
 
 if (!host || !dir) return;
@@ -72,9 +73,12 @@ async function getHtmlAndFiles(page, urlPath) {
             return [null, null]
         }
         if (lastUpdatedDate) {
-            const footerDate = document.querySelector('footer .date');
-            if (footerDate && footerDate.innerText !== lastUpdatedDate) {
-                footerDate.innerText = lastUpdatedDate + ' (Last Updated)'
+            let date = document.querySelector('footer .date');
+            if (!date) {
+                date = document.querySelector('.updated.date');
+            }
+            if (date && date.innerText !== lastUpdatedDate) {
+                date.innerText = lastUpdatedDate + ' (Last Updated)'
             }
         }
         const files = [];
@@ -125,7 +129,7 @@ async function loadPages(browser, files) {
     const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
-    const [html, files] = await getHtmlAndFiles(page, index);
+    const [html, files] = await getHtmlAndFiles(page, url.resolve(index, '#/' + indexFile));
     if (html !== null) {
         writeHtml('index.html', html);
         await loadPages(browser, files);
