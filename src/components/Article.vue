@@ -545,6 +545,7 @@
 
                 @media screen and (max-width: 750px)
                     max-width none
+                    width 100%
 
             .ul-a
                 margin-bottom .25em
