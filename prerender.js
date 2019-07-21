@@ -3,6 +3,7 @@ const url = require('url');
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
+const spawn = require('cross-spawn');
 
 ['.env', '.env.local', '.env.production.local'].forEach((filename) => {
     try {
@@ -22,6 +23,19 @@ const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
 if (!host || !dir) return;
 
 const index = url.resolve(host, indexPath);
+
+function getLastUpdatedDate(filepath) {
+    try {
+        const result = spawn.sync('git', ['log', '-1', '--format=%ct', filepath], {cwd: dir}).stdout.toString();
+        if (result) {
+            return new Date(parseInt(result) * 1000).toDateString()
+        } else {
+            return null
+        }
+    } catch (e) {
+        return null
+    }
+}
 
 function getAbspath(filepath) {
     return path.join(dir, filepath)
@@ -53,9 +67,15 @@ async function getHtmlAndFiles(page, urlPath) {
     if (urlPath.endsWith('#/' + categoryFile)) {
         await page.waitForSelector('ul');
     }
-    return await page.evaluate(() => {
+    return await page.evaluate((lastUpdatedDate) => {
         if (document.querySelector('main.error')) {
             return [null, null]
+        }
+        if (lastUpdatedDate) {
+            const footerDate = document.querySelector('footer .date');
+            if (footerDate && footerDate.innerText !== lastUpdatedDate) {
+                footerDate.innerText = lastUpdatedDate + ' (Last Updated)'
+            }
         }
         const files = [];
         document.querySelectorAll('a').forEach((a) => {
@@ -75,7 +95,7 @@ async function getHtmlAndFiles(page, urlPath) {
             files.push(filepath)
         });
         return [document.documentElement.outerHTML, files];
-    });
+    }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
 
 const hasLoaded = [];

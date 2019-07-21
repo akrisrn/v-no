@@ -34,6 +34,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.5.3",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "cross-spawn": "latest"
   }
 }
