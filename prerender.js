@@ -78,7 +78,7 @@ async function getHtmlAndFiles(page, urlPath) {
                 date = document.querySelector('.updated.date');
             }
             if (date && date.innerText !== lastUpdatedDate) {
-                date.innerText = lastUpdatedDate + ' (Last Updated)'
+                date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '')
             }
         }
         const files = [];
