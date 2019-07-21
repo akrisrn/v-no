@@ -541,7 +541,10 @@
 
             .ul-a, .ul-b
                 display inline-table
-                max-width 350px
+                max-width 348px
+
+                @media screen and (max-width: 750px)
+                    max-width none
 
             .ul-a
                 margin-bottom .25em
