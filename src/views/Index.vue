@@ -195,6 +195,8 @@
 
             + main
                 margin-top 0
+                padding-top 24px
+                border-top 3px double darkgray
 
         @media screen and (max-width: 750px)
             height 150px
