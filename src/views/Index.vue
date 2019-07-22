@@ -205,6 +205,7 @@
             width 100%
             height 250px
             background-color darkgray
+            overflow hidden
             position absolute
             transition height 1s
 
@@ -213,7 +214,7 @@
 
             div
                 height 100%
-                filter brightness(0.8) blur(3px)
+                filter brightness(0.8) opacity(0.8) blur(3px)
                 background-size cover
                 background-attachment fixed
 
