@@ -215,7 +215,7 @@
             div
                 height 100%
                 filter brightness(0.8) opacity(0.8) blur(3px)
-                background-size cover
+                background-size 100%
                 background-attachment fixed
 
             @media screen and (max-width: 750px)

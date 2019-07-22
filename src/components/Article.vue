@@ -577,6 +577,10 @@
         .hidden
             display none
 
+        .count:before
+            content '-'
+            margin-left 8px
+
     .index
         ul.toc.tags
             padding-left 0
