@@ -32,7 +32,28 @@
                 return '';
             },
         }).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
-            .use(require('markdown-it-task-lists'));
+            .use(require('markdown-it-task-lists')).use(require('markdown-it-container'), 'details', {
+                validate: (params: string) => {
+                    return params.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
+                },
+                render: (tokens: any, idx: number) => {
+                    if (tokens[idx].nesting === 1) {
+                        const match = tokens[idx].info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
+                        let open = '';
+                        if (match[1]) {
+                            open = ' open';
+                        }
+                        let classAttr = '';
+                        if (match[2]) {
+                            classAttr = ` class="${match[2].split('.').join(' ')}"`;
+                        }
+                        const summary = this.markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
+                        return `<details${classAttr}${open}><summary>${summary}</summary>`;
+                    } else {
+                        return '</details>';
+                    }
+                },
+            });
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
