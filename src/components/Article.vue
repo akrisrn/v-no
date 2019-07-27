@@ -477,6 +477,14 @@
                 {'&.h' + i * 100}
                     height i * 100px
 
+            &.left
+                float left
+                margin-right 16px
+
+            &.right
+                float right
+                margin-left 16px
+
         mark
             border-radius 3px
             background-color rgba(255, 235, 59, 0.5)
