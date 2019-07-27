@@ -560,6 +560,81 @@
             th
                 text-align left
 
+        details
+            overflow auto
+            margin 16px 0
+            padding 0 16px
+            box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+            border-radius 3px
+            border-left 6px solid #8f9398
+
+            ::-webkit-details-marker
+                display none
+
+            ::-moz-list-bullet
+                font-size 0
+
+            summary
+                outline none
+                margin 0 -16px
+                padding 6px 16px
+                background-color rgba(27, 31, 35, 0.1)
+
+                + *
+                    margin-top 16px
+
+                &:after
+                    float right
+                    content '▲'
+                    font-size 13px
+                    color #8f9398
+
+            &:not([open])
+                summary:after
+                    content '▼'
+
+            &.readonly summary
+                pointer-events: none;
+
+                &:after
+                    content none
+
+            &.note
+                border-left-color #448aff
+
+                summary
+                    background-color rgba(68, 138, 255, 0.1)
+
+                    &:after
+                        color #448aff
+
+            &.success
+                border-left-color #00c853
+
+                summary
+                    background-color rgba(0, 200, 83, 0.1)
+
+                    &:after
+                        color #00c853
+
+            &.warning
+                border-left-color #ff9100
+
+                summary
+                    background-color rgba(255, 145, 0, 0.1)
+
+                    &:after
+                        color #ff9100
+
+            &.danger
+                border-left-color #ff1744
+
+                summary
+                    background-color rgba(255, 23, 68, 0.1)
+
+                    &:after
+                        color #ff1744
+
         #toc
             font-size 13px
             margin-bottom 16px
