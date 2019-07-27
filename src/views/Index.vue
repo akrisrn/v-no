@@ -66,6 +66,16 @@
         }
 
         // noinspection JSUnusedGlobalSymbols
+        public mounted() {
+            window.addEventListener('scroll', () => {
+                const coverDiv = document.querySelector<HTMLDivElement>('#cover div');
+                if (coverDiv) {
+                    coverDiv.style.backgroundPositionY = -window.scrollY + 'px';
+                }
+            });
+        }
+
+        // noinspection JSUnusedGlobalSymbols
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
@@ -216,7 +226,6 @@
                 height 100%
                 filter brightness(0.8) opacity(0.8) blur(3px)
                 background-size 100%
-                background-attachment fixed
 
             @media screen and (max-width: 750px)
                 height 150px
