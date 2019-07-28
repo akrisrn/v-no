@@ -486,6 +486,11 @@
         h1, h2
             border-bottom-color lightgray
 
+        h1, h2, h3, h4, h5, h6
+            &:before
+                font-family sans-serif
+                content '◾ '
+
         img
             margin-top 8px
             background-color transparent
@@ -579,6 +584,13 @@
                 margin 0 -16px
                 padding 6px 16px
                 background-color rgba(27, 31, 35, 0.1)
+
+                h1, h2
+                    border-bottom none
+                    padding-bottom 0
+
+                h1, h2, h3, h4, h5, h6
+                    margin-bottom 24px
 
                 + *
                     margin-top 16px
