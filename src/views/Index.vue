@@ -70,7 +70,7 @@
             window.addEventListener('scroll', () => {
                 const coverDiv = document.querySelector<HTMLDivElement>('#cover div');
                 if (coverDiv) {
-                    coverDiv.style.backgroundPositionY = -window.scrollY + 'px';
+                    coverDiv.style.backgroundPositionY = -(window.scrollY < 0 ? 0 : window.scrollY) + 'px';
                 }
             });
         }
@@ -231,6 +231,7 @@
                 height 150px
 
         header
+            padding 0 24px
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 30px
