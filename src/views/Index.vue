@@ -264,8 +264,8 @@
             border-top 1px solid lightgray
 
             a.home:before
-                content '« '
                 font-family sans-serif
+                content '« '
 
         .date
             float right

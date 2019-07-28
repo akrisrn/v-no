@@ -522,9 +522,9 @@
                 padding 0
 
                 &:before
+                    font-family sans-serif
                     content '»'
                     padding-right 8px
-                    font-family sans-serif
 
                 + dd
                     margin-top -16px
@@ -706,9 +706,9 @@
                 white-space nowrap
 
                 &:before
+                    font-family sans-serif
                     content '»'
                     padding-right 8px
-                    font-family sans-serif
 
                 blockquote
                     border-left none
