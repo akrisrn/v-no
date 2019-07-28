@@ -68,7 +68,7 @@ async function getHtmlAndFiles(page, urlPath) {
     if (urlPath.endsWith('#/' + categoryFile)) {
         await page.waitForSelector('ul');
     }
-    return await page.evaluate((lastUpdatedDate) => {
+    return page.evaluate((lastUpdatedDate) => {
         if (document.querySelector('main.error')) {
             return [null, null]
         }
