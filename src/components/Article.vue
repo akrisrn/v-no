@@ -596,8 +596,9 @@
                     margin-top 16px
 
                 &:after
-                    float right
+                    font-family sans-serif
                     content '▲'
+                    float right
                     font-size 13px
                     color #8f9398
 
@@ -694,6 +695,7 @@
             display none
 
         .count:before
+            font-family sans-serif
             content '-'
             margin-left 8px
 
@@ -705,6 +707,7 @@
                 display inline
 
                 + li:before
+                    font-family sans-serif
                     content '|'
                     margin-right 8px
 
