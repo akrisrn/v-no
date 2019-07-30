@@ -350,7 +350,12 @@
                             }
                             return line;
                         }).join('\n');
-                        a.parentElement!.outerHTML = this.renderMD(data, true);
+                        // 规避递归节点重复问题。
+                        try {
+                            a.parentElement!.outerHTML = this.renderMD(data, true);
+                        } catch (e) {
+                            return;
+                        }
                         this.updateDD();
                         this.updateImagePath();
                         updatedLinks.push(href);
