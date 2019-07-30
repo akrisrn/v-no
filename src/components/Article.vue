@@ -235,7 +235,7 @@
                         if (match[1].startsWith('.')) {
                             match[1].substr(1).split('.').forEach((cls) => {
                                 cls = cls.trim();
-                                if (cls === 'hidden') {
+                                if (['hidden', 'left', 'right'].includes(cls)) {
                                     parent.classList.add(cls);
                                 } else {
                                     img.classList.add(cls);
@@ -496,6 +496,16 @@
                 font-family sans-serif
                 content '◾ '
 
+        p.left
+            float left
+            margin-right 16px
+            margin-bottom 0
+
+        p.right
+            float right
+            margin-left 16px
+            margin-bottom 0
+
         img
             margin-top 8px
             background-color transparent
@@ -507,14 +517,6 @@
             for i in 1..4
                 {'&.h' + i * 100}
                     height i * 100px
-
-            &.left
-                float left
-                margin-right 16px
-
-            &.right
-                float right
-                margin-left 16px
 
         mark
             border-radius 3px
@@ -596,7 +598,6 @@
 
                 h1, h2, h3, h4, h5, h6
                     display inline
-                    margin 8px 0
 
                 + *
                     margin-top 16px
