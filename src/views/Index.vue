@@ -21,6 +21,7 @@
             </main>
         </transition>
         <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ isDark ? '☆' : '★' }}</span>
+        <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">〒</span>
     </div>
 </template>
 
@@ -57,7 +58,7 @@
         @Watch('isShow')
         public onIsShowChanged() {
             if (this.isShow) {
-                window.scrollTo(0, 0);
+                this.scrollToTop();
             }
         }
 
@@ -145,6 +146,11 @@
                     },
                 } as any));
             }
+        }
+
+        // noinspection JSMethodCanBeStatic
+        public scrollToTop() {
+            window.scrollTo(0, 0);
         }
 
         public get path() {
@@ -281,9 +287,8 @@
             float right
             color darkgray
 
-    #toggle-dark
+    #toggle-dark, #to-top
         position fixed
-        top 16px
         right 16px
         cursor pointer
         font-size 20px
@@ -295,4 +300,10 @@
 
         &.dark:hover
             color #bebebe
+
+    #toggle-dark
+        top 16px
+
+    #to-top
+        bottom 8px
 </style>
