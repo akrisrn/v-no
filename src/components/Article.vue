@@ -501,7 +501,7 @@
 
         h1, h2, h3, h4, h5, h6
             &:before
-                font-family sans-serif
+                font-size 0.7em
                 content '■'
                 margin-right 8px
 
@@ -543,7 +543,6 @@
                 padding 0
 
                 &:before
-                    font-family sans-serif
                     content '»'
                     margin-right 8px
 
@@ -612,7 +611,6 @@
                     margin-top 16px
 
                 &:after
-                    font-family sans-serif
                     content '▲'
                     float right
                     font-size 13px
@@ -693,9 +691,6 @@
                 li + li p
                     margin-top 0
 
-            .footnote-backref
-                font-family sans-serif
-
         .center
             text-align center
 
@@ -703,7 +698,6 @@
             display none
 
         .count:before
-            font-family sans-serif
             content '-'
             margin-left 8px
 
@@ -715,7 +709,6 @@
                 display inline
 
                 + li:before
-                    font-family sans-serif
                     content '|'
                     margin-right 8px
 
@@ -729,7 +722,6 @@
                 white-space nowrap
 
                 &:before
-                    font-family sans-serif
                     content '»'
                     margin-right 8px
 
@@ -748,7 +740,6 @@
                     font-size 12px
 
                     &:before
-                        font-family sans-serif
                         content '#'
                         margin-right 2px
 
@@ -774,7 +765,6 @@
                         color gray
 
                     &:before
-                        font-family sans-serif
                         content '#'
                         margin-right 2px
 

@@ -302,7 +302,6 @@
             border-top 1px solid lightgray
 
             a.home:before
-                font-family sans-serif
                 content '« '
 
         .date
