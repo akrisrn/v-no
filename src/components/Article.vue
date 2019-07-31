@@ -284,7 +284,6 @@
             });
         }
 
-        // noinspection JSMethodCanBeStatic
         public updateCover() {
             const cover = document.querySelector<HTMLImageElement>('article img.cover');
             if (cover) {

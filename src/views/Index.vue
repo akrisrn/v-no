@@ -33,7 +33,6 @@
         'beforeRouteUpdate',
     ]);
 
-    // noinspection JSUnusedGlobalSymbols
     @Component({components: {Article}})
     export default class Index extends Vue {
         public show = false;
@@ -75,7 +74,6 @@
             });
         }
 
-        // noinspection JSUnusedGlobalSymbols
         public setCover(url: string) {
             if (url === '') {
                 this.isCoverShow = false;
