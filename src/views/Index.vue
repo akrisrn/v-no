@@ -20,8 +20,8 @@
                 </footer>
             </main>
         </transition>
-        <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ isDark ? '☆' : '★' }}</span>
-        <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">〒</span>
+        <span id="toggle-dark">★</span>
+        <span id="to-top">〒</span>
     </div>
 </template>
 
@@ -47,6 +47,8 @@
         public isError = false;
         public isDark = false;
         public smoothScroll = new SmoothScroll();
+        public toggleDark: HTMLElement | null = null;
+        public toTop: HTMLElement | null = null;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
             next();
@@ -67,9 +69,15 @@
         @Watch('isDark')
         public onIsDarkChanged() {
             if (this.isDark) {
+                this.toggleDark!.innerText = '☆';
+                this.toggleDark!.classList.add('dark');
+                this.toTop!.classList.add('dark');
                 document.body.classList.add('dark');
                 window.localStorage.setItem('dark', String(true));
             } else {
+                this.toggleDark!.innerText = '★';
+                this.toggleDark!.classList.remove('dark');
+                this.toTop!.classList.remove('dark');
                 document.body.classList.remove('dark');
                 window.localStorage.removeItem('dark');
             }
@@ -88,6 +96,14 @@
                 if (coverDiv) {
                     coverDiv.style.backgroundPositionY = -(window.scrollY < 0 ? 0 : window.scrollY) + 'px';
                 }
+            });
+            this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
+            this.toggleDark.addEventListener('click', () => {
+                this.isDark = !this.isDark;
+            });
+            this.toTop = document.querySelector<HTMLElement>('#to-top')!;
+            this.toTop.addEventListener('click', () => {
+                this.scrollToTop();
             });
         }
 
