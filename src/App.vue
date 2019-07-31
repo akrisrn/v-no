@@ -37,9 +37,8 @@
                     td + td, th + th
                         border-left-color: darkgray !important
 
-            .index
-                ul:not(.toc) .more span
-                    background-color #2b2b2b !important
+            .index ul:not(.toc) .more span
+                background-color #2b2b2b !important
 
             footer
                 border-top-color darkgray !important
