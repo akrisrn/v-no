@@ -12,7 +12,7 @@
             <main :class="{error: isError}" v-if="isShow">
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
-                         @update:data="data = $event">
+                         :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory">
                     <a class="home" href="/" v-on:click.prevent="returnHome">Return to home</a>
@@ -30,6 +30,7 @@
     import {error2markdown, getDateString, getWrapRegExp} from '@/utils';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
+    import SmoothScroll from 'smooth-scroll';
 
     Component.registerHooks([
         'beforeRouteUpdate',
@@ -45,6 +46,7 @@
         public isHeaderFloat = false;
         public isError = false;
         public isDark = false;
+        public smoothScroll = new SmoothScroll();
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
             next();
@@ -58,7 +60,7 @@
         @Watch('isShow')
         public onIsShowChanged() {
             if (this.isShow) {
-                this.scrollToTop();
+                this.scrollToTop(false);
             }
         }
 
@@ -149,8 +151,12 @@
         }
 
         // noinspection JSMethodCanBeStatic
-        public scrollToTop() {
-            window.scrollTo(0, 0);
+        public scrollToTop(isSmooth = true) {
+            if (isSmooth) {
+                this.smoothScroll.animateScroll(0);
+            } else {
+                window.scrollTo(0, 0);
+            }
         }
 
         public get path() {

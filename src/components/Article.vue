@@ -15,6 +15,7 @@
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
         @Prop() public setCover!: (url: string) => void;
+        @Prop() public smoothScroll!: SmoothScroll;
 
         public classObject = [{
             index: this.isIndex,
@@ -179,7 +180,7 @@
                     e.preventDefault();
                     for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
                         if (h.innerText === innerText) {
-                            window.scrollTo(0, h.offsetTop - 10);
+                            this.smoothScroll.animateScroll(h.offsetTop - 10);
                             break;
                         }
                     }
@@ -212,12 +213,12 @@
                 if (fnref) {
                     fnref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        window.scrollTo(0, backref.offsetTop - 10);
+                        this.smoothScroll.animateScroll(backref.offsetTop - 10);
                     });
                     fnref.removeAttribute('href');
                     backref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        window.scrollTo(0, fnref.offsetTop - 10);
+                        this.smoothScroll.animateScroll(fnref.offsetTop - 10);
                     });
                     backref.removeAttribute('href');
                 }
