@@ -6,7 +6,21 @@
     body
         margin 0
         background-color #f1f1f1
-        transition background-color 0.5s
+
+        &, .markdown-body pre, .markdown-body code
+            transition background-color 0.5s
+
+        header, .markdown-body:not(footer), .markdown-body a
+            transition color 0.5s
+
+        .markdown-body blockquote, .markdown-body table td + td, .markdown-body table th + th
+            transition border-left-color 0.5s
+
+        .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
+            transition border-bottom-color 0.5s
+
+        .markdown-body table tr + tr, footer
+            transition border-top-color 0.5s
 
         &.dark
             background-color #2b2b2b !important

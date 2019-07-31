@@ -762,7 +762,7 @@
 
                 span
                     background-color #f1f1f1
-                    transition color 0.5s
+                    transition background-color 0.5s, color 0.5s
                     position relative
                     top -16px
                     padding-right 8px
