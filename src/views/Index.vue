@@ -5,11 +5,11 @@
                 <div :style="{backgroundImage: `url(${cover})`}"></div>
             </div>
             <transition name="slide-fade">
-                <header :class="{float: isHeaderFloat}" v-if="show">{{ title }}</header>
+                <header :class="{float: isHeaderFloat}" v-if="isShow">{{ title }}</header>
             </transition>
         </div>
         <transition name="slide-fade">
-            <main :class="{error: isError}" v-if="show">
+            <main :class="{error: isError}" v-if="isShow">
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
                          @update:data="data = $event">
@@ -35,10 +35,10 @@
 
     @Component({components: {Article}})
     export default class Index extends Vue {
-        public show = false;
         public data = '';
         public cover = '';
         public title = '';
+        public isShow = false;
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
@@ -48,13 +48,13 @@
             if (!this.cover) {
                 this.cover = ' ';
             }
-            this.show = false;
+            this.isShow = false;
             this.updateData();
         }
 
-        @Watch('show')
-        public onShowChanged() {
-            if (this.show) {
+        @Watch('isShow')
+        public onIsShowChanged() {
+            if (this.isShow) {
                 window.scrollTo(0, 0);
             }
         }
@@ -109,7 +109,7 @@
         }
 
         public setData(data: string) {
-            this.show = true;
+            this.isShow = true;
             this.data = data;
             this.setTitle();
         }
