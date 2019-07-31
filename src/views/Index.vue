@@ -239,7 +239,7 @@
 
             div
                 height 100%
-                filter brightness(0.8) opacity(0.8) blur(3px)
+                filter opacity(0.8) blur(5px)
                 background-size 100%
                 transform scale(1.1)
 

@@ -501,7 +501,8 @@
         h1, h2, h3, h4, h5, h6
             &:before
                 font-family sans-serif
-                content '◾ '
+                content '■'
+                margin-right 8px
 
         p.left
             float left
@@ -543,7 +544,7 @@
                 &:before
                     font-family sans-serif
                     content '»'
-                    padding-right 8px
+                    margin-right 8px
 
                 + dd
                     margin-top -16px
@@ -729,7 +730,7 @@
                 &:before
                     font-family sans-serif
                     content '»'
-                    padding-right 8px
+                    margin-right 8px
 
                 blockquote
                     border-left none
