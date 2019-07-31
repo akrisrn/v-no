@@ -189,9 +189,6 @@
         transform translateY(10px) !important
         opacity 0 !important
 
-    body
-        margin 0
-
     #header
         height 250px
         transition height 1s
@@ -226,6 +223,7 @@
                 height 100%
                 filter brightness(0.8) opacity(0.8) blur(3px)
                 background-size 100%
+                transform scale(1.1)
 
             @media screen and (max-width: 750px)
                 height 150px
@@ -244,7 +242,7 @@
             &.float
                 color #f1f1f1
                 font-size 40px
-                text-shadow 3px 3px 3px #2d2d2d
+                text-shadow 3px 3px 3px #1e1e1e
                 transition font-size 1s
 
                 @media screen and (max-width: 750px)

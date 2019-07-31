@@ -483,6 +483,14 @@
         > :first-child dt:first-of-type
             margin-top 0 !important
 
+        a
+            color #287BDE !important
+            text-decoration none !important
+            cursor pointer !important
+
+            &:hover
+                text-decoration underline !important
+
         hr
             height 1px
             background-color transparent
@@ -545,7 +553,7 @@
                 content none
 
         pre
-            background-color #2d2d2d
+            background-color #2b2b2b
 
         kbd
             margin-bottom 3px
@@ -673,14 +681,6 @@
             .ul-b
                 margin-bottom 0
 
-        .footnote-ref > a, a.footnote-backref, #toc a
-            color #0366d6
-            text-decoration none
-            cursor pointer
-
-            &:hover
-                text-decoration underline
-
         .footnotes
             font-size 13px
             color gray
@@ -742,7 +742,7 @@
 
                 code
                     color darkgray
-                    background none
+                    background-color transparent !important
                     padding 0
                     font-size 12px
 
@@ -762,7 +762,7 @@
                 height 8px
 
                 span
-                    background #f1f1f1
+                    background-color #f1f1f1
                     transition color 0.5s
                     position relative
                     top -16px
@@ -789,7 +789,7 @@
             width 10px
             height 10px
             border-radius 50%
-            background darkgray
+            background-color darkgray
             animation-timing-function cubic-bezier(0, 1, 1, 0)
 
             &:nth-child(1)
