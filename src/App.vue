@@ -10,7 +10,7 @@
         &, .markdown-body pre, .markdown-body code
             transition background-color 0.5s
 
-        header, .markdown-body:not(footer), .markdown-body a
+        .markdown-body:not(footer), .markdown-body a
             transition color 0.5s
 
         .markdown-body blockquote, .markdown-body table td + td, .markdown-body table th + th

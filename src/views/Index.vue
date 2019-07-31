@@ -278,12 +278,12 @@
             position relative
             top 50%
             transform translateY(-50%)
+            transition font-size 1s, color 0.5s
 
             &.float
                 color #f1f1f1
                 font-size 40px
                 text-shadow 3px 3px 3px #1e1e1e
-                transition font-size 1s, color 0.5s
 
                 @media screen and (max-width: 750px)
                     font-size 30px
