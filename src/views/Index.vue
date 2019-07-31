@@ -20,6 +20,7 @@
                 </footer>
             </main>
         </transition>
+        <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ isDark ? '☆' : '★' }}</span>
     </div>
 </template>
 
@@ -42,6 +43,7 @@
         public isCoverShow = true;
         public isHeaderFloat = false;
         public isError = false;
+        public isDark = false;
 
         public beforeRouteUpdate(to: any, from: any, next: any) {
             next();
@@ -59,8 +61,20 @@
             }
         }
 
+        @Watch('isDark')
+        public onIsDarkChanged() {
+            if (this.isDark) {
+                document.body.classList.add('dark');
+                window.localStorage.setItem('dark', String(true));
+            } else {
+                document.body.classList.remove('dark');
+                window.localStorage.removeItem('dark');
+            }
+        }
+
         // noinspection JSUnusedGlobalSymbols
         public created() {
+            this.isDark = !!window.localStorage.getItem('dark');
             this.updateData();
         }
 
@@ -266,4 +280,19 @@
         .date
             float right
             color darkgray
+
+    #toggle-dark
+        position fixed
+        top 16px
+        right 16px
+        cursor pointer
+        font-size 20px
+        color transparent
+        transition color 0.5s
+
+        &:hover
+            color #4a4a4a
+
+        &.dark:hover
+            color #bebebe
 </style>
