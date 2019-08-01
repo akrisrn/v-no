@@ -98,6 +98,7 @@ async function getHtmlAndFiles(page, urlPath) {
             }
             files.push(filepath)
         });
+        document.body.classList.add('prerender');
         return [document.documentElement.outerHTML, files];
     }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
