@@ -49,6 +49,8 @@
         public smoothScroll = new SmoothScroll();
         public toggleDark: HTMLElement | null = null;
         public toTop: HTMLElement | null = null;
+        public keyInput = '';
+        public inputBinds: { [index: string]: () => void } = {};
 
         public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
@@ -85,6 +87,27 @@
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
+            // noinspection JSUnusedGlobalSymbols
+            this.inputBinds = {
+                home: () => {
+                    if (document.querySelector('.prerender')) {
+                        window.location.href = '/';
+                    } else {
+                        this.returnHome();
+                    }
+                },
+                gg: () => {
+                    const footer = document.querySelector('footer');
+                    this.smoothScroll.animateScroll(footer ? footer : 9999);
+                    this.keyInput += '_';
+                },
+                G: () => {
+                    this.smoothScroll.animateScroll(0);
+                },
+                Backspace: () => {
+                    this.keyInput = this.keyInput.substr(0, this.keyInput.length - 10);
+                }
+            };
             this.isDark = !!window.localStorage.getItem('dark');
             this.updateData();
         }
@@ -95,6 +118,15 @@
                 const coverDiv = document.querySelector<HTMLDivElement>('#cover div');
                 if (coverDiv) {
                     coverDiv.style.backgroundPositionY = -(window.scrollY < 0 ? 0 : window.scrollY) + 'px';
+                }
+            });
+            window.addEventListener('keydown', (event) => {
+                this.keyInput += event.key;
+                for (const key of Object.keys(this.inputBinds)) {
+                    if (this.keyInput.endsWith(key)) {
+                        this.inputBinds[key]();
+                        break;
+                    }
                 }
             });
             this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
