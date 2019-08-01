@@ -15,7 +15,7 @@
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory">
-                    <a class="home" href="/" @click.prevent="returnHome">Return to home</a>
+                    <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
             </main>
