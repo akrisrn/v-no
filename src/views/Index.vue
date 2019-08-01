@@ -87,27 +87,23 @@
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
-            // noinspection JSUnusedGlobalSymbols
-            this.inputBinds = {
-                home: () => {
-                    if (document.querySelector('.prerender')) {
-                        window.location.href = '/';
-                    } else {
-                        this.returnHome();
-                    }
-                },
-                gg: () => {
-                    const footer = document.querySelector('footer');
-                    this.smoothScroll.animateScroll(footer ? footer : 9999);
-                    this.keyInput += '_';
-                },
-                G: () => {
-                    this.smoothScroll.animateScroll(0);
-                },
-                Backspace: () => {
-                    this.keyInput = this.keyInput.substr(0, this.keyInput.length - 10);
+            this.addInputBind('home', () => {
+                if (document.querySelector('.prerender')) {
+                    window.location.href = '/';
+                } else {
+                    this.returnHome();
                 }
-            };
+            });
+            this.addInputBind('gg', () => {
+                this.smoothScroll.animateScroll(document.body.offsetHeight);
+                this.keyInput += '_';
+            });
+            this.addInputBind('G', () => {
+                this.smoothScroll.animateScroll(0);
+            });
+            this.addInputBind('Backspace', () => {
+                this.keyInput = this.keyInput.substr(0, this.keyInput.length - 10);
+            });
             this.isDark = !!window.localStorage.getItem('dark');
             this.updateData();
         }
@@ -205,6 +201,10 @@
             } else {
                 window.scrollTo(0, 0);
             }
+        }
+
+        public addInputBind(input: string, bind: () => void) {
+            this.inputBinds[input] = bind;
         }
 
         public get path() {
