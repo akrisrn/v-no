@@ -87,6 +87,8 @@
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
+            // @ts-ignore
+            window.addInputBind = this.addInputBind;
             this.addInputBind('home', () => {
                 if (document.querySelector('.prerender')) {
                     window.location.href = '/';
