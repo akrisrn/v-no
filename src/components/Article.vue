@@ -691,6 +691,9 @@
                 li + li p
                     margin-top 0
 
+            .footnote-backref
+                font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Segoe UI Symbol
+
         .center
             text-align center
 
