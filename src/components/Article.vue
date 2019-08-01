@@ -37,9 +37,9 @@
                 validate: (params: string) => {
                     return params.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
                 },
-                render: (tokens: any, idx: number) => {
+                render: (tokens: { [index: number]: { nesting: number, info: string } }, idx: number) => {
                     if (tokens[idx].nesting === 1) {
-                        const match = tokens[idx].info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
+                        const match = tokens[idx].info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/)!;
                         let open = '';
                         if (match[1]) {
                             open = ' open';
@@ -314,7 +314,7 @@
                     if (updatedLinks.includes(href)) {
                         return;
                     }
-                    const params: any = {};
+                    const params: { [index: string]: string } = {};
                     const match = a.innerText.match(/#(.+)$/);
                     if (match) {
                         match[1].split('|').forEach((seg, i) => {
@@ -380,7 +380,7 @@
 
         public updateIndexList() {
             document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
-                const lis: any[] = [];
+                const lis: Array<{ node: HTMLLIElement, time: number }> = [];
                 ul.querySelectorAll('li').forEach((li) => {
                     const item = {
                         node: li,
@@ -433,7 +433,7 @@
             axios.get('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
                 const matches = (response.data as string).match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
                 if (matches) {
-                    const tagDict: any = {};
+                    const tagDict: { [index: string]: string[] } = {};
                     matches.forEach((match) => {
                         const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
                         const tags = m[3].split(/`\s+`/).map((seg) => {

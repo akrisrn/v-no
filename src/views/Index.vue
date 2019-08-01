@@ -50,7 +50,7 @@
         public toggleDark: HTMLElement | null = null;
         public toTop: HTMLElement | null = null;
 
-        public beforeRouteUpdate(to: any, from: any, next: any) {
+        public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
             if (!this.cover) {
                 this.cover = ' ';
