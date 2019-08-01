@@ -103,6 +103,9 @@
             this.addInputBind('G', () => {
                 this.smoothScroll.animateScroll(0);
             });
+            this.addInputBind('dark', () => {
+                this.isDark = !this.isDark;
+            });
             this.addInputBind('Backspace', () => {
                 this.keyInput = this.keyInput.substr(0, this.keyInput.length - 10);
             });
