@@ -107,7 +107,7 @@
                 this.isDark = !this.isDark;
             });
             this.addInputBind('Backspace', () => {
-                this.keyInput = this.keyInput.substr(0, this.keyInput.length - 10);
+                this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
             });
             this.isDark = !!window.localStorage.getItem('dark');
             this.updateData();
