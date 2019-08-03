@@ -429,40 +429,48 @@
             });
         }
 
+        public updateCategoryListActual(pageData: string) {
+            const matches = pageData.match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
+            if (matches) {
+                const tagDict: { [index: string]: string[] } = {};
+                matches.forEach((match) => {
+                    const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
+                    const tags = m[3].split(/`\s+`/).map((seg) => {
+                        return seg.replace(/`/g, '');
+                    });
+                    tags.forEach((tag) => {
+                        if (tagDict[tag] === undefined) {
+                            tagDict[tag] = [];
+                        }
+                        tagDict[tag].push(`- [${m[1]}](${m[2]})`);
+                    });
+                });
+                this.syncData += '\n' + Object.keys(tagDict).sort().map((key) => {
+                    const count = `<span class="count">（${tagDict[key].length}）</span>`;
+                    return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
+                }).join('\n\n');
+                setTimeout(() => {
+                    this.updateToc();
+                    this.updateLinkPath();
+                    this.updateIndexList();
+                    document.querySelectorAll('#toc li > a').forEach((a) => {
+                        const count = a.querySelector('span.count');
+                        if (count) {
+                            a.removeChild(count);
+                            a.parentElement!.append(count);
+                        }
+                    });
+                }, 0);
+            }
+        }
+
         public updateCategoryList() {
             axios.get('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
-                const matches = (response.data as string).match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
-                if (matches) {
-                    const tagDict: { [index: string]: string[] } = {};
-                    matches.forEach((match) => {
-                        const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
-                        const tags = m[3].split(/`\s+`/).map((seg) => {
-                            return seg.replace(/`/g, '');
-                        });
-                        tags.forEach((tag) => {
-                            if (tagDict[tag] === undefined) {
-                                tagDict[tag] = [];
-                            }
-                            tagDict[tag].push(`- [${m[1]}](${m[2]})`);
-                        });
-                    });
-                    this.syncData += '\n' + Object.keys(tagDict).sort().map((key) => {
-                        const count = `<span class="count">（${tagDict[key].length}）</span>`;
-                        return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
-                    }).join('\n\n');
-                    setTimeout(() => {
-                        this.updateToc();
-                        this.updateLinkPath();
-                        this.updateIndexList();
-                        document.querySelectorAll('#toc li > a').forEach((a) => {
-                            const count = a.querySelector('span.count');
-                            if (count) {
-                                a.removeChild(count);
-                                a.parentElement!.append(count);
-                            }
-                        });
-                    }, 0);
-                }
+                axios.get('/' + process.env.VUE_APP_ARCHIVE_FILE).then((response2) => {
+                    this.updateCategoryListActual(response.data + response2.data);
+                }).catch(() => {
+                    this.updateCategoryListActual(response.data);
+                });
             });
         }
 
