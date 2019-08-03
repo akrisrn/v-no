@@ -1,11 +1,7 @@
 #!/bin/sh
 
 set -e
-if [ "$(git log -1 --format=%s)" = "prerender" ]; then
-  exit 0
-fi
 cd THIS_PROJECT_ROOT_PATH
 yarn run prerender
 cd -
 git add '*.html'
-git commit -m 'prerender'
