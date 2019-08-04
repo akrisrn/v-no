@@ -27,10 +27,10 @@ const index = url.resolve(host, indexPath);
 
 function getLastUpdatedDate(filepath) {
     try {
-        const result = spawn.sync('git', ['log', '-2', '--format=%ct', filepath], {cwd: dir}).stdout.toString();
-        // 略过小于两次提交的文件
-        if (result && result.split('\n').length === 3) {
-            return new Date(parseInt(result) * 1000).toDateString()
+        let result = spawn.sync('git', ['log', '--format=%ct %s', filepath], {cwd: dir}).stdout.toString();
+        result = result.split('\n').filter(commit => commit && !commit.endsWith('small fix'));
+        if (result.length >= 2) {
+            return new Date(parseInt(result[0]) * 1000).toDateString()
         } else {
             return null
         }
