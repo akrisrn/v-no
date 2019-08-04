@@ -517,12 +517,19 @@
         p.left
             float left
             margin-right 16px
-            margin-bottom 0
 
         p.right
             float right
             margin-left 16px
+
+        p.left, p.right
             margin-bottom 0
+
+            @media screen and (max-width: 750px)
+                float none
+                margin-right 0
+                margin-left 0
+                margin-bottom 16px
 
         img
             margin-top 8px
