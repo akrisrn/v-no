@@ -7,6 +7,7 @@
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
+    import SmoothScroll from 'smooth-scroll';
     import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
 
     @Component
