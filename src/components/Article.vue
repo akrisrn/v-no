@@ -722,7 +722,7 @@
 
                 + li:before
                     content '|'
-                    margin-right 8px
+                    margin-right 12px
 
         ul:not(.toc)
             padding-left 0
@@ -738,9 +738,7 @@
                     margin-right 8px
 
                 blockquote
-                    border-left none
-                    margin-bottom 0
-                    padding-left 16px
+                    margin 8px 0
                     padding-right 0
                     white-space normal
                     font-size 13px
@@ -750,6 +748,7 @@
                     background-color transparent !important
                     padding 0
                     font-size 12px
+                    font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
 
                     &:before
                         content '#'
