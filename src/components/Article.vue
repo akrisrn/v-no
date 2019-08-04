@@ -345,7 +345,7 @@
                                     } else {
                                         result = param;
                                     }
-                                    line = line.replace(m[0], result);
+                                    line = line.replace(m[0], result.replace(/\\n/g, '\n'));
                                 });
                                 return line;
                             }
