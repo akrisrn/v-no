@@ -293,7 +293,7 @@
         #cover
             width 100%
             height 250px
-            background-color darkgray
+            background-color gray
             overflow hidden
             position absolute
             transition height 1s
