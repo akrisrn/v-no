@@ -116,6 +116,7 @@ async function loadPages(browser, files) {
         const urlPath = url.resolve(index, '#' + filepath);
         pages.push(browser.newPage().then(async (page) => {
             const [html, newFiles] = await getHtmlAndFiles(page, urlPath);
+            await page.close();
             if (html !== null) {
                 writeHtml(filepath.replace(/\.md$/, '.html'), html);
                 await loadPages(browser, newFiles)
@@ -132,6 +133,7 @@ async function loadPages(browser, files) {
 
     const page = await browser.newPage();
     const [html, files] = await getHtmlAndFiles(page, url.resolve(index, '#/' + indexFile));
+    await page.close();
     if (html !== null) {
         writeHtml('index.html', html);
         await loadPages(browser, files);
