@@ -10,6 +10,6 @@ export default new Router({
     routes: [{
         path: '*',
         name: 'index',
-        component: () => import('./views/Index.vue'),
+        component: () => import(/* webpackChunkName: "index" */ './views/Index.vue'),
     }],
 });
