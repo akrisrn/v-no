@@ -75,13 +75,13 @@
                 this.toggleDark!.classList.add('dark');
                 this.toTop!.classList.add('dark');
                 document.body.classList.add('dark');
-                window.localStorage.setItem('dark', String(true));
+                localStorage.setItem('dark', String(true));
             } else {
                 this.toggleDark!.innerText = '★';
                 this.toggleDark!.classList.remove('dark');
                 this.toTop!.classList.remove('dark');
                 document.body.classList.remove('dark');
-                window.localStorage.removeItem('dark');
+                localStorage.removeItem('dark');
             }
         }
 
@@ -91,7 +91,7 @@
             window.addInputBind = this.addInputBind;
             this.addInputBind('home', () => {
                 if (document.querySelector('.prerender')) {
-                    window.location.href = '/';
+                    location.href = '/';
                 } else {
                     this.returnHome();
                 }
@@ -109,19 +109,19 @@
             this.addInputBind('Backspace', () => {
                 this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
             });
-            this.isDark = !!window.localStorage.getItem('dark');
+            this.isDark = !!localStorage.getItem('dark');
             this.updateData();
         }
 
         // noinspection JSUnusedGlobalSymbols
         public mounted() {
-            window.addEventListener('scroll', () => {
+            addEventListener('scroll', () => {
                 const coverDiv = document.querySelector<HTMLDivElement>('#cover div');
                 if (coverDiv) {
-                    coverDiv.style.backgroundPositionY = -(window.scrollY < 0 ? 0 : window.scrollY) + 'px';
+                    coverDiv.style.backgroundPositionY = -(scrollY < 0 ? 0 : scrollY) + 'px';
                 }
             });
-            window.addEventListener('keydown', (event) => {
+            addEventListener('keydown', (event) => {
                 this.keyInput += event.key;
                 for (const key of Object.keys(this.inputBinds)) {
                     if (this.keyInput.endsWith(key)) {
@@ -204,7 +204,7 @@
             if (isSmooth) {
                 this.smoothScroll.animateScroll(0);
             } else {
-                window.scrollTo(0, 0);
+                scrollTo(0, 0);
             }
         }
 
