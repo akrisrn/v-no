@@ -5,7 +5,6 @@
 <style lang="stylus">
     body
         margin 0
-        background-color #f1f1f1
 
         &, .markdown-body pre, .markdown-body code
             transition background-color 0.5s
@@ -23,8 +22,6 @@
             transition border-top-color 0.5s
 
         &.dark
-            background-color #2b2b2b !important
-
             header, .markdown-body
                 color #bebebe !important
 
