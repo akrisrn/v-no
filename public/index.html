@@ -8,25 +8,15 @@
     <!--suppress HtmlUnknownTarget -->
     <link rel="icon" href="<%= VUE_APP_FAVICON %>">
     <title></title>
-    <style>
-        body {
-            background-color: #f1f1f1
-        }
-
-        /*noinspection CssUnusedSymbol*/
-        body.dark {
-            background-color: #2b2b2b
-        }
-    </style>
+    <!--@formatter:off-->
+    <!--suppress CssUnusedSymbol -->
+    <style>body{background-color:#f1f1f1}body.dark{background-color:#2b2b2b}</style>
+    <!--@formatter:on-->
 </head>
 <body>
-<script>
-    if (localStorage.getItem('dark')) {
-        document.body.classList.add('dark')
-    } else {
-        document.body.classList.remove('dark')
-    }
-</script>
+<!--@formatter:off-->
+<script>if(localStorage.getItem('dark')){document.body.classList.add('dark')}else{document.body.classList.remove('dark')}</script>
+<!--@formatter:on-->
 <noscript>
     <strong>
         We're sorry but this application doesn't work properly without JavaScript enabled. Please enable it to continue.
