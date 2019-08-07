@@ -21,6 +21,9 @@
         .markdown-body table tr + tr, footer
             transition border-top-color 0.5s
 
+        .markdown-body img
+            transition filter 0.5s
+
         &.dark
             header, .markdown-body
                 color #bebebe !important
@@ -44,6 +47,9 @@
 
                     tr + tr
                         border-top-color darkgray !important
+
+                img
+                    filter brightness(0.7) !important
 
             .index ul:not(.toc) .more span
                 background-color #2b2b2b !important
