@@ -12,7 +12,7 @@
         .markdown-body:not(footer), .markdown-body a
             transition color 0.5s
 
-        .markdown-body blockquote, .markdown-body table td + td, .markdown-body table th + th
+        .markdown-body blockquote
             transition border-left-color 0.5s
 
         .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
@@ -44,9 +44,6 @@
 
                     tr + tr
                         border-top-color darkgray !important
-
-                    td + td, th + th
-                        border-left-color: darkgray !important
 
             .index ul:not(.toc) .more span
                 background-color #2b2b2b !important

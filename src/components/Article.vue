@@ -590,9 +590,6 @@
             td, th
                 border none
 
-            td + td, th + th
-                border-left 1px solid #c6cbd1
-
             th
                 text-align left
 
@@ -745,7 +742,9 @@
                     margin-right 8px
 
                 blockquote
-                    margin 8px 0
+                    border-left none
+                    margin-bottom 0
+                    padding-left 16px
                     padding-right 0
                     white-space normal
                     font-size 13px
