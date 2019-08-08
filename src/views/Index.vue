@@ -70,13 +70,16 @@
 
         @Watch('isDark')
         public onIsDarkChanged() {
+            const metaThemeColor = document.querySelector('meta[name=theme-color]')!;
             if (this.isDark) {
+                metaThemeColor.setAttribute('content', '#2b2b2b');
                 this.toggleDark!.innerText = '☆';
                 this.toggleDark!.classList.add('dark');
                 this.toTop!.classList.add('dark');
                 document.body.classList.add('dark');
                 localStorage.setItem('dark', String(true));
             } else {
+                metaThemeColor.setAttribute('content', '#efefef');
                 this.toggleDark!.innerText = '★';
                 this.toggleDark!.classList.remove('dark');
                 this.toTop!.classList.remove('dark');
