@@ -306,7 +306,7 @@
 
             div
                 height 100%
-                filter opacity(0.7) blur(5px)
+                filter brightness(0.7) opacity(0.7) blur(5px)
                 background-size 100%
                 transform scale(1.1)
 
@@ -326,9 +326,9 @@
             transition font-size 1s, color 0.5s
 
             &.float
-                color #f1f1f1
+                color white
                 font-size 40px
-                text-shadow 3px 3px 3px #1e1e1e
+                text-shadow 3px 3px 3px black
 
                 @media screen and (max-width: 750px)
                     font-size 30px
