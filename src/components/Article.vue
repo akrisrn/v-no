@@ -446,10 +446,10 @@
                         tagDict[tag].push(`- [${m[1]}](${m[2]})`);
                     });
                 });
-                this.syncData += '\n' + Object.keys(tagDict).sort().map((key) => {
+                this.syncData = this.syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
                     const count = `<span class="count">（${tagDict[key].length}）</span>`;
                     return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
-                }).join('\n\n');
+                }).join('\n\n'));
                 setTimeout(() => {
                     this.updateToc();
                     this.updateLinkPath();
