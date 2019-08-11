@@ -571,6 +571,20 @@
         pre
             background-color #2b2b2b
 
+        blockquote
+            font-style italic
+            padding 0 40px
+            border-left none
+            position relative
+
+            &:before
+                font-family Arial
+                content '“'
+                font-size 4em
+                position absolute
+                top -32px
+                left 0
+
         kbd
             margin-bottom 3px
 
@@ -733,12 +747,15 @@
                     margin-right 8px
 
                 blockquote
-                    border-left none
+                    font-style normal
                     margin-bottom 0
                     padding-left 16px
                     padding-right 0
                     white-space normal
                     font-size 13px
+
+                    &:before
+                        content none
 
                 code
                     color darkgray

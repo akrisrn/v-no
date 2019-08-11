@@ -12,9 +12,6 @@
         .markdown-body:not(footer), .markdown-body a
             transition color 0.5s
 
-        .markdown-body blockquote
-            transition border-left-color 0.5s
-
         .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
             transition border-bottom-color 0.5s
 
@@ -34,9 +31,6 @@
 
                 h1, h2
                     border-bottom-color darkgray !important
-
-                blockquote
-                    border-left-color darkgray !important
 
                 pre, code
                     background-color #1e1e1e !important
