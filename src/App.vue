@@ -21,7 +21,7 @@
         .markdown-body table tr + tr, footer
             transition border-top-color 0.5s
 
-        .markdown-body img
+        .markdown-body img, .markdown-body kbd
             transition filter 0.5s
 
         &.dark
@@ -48,7 +48,7 @@
                     tr + tr
                         border-top-color darkgray !important
 
-                img
+                img, kbd
                     filter brightness(0.7) !important
 
             .index ul:not(.toc) .more span
