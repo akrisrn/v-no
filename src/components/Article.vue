@@ -573,6 +573,7 @@
 
         blockquote
             font-style italic
+            margin 32px 0
             padding 0 40px
             border-left none
             position relative
@@ -748,7 +749,7 @@
 
                 blockquote
                     font-style normal
-                    margin-bottom 0
+                    margin 0
                     padding-left 16px
                     padding-right 0
                     white-space normal
