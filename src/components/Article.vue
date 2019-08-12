@@ -72,6 +72,7 @@
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateCover();
+                this.updateTextCount();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -292,6 +293,31 @@
                 this.setCover(cover.getAttribute('src')!);
             } else {
                 this.setCover('');
+            }
+        }
+
+        public updateTextCount() {
+            const textCount = document.querySelector<HTMLElement>('.text-count');
+            if (textCount) {
+                let count = 0;
+                document.querySelectorAll('article > *:not(#toc):not(pre)').forEach((element) => {
+                    if (element.textContent) {
+                        // tslint:disable-next-line:max-line-length
+                        count += element.textContent.replace(/\s|[\u0020-\u002F]|[\u003A-\u0040]|[\u005B-\u0060]|[\u007B-\u007E]|[\u00A0-\u00BF]|[\u2000-\u206F]|[\u3000-\u303F]|[\uFE30-\uFE6F]|[\uFF00-\uFFEF]/g, '').length;
+                    }
+                });
+                const countStr = count.toString();
+                const countList = [];
+                let start = 0;
+                for (let i = Math.floor(countStr.length / 3); i >= 0; i--) {
+                    const end = countStr.length - i * 3;
+                    if (end === 0) {
+                        continue;
+                    }
+                    countList.push(countStr.substring(start, end));
+                    start = end;
+                }
+                textCount.innerHTML = textCount.innerHTML.replace('$count', countList.join(','));
             }
         }
 
