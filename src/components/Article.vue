@@ -384,7 +384,9 @@
                             return;
                         }
                         this.updateDD();
+                        this.updateTable();
                         this.updateImagePath();
+                        this.updateTextCount();
                         updatedLinks.push(href);
                         this.updateLinkPath(updatedLinks);
                     }).catch((error) => {
