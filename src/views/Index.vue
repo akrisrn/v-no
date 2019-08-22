@@ -1,17 +1,10 @@
 <template>
     <div>
-        <div :class="{hidden: !isCoverShow}" id="header">
-            <div :class="{hidden: !isCoverShow}" id="cover" v-if="cover">
-                <div :style="{backgroundImage: `url(${cover})`}"></div>
-            </div>
-            <transition name="slide-fade">
-                <header :class="{float: isHeaderFloat}" v-if="isShow">{{ title }}</header>
-            </transition>
-        </div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
+                <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
-                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :setCover="setCover"
+                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex"
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive">
@@ -39,11 +32,8 @@
     @Component({components: {Article}})
     export default class Index extends Vue {
         public data = '';
-        public cover = '';
         public title = '';
         public isShow = false;
-        public isCoverShow = true;
-        public isHeaderFloat = false;
         public isError = false;
         public isDark = false;
         public smoothScroll = new SmoothScroll();
@@ -54,9 +44,6 @@
 
         public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
-            if (!this.cover) {
-                this.cover = ' ';
-            }
             this.isShow = false;
             this.updateData();
         }
@@ -118,12 +105,6 @@
 
         // noinspection JSUnusedGlobalSymbols
         public mounted() {
-            addEventListener('scroll', () => {
-                const coverDiv = document.querySelector<HTMLDivElement>('#cover div');
-                if (coverDiv) {
-                    coverDiv.style.backgroundPositionY = -(scrollY < 0 ? 0 : scrollY) + 'px';
-                }
-            });
             addEventListener('keydown', (event) => {
                 this.keyInput += event.key;
                 for (const key of Object.keys(this.inputBinds)) {
@@ -141,17 +122,6 @@
             this.toTop.addEventListener('click', () => {
                 this.scrollToTop();
             });
-        }
-
-        public setCover(url: string) {
-            if (url === '') {
-                this.isCoverShow = false;
-                this.isHeaderFloat = false;
-            } else {
-                this.isCoverShow = true;
-                this.isHeaderFloat = true;
-                this.cover = url;
-            }
         }
 
         public returnHome() {
@@ -274,65 +244,6 @@
         transform translateY(10px) !important
         opacity 0 !important
 
-    #header
-        height 250px
-        transition height 1s
-
-        &.hidden
-            height 120px
-
-            header
-                max-width 700px
-                margin 0 auto
-
-            + main
-                margin-top 0
-                padding-top 24px
-                border-top 3px double darkgray
-
-        @media screen and (max-width: 750px)
-            height 150px
-
-        #cover
-            width 100%
-            height 250px
-            background-color gray
-            overflow hidden
-            position absolute
-            transition height 1s
-
-            &.hidden
-                height 0
-
-            div
-                height 100%
-                filter brightness(0.7) opacity(0.7) blur(5px)
-                background-size 100%
-                transform scale(1.1)
-
-            @media screen and (max-width: 750px)
-                height 150px
-
-        header
-            padding 0 24px
-            color #4a4a4a
-            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-            font-size 30px
-            font-weight bold
-            text-align center
-            position relative
-            top 50%
-            transform translateY(-50%)
-            transition font-size 1s, color 0.5s
-
-            &.float
-                color white
-                font-size 40px
-                text-shadow 3px 3px 3px black
-
-                @media screen and (max-width: 750px)
-                    font-size 30px
-
     main
         max-width 700px
         margin 24px auto
@@ -340,6 +251,15 @@
         @media screen and (max-width: 750px)
             margin-left 16px
             margin-right 16px
+
+        header
+            color #4a4a4a
+            font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
+            font-size 32px
+            font-weight bold
+            margin 24px 0
+            padding-bottom 16px
+            border-bottom 3px double darkgray
 
         footer
             margin-top 16px

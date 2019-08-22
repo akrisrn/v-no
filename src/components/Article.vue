@@ -15,7 +15,6 @@
         @PropSync('data') public syncData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
-        @Prop() public setCover!: (url: string) => void;
         @Prop() public smoothScroll!: SmoothScroll;
 
         public classObject = [{
@@ -71,7 +70,6 @@
                 this.updateTable();
                 this.updateFootnote();
                 this.updateImagePath();
-                this.updateCover();
                 this.updateTextCount();
                 this.updateLinkPath();
                 if (this.isCategory) {
@@ -285,15 +283,6 @@
                     parent.classList.add('center');
                 }
             });
-        }
-
-        public updateCover() {
-            const cover = document.querySelector<HTMLImageElement>('article img.cover');
-            if (cover) {
-                this.setCover(cover.getAttribute('src')!);
-            } else {
-                this.setCover('');
-            }
         }
 
         public updateTextCount() {
