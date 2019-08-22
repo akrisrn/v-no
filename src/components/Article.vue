@@ -754,10 +754,6 @@
                 content '\f05c'
                 margin-right 8px
                 cursor pointer
-                transition color 0.5s
-
-            &:hover
-                color darkgray
 
     .index
         ul.toc.tags
