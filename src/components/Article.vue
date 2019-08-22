@@ -484,6 +484,7 @@
                 }).join('\n\n'));
                 setTimeout(() => {
                     this.updateToc();
+                    this.updateHeading();
                     this.updateLinkPath();
                     this.updateIndexList();
                     document.querySelectorAll('#toc li > a').forEach((a) => {
