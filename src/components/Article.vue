@@ -68,6 +68,7 @@
                 this.updateDD();
                 this.updateToc();
                 this.updateTable();
+                this.updateHeading();
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateTextCount();
@@ -204,6 +205,20 @@
                         thead.remove();
                     }
                 }
+            });
+        }
+
+        public updateHeading() {
+            document.querySelectorAll<HTMLHeadingElement>('article h1,h2,h3,h4,h5,h6').forEach((h) => {
+                let octicons = h.querySelector('.octicons');
+                if (!octicons) {
+                    octicons = document.createElement('span');
+                    octicons.classList.add('octicons');
+                    h.insertBefore(octicons, h.childNodes[0]);
+                }
+                octicons.addEventListener('click', () => {
+                    this.smoothScroll.animateScroll(h.offsetTop - 10);
+                });
             });
         }
 
@@ -525,12 +540,6 @@
         h1, h2
             border-bottom-color lightgray
 
-        h1, h2, h3, h4, h5, h6
-            &:before
-                font-size 0.7em
-                content '■'
-                margin-right 8px
-
         p.left
             float left
             margin-right 16px
@@ -738,6 +747,17 @@
         .count:before
             content '-'
             margin-left 8px
+
+        .octicons
+            &:before
+                font-family octicons-link
+                content '\f05c'
+                margin-right 8px
+                cursor pointer
+                transition color 0.5s
+
+            &:hover
+                color darkgray
 
     .index
         ul.toc.tags
