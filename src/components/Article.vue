@@ -589,9 +589,8 @@
             background-color #2b2b2b
 
         blockquote
-            font-style italic
-            margin 32px 0
-            padding 0 40px
+            margin 24px 0
+            padding 0 32px
             border-left none
             position relative
 
