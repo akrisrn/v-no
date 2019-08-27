@@ -256,10 +256,8 @@
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 32px
-            font-weight bold
-            margin 24px 0
-            padding-bottom 16px
-            border-bottom 3px double darkgray
+            text-align center
+            margin 40px 0
 
         footer
             margin-top 16px
