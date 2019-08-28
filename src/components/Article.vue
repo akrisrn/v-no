@@ -751,8 +751,7 @@
 
         .octicons
             &:before
-                font-family octicons-link
-                content '\f05c'
+                content '≡'
                 margin-right 8px
                 cursor pointer
 
