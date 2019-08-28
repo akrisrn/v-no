@@ -2,6 +2,9 @@
     <div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
+                <div class="markdown-body" v-if="date && !isError">
+                    <code class="date">{{ date }}</code>
+                </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex"
@@ -256,9 +259,9 @@
         header
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-            font-size 32px
-            text-align center
-            margin 40px 0
+            font-size 40px
+            font-weight 500
+            margin 16px 0 32px
 
         footer
             margin-top 16px
@@ -271,6 +274,9 @@
         .date
             float right
             color darkgray
+
+        code.date
+            float none
 
     #toggle-dark, #to-top
         position fixed
