@@ -156,6 +156,7 @@
         public updateData() {
             if (this.path.endsWith('.md')) {
                 axios.get(this.path).then((response) => {
+                    this.isError = false;
                     this.setData(response.data);
                 }).catch((error) => {
                     this.isError = true;
