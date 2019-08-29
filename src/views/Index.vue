@@ -250,7 +250,7 @@
 
     main
         max-width 700px
-        margin 24px auto
+        margin 32px auto
 
         @media screen and (max-width: 750px)
             margin-left 16px
@@ -260,7 +260,7 @@
             color #4a4a4a
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 40px
-            font-weight 500
+            font-weight 600
             margin 16px 0 32px
 
         footer
@@ -277,6 +277,7 @@
 
         code.date
             float none
+            color #4a4a4a
 
     #toggle-dark, #to-top
         position fixed
