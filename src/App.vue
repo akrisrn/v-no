@@ -12,7 +12,7 @@
         header, .markdown-body:not(footer), .markdown-body a
             transition color 0.5s
 
-        .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
+        header, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
             transition border-bottom-color 0.5s
 
         .markdown-body table tr + tr, footer
@@ -22,6 +22,9 @@
             transition filter 0.5s
 
         &.dark
+            header
+                border-bottom-color darkgray !important
+
             header, .markdown-body
                 color #bebebe !important
 
