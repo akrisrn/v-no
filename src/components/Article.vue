@@ -675,7 +675,7 @@
                     content '▼'
 
             &.readonly summary
-                pointer-events: none;
+                pointer-events none
 
                 &:after
                     content none
