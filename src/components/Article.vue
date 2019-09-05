@@ -680,6 +680,9 @@
                 &:after
                     content none
 
+            &.empty summary
+                display none
+
             &.success
                 border-left-color rgba(0, 200, 83, 0.5)
 
