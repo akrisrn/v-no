@@ -13,7 +13,6 @@
     @Component
     export default class Article extends Vue {
         @PropSync('data') public syncData!: string;
-        @Prop() public path!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
         @Prop() public smoothScroll!: SmoothScroll;
@@ -73,7 +72,6 @@
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateTextCount();
-                this.updateRawLink();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
@@ -324,13 +322,6 @@
                     start = end;
                 }
                 textCount.innerHTML = textCount.innerHTML.replace('$count$', countList.join(','));
-            }
-        }
-
-        public updateRawLink() {
-            const raw = document.querySelector<HTMLLinkElement>('#raw');
-            if (raw) {
-                raw.href = this.path;
             }
         }
 

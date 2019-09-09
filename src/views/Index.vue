@@ -9,7 +9,7 @@
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
-                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :path="path"
+                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex"
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive">
