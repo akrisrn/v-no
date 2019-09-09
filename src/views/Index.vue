@@ -253,10 +253,10 @@
     main
         max-width 700px
         margin 32px auto
+        transition margin 0.5s
 
         @media screen and (max-width: 750px)
-            margin-left 16px
-            margin-right 16px
+            margin 16px
 
         header
             color #4a4a4a
