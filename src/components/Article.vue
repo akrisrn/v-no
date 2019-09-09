@@ -306,8 +306,7 @@
                 let count = 0;
                 document.querySelectorAll('article > *:not(#toc):not(pre)').forEach((element) => {
                     if (element.textContent) {
-                        // tslint:disable-next-line:max-line-length
-                        count += element.textContent.replace(/\s|[\u0020-\u002F]|[\u003A-\u0040]|[\u005B-\u0060]|[\u007B-\u007E]|[\u00A0-\u00BF]|[\u2000-\u206F]|[\u3000-\u303F]|[\uFE30-\uFE6F]|[\uFF00-\uFFEF]/g, '').length;
+                        count += element.textContent.replace(/\s/g, '').length;
                     }
                 });
                 const countStr = count.toString();
