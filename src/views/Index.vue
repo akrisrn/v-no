@@ -5,7 +5,7 @@
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code v-if="date">{{ date }}</code>
                     <code><span id="text-count">$count$w</span></code>
-                    <code><a id="raw" target="_blank">Raw</a></code>
+                    <code><a :href="path" target="_blank">Raw</a></code>
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
