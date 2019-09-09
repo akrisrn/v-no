@@ -79,7 +79,7 @@ async function getHtmlAndFiles(page, urlPath) {
                 date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '')
             }
             const bar = document.querySelector('#bar');
-            if (bar.childElementCount === 2) {
+            if (bar.childElementCount === 3) {
                 const code = document.createElement('code');
                 code.innerText = lastUpdatedDate;
                 bar.insertBefore(code, bar.children[0])
