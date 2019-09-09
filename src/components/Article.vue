@@ -71,13 +71,13 @@
                 this.updateHeading();
                 this.updateFootnote();
                 this.updateImagePath();
-                this.updateTextCount();
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
                 } else if (this.isIndex) {
                     this.updateIndexList();
                 }
+                this.updateTextCount();
             }, 0);
         }
 
@@ -321,7 +321,7 @@
                     countList.push(countStr.substring(start, end));
                     start = end;
                 }
-                textCount.innerHTML = textCount.innerHTML.replace('$count$', countList.join(','));
+                textCount.innerHTML = countList.join(',') + 'w';
             }
         }
 
@@ -390,6 +390,7 @@
                         this.updateDD();
                         this.updateTable();
                         this.updateImagePath();
+                        this.updateTextCount();
                         updatedLinks.push(href);
                         this.updateLinkPath(updatedLinks);
                     }).catch((error) => {
@@ -486,6 +487,7 @@
                     this.updateHeading();
                     this.updateLinkPath();
                     this.updateIndexList();
+                    this.updateTextCount();
                     document.querySelectorAll('#toc li > a').forEach((a) => {
                         const count = a.querySelector('span.count');
                         if (count) {
