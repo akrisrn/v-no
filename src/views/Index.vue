@@ -4,6 +4,7 @@
             <main :class="{error: isError}" v-if="isShow">
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code v-if="date">{{ date }}</code>
+                    <code>{{ author }}</code>
                     <code><span id="text-count"></span></code>
                     <code><a :href="path" target="_blank">Raw</a></code>
                 </div>
@@ -38,6 +39,7 @@
     export default class Index extends Vue {
         public data = '';
         public title = '';
+        public author = '';
         public isShow = false;
         public isError = false;
         public isDark = false;
@@ -152,10 +154,21 @@
             document.title = this.title;
         }
 
+        public setAuthor() {
+            const authorMatch = this.data.match(getWrapRegExp('^@author:', '\n'));
+            if (authorMatch) {
+                this.author = authorMatch[1];
+                this.data = this.data.replace(authorMatch[0], '');
+            } else {
+                this.author = process.env.VUE_APP_AUTHOR;
+            }
+        }
+
         public setData(data: string) {
             this.isShow = true;
             this.data = data;
             this.setTitle();
+            this.setAuthor();
         }
 
         public updateData() {
