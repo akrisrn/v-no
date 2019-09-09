@@ -301,7 +301,7 @@
         }
 
         public updateTextCount() {
-            const textCount = document.querySelector<HTMLElement>('.text-count');
+            const textCount = document.querySelector<HTMLElement>('#text-count');
             if (textCount) {
                 let count = 0;
                 document.querySelectorAll('article > *:not(#toc):not(pre)').forEach((element) => {
@@ -321,7 +321,7 @@
                     countList.push(countStr.substring(start, end));
                     start = end;
                 }
-                textCount.innerHTML = textCount.innerHTML.replace('$count', countList.join(','));
+                textCount.innerHTML = textCount.innerHTML.replace('$count$', countList.join(','));
             }
         }
 
