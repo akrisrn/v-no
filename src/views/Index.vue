@@ -2,8 +2,10 @@
     <div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
-                <div class="markdown-body" v-if="date && !isError">
-                    <code class="date">{{ date }}</code>
+                <div class="markdown-body" id="bar" v-if="!isError">
+                    <code v-if="date">{{ date }}</code>
+                    <code><span id="text-count">$count$w</span></code>
+                    <code><a id="raw" target="_blank">Raw</a></code>
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
@@ -277,9 +279,9 @@
             float right
             color darkgray
 
-        code.date
-            float none
-            color #4a4a4a
+        #bar
+            * + *
+                margin-left 8px
 
     #toggle-dark, #to-top
         position fixed
