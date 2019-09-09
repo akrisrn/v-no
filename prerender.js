@@ -74,12 +74,15 @@ async function getHtmlAndFiles(page, urlPath) {
             return [null, null]
         }
         if (lastUpdatedDate) {
-            let date = document.querySelector('footer .date');
-            if (!date) {
-                date = document.querySelector('.updated.date');
-            }
+            const date = document.querySelector('footer .date');
             if (date && date.innerText !== lastUpdatedDate) {
                 date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '')
+            }
+            const bar = document.querySelector('#bar');
+            if (bar.childElementCount === 2) {
+                const code = document.createElement('code');
+                code.innerText = lastUpdatedDate;
+                bar.insertBefore(code, bar.children[0])
             }
         }
         const files = [];
