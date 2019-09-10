@@ -406,6 +406,10 @@
                     link.href = href;
                     document.head.appendChild(link);
                     a.parentElement!.remove();
+                } else if (href.startsWith('http://') || href.startsWith('https://')) {
+                    // noinspection JSDeprecatedSymbols
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
                 }
             });
         }
