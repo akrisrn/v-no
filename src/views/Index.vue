@@ -283,7 +283,7 @@
         footer
             margin-top 16px
             padding-top 8px
-            border-top 1px solid lightgray
+            border-top 3px double darkgray
 
             a.home:before
                 content '« '

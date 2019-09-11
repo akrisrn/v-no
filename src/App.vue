@@ -9,13 +9,13 @@
         &, .markdown-body pre, .markdown-body code
             transition background-color 0.5s
 
-        header, .markdown-body:not(footer), .markdown-body a
+        header, .markdown-body, .markdown-body a
             transition color 0.5s
 
         .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
             transition border-bottom-color 0.5s
 
-        .markdown-body table tr + tr, footer
+        .markdown-body table tr + tr
             transition border-top-color 0.5s
 
         .markdown-body img, .markdown-body kbd
@@ -47,7 +47,4 @@
 
             .index ul:not(.toc) .more span
                 background-color #2b2b2b !important
-
-            footer
-                border-top-color darkgray !important
 </style>
