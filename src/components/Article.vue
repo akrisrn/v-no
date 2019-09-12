@@ -26,12 +26,6 @@
             html: true,
             breaks: true,
             linkify: true,
-            highlight(str, lang) {
-                if (lang && Prism.languages[lang]) {
-                    return Prism.highlight(str, Prism.languages[lang], lang);
-                }
-                return '';
-            },
         }).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
             .use(require('markdown-it-task-lists')).use(require('markdown-it-container'), 'details', {
                 validate: (params: string) => {
@@ -78,6 +72,7 @@
                     this.updateIndexList();
                 }
                 this.updateTextCount();
+                Prism.highlightAll();
             }, 0);
         }
 
