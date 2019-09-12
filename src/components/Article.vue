@@ -764,6 +764,13 @@
                 margin-right 8px
                 cursor pointer
 
+        div.code-toolbar > .toolbar span
+            color darkgray
+            transition color 0.5s
+
+            &:hover
+                color lightgray
+
     .index
         ul.toc.tags
             padding-left 0
