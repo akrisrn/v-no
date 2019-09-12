@@ -764,12 +764,16 @@
                 margin-right 8px
                 cursor pointer
 
-        div.code-toolbar > .toolbar span
-            color darkgray
-            transition color 0.5s
+        div.code-toolbar > .toolbar
+            .toolbar-item + .toolbar-item
+                margin-left 3px
 
-            &:hover
-                color lightgray
+            button, span
+                color darkgray
+                transition color 0.5s
+
+                &:hover
+                    color lightgray
 
     .index
         ul.toc.tags
