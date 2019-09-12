@@ -61,6 +61,7 @@
             setTimeout(() => {
                 this.updateDD();
                 this.updateToc();
+                this.updatePre();
                 this.updateTable();
                 this.updateHeading();
                 this.updateFootnote();
@@ -181,6 +182,12 @@
                         }
                     }
                 });
+            });
+        }
+
+        public updatePre() {
+            document.querySelectorAll('article pre').forEach((pre) => {
+                pre.classList.add('line-numbers');
             });
         }
 
