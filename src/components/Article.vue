@@ -768,6 +768,10 @@
             .toolbar-item + .toolbar-item
                 margin-left 3px
 
+            button
+                cursor pointer
+                outline none
+
             button, span
                 color darkgray
                 transition color 0.5s
