@@ -103,6 +103,9 @@ async function getHtmlAndFiles(page, urlPath) {
             files.push(filepath)
         });
         document.body.classList.add('prerender');
+        document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
+            toolbar.outerHTML = toolbar.querySelector('pre').outerHTML
+        });
         return [document.documentElement.outerHTML, files];
     }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
