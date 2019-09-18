@@ -3,11 +3,11 @@
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
                 <div class="markdown-body" id="bar" v-if="!isError">
-                    <code v-if="date">{{ date }}</code>
-                    <code>@{{ author }}</code>
-                    <code v-for="tag in tags">#{{ tag }}</code>
-                    <code><span id="text-count"></span></code>
-                    <code><a :href="path" target="_blank">Raw</a></code>
+                    <code class="item-date" v-if="date">{{ date }}</code>
+                    <code class="item-author">@{{ author }}</code>
+                    <code class="item-tag" v-for="tag in tags">#{{ tag }}</code>
+                    <code class="item-count"><span id="text-count"></span></code>
+                    <code class="item-raw"><a :href="path" target="_blank">Raw</a></code>
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
