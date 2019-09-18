@@ -171,6 +171,8 @@
             if (tagsMatch) {
                 this.tags = tagsMatch[1].split(/\s*[,，]\s*/);
                 this.data = this.data.replace(tagsMatch[0], '');
+            } else {
+                this.tags = [];
             }
         }
 
