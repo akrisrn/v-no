@@ -72,8 +72,8 @@
                 } else if (this.isIndex) {
                     this.updateIndexList();
                 }
-                this.updateTextCount();
                 Prism.highlightAll();
+                this.updateTextCount();
             }, 0);
         }
 
@@ -390,6 +390,7 @@
                         }
                         this.updateDD();
                         this.updateTable();
+                        this.updateHeading();
                         this.updateImagePath();
                         this.updateTextCount();
                         updatedLinks.push(href);
