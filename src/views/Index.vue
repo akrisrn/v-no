@@ -333,6 +333,10 @@
                 &.item-count
                     background-color rgba(255, 23, 68, 0.1)
 
+                    &:after
+                        content 'W'
+                        margin-left 2px
+
     #toggle-dark, #to-top
         position fixed
         right 16px

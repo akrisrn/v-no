@@ -322,7 +322,7 @@
                     countList.push(countStr.substring(start, end));
                     start = end;
                 }
-                textCount.innerHTML = countList.join(',') + 'w';
+                textCount.innerHTML = countList.join(',');
             }
         }
 
