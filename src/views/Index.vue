@@ -5,6 +5,7 @@
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code v-if="date">{{ date }}</code>
                     <code>@{{ author }}</code>
+                    <code v-for="tag in tags">#{{ tag }}</code>
                     <code><span id="text-count"></span></code>
                     <code><a :href="path" target="_blank">Raw</a></code>
                 </div>
@@ -40,6 +41,7 @@
         public data = '';
         public title = '';
         public author = '';
+        public tags: string[] = [];
         public isShow = false;
         public isError = false;
         public isDark = false;
@@ -164,11 +166,20 @@
             }
         }
 
+        public setTags() {
+            const tagsMatch = this.data.match(getWrapRegExp('^@tags:', '\n'));
+            if (tagsMatch) {
+                this.tags = tagsMatch[1].split(/\s*[,，]\s*/);
+                this.data = this.data.replace(tagsMatch[0], '');
+            }
+        }
+
         public setData(data: string) {
             this.isShow = true;
             this.data = data;
             this.setTitle();
             this.setAuthor();
+            this.setTags();
         }
 
         public updateData() {
