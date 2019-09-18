@@ -4,8 +4,8 @@
             <main :class="{error: isError}" v-if="isShow">
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code class="item-date" v-if="date">{{ date }}</code>
-                    <code class="item-author">@{{ author }}</code>
-                    <code class="item-tag" v-for="tag in tags">#{{ tag }}</code>
+                    <code class="item-author">{{ author }}</code>
+                    <code class="item-tag" v-for="tag in tags">{{ tag }}</code>
                     <code class="item-count"><span id="text-count"></span></code>
                     <code class="item-raw"><a :href="path" target="_blank">Raw</a></code>
                 </div>
@@ -308,6 +308,7 @@
         #bar
             code
                 display inline-block
+                font-size 12px
                 padding-top 0
                 padding-bottom 0
                 margin-right 8px
@@ -318,8 +319,16 @@
                 &.item-author
                     background-color rgba(0, 200, 83, 0.1)
 
+                    &:before
+                        content '@'
+                        margin-right 2px
+
                 &.item-tag
                     background-color rgba(255, 145, 0, 0.1)
+
+                    &:before
+                        content '#'
+                        margin-right 2px
 
                 &.item-count
                     background-color rgba(255, 23, 68, 0.1)
