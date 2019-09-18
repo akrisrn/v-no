@@ -310,6 +310,18 @@
                 padding-bottom 0
                 margin-right 8px
 
+                &.item-date
+                    background-color rgba(68, 138, 255, 0.1)
+
+                &.item-author
+                    background-color rgba(0, 200, 83, 0.1)
+
+                &.item-tag
+                    background-color rgba(255, 145, 0, 0.1)
+
+                &.item-count
+                    background-color rgba(255, 23, 68, 0.1)
+
     #toggle-dark, #to-top
         position fixed
         right 16px
