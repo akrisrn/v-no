@@ -211,7 +211,7 @@
         }
 
         public updateHeading() {
-            document.querySelectorAll<HTMLHeadingElement>('article h1,h2,h3,h4,h5,h6').forEach((h) => {
+            document.querySelectorAll<HTMLHeadingElement>('article>h1,article>h2,article>h3,article>h4,article>h5,article>h6').forEach((h) => {
                 let octicons = h.querySelector('.octicons');
                 if (!octicons) {
                     octicons = document.createElement('span');
@@ -390,7 +390,6 @@
                         }
                         this.updateDD();
                         this.updateTable();
-                        this.updateHeading();
                         this.updateImagePath();
                         this.updateTextCount();
                         updatedLinks.push(href);
@@ -643,7 +642,7 @@
 
         details
             overflow auto
-            margin 16px 0
+            margin 24px 0
             padding 0 16px
             box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
             border-radius 3px
