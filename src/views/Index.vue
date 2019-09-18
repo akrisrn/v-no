@@ -304,8 +304,11 @@
             color darkgray
 
         #bar
-            * + *
-                margin-left 8px
+            code
+                display inline-block
+                padding-top 0
+                padding-bottom 0
+                margin-right 8px
 
     #toggle-dark, #to-top
         position fixed
