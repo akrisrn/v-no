@@ -289,7 +289,7 @@
             font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
             font-size 32px
             font-weight 600
-            margin 8px 0 24px
+            margin 16px 0 24px
 
         footer
             margin-top 16px
