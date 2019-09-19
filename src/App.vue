@@ -12,7 +12,7 @@
         header, .markdown-body, .markdown-body a
             transition color 0.5s
 
-        .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
+        .markdown-body hr, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
             transition border-bottom-color 0.5s
 
         .markdown-body table tr + tr
@@ -29,7 +29,7 @@
                 a
                     color #6d9cbe !important
 
-                h1, h2
+                hr, h1, h2
                     border-bottom-color darkgray !important
 
                 pre, code

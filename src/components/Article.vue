@@ -526,7 +526,7 @@
         hr
             height 1px
             background-color transparent
-            border-bottom 3px double darkgray
+            border-bottom 1px solid lightgray
 
         h1, h2
             border-bottom-color lightgray
