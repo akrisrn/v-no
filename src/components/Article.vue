@@ -63,6 +63,7 @@
                 this.updateToc();
                 this.updatePre();
                 this.updateTable();
+                this.updateHeading();
                 this.updateFootnote();
                 this.updateImagePath();
                 this.updateLinkPath();
@@ -206,6 +207,20 @@
                         thead.remove();
                     }
                 }
+            });
+        }
+
+        public updateHeading() {
+            document.querySelectorAll<HTMLHeadingElement>('article>h1,article>h2,article>h3,article>h4,article>h5,article>h6').forEach((h) => {
+                let link = h.querySelector('.heading-link');
+                if (!link) {
+                    link = document.createElement('span');
+                    link.classList.add('heading-link');
+                    h.append(link);
+                }
+                link.addEventListener('click', () => {
+                    this.smoothScroll.animateScroll(h.offsetTop - 10);
+                });
             });
         }
 
@@ -474,6 +489,7 @@
                 }).join('\n\n'));
                 setTimeout(() => {
                     this.updateToc();
+                    this.updateHeading();
                     this.updateLinkPath();
                     this.updateIndexList();
                     this.updateTextCount();
@@ -741,6 +757,20 @@
         .count:before
             content '-'
             margin-left 8px
+
+        h1, h2, h3, h4, h5, h6
+            &:hover
+                .heading-link
+                    opacity 1
+
+        .heading-link
+            opacity 0
+            transition opacity 0.5s
+
+            &:before
+                content '#'
+                margin-left 0.3em
+                cursor pointer
 
         div.code-toolbar > .toolbar
             .toolbar-item + .toolbar-item
