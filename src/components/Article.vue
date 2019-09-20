@@ -214,7 +214,7 @@
             document.querySelectorAll<HTMLHeadingElement>('article>h1,article>h2,article>h3,article>h4,article>h5,article>h6').forEach((h) => {
                 let link = h.querySelector('.heading-link');
                 if (!link) {
-                    link = document.createElement('span');
+                    link = document.createElement('a');
                     link.classList.add('heading-link');
                     h.append(link);
                 }
