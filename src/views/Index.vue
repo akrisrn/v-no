@@ -290,6 +290,8 @@
             font-size 32px
             font-weight 600
             margin 16px 0 24px
+            padding-bottom 16px
+            border-bottom 1px solid lightgray
 
         footer
             margin-top 16px
