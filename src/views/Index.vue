@@ -227,6 +227,9 @@
                 if (hash.startsWith('#/')) {
                     path = hash.substr(1);
                     if (path !== '/') {
+                        if (path.endsWith('/')) {
+                            path += 'index.md';
+                        }
                         return path;
                     }
                 }
