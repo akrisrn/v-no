@@ -297,7 +297,9 @@
                 if (parent.tagName === 'DT') {
                     parent.parentElement!.classList.add('center');
                 } else {
-                    parent.classList.add('center');
+                    if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
+                        parent.classList.add('center');
+                    }
                 }
             });
         }
