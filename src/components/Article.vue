@@ -548,6 +548,7 @@
 
         h1, h2
             border-bottom-color lightgray
+            padding-bottom 8px
 
         p.left
             float left
@@ -570,11 +571,11 @@
             margin-top 8px
             background-color transparent
 
-            for i in 3..6
+            for i in 1..6
                 {'&.w' + i * 100}
                     max-width i * 100px
 
-            for i in 1..4
+            for i in 1..5
                 {'&.h' + i * 100}
                     height i * 100px
 
