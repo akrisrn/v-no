@@ -210,8 +210,8 @@
                     this.isError = false;
                     const data = this.setFooter(this.setTags(this.setAuthor(response.data)));
                     if (this.hasFooter) {
-                        axios.get('/' + process.env.VUE_APP_FOOTER_FILE).then((response) => {
-                            this.setData(data + '\n\n' + response.data);
+                        axios.get('/' + process.env.VUE_APP_FOOTER_FILE).then((response2) => {
+                            this.setData(data + '\n\n' + response2.data);
                         }).catch(() => {
                             this.setData(data);
                         });
