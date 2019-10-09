@@ -192,8 +192,8 @@
         }
 
         public setFooter(data: string) {
-            return this.setFlag(data, '@noFooter', () => {
-                this.hasFooter = false;
+            return this.setFlag(data, '@footer:', (match) => {
+                this.hasFooter = match.toLowerCase() === 'true';
             }, () => {
                 this.hasFooter = true;
             });
