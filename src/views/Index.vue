@@ -145,6 +145,25 @@
             this.$router.push(home);
         }
 
+        public setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
+                       onDone?: () => void) {
+            const match = data.match(getWrapRegExp(flag, '\n'));
+            if (match) {
+                if (onMatch) {
+                    onMatch(match[1]);
+                }
+                data = data.replace(match[0], '');
+            } else {
+                if (onNotMatch) {
+                    onNotMatch();
+                }
+            }
+            if (onDone) {
+                onDone();
+            }
+            return data;
+        }
+
         public setTitle(data: string) {
             return this.setFlag(data, '^#', (match) => {
                 this.title = match;
@@ -153,19 +172,6 @@
             }, () => {
                 document.title = this.title;
             });
-        }
-
-        public setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
-                       onDone?: () => void) {
-            const match = data.match(getWrapRegExp(flag, '\n'));
-            if (match) {
-                onMatch && onMatch(match[1]);
-                data = data.replace(match[0], '');
-            } else {
-                onNotMatch && onNotMatch();
-            }
-            onDone && onDone();
-            return data;
         }
 
         public setAuthor(data: string) {
