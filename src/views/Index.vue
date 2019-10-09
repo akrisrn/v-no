@@ -146,30 +146,30 @@
         }
 
         public setTitle(data: string) {
-            const titleMatch = data.match(getWrapRegExp('^#', '\n'));
-            if (titleMatch) {
-                this.title = titleMatch[1];
-                data = data.replace(titleMatch[0], '');
-            } else {
+            return this.setFlag(data, '^#', (match) => {
+                this.title = match;
+            }, () => {
                 this.title = this.path.substr(1);
-            }
-            document.title = this.title;
-            return data;
+            }, () => {
+                document.title = this.title;
+            });
         }
 
-        public setFlag(data: string, flag: string, onMatch: (match: string) => void, onNotMatch: () => void) {
-            const match = data.match(getWrapRegExp('@' + flag, '\n'));
+        public setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
+                       onDone?: () => void) {
+            const match = data.match(getWrapRegExp(flag, '\n'));
             if (match) {
-                onMatch(match[1]);
+                onMatch && onMatch(match[1]);
                 data = data.replace(match[0], '');
             } else {
-                onNotMatch();
+                onNotMatch && onNotMatch();
             }
+            onDone && onDone();
             return data;
         }
 
         public setAuthor(data: string) {
-            return this.setFlag(data, 'author:', (match) => {
+            return this.setFlag(data, '@author:', (match) => {
                 this.author = match;
             }, () => {
                 this.author = process.env.VUE_APP_AUTHOR;
@@ -177,7 +177,7 @@
         }
 
         public setTags(data: string) {
-            return this.setFlag(data, 'tags:', (match) => {
+            return this.setFlag(data, '@tags:', (match) => {
                 this.tags = match.split(/\s*[,，]\s*/);
             }, () => {
                 this.tags = [];
