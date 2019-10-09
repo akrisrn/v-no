@@ -157,7 +157,7 @@
         }
 
         public setAuthor() {
-            const authorMatch = this.data.match(getWrapRegExp('^@author:', '\n'));
+            const authorMatch = this.data.match(getWrapRegExp('@author:', '\n'));
             if (authorMatch) {
                 this.author = authorMatch[1];
                 this.data = this.data.replace(authorMatch[0], '');
@@ -167,7 +167,7 @@
         }
 
         public setTags() {
-            const tagsMatch = this.data.match(getWrapRegExp('^@tags:', '\n'));
+            const tagsMatch = this.data.match(getWrapRegExp('@tags:', '\n'));
             if (tagsMatch) {
                 this.tags = tagsMatch[1].split(/\s*[,，]\s*/);
                 this.data = this.data.replace(tagsMatch[0], '');
