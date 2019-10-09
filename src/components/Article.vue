@@ -244,7 +244,10 @@
 
         public updateImagePath() {
             document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
-                const parent = img.parentElement!;
+                let parent = img.parentElement!;
+                if (parent.tagName === 'A') {
+                    parent = parent.parentElement!;
+                }
                 const src = img.getAttribute('src')!;
                 const match = src.match(/#(.+)$/);
                 if (match) {
