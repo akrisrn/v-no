@@ -145,50 +145,50 @@
             this.$router.push(home);
         }
 
-        public setTitle() {
-            const titleMatch = this.data.match(getWrapRegExp('^#', '\n'));
+        public setTitle(data: string) {
+            const titleMatch = data.match(getWrapRegExp('^#', '\n'));
             if (titleMatch) {
                 this.title = titleMatch[1];
-                this.data = this.data.replace(titleMatch[0], '');
+                data = data.replace(titleMatch[0], '');
             } else {
                 this.title = this.path.substr(1);
             }
             document.title = this.title;
+            return data;
         }
 
-        public setAuthor() {
-            const authorMatch = this.data.match(getWrapRegExp('@author:', '\n'));
+        public setAuthor(data: string) {
+            const authorMatch = data.match(getWrapRegExp('@author:', '\n'));
             if (authorMatch) {
                 this.author = authorMatch[1];
-                this.data = this.data.replace(authorMatch[0], '');
+                data = data.replace(authorMatch[0], '');
             } else {
                 this.author = process.env.VUE_APP_AUTHOR;
             }
+            return data;
         }
 
-        public setTags() {
-            const tagsMatch = this.data.match(getWrapRegExp('@tags:', '\n'));
+        public setTags(data: string) {
+            const tagsMatch = data.match(getWrapRegExp('@tags:', '\n'));
             if (tagsMatch) {
                 this.tags = tagsMatch[1].split(/\s*[,，]\s*/);
-                this.data = this.data.replace(tagsMatch[0], '');
+                data = data.replace(tagsMatch[0], '');
             } else {
                 this.tags = [];
             }
+            return data;
         }
 
         public setData(data: string) {
             this.isShow = true;
-            this.data = data;
-            this.setTitle();
-            this.setAuthor();
-            this.setTags();
+            this.data = this.setTitle(data);
         }
 
         public updateData() {
             if (this.path.endsWith('.md')) {
                 axios.get(this.path).then((response) => {
                     this.isError = false;
-                    this.setData(response.data);
+                    this.setData(this.setTags(this.setAuthor(response.data)));
                 }).catch((error) => {
                     this.isError = true;
                     this.setData(error2markdown(error));
