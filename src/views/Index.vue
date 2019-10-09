@@ -157,26 +157,31 @@
             return data;
         }
 
-        public setAuthor(data: string) {
-            const authorMatch = data.match(getWrapRegExp('@author:', '\n'));
-            if (authorMatch) {
-                this.author = authorMatch[1];
-                data = data.replace(authorMatch[0], '');
+        public setFlag(data: string, flag: string, onMatch: (match: string) => void, onNotMatch: () => void) {
+            const match = data.match(getWrapRegExp('@' + flag, '\n'));
+            if (match) {
+                onMatch(match[1]);
+                data = data.replace(match[0], '');
             } else {
-                this.author = process.env.VUE_APP_AUTHOR;
+                onNotMatch();
             }
             return data;
         }
 
+        public setAuthor(data: string) {
+            return this.setFlag(data, 'author:', (match) => {
+                this.author = match;
+            }, () => {
+                this.author = process.env.VUE_APP_AUTHOR;
+            });
+        }
+
         public setTags(data: string) {
-            const tagsMatch = data.match(getWrapRegExp('@tags:', '\n'));
-            if (tagsMatch) {
-                this.tags = tagsMatch[1].split(/\s*[,，]\s*/);
-                data = data.replace(tagsMatch[0], '');
-            } else {
+            return this.setFlag(data, 'tags:', (match) => {
+                this.tags = match.split(/\s*[,，]\s*/);
+            }, () => {
                 this.tags = [];
-            }
-            return data;
+            });
         }
 
         public setData(data: string) {
