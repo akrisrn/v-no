@@ -576,6 +576,7 @@
 
             for i in 1..6
                 {'&.w' + i * 100}
+                    width 100%
                     max-width i * 100px
 
             for i in 1..5
