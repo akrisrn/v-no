@@ -903,6 +903,12 @@
                         content '#'
                         margin-right 2px
 
+        #search-input
+            width 100%
+            background-color transparent
+            border none
+            outline none
+
     .lds-ellipsis
         position relative
         width 50px
