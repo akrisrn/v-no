@@ -71,6 +71,8 @@
                 this.updateLinkPath();
                 if (this.isCategory) {
                     this.updateCategoryList();
+                } else if (this.isSearch) {
+                    this.updateSearchList();
                 } else if (this.isIndex) {
                     this.updateIndexList();
                 }
@@ -509,6 +511,50 @@
 
         public updateCategoryList() {
             getIndexFileData(this.updateCategoryListActual);
+        }
+
+        public updateSearchListActual(pageData: string) {
+            const queryContent = this.params.content ? decodeURIComponent(this.params.content) : '';
+            const resultUl = document.querySelector('ul#result')!;
+            const list = getListFromData(pageData);
+            if (list.length > 0) {
+                list.forEach((item) => {
+                    axios.get(item.href).then((response) => {
+                        if ((response.data as string).toLowerCase().indexOf(queryContent.toLowerCase()) >= 0) {
+                            const li = document.createElement('li');
+                            const a = document.createElement('a');
+                            a.href = item.href;
+                            a.innerText = item.title;
+                            li.append(a);
+                            resultUl.append(li);
+                            this.updateLinkPath();
+                            this.updateIndexList();
+                            this.updateTextCount();
+                        }
+                    });
+                });
+            }
+        }
+
+        public updateSearchList() {
+            const queryContent = this.params.content ? decodeURIComponent(this.params.content) : '';
+            const resultUl = document.querySelector('ul#result');
+            const searchInput = document.querySelector('input#search-input') as HTMLInputElement | null;
+            if (searchInput) {
+                searchInput.value = queryContent;
+                searchInput.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        searchInput.value = searchInput.value.trim();
+                        const param = searchInput.value ? `?content=${encodeURIComponent(searchInput.value)}` : '';
+                        const indexOf = location.href.indexOf('?');
+                        location.href = ((indexOf >= 0) ? location.href.substring(0, indexOf) : location.href) + param;
+                    }
+                });
+            }
+            if (queryContent && resultUl) {
+                getIndexFileData(this.updateSearchListActual);
+            }
         }
 
         public get markdown() {
