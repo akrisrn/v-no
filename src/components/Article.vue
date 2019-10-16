@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-    import {getDateString, getTime, getWrapRegExp} from '@/utils';
+    import {getDateString, getListFromData, getTime, getWrapRegExp} from '@/utils';
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
@@ -473,19 +473,15 @@
         }
 
         public updateCategoryListActual(pageData: string) {
-            const matches = pageData.match(/^-\s*\[.*?]\(.*?\)\s*`.*?`\s*$/gm);
-            if (matches) {
+            const list = getListFromData(pageData);
+            if (list.length > 0) {
                 const tagDict: { [index: string]: string[] } = {};
-                matches.forEach((match) => {
-                    const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
-                    const tags = m[3].split(/`\s+`/).map((seg) => {
-                        return seg.replace(/`/g, '');
-                    });
-                    tags.forEach((tag) => {
+                list.forEach((item) => {
+                    item.tags.forEach((tag) => {
                         if (tagDict[tag] === undefined) {
                             tagDict[tag] = [];
                         }
-                        tagDict[tag].push(`- [${m[1]}](${m[2]})`);
+                        tagDict[tag].push(`- [${item.title}](${item.href})`);
                     });
                 });
                 this.syncData = this.syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
