@@ -15,6 +15,7 @@
         @PropSync('data') public syncData!: string;
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
+        @Prop() public isSearch!: boolean;
         @Prop() public smoothScroll!: SmoothScroll;
 
         public classObject = [{

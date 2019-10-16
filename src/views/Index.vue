@@ -11,10 +11,10 @@
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
-                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex"
+                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch"
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
-                <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive">
+                <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive || isSearch">
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
@@ -280,7 +280,7 @@
 
         public get isIndex() {
             return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE,
-                process.env.VUE_APP_ARCHIVE_FILE].includes(this.path.substr(1));
+                process.env.VUE_APP_ARCHIVE_FILE, process.env.VUE_APP_SEARCH_FILE].includes(this.path.substr(1));
         }
 
         public get isCategory() {
@@ -289,6 +289,10 @@
 
         public get isArchive() {
             return this.path.substr(1) === process.env.VUE_APP_ARCHIVE_FILE;
+        }
+
+        public get isSearch() {
+            return this.path.substr(1) === process.env.VUE_APP_SEARCH_FILE;
         }
 
         public get date() {
