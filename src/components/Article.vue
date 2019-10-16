@@ -16,6 +16,7 @@
         @Prop() public isIndex!: boolean;
         @Prop() public isCategory!: boolean;
         @Prop() public isSearch!: boolean;
+        @Prop() public params!: { [index: string]: string };
         @Prop() public smoothScroll!: SmoothScroll;
 
         public classObject = [{

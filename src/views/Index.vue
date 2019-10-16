@@ -11,7 +11,7 @@
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
-                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch"
+                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive || isSearch">
@@ -51,6 +51,7 @@
         public toTop: HTMLElement | null = null;
         public keyInput = '';
         public inputBinds: { [index: string]: () => void } = {};
+        public params: { [index: string]: string } = {};
 
         public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
@@ -247,6 +248,7 @@
         }
 
         public get path() {
+            this.params = {};
             let path = this.$route.path;
             const hash = this.$route.hash;
             if (this.isIndexPath) {
@@ -256,6 +258,16 @@
                 if (hash.startsWith('#/')) {
                     path = hash.substr(1);
                     if (path !== '/') {
+                        const indexOf = path.indexOf('?');
+                        if (indexOf >= 0) {
+                            path.substring(indexOf + 1).split('&').forEach((param) => {
+                                const indexOfEQ = param.indexOf('=');
+                                if (indexOfEQ >= 0) {
+                                    this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
+                                }
+                            });
+                            path = path.substring(0, indexOf);
+                        }
                         if (path.endsWith('/')) {
                             path += 'index.md';
                         }
