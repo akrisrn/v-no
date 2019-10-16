@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-    import {getDateString, getListFromData, getTime, getWrapRegExp} from '@/utils';
+    import {getDateString, getIndexFileData, getListFromData, getTime, getWrapRegExp} from '@/utils';
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
@@ -506,13 +506,7 @@
         }
 
         public updateCategoryList() {
-            axios.get('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
-                axios.get('/' + process.env.VUE_APP_ARCHIVE_FILE).then((response2) => {
-                    this.updateCategoryListActual(response.data + response2.data);
-                }).catch(() => {
-                    this.updateCategoryListActual(response.data);
-                });
-            });
+            getIndexFileData(this.updateCategoryListActual);
         }
 
         public get markdown() {
