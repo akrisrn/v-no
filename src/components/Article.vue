@@ -518,6 +518,8 @@
             const resultUl = document.querySelector('ul#result')!;
             const list = getListFromData(pageData);
             if (list.length > 0) {
+                const header = document.querySelector('header')!;
+                let count = 0;
                 list.forEach((item) => {
                     axios.get(item.href).then((response) => {
                         if ((response.data as string).toLowerCase().indexOf(queryContent.toLowerCase()) >= 0) {
@@ -530,6 +532,12 @@
                             this.updateLinkPath();
                             this.updateIndexList();
                             this.updateTextCount();
+                        }
+                    }).finally(() => {
+                        if (++count === list.length) {
+                            header.innerText = 'Search done';
+                        } else {
+                            header.innerText = `Searching...(${count}/${list.length})`;
                         }
                     });
                 });
