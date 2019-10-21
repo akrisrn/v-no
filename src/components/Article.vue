@@ -531,11 +531,12 @@
                             li.append(a);
                             const results = [''];
                             const regexp = new RegExp(queryContent, 'ig');
-                            let match;
-                            while ((match = regexp.exec(data)) !== null) {
+                            let match = regexp.exec(data);
+                            while (match !== null) {
                                 results.push(data.substring(match.index - 10, match.index) +
                                     `<span style="color: red">${match[0]}</span>` +
                                     data.substring(match.index + match[0].length, regexp.lastIndex + 10));
+                                match = regexp.exec(data);
                             }
                             results.push('');
                             const blockquote = document.createElement('blockquote');
