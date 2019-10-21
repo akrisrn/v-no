@@ -522,12 +522,27 @@
                 let count = 0;
                 list.forEach((item) => {
                     axios.get(item.href).then((response) => {
-                        if ((response.data as string).toLowerCase().indexOf(queryContent.toLowerCase()) >= 0) {
+                        const data = response.data as string;
+                        if (data.toLowerCase().indexOf(queryContent.toLowerCase()) >= 0) {
                             const li = document.createElement('li');
                             const a = document.createElement('a');
                             a.href = item.href;
                             a.innerText = item.title;
                             li.append(a);
+                            const results = [''];
+                            const regexp = new RegExp(queryContent, 'ig');
+                            let match;
+                            while ((match = regexp.exec(data)) !== null) {
+                                results.push(data.substring(match.index - 10, match.index) +
+                                    `<span style="color: red">${match[0]}</span>` +
+                                    data.substring(match.index + match[0].length, regexp.lastIndex + 10));
+                            }
+                            results.push('');
+                            const blockquote = document.createElement('blockquote');
+                            const p = document.createElement('p');
+                            p.innerHTML = `${results.join('......')}`;
+                            blockquote.append(p);
+                            li.append(blockquote);
                             resultUl.append(li);
                             this.updateLinkPath();
                             this.updateIndexList();
