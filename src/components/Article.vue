@@ -613,7 +613,7 @@
 
         h1, h2
             border-bottom-color lightgray
-            padding-bottom 8px
+            padding-bottom 12px
 
         p.left
             float left
