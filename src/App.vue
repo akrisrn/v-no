@@ -9,10 +9,7 @@
         &, .markdown-body pre, .markdown-body code
             transition background-color 0.5s
 
-        header
-            transition color 0.5s, border-bottom-color 0.5s
-
-        .markdown-body:not(footer), .markdown-body a
+        header, .markdown-body:not(footer), .markdown-body a
             transition color 0.5s
 
         .markdown-body hr, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
@@ -25,9 +22,6 @@
             transition filter 0.5s
 
         &.dark
-            header
-                border-bottom-color darkgray !important
-
             header, .markdown-body
                 color #bebebe !important
 
