@@ -42,7 +42,6 @@
         public title = '';
         public author = '';
         public tags: string[] = [];
-        public hasFooter = false;
         public isShow = false;
         public isError = false;
         public isDark = false;
@@ -192,14 +191,6 @@
             });
         }
 
-        public setFooter(data: string) {
-            return this.setFlag(data, '@footer:', (match) => {
-                this.hasFooter = match.toLowerCase() === 'true';
-            }, () => {
-                this.hasFooter = true;
-            });
-        }
-
         public setData(data: string) {
             this.isShow = true;
             this.data = this.setTitle(data);
@@ -209,16 +200,8 @@
             if (this.path.endsWith('.md')) {
                 axios.get(this.path).then((response) => {
                     this.isError = false;
-                    const data = this.setFooter(this.setTags(this.setAuthor(response.data)));
-                    if (this.hasFooter) {
-                        axios.get('/' + process.env.VUE_APP_FOOTER_FILE).then((response2) => {
-                            this.setData(data + '\n\n' + response2.data);
-                        }).catch(() => {
-                            this.setData(data);
-                        });
-                    } else {
-                        this.setData(data);
-                    }
+                    const data = this.setTags(this.setAuthor(response.data));
+                    this.setData(data);
                 }).catch((error) => {
                     this.isError = true;
                     this.setData(error2markdown(error));
