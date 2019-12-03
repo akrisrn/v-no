@@ -1,5 +1,5 @@
 <template>
-    <article :class="classObject" v-html="markdown"></article>
+    <article :class="classObject" v-html="markdown"/>
 </template>
 
 <script lang="ts">
@@ -51,6 +51,10 @@
                     }
                 },
             });
+
+        public get markdown() {
+            return this.renderMD(this.syncData);
+        }
 
         // noinspection JSUnusedGlobalSymbols
         public created() {
@@ -104,7 +108,7 @@
                 if (jsExpMatches) {
                     jsExpMatches.forEach((jsExpMatch) => {
                         const m = jsExpMatch.match(getWrapRegExp('\\$', '\\$'))!;
-                        let result = '';
+                        let result: string;
                         try {
                             if (!article) {
                                 article = document.createElement('article');
@@ -166,7 +170,7 @@
                 uls[1].classList.add('ul-b');
             }
             document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
-                let href = a.getAttribute('h')!;
+                let href = a.getAttribute('h');
                 if (href === null) {
                     href = a.getAttribute('href')!;
                     a.setAttribute('h', href);
@@ -355,7 +359,7 @@
                     if (updatedLinks.includes(href)) {
                         return;
                     }
-                    const params: { [index: string]: string } = {};
+                    const params: { [index: string]: string | undefined } = {};
                     const match = a.innerText.match(/#(.+)$/);
                     if (match) {
                         match[1].split('|').forEach((seg, i) => {
@@ -377,13 +381,13 @@
                                     let defaultValue;
                                     [m[1], defaultValue] = m[1].split('|');
                                     const param = params[m[1]];
-                                    let result = '';
+                                    let result: string;
                                     if (param !== undefined) {
                                         result = param;
                                     } else if (defaultValue !== undefined) {
                                         result = defaultValue;
                                     } else {
-                                        result = param;
+                                        result = 'undefined';
                                     }
                                     line = line.replace(m[0], result.replace(/\\n/g, '\n'));
                                 });
@@ -479,18 +483,18 @@
         public updateCategoryListActual(pageData: string) {
             const list = getListFromData(pageData);
             if (list.length > 0) {
-                const tagDict: { [index: string]: string[] } = {};
+                const tagDict: { [index: string]: string[] | undefined } = {};
                 list.forEach((item) => {
                     item.tags.forEach((tag) => {
                         if (tagDict[tag] === undefined) {
                             tagDict[tag] = [];
                         }
-                        tagDict[tag].push(`- [${item.title}](${item.href})`);
+                        tagDict[tag]!.push(`- [${item.title}](${item.href})`);
                     });
                 });
                 this.syncData = this.syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
-                    const count = `<span class="count">（${tagDict[key].length}）</span>`;
-                    return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
+                    const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
+                    return `###### ${key}${count}\n\n${tagDict[key]!.join('\n')}`;
                 }).join('\n\n'));
                 setTimeout(() => {
                     this.updateToc();
@@ -579,10 +583,6 @@
             if (queryContent && resultUl) {
                 getIndexFileData(this.updateSearchListActual);
             }
-        }
-
-        public get markdown() {
-            return this.renderMD(this.syncData);
         }
     }
 </script>

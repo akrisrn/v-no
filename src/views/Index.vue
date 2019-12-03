@@ -6,7 +6,7 @@
                     <code class="item-date" v-if="date">{{ date }}</code>
                     <code class="item-author">{{ author }}</code>
                     <code class="item-tag" v-for="tag in tags">{{ tag }}</code>
-                    <code class="item-count"><span id="text-count"></span></code>
+                    <code class="item-count"><span id="text-count"/></code>
                     <code class="item-raw"><a :href="path" target="_blank">Raw</a></code>
                 </div>
                 <header>{{ title }}</header>
@@ -51,6 +51,70 @@
         public keyInput = '';
         public inputBinds: { [index: string]: () => void } = {};
         public params: { [index: string]: string } = {};
+
+        public get path() {
+            this.params = {};
+            let path = this.$route.path;
+            const hash = this.$route.hash;
+            if (this.isIndexPath) {
+                path = '/';
+            }
+            if (path === '/') {
+                if (hash.startsWith('#/')) {
+                    path = hash.substr(1);
+                    if (path !== '/') {
+                        const indexOf = path.indexOf('?');
+                        if (indexOf >= 0) {
+                            path.substring(indexOf + 1).split('&').forEach((param) => {
+                                const indexOfEQ = param.indexOf('=');
+                                if (indexOfEQ >= 0) {
+                                    this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
+                                }
+                            });
+                            path = path.substring(0, indexOf);
+                        }
+                        if (path.endsWith('/')) {
+                            path += 'index.md';
+                        }
+                        return path;
+                    }
+                }
+                return '/' + process.env.VUE_APP_INDEX_FILE;
+            }
+            if (path.endsWith('.html')) {
+                return path.replace(/\.html$/, '.md');
+            }
+            return path;
+        }
+
+        public get isIndexPath() {
+            let path = this.$route.path;
+            if (path.endsWith('/')) {
+                path += 'index.html';
+            }
+            return path === '/' + process.env.VUE_APP_INDEX_PATH;
+        }
+
+        public get isIndex() {
+            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE,
+                process.env.VUE_APP_ARCHIVE_FILE, process.env.VUE_APP_SEARCH_FILE].includes(this.path.substr(1));
+        }
+
+        public get isCategory() {
+            return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
+        }
+
+        public get isArchive() {
+            return this.path.substr(1) === process.env.VUE_APP_ARCHIVE_FILE;
+        }
+
+        public get isSearch() {
+            return this.path.substr(1) === process.env.VUE_APP_SEARCH_FILE;
+        }
+
+        public get date() {
+            return getDateString(this.path);
+        }
 
         public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
@@ -228,70 +292,6 @@
 
         public addInputBind(input: string, bind: () => void) {
             this.inputBinds[input] = bind;
-        }
-
-        public get path() {
-            this.params = {};
-            let path = this.$route.path;
-            const hash = this.$route.hash;
-            if (this.isIndexPath) {
-                path = '/';
-            }
-            if (path === '/') {
-                if (hash.startsWith('#/')) {
-                    path = hash.substr(1);
-                    if (path !== '/') {
-                        const indexOf = path.indexOf('?');
-                        if (indexOf >= 0) {
-                            path.substring(indexOf + 1).split('&').forEach((param) => {
-                                const indexOfEQ = param.indexOf('=');
-                                if (indexOfEQ >= 0) {
-                                    this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
-                                }
-                            });
-                            path = path.substring(0, indexOf);
-                        }
-                        if (path.endsWith('/')) {
-                            path += 'index.md';
-                        }
-                        return path;
-                    }
-                }
-                return '/' + process.env.VUE_APP_INDEX_FILE;
-            }
-            if (path.endsWith('.html')) {
-                return path.replace(/\.html$/, '.md');
-            }
-            return path;
-        }
-
-        public get isIndexPath() {
-            let path = this.$route.path;
-            if (path.endsWith('/')) {
-                path += 'index.html';
-            }
-            return path === '/' + process.env.VUE_APP_INDEX_PATH;
-        }
-
-        public get isIndex() {
-            return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE,
-                process.env.VUE_APP_ARCHIVE_FILE, process.env.VUE_APP_SEARCH_FILE].includes(this.path.substr(1));
-        }
-
-        public get isCategory() {
-            return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
-        }
-
-        public get isArchive() {
-            return this.path.substr(1) === process.env.VUE_APP_ARCHIVE_FILE;
-        }
-
-        public get isSearch() {
-            return this.path.substr(1) === process.env.VUE_APP_SEARCH_FILE;
-        }
-
-        public get date() {
-            return getDateString(this.path);
         }
     }
 </script>
