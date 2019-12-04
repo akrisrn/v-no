@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import Article from '@/components/Article.vue';
-    import {error2markdown, getDateString, setFlag} from '@/utils';
+    import {EFlags, error2markdown, getDateString, setFlag} from '@/utils';
     import axios from 'axios';
     import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
@@ -221,7 +221,7 @@
         }
 
         public setAuthor(data: string) {
-            return setFlag(data, '@author:', (match) => {
+            return setFlag(data, `@${EFlags.author}:`, (match) => {
                 this.author = match;
             }, () => {
                 this.author = process.env.VUE_APP_AUTHOR;
@@ -229,7 +229,7 @@
         }
 
         public setTags(data: string) {
-            return setFlag(data, '@tags:', (match) => {
+            return setFlag(data, `@${EFlags.tags}:`, (match) => {
                 this.tags = match.split(/\s*[,，]\s*/);
             }, () => {
                 this.tags = [];

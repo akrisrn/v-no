@@ -83,3 +83,8 @@ export function setFlag(data: string, flag: string, onMatch?: (match: string) =>
     }
     return data;
 }
+
+export enum EFlags {
+    author = 'author',
+    tags = 'tags'
+}
