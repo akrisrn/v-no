@@ -8,6 +8,7 @@
         getDateString,
         getIndexFileData,
         getListFromData,
+        getQueryContent,
         getTime,
         getWrapRegExp,
         setFlag,
@@ -527,7 +528,7 @@
         }
 
         public updateSearchListActual(pageData: string) {
-            const queryContent = this.params.content ? decodeURIComponent(this.params.content).toLowerCase() : '';
+            const queryContent = getQueryContent(this.params).toLowerCase();
             let isQueryTag = false;
             let queryTag = '';
             if (queryContent.startsWith(`@${EFlags.tags}:`)) {
@@ -598,7 +599,7 @@
         }
 
         public updateSearchList() {
-            const queryContent = this.params.content ? decodeURIComponent(this.params.content) : '';
+            const queryContent = getQueryContent(this.params);
             const resultUl = document.querySelector('ul#result');
             const searchInput = document.querySelector('input#search-input') as HTMLInputElement | null;
             if (searchInput) {

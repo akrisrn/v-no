@@ -88,6 +88,10 @@ export function splitTags(tags: string) {
     return tags.split(/\s*[,，]\s*/);
 }
 
+export function getQueryContent(params: { [index: string]: string }) {
+    return params.content ? decodeURIComponent(params.content) : '';
+}
+
 export enum EFlags {
     author = 'author',
     tags = 'tags',
