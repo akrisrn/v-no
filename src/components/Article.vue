@@ -527,8 +527,13 @@
         }
 
         public updateSearchListActual(pageData: string) {
-            const queryContent = this.params.content ? decodeURIComponent(this.params.content) : '';
-            const isQueryTag = queryContent.startsWith(`@${EFlags.tags}:`);
+            const queryContent = this.params.content ? decodeURIComponent(this.params.content).toLowerCase() : '';
+            let isQueryTag = false;
+            let queryTag = '';
+            if (queryContent.startsWith(`@${EFlags.tags}:`)) {
+                isQueryTag = true;
+                queryTag = queryContent.substr(`@${EFlags.tags}:`.length).trim();
+            }
             const resultUl = document.querySelector('ul#result')!;
             const list = getListFromData(pageData);
             if (list.length > 0) {
@@ -539,14 +544,13 @@
                         const data = response.data as string;
                         let isFind: boolean;
                         if (isQueryTag) {
-                            const queryTag = queryContent.substr(`@${EFlags.tags}:`.length).trim();
                             let dataTags: string[] = [];
                             setFlag(data, `@${EFlags.tags}:`, (match) => {
-                                dataTags = splitTags(match);
+                                dataTags = splitTags(match.toLowerCase());
                             });
                             isFind = dataTags.includes(queryTag);
                         } else {
-                            isFind = data.toLowerCase().indexOf(queryContent.toLowerCase()) >= 0;
+                            isFind = data.toLowerCase().indexOf(queryContent) >= 0;
                         }
                         if (isFind) {
                             const li = document.createElement('li');
