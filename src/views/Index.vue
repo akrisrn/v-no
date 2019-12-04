@@ -102,6 +102,10 @@
                 process.env.VUE_APP_ARCHIVE_FILE, process.env.VUE_APP_SEARCH_FILE].includes(this.path.substr(1));
         }
 
+        public get isHome() {
+            return this.path.substr(1) === process.env.VUE_APP_INDEX_FILE;
+        }
+
         public get isCategory() {
             return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
         }
