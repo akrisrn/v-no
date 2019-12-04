@@ -12,6 +12,7 @@
         getTime,
         getWrapRegExp,
         setFlag,
+        buildQueryContent,
         splitTags,
     } from '@/utils';
     import axios from 'axios';
@@ -608,7 +609,7 @@
                     if (event.key === 'Enter') {
                         event.preventDefault();
                         searchInput.value = searchInput.value.trim();
-                        const param = searchInput.value ? `?content=${encodeURIComponent(searchInput.value)}` : '';
+                        const param = searchInput.value ? buildQueryContent(searchInput.value) : '';
                         const indexOf = location.href.indexOf('?');
                         location.href = ((indexOf >= 0) ? location.href.substring(0, indexOf) : location.href) + param;
                     }
