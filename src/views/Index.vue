@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import Article from '@/components/Article.vue';
-    import {EFlags, error2markdown, getDateString, setFlag} from '@/utils';
+    import {EFlags, error2markdown, getDateString, setFlag, splitTags} from '@/utils';
     import axios from 'axios';
     import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
@@ -230,7 +230,7 @@
 
         public setTags(data: string) {
             return setFlag(data, `@${EFlags.tags}:`, (match) => {
-                this.tags = match.split(/\s*[,，]\s*/);
+                this.tags = splitTags(match);
             }, () => {
                 this.tags = [];
             });
