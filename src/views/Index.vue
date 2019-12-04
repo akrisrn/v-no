@@ -3,6 +3,9 @@
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
                 <div class="markdown-body" id="bar" v-if="!isError">
+                    <code class="item-home" v-if="!isHome">
+                        <a @click.prevent="returnHome" href="/">«</a>
+                    </code>
                     <code class="item-date" v-if="date">{{ date }}</code>
                     <code class="item-author">{{ author }}</code>
                     <code class="item-tag" v-for="tag in tags">
