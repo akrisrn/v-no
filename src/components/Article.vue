@@ -533,6 +533,12 @@
                             a.href = item.href;
                             a.innerText = item.title;
                             li.append(a);
+                            for (const tag of item.tags) {
+                                const code = document.createElement('code');
+                                code.innerText = tag;
+                                li.append(' ');
+                                li.append(code);
+                            }
                             const results = [''];
                             const regexp = new RegExp(queryContent, 'ig');
                             let match = regexp.exec(data);
