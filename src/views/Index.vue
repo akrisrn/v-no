@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import Article from '@/components/Article.vue';
-    import {error2markdown, getDateString, getWrapRegExp} from '@/utils';
+    import {error2markdown, getDateString, setFlag} from '@/utils';
     import axios from 'axios';
     import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
@@ -210,27 +210,8 @@
             this.$router.push(home);
         }
 
-        public setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
-                       onDone?: () => void) {
-            const match = data.match(getWrapRegExp(flag, '\n'));
-            if (match) {
-                if (onMatch) {
-                    onMatch(match[1]);
-                }
-                data = data.replace(match[0], '');
-            } else {
-                if (onNotMatch) {
-                    onNotMatch();
-                }
-            }
-            if (onDone) {
-                onDone();
-            }
-            return data;
-        }
-
         public setTitle(data: string) {
-            return this.setFlag(data, '^#', (match) => {
+            return setFlag(data, '^#', (match) => {
                 this.title = match;
             }, () => {
                 this.title = this.path.substr(1);
@@ -240,7 +221,7 @@
         }
 
         public setAuthor(data: string) {
-            return this.setFlag(data, '@author:', (match) => {
+            return setFlag(data, '@author:', (match) => {
                 this.author = match;
             }, () => {
                 this.author = process.env.VUE_APP_AUTHOR;
@@ -248,7 +229,7 @@
         }
 
         public setTags(data: string) {
-            return this.setFlag(data, '@tags:', (match) => {
+            return setFlag(data, '@tags:', (match) => {
                 this.tags = match.split(/\s*[,，]\s*/);
             }, () => {
                 this.tags = [];
