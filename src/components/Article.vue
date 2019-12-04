@@ -3,7 +3,16 @@
 </template>
 
 <script lang="ts">
-    import {getDateString, getIndexFileData, getListFromData, getTime, getWrapRegExp} from '@/utils';
+    import {
+        EFlags,
+        getDateString,
+        getIndexFileData,
+        getListFromData,
+        getTime,
+        getWrapRegExp,
+        setFlag,
+        splitTags
+    } from '@/utils';
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';
     import Prism from 'prismjs';
@@ -519,6 +528,7 @@
 
         public updateSearchListActual(pageData: string) {
             const queryContent = this.params.content ? decodeURIComponent(this.params.content) : '';
+            const isQueryTag = queryContent.startsWith(`@${EFlags.tags}:`);
             const resultUl = document.querySelector('ul#result')!;
             const list = getListFromData(pageData);
             if (list.length > 0) {
@@ -527,7 +537,18 @@
                 list.forEach((item) => {
                     axios.get(item.href).then((response) => {
                         const data = response.data as string;
-                        if (data.toLowerCase().indexOf(queryContent.toLowerCase()) >= 0) {
+                        let isFind: boolean;
+                        if (isQueryTag) {
+                            const queryTag = queryContent.substr(`@${EFlags.tags}:`.length).trim();
+                            let dataTags: string[] = [];
+                            setFlag(data, `@${EFlags.tags}:`, (match) => {
+                                dataTags = splitTags(match);
+                            });
+                            isFind = dataTags.includes(queryTag);
+                        } else {
+                            isFind = data.toLowerCase().indexOf(queryContent.toLowerCase()) >= 0;
+                        }
+                        if (isFind) {
                             const li = document.createElement('li');
                             const a = document.createElement('a');
                             a.href = item.href;
@@ -539,21 +560,23 @@
                                 li.append(' ');
                                 li.append(code);
                             }
-                            const results = [''];
-                            const regexp = new RegExp(queryContent, 'ig');
-                            let match = regexp.exec(data);
-                            while (match !== null) {
-                                results.push(data.substring(match.index - 10, match.index) +
-                                    `<span style="color: red">${match[0]}</span>` +
-                                    data.substring(match.index + match[0].length, regexp.lastIndex + 10));
-                                match = regexp.exec(data);
+                            if (!isQueryTag) {
+                                const results = [''];
+                                const regexp = new RegExp(queryContent, 'ig');
+                                let match = regexp.exec(data);
+                                while (match !== null) {
+                                    results.push(data.substring(match.index - 10, match.index) +
+                                        `<span style="color: red">${match[0]}</span>` +
+                                        data.substring(match.index + match[0].length, regexp.lastIndex + 10));
+                                    match = regexp.exec(data);
+                                }
+                                results.push('');
+                                const blockquote = document.createElement('blockquote');
+                                const p = document.createElement('p');
+                                p.innerHTML = `${results.join('......')}`;
+                                blockquote.append(p);
+                                li.append(blockquote);
                             }
-                            results.push('');
-                            const blockquote = document.createElement('blockquote');
-                            const p = document.createElement('p');
-                            p.innerHTML = `${results.join('......')}`;
-                            blockquote.append(p);
-                            li.append(blockquote);
                             resultUl.append(li);
                             this.updateLinkPath();
                             this.updateIndexList();
