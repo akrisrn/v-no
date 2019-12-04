@@ -16,7 +16,7 @@
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
                          :smoothScroll="smoothScroll" @update:data="data = $event">
                 </Article>
-                <footer class="markdown-body" v-if="!isIndex || isCategory || isArchive || isSearch">
+                <footer class="markdown-body" v-if="!isHome">
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
