@@ -88,7 +88,7 @@ export function splitTags(tags: string) {
     return tags.split(/\s*[,，]\s*/);
 }
 
-export function getQueryContent(params: { [index: string]: string }) {
+export function getQueryContent(params: { [index: string]: string | undefined }) {
     return params.content ? decodeURIComponent(params.content) : '';
 }
 
