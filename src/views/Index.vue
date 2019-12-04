@@ -5,7 +5,9 @@
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code class="item-date" v-if="date">{{ date }}</code>
                     <code class="item-author">{{ author }}</code>
-                    <code class="item-tag" v-for="tag in tags">{{ tag }}</code>
+                    <code class="item-tag" v-for="tag in tags">
+                        <a :href="getTagLink(tag)">{{ tag }}</a>
+                    </code>
                     <code class="item-count"><span id="text-count"/></code>
                     <code class="item-raw"><a :href="path" target="_blank">Raw</a></code>
                 </div>
@@ -27,7 +29,7 @@
 
 <script lang="ts">
     import Article from '@/components/Article.vue';
-    import {EFlags, error2markdown, getDateString, setFlag, splitTags} from '@/utils';
+    import {EFlags, error2markdown, getDateString, setFlag, buildQueryContent, splitTags} from '@/utils';
     import axios from 'axios';
     import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
@@ -273,6 +275,10 @@
 
         public addInputBind(input: string, bind: () => void) {
             this.inputBinds[input] = bind;
+        }
+
+        public getTagLink(tag: string) {
+            return buildQueryContent(`@${EFlags.tags}:${tag}`, true);
         }
     }
 </script>

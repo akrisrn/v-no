@@ -462,6 +462,12 @@
                             }
                         }
                     }
+                    li.querySelectorAll('code').forEach((code) => {
+                        const a = document.createElement('a');
+                        a.href = buildQueryContent(`@${EFlags.tags}:${code.innerText}`, true);
+                        a.innerText = code.innerText;
+                        code.innerHTML = a.outerHTML;
+                    });
                     lis.push(item);
                 });
                 let maxSize = process.env.VUE_APP_MAX_SIZE_OF_LIST;
