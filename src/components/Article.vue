@@ -11,7 +11,7 @@
         getTime,
         getWrapRegExp,
         setFlag,
-        splitTags
+        splitTags,
     } from '@/utils';
     import axios from 'axios';
     import MarkdownIt from 'markdown-it';

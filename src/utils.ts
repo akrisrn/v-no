@@ -90,5 +90,5 @@ export function splitTags(tags: string) {
 
 export enum EFlags {
     author = 'author',
-    tags = 'tags'
+    tags = 'tags',
 }
