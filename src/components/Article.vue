@@ -462,7 +462,7 @@
                             }
                         }
                     }
-                    li.querySelectorAll('code').forEach((code) => {
+                    li.querySelectorAll<HTMLElement>('code:not(.nolink)').forEach((code) => {
                         const a = document.createElement('a');
                         a.href = buildQueryContent(`@${EFlags.tags}:${code.innerText}`, true);
                         a.innerText = code.innerText;
