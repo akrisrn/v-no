@@ -83,9 +83,13 @@ async function getHtmlAndFiles(page, urlPath) {
                 const code = document.createElement('code');
                 code.classList.add('item-date');
                 code.innerText = lastUpdatedDate;
-                bar.insertBefore(code, bar.children[0])
+                bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0])
             }
         }
+        document.querySelectorAll('code.item-tag,.index li>code').forEach((code) => {
+            code.innerHTML = code.innerText;
+            code.classList.add('nolink')
+        });
         const files = [];
         document.querySelectorAll('a').forEach((a) => {
             const href = a.getAttribute('href');
