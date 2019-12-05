@@ -506,7 +506,11 @@
                         if (tagDict[tag] === undefined) {
                             tagDict[tag] = [];
                         }
-                        tagDict[tag]!.push(`- [${item.title}](${item.href})`);
+                        let text = `- [${item.title}](${item.href})`;
+                        item.tags.forEach((tag) => {
+                            text += ' `' + tag + '`';
+                        });
+                        tagDict[tag]!.push(text);
                     });
                 });
                 this.syncData = this.syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
