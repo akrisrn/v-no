@@ -11,8 +11,12 @@
                     <code class="item-tag" v-for="tag in tags">
                         <a :href="getTagLink(tag)">{{ tag }}</a>
                     </code>
-                    <code class="item-count"><span id="text-count"/></code>
-                    <code class="item-raw"><a :href="path" target="_blank">Raw</a></code>
+                    <code class="item-count">
+                        <span id="text-count"/>
+                    </code>
+                    <code class="item-raw">
+                        <a :href="path" target="_blank">Raw</a>
+                    </code>
                 </div>
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
@@ -113,6 +117,7 @@
             return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
         }
 
+        // noinspection JSUnusedGlobalSymbols
         public get isArchive() {
             return this.path.substr(1) === process.env.VUE_APP_ARCHIVE_FILE;
         }
