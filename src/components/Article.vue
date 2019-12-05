@@ -502,15 +502,14 @@
             if (list.length > 0) {
                 const tagDict: { [index: string]: string[] | undefined } = {};
                 list.forEach((item) => {
+                    const tags = item.tags.map((tag) => {
+                        return '`' + tag + '`';
+                    }).join(' ');
                     item.tags.forEach((tag) => {
                         if (tagDict[tag] === undefined) {
                             tagDict[tag] = [];
                         }
-                        let text = `- [${item.title}](${item.href})`;
-                        item.tags.forEach((tag) => {
-                            text += ' `' + tag + '`';
-                        });
-                        tagDict[tag]!.push(text);
+                        tagDict[tag]!.push(`- [${item.title}](${item.href}) ${tags}`);
                     });
                 });
                 this.syncData = this.syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
@@ -570,12 +569,12 @@
                             a.href = item.href;
                             a.innerText = item.title;
                             li.append(a);
-                            for (const tag of item.tags) {
+                            item.tags.forEach((tag) => {
                                 const code = document.createElement('code');
                                 code.innerText = tag;
                                 li.append(' ');
                                 li.append(code);
-                            }
+                            });
                             if (!isQueryTag) {
                                 const results = [''];
                                 const regexp = new RegExp(queryContent, 'ig');
