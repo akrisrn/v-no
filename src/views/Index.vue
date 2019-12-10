@@ -21,7 +21,7 @@
                 <header>{{ title }}</header>
                 <!--suppress JSUnresolvedVariable -->
                 <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
-                         :smoothScroll="smoothScroll" @update:data="data = $event">
+                         @update:data="data = $event">
                 </Article>
                 <footer class="markdown-body" v-if="!isHome">
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
@@ -39,9 +39,9 @@
     import {getDateString} from '@/utils/date';
     import {EFlags, setFlag} from '@/utils/flag';
     import {error2markdown} from '@/utils/markdown';
+    import {scroll} from '@/utils/scroll';
     import {buildQueryContent, splitTags} from '@/utils/utils';
     import axios from 'axios';
-    import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
 
     Component.registerHooks([
@@ -57,7 +57,6 @@
         public isShow = false;
         public isError = false;
         public isDark = false;
-        public smoothScroll = new SmoothScroll();
         public toggleDark: HTMLElement | null = null;
         public toTop: HTMLElement | null = null;
         public keyInput = '';
@@ -142,7 +141,7 @@
         @Watch('isShow')
         public onIsShowChanged() {
             if (this.isShow) {
-                this.scrollToTop(false);
+                scroll(0, false);
             }
         }
 
@@ -178,11 +177,11 @@
                 }
             });
             this.addInputBind('gg', () => {
-                this.smoothScroll.animateScroll(document.body.offsetHeight);
+                scroll(document.body.offsetHeight);
                 this.keyInput += '_';
             });
             this.addInputBind('G', () => {
-                this.smoothScroll.animateScroll(0);
+                scroll(0);
             });
             this.addInputBind('dark', () => {
                 this.isDark = !this.isDark;
@@ -211,7 +210,7 @@
             });
             this.toTop = document.querySelector<HTMLElement>('#to-top')!;
             this.toTop.addEventListener('click', () => {
-                this.scrollToTop();
+                scroll(0);
             });
         }
 
@@ -276,15 +275,6 @@
                         statusText: 'Not Found',
                     },
                 } as any));
-            }
-        }
-
-        // noinspection JSMethodCanBeStatic
-        public scrollToTop(isSmooth = true) {
-            if (isSmooth) {
-                this.smoothScroll.animateScroll(0);
-            } else {
-                scrollTo(0, 0);
             }
         }
 

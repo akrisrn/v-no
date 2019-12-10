@@ -7,10 +7,10 @@
     import {getDateString, getTime} from '@/utils/date';
     import {EFlags, setFlag} from '@/utils/flag';
     import {renderMD} from '@/utils/markdown';
+    import {scroll} from '@/utils/scroll';
     import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/utils/utils';
     import axios from 'axios';
     import Prism from 'prismjs';
-    import SmoothScroll from 'smooth-scroll';
     import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
 
     @Component
@@ -20,7 +20,6 @@
         @Prop() public isCategory!: boolean;
         @Prop() public isSearch!: boolean;
         @Prop() public params!: { [index: string]: string | undefined };
-        @Prop() public smoothScroll!: SmoothScroll;
 
         public classObject = [{
             index: this.isIndex,
@@ -95,7 +94,7 @@
                     e.preventDefault();
                     for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
                         if (h.innerText === innerText) {
-                            this.smoothScroll.animateScroll(h.offsetTop - 10);
+                            scroll(h.offsetTop - 10);
                             break;
                         }
                     }
@@ -137,7 +136,7 @@
                     h.append(link);
                 }
                 link.addEventListener('click', () => {
-                    this.smoothScroll.animateScroll(h.offsetTop - 10);
+                    scroll(h.offsetTop - 10);
                 });
             });
         }
@@ -148,12 +147,12 @@
                 if (fnref) {
                     fnref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        this.smoothScroll.animateScroll(backref.offsetTop - 10);
+                        scroll(backref.offsetTop - 10);
                     });
                     fnref.removeAttribute('href');
                     backref.addEventListener('click', (e) => {
                         e.preventDefault();
-                        this.smoothScroll.animateScroll(fnref.offsetTop - 10);
+                        scroll(fnref.offsetTop - 10);
                     });
                     backref.removeAttribute('href');
                 }
