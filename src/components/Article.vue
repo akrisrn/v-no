@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+    import {renderMD} from '@/utils/markdown';
     import {
         buildQueryContent,
         EFlags,
@@ -12,7 +13,6 @@
         getQueryContent,
         getTime,
         getWrapRegExp,
-        renderMD,
         setFlag,
         splitTags,
     } from '@/utils/utils';
