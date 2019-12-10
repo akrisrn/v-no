@@ -3,15 +3,14 @@
 </template>
 
 <script lang="ts">
+    import {getDateString, getTime} from '@/utils/date';
     import {renderMD} from '@/utils/markdown';
     import {
         buildQueryContent,
         EFlags,
-        getDateString,
         getIndexFileData,
         getListFromData,
         getQueryContent,
-        getTime,
         getWrapRegExp,
         setFlag,
         splitTags,

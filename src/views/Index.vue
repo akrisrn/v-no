@@ -36,8 +36,9 @@
 
 <script lang="ts">
     import Article from '@/components/Article.vue';
+    import {getDateString} from '@/utils/date';
     import {error2markdown} from '@/utils/markdown';
-    import {buildQueryContent, EFlags, getDateString, setFlag, splitTags} from '@/utils/utils';
+    import {buildQueryContent, EFlags, setFlag, splitTags} from '@/utils/utils';
     import axios from 'axios';
     import SmoothScroll from 'smooth-scroll';
     import {Component, Vue, Watch} from 'vue-property-decorator';
