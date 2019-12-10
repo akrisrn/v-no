@@ -3,17 +3,11 @@
 </template>
 
 <script lang="ts">
+    import {getIndexFileData, getListFromData} from '@/utils/data';
     import {getDateString, getTime} from '@/utils/date';
     import {EFlags, setFlag} from '@/utils/flag';
     import {renderMD} from '@/utils/markdown';
-    import {
-        buildQueryContent,
-        getIndexFileData,
-        getListFromData,
-        getQueryContent,
-        getWrapRegExp,
-        splitTags,
-    } from '@/utils/utils';
+    import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/utils/utils';
     import axios from 'axios';
     import Prism from 'prismjs';
     import SmoothScroll from 'smooth-scroll';
