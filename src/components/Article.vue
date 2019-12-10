@@ -4,6 +4,7 @@
 
 <script lang="ts">
     import {
+        buildQueryContent,
         EFlags,
         getDateString,
         getIndexFileData,
@@ -12,7 +13,6 @@
         getTime,
         getWrapRegExp,
         setFlag,
-        buildQueryContent,
         splitTags,
     } from '@/utils';
     import axios from 'axios';
