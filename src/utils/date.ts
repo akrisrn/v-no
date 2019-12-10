@@ -1,4 +1,4 @@
-export function getDate(path: string) {
+function getDate(path: string) {
     if (path) {
         if (path.endsWith('/')) {
             path = path.substr(0, path.length - 1);
