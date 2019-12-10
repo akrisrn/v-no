@@ -1,4 +1,4 @@
-import resource from '@/resource';
+import resource from '@/utils/resource';
 import axios, {AxiosError} from 'axios';
 import MarkdownIt from 'markdown-it';
 

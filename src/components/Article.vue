@@ -15,7 +15,7 @@
         renderMD,
         setFlag,
         splitTags,
-    } from '@/utils';
+    } from '@/utils/utils';
     import axios from 'axios';
     import Prism from 'prismjs';
     import SmoothScroll from 'smooth-scroll';
