@@ -4,15 +4,14 @@
 
 <script lang="ts">
     import {getDateString, getTime} from '@/utils/date';
+    import {EFlags, setFlag} from '@/utils/flag';
     import {renderMD} from '@/utils/markdown';
     import {
         buildQueryContent,
-        EFlags,
         getIndexFileData,
         getListFromData,
         getQueryContent,
         getWrapRegExp,
-        setFlag,
         splitTags,
     } from '@/utils/utils';
     import axios from 'axios';

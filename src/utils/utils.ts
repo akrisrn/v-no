@@ -31,25 +31,6 @@ export function getIndexFileData(func: (data: string) => void) {
     });
 }
 
-export function setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
-                        onDone?: () => void) {
-    const match = data.match(getWrapRegExp(flag, '\n'));
-    if (match) {
-        if (onMatch) {
-            onMatch(match[1]);
-        }
-        data = data.replace(match[0], '');
-    } else {
-        if (onNotMatch) {
-            onNotMatch();
-        }
-    }
-    if (onDone) {
-        onDone();
-    }
-    return data;
-}
-
 export function splitTags(tags: string) {
     return tags.split(/\s*[,，]\s*/);
 }
@@ -60,9 +41,4 @@ export function getQueryContent(params: { [index: string]: string | undefined })
 
 export function buildQueryContent(content: string, isComplete = false) {
     return (isComplete ? `#/${process.env.VUE_APP_SEARCH_FILE}` : '') + `?content=${encodeURIComponent(content)}`;
-}
-
-export enum EFlags {
-    author = 'author',
-    tags = 'tags',
 }
