@@ -61,7 +61,7 @@
         public toTop: HTMLElement | null = null;
         public keyInput = '';
         public inputBinds: { [index: string]: () => void } = {};
-        public params: { [index: string]: string } = {};
+        public params: { [index: string]: string | undefined } = {};
 
         public get path() {
             this.params = {};
