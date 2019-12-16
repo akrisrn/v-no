@@ -1,6 +1,7 @@
 import {getIndexFileData, getListFromData} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
-import {EFlags, setFlag} from '@/ts/flag';
+import {EFlags} from '@/ts/enums';
+import {setFlag} from '@/ts/flag';
 import {renderMD} from '@/ts/markdown';
 import {scroll} from '@/ts/scroll';
 import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/ts/utils';

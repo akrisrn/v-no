@@ -36,7 +36,8 @@
 
 <script lang="ts">
     import {getDateString} from '@/ts/date';
-    import {EFlags, setFlag} from '@/ts/flag';
+    import {EFlags} from '@/ts/enums';
+    import {setFlag} from '@/ts/flag';
     import {error2markdown} from '@/ts/markdown';
     import {scroll} from '@/ts/scroll';
     import {buildQueryContent, splitTags} from '@/ts/utils';
