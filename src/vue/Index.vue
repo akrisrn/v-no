@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts">
+    import {setFlag} from '@/ts/data';
     import {getDateString} from '@/ts/date';
     import {EFlag} from '@/ts/enums';
-    import {setFlag} from '@/ts/flag';
     import {error2markdown} from '@/ts/markdown';
     import {scroll} from '@/ts/scroll';
     import {buildQueryContent, splitTags} from '@/ts/utils';
