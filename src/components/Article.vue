@@ -67,7 +67,7 @@
     }
 </script>
 
-<style>@import '~github-markdown-css/github-markdown.css';</style>
+<style lang="css">@import '~github-markdown-css/github-markdown.css';</style>
 
 <style lang="stylus">
     .markdown-body
