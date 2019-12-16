@@ -2,7 +2,7 @@ import {getIndexFileData, getListFromData, setFlag} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
 import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
-import {buildQueryContent, getQueryContent} from '@/ts/query';
+import {buildQueryContent, getQueryContent, getQueryTypeAndParam} from '@/ts/query';
 import {scroll} from '@/ts/scroll';
 import {getWrapRegExp, splitTags} from '@/ts/utils';
 import axios from 'axios';
@@ -394,12 +394,7 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
 export function updateSearchListActual(params: { [index: string]: string | undefined }, isCategory: boolean) {
     return (pageData: string) => {
         const queryContent = getQueryContent(params).toLowerCase();
-        let isQueryTag = false;
-        let queryTag = '';
-        if (queryContent.startsWith(`@${EFlag.tags}:`)) {
-            isQueryTag = true;
-            queryTag = queryContent.substr(`@${EFlag.tags}:`.length).trim();
-        }
+        const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
         const resultUl = document.querySelector('ul#result')!;
         const list = getListFromData(pageData);
         if (list.length > 0) {
@@ -409,12 +404,12 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                 axios.get(item.href).then((response) => {
                     const data = response.data as string;
                     let isFind: boolean;
-                    if (isQueryTag) {
+                    if (queryType === EFlag.tags) {
                         let dataTags: string[] = [];
                         setFlag(data, `@${EFlag.tags}:`, (match) => {
                             dataTags = splitTags(match.toLowerCase());
                         });
-                        isFind = dataTags.includes(queryTag);
+                        isFind = dataTags.includes(queryParam!);
                     } else {
                         isFind = data.toLowerCase().indexOf(queryContent) >= 0;
                     }
@@ -430,7 +425,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                             li.append(' ');
                             li.append(code);
                         });
-                        if (!isQueryTag) {
+                        if (!queryType) {
                             const results = [''];
                             const regexp = new RegExp(queryContent, 'ig');
                             let match = regexp.exec(data);
