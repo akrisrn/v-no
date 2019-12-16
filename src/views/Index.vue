@@ -288,17 +288,9 @@
     }
 </script>
 
+<style lang="stylus">@import '../style/fade.styl';</style>
+
 <style lang="stylus">
-    .slide-fade-enter-active
-        transition all 0.5s !important
-
-    .slide-fade-leave-active
-        transition all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0) !important
-
-    .slide-fade-enter, .slide-fade-leave-to
-        transform translateY(10px) !important
-        opacity 0 !important
-
     main
         max-width 700px
         margin 32px auto
