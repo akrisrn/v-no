@@ -68,6 +68,7 @@
 </script>
 
 <style lang="css">@import '~github-markdown-css/github-markdown.css';</style>
+<style lang="stylus">@import '../style/loadings.styl';</style>
 
 <style lang="stylus">
     .markdown-body
@@ -412,51 +413,4 @@
             background-color transparent
             border none
             outline none
-
-    .lds-ellipsis
-        position relative
-        width 50px
-        height 100px
-        margin 0 auto
-
-        div
-            position absolute
-            top 45px
-            width 10px
-            height 10px
-            border-radius 50%
-            background-color darkgray
-            animation-timing-function cubic-bezier(0, 1, 1, 0)
-
-            &:nth-child(1)
-                animation lds-ellipsis1 1s infinite
-
-            &:nth-child(2)
-                animation lds-ellipsis2 1s infinite
-
-            &:nth-child(3)
-                left 20px
-                animation lds-ellipsis2 1s infinite
-
-            &:nth-child(4)
-                left 40px
-                animation lds-ellipsis3 1s infinite
-
-            @keyframes lds-ellipsis1
-                from
-                    transform scale(0)
-                to
-                    transform scale(1)
-
-            @keyframes lds-ellipsis2
-                from
-                    transform translate(0, 0)
-                to
-                    transform translate(20px, 0)
-
-            @keyframes lds-ellipsis3
-                from
-                    transform scale(1)
-                to
-                    transform scale(0)
 </style>
