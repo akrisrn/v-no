@@ -69,6 +69,7 @@
 
 <style lang="css">@import '~github-markdown-css/github-markdown.css';</style>
 <style lang="stylus">@import '../style/loadings.styl';</style>
+<style lang="stylus">@import '../style/index.styl';</style>
 
 <style lang="stylus">
     .markdown-body
@@ -336,81 +337,4 @@
 
                 &:hover
                     color lightgray
-
-    .index
-        ul.toc.tags
-            padding-left 0
-
-            li
-                display inline
-
-                + li:before
-                    content '|'
-                    margin-right 12px
-
-        ul:not(.toc)
-            padding-left 0
-
-            li
-                list-style none
-                overflow hidden
-                text-overflow ellipsis
-                white-space nowrap
-
-                &:before
-                    content '»'
-                    margin-right 8px
-
-                blockquote
-                    font-style normal
-                    margin 0
-                    padding-left 16px
-                    padding-right 0
-                    white-space normal
-                    font-size 13px
-
-                    &:before
-                        content none
-
-                code
-                    color darkgray
-                    background-color transparent !important
-                    padding 0
-                    font-size 12px
-                    font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-
-                    &:before
-                        content '#'
-                        margin-right 2px
-
-                .date
-                    margin-left 8px
-
-            .more
-                font-size 13px
-                color darkgray
-                border-top 1px dashed
-                margin-top 16px
-                height 8px
-
-                span
-                    background-color #f1f1f1
-                    transition background-color 0.5s, color 0.5s
-                    position relative
-                    top -16px
-                    padding-right 8px
-                    cursor pointer
-
-                    &:hover
-                        color gray
-
-                    &:before
-                        content '#'
-                        margin-right 2px
-
-        #search-input
-            width 100%
-            background-color transparent
-            border none
-            outline none
 </style>
