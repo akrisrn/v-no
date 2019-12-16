@@ -3,6 +3,7 @@ import {getDateString, getTime} from '@/ts/date';
 import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
 import {buildQueryContent, getQueryContent, getQueryTypeAndParam} from '@/ts/query';
+import resource from '@/ts/resource';
 import {scroll} from '@/ts/scroll';
 import {getWrapRegExp, splitTags} from '@/ts/utils';
 import axios from 'axios';
@@ -455,9 +456,9 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                     }
                 }).finally(() => {
                     if (++count === list.length) {
-                        header.innerText = 'Search done';
+                        header.innerText = resource.searchDone;
                     } else {
-                        header.innerText = `Searching...(${count}/${list.length})`;
+                        header.innerText = `${resource.searching}(${count}/${list.length})`;
                     }
                 });
             });
