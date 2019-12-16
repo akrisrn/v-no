@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts">
-    import Article from '@/components/Article.vue';
     import {getDateString} from '@/utils/date';
     import {EFlags, setFlag} from '@/utils/flag';
     import {error2markdown} from '@/utils/markdown';
     import {scroll} from '@/utils/scroll';
     import {buildQueryContent, splitTags} from '@/utils/utils';
+    import Article from '@/vue/Article.vue';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
 
