@@ -36,7 +36,7 @@
 
 <script lang="ts">
     import {getDateString} from '@/ts/date';
-    import {EFlags} from '@/ts/enums';
+    import {EFlag} from '@/ts/enums';
     import {setFlag} from '@/ts/flag';
     import {error2markdown} from '@/ts/markdown';
     import {scroll} from '@/ts/scroll';
@@ -238,7 +238,7 @@
         }
 
         public setAuthor(data: string) {
-            return setFlag(data, `@${EFlags.author}:`, (match) => {
+            return setFlag(data, `@${EFlag.author}:`, (match) => {
                 this.author = match;
             }, () => {
                 this.author = process.env.VUE_APP_AUTHOR;
@@ -246,7 +246,7 @@
         }
 
         public setTags(data: string) {
-            return setFlag(data, `@${EFlags.tags}:`, (match) => {
+            return setFlag(data, `@${EFlag.tags}:`, (match) => {
                 this.tags = splitTags(match);
             }, () => {
                 this.tags = [];
@@ -284,7 +284,7 @@
         }
 
         public getTagLink(tag: string) {
-            return buildQueryContent(`@${EFlags.tags}:${tag}`, true);
+            return buildQueryContent(`@${EFlag.tags}:${tag}`, true);
         }
     }
 </script>

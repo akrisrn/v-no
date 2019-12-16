@@ -1,4 +1,4 @@
-export enum EFlags {
+export enum EFlag {
     author = 'author',
     tags = 'tags',
 }

@@ -1,6 +1,6 @@
 import {getIndexFileData, getListFromData} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
-import {EFlags} from '@/ts/enums';
+import {EFlag} from '@/ts/enums';
 import {setFlag} from '@/ts/flag';
 import {renderMD} from '@/ts/markdown';
 import {scroll} from '@/ts/scroll';
@@ -316,7 +316,7 @@ export function updateIndexList(isCategory: boolean) {
             }
             li.querySelectorAll<HTMLElement>('code:not(.nolink)').forEach((code) => {
                 const a = document.createElement('a');
-                a.href = buildQueryContent(`@${EFlags.tags}:${code.innerText}`, true);
+                a.href = buildQueryContent(`@${EFlag.tags}:${code.innerText}`, true);
                 a.innerText = code.innerText;
                 code.innerHTML = a.outerHTML;
             });
@@ -396,9 +396,9 @@ export function updateSearchListActual(params: { [index: string]: string | undef
         const queryContent = getQueryContent(params).toLowerCase();
         let isQueryTag = false;
         let queryTag = '';
-        if (queryContent.startsWith(`@${EFlags.tags}:`)) {
+        if (queryContent.startsWith(`@${EFlag.tags}:`)) {
             isQueryTag = true;
-            queryTag = queryContent.substr(`@${EFlags.tags}:`.length).trim();
+            queryTag = queryContent.substr(`@${EFlag.tags}:`.length).trim();
         }
         const resultUl = document.querySelector('ul#result')!;
         const list = getListFromData(pageData);
@@ -411,7 +411,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                     let isFind: boolean;
                     if (isQueryTag) {
                         let dataTags: string[] = [];
-                        setFlag(data, `@${EFlags.tags}:`, (match) => {
+                        setFlag(data, `@${EFlag.tags}:`, (match) => {
                             dataTags = splitTags(match.toLowerCase());
                         });
                         isFind = dataTags.includes(queryTag);
