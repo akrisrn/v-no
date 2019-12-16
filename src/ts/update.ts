@@ -2,8 +2,9 @@ import {getIndexFileData, getListFromData, setFlag} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
 import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
+import {buildQueryContent, getQueryContent} from '@/ts/query';
 import {scroll} from '@/ts/scroll';
-import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/ts/utils';
+import {getWrapRegExp, splitTags} from '@/ts/utils';
 import axios from 'axios';
 
 export function updateDD() {

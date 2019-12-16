@@ -39,8 +39,9 @@
     import {getDateString} from '@/ts/date';
     import {EFlag} from '@/ts/enums';
     import {error2markdown} from '@/ts/markdown';
+    import {buildQueryContent} from '@/ts/query';
     import {scroll} from '@/ts/scroll';
-    import {buildQueryContent, splitTags} from '@/ts/utils';
+    import {splitTags} from '@/ts/utils';
     import Article from '@/vue/Article.vue';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
