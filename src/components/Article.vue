@@ -68,6 +68,6 @@
 </script>
 
 <style lang="css">@import '~github-markdown-css/github-markdown.css';</style>
-<style lang="stylus">@import '../style/loadings.styl';</style>
-<style lang="stylus">@import '../style/index.styl';</style>
 <style lang="stylus">@import '../style/markdown.styl';</style>
+<style lang="stylus">@import '../style/index.styl';</style>
+<style lang="stylus">@import '../style/loadings.styl';</style>
