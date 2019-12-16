@@ -1,4 +1,4 @@
-import {getWrapRegExp} from '@/utils/utils';
+import {getWrapRegExp} from '@/ts/utils';
 
 export function setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
                         onDone?: () => void) {

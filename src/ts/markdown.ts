@@ -1,5 +1,5 @@
-import resource from '@/utils/resource';
-import {getWrapRegExp} from '@/utils/utils';
+import resource from '@/ts/resource';
+import {getWrapRegExp} from '@/ts/utils';
 import {AxiosError} from 'axios';
 import MarkdownIt from 'markdown-it';
 

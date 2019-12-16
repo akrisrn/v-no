@@ -1,9 +1,9 @@
-import {getIndexFileData, getListFromData} from '@/utils/data';
-import {getDateString, getTime} from '@/utils/date';
-import {EFlags, setFlag} from '@/utils/flag';
-import {renderMD} from '@/utils/markdown';
-import {scroll} from '@/utils/scroll';
-import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/utils/utils';
+import {getIndexFileData, getListFromData} from '@/ts/data';
+import {getDateString, getTime} from '@/ts/date';
+import {EFlags, setFlag} from '@/ts/flag';
+import {renderMD} from '@/ts/markdown';
+import {scroll} from '@/ts/scroll';
+import {buildQueryContent, getQueryContent, getWrapRegExp, splitTags} from '@/ts/utils';
 import axios from 'axios';
 
 export function updateDD() {
