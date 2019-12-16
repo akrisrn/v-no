@@ -2,4 +2,4 @@
     <router-view/>
 </template>
 
-<style lang="stylus">@import '../style/body.styl';</style>
+<style lang="stylus">@import '../styl/body.styl';</style>
