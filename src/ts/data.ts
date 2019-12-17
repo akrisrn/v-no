@@ -2,7 +2,7 @@ import {getWrapRegExp} from '@/ts/utils';
 import axios from 'axios';
 
 export function getListFromData(data: string) {
-    const matches = data.match(/^-\s*\[.*?]\(.*?\)\s*(`.*?`)?\s*$/gm);
+    const matches = data.match(/^-\s*\[.*?]\(.*?\.md#\)\s*(`.*?`)?\s*$/gm);
     if (matches) {
         return matches.map((match) => {
             const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
