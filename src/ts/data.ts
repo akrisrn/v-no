@@ -18,6 +18,20 @@ export function getListFromData(data: string) {
     }
 }
 
+export function getMDFromData(data: string) {
+    const matches = data.match(/\[.*?]\(.*?\.md#\)/gm);
+    if (matches) {
+        return matches.map((match) => {
+            const m = match.match(/\[(.*?)]\((.*?)\)/)!;
+            const title = m[1];
+            const href = m[2];
+            return {title, href};
+        });
+    } else {
+        return [];
+    }
+}
+
 export function getIndexFileData(func: (data: string) => void) {
     axios.get('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
         axios.get('/' + process.env.VUE_APP_ARCHIVE_FILE).then((response2) => {
