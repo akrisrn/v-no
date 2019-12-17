@@ -86,7 +86,7 @@ async function getHtmlAndFiles(page, urlPath) {
                 bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0])
             }
         }
-        document.querySelectorAll('code.item-tag,.index li>code').forEach((code) => {
+        document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
             code.innerHTML = code.innerText;
             code.classList.add('nolink')
         });
