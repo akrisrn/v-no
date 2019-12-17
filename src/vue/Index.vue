@@ -41,7 +41,7 @@
     import {getDateString} from '@/ts/date';
     import {EFlag} from '@/ts/enums';
     import {error2markdown} from '@/ts/markdown';
-    import {buildQueryContent} from '@/ts/query';
+    import {getQueryLink} from '@/ts/query';
     import resource from '@/ts/resource';
     import {scroll} from '@/ts/scroll';
     import {splitTags} from '@/ts/utils';
@@ -288,11 +288,11 @@
         }
 
         public getAuthorLink(author: string) {
-            return buildQueryContent(`@${EFlag.author}:${author}`, true);
+            return getQueryLink(EFlag.author, author);
         }
 
         public getTagLink(tag: string) {
-            return buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+            return getQueryLink(EFlag.tags, tag);
         }
     }
 </script>
