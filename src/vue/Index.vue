@@ -40,6 +40,7 @@
     import {EFlag} from '@/ts/enums';
     import {error2markdown} from '@/ts/markdown';
     import {buildQueryContent} from '@/ts/query';
+    import resource from '@/ts/resource';
     import {scroll} from '@/ts/scroll';
     import {splitTags} from '@/ts/utils';
     import Article from '@/vue/Article.vue';
@@ -274,7 +275,7 @@
                 this.setData(error2markdown({
                     response: {
                         status: 404,
-                        statusText: 'Not Found',
+                        statusText: resource.notFound,
                     },
                 } as any));
             }
