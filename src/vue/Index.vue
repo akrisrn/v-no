@@ -7,7 +7,9 @@
                         <a @click.prevent="returnHome" href="/">«</a>
                     </code>
                     <code class="item-date" v-if="date">{{ date }}</code>
-                    <code class="item-author">{{ author }}</code>
+                    <code class="item-author">
+                        <a :href="getAuthorLink(author)">{{ author }}</a>
+                    </code>
                     <code class="item-tag" v-for="tag in tags">
                         <a :href="getTagLink(tag)">{{ tag }}</a>
                     </code>
@@ -283,6 +285,10 @@
 
         public addInputBind(input: string, bind: () => void) {
             this.inputBinds[input] = bind;
+        }
+
+        public getAuthorLink(author: string) {
+            return buildQueryContent(`@${EFlag.author}:${author}`, true);
         }
 
         public getTagLink(tag: string) {
