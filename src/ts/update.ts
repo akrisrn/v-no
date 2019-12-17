@@ -355,7 +355,12 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         const list = getListFromData(pageData);
         if (list.length > 0) {
             const tagDict: { [index: string]: string[] | undefined } = {};
-            list.forEach((item) => {
+            const untagged = [];
+            for (const item of list) {
+                if (item.tags.length === 0) {
+                    untagged.push(`- [${item.title}](${item.href})`);
+                    continue;
+                }
                 const tags = item.tags.map((tag) => {
                     return '`' + tag + '`';
                 }).join(' ');
@@ -365,8 +370,13 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
                     }
                     tagDict[tag]!.push(`- [${item.title}](${item.href}) ${tags}`);
                 });
-            });
-            updateData(syncData.replace('[list]', Object.keys(tagDict).sort().map((key) => {
+            }
+            const sortedKeys = Object.keys(tagDict).sort();
+            if (untagged.length > 0) {
+                sortedKeys.unshift(process.env.VUE_APP_UNTAGGED);
+                tagDict[process.env.VUE_APP_UNTAGGED] = untagged;
+            }
+            updateData(syncData.replace('[list]', sortedKeys.map((key) => {
                 const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
                 return `###### ${key}${count}\n\n${tagDict[key]!.join('\n')}`;
             }).join('\n\n')));
