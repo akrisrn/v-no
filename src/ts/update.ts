@@ -1,4 +1,4 @@
-import {getIndexFileData, getListFromData, setFlag} from '@/ts/data';
+import {getIndexFileData, getListFromData, getMDFromData, setFlag} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
 import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
@@ -397,7 +397,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
         const queryContent = getQueryContent(params).toLowerCase();
         const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
         const resultUl = document.querySelector('ul#result')!;
-        const list = getListFromData(pageData);
+        const list = getMDFromData(pageData);
         if (list.length > 0) {
             const header = document.querySelector('header')!;
             let count = 0;
@@ -426,12 +426,6 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                         a.href = item.href;
                         a.innerText = item.title;
                         li.append(a);
-                        item.tags.forEach((tag) => {
-                            const code = document.createElement('code');
-                            code.innerText = tag;
-                            li.append(' ');
-                            li.append(code);
-                        });
                         if (!queryType) {
                             const results = [''];
                             const regexp = new RegExp(queryContent, 'ig');
