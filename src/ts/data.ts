@@ -22,9 +22,8 @@ export function getListFromData(data: string) {
             }
             return {title, href, tags};
         });
-    } else {
-        return [];
     }
+    return [];
 }
 
 export function getMDFromData(data: string) {
@@ -36,9 +35,8 @@ export function getMDFromData(data: string) {
             const href = m[2];
             return {title, href};
         });
-    } else {
-        return [];
     }
+    return [];
 }
 
 export function getIndexFileData(func: (data: string) => void) {

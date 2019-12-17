@@ -82,8 +82,9 @@ export function updateTable() {
 }
 
 export function updateHeading() {
-    const selector = 'article>h1,article>h2,article>h3,article>h4,article>h5,article>h6';
-    document.querySelectorAll<HTMLHeadingElement>(selector).forEach((h) => {
+    document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map((item) => {
+        return `article>h${item}`;
+    }).join(',')).forEach((h) => {
         let link = h.querySelector('.heading-link');
         if (!link) {
             link = document.createElement('a');
@@ -146,7 +147,6 @@ export function updateImagePath() {
                 img.src = new URL(img.src).pathname;
             }
         }
-
         let loadings = parent.previousElementSibling;
         if (!parent.classList.contains('hidden') || (loadings && loadings.classList.contains('lds-ellipsis'))) {
             parent.classList.add('hidden');
@@ -168,7 +168,6 @@ export function updateImagePath() {
                 loadings.remove();
             }
         }
-
         if (parent.tagName === 'DT') {
             parent.parentElement!.classList.add('center');
         } else {
@@ -211,7 +210,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
     //      #a=1|b=2|3 会被转化成 {1: 1, 2: 2, 3: 3, a: 1, b: 2}
     // 4. text 为 *：将链接引入为 JavaScript 文件引用
     // 5. text 为 $：将链接引入为 CSS 文件引用
-    document.querySelectorAll<HTMLLinkElement>('article a[href]').forEach((a) => {
+    for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
         const href = a.getAttribute('href')!;
         const pathname = new URL(a.href).pathname;
         if (href.endsWith('.md#')) {
@@ -221,7 +220,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
             a.classList.add('snippet');
             if (updatedLinks.includes(href)) {
-                return;
+                continue;
             }
             const params: { [index: string]: string | undefined } = {};
             const match = a.innerText.match(/#(.+)$/);
@@ -290,7 +289,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
             a.target = '_blank';
             a.rel = 'noopener noreferrer';
         }
-    });
+    }
 }
 
 export function updateIndexList(isCategory: boolean) {

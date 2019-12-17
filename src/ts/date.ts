@@ -11,9 +11,8 @@ function getDate(path: string) {
             }
         }
         return new Date(match[1]);
-    } else {
-        return null;
     }
+    return null;
 }
 
 export function getDateString(path: string) {

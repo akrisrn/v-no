@@ -31,9 +31,8 @@ function getLastUpdatedDate(filepath) {
         result = result.split('\n').filter(commit => commit && !commit.endsWith('small fix'));
         if (result.length >= 2) {
             return new Date(parseInt(result[0]) * 1000).toDateString()
-        } else {
-            return null
         }
+        return null
     } catch (e) {
         return null
     }
@@ -91,10 +90,10 @@ async function getHtmlAndFiles(page, urlPath) {
             code.classList.add('nolink')
         });
         const files = [];
-        document.querySelectorAll('a').forEach((a) => {
+        for (const a of document.querySelectorAll('a')) {
             const href = a.getAttribute('href');
             if (!href) {
-                return;
+                continue;
             }
             let filepath;
             if (href.startsWith('#/') && href.endsWith('.md')) {
@@ -103,10 +102,10 @@ async function getHtmlAndFiles(page, urlPath) {
             } else if (href.startsWith('/') && href.endsWith('.html')) {
                 filepath = href.replace(/\.html$/, '.md')
             } else {
-                return
+                continue;
             }
             files.push(filepath)
-        });
+        }
         document.body.classList.add('prerender');
         document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
             toolbar.outerHTML = toolbar.querySelector('pre').outerHTML
@@ -141,7 +140,6 @@ async function loadPages(browser, files) {
 
 (async () => {
     const browser = await puppeteer.launch();
-
     const page = await browser.newPage();
     const [html, files] = await getHtmlAndFiles(page, url.resolve(index, '#/' + indexFile));
     await page.close();
@@ -151,6 +149,5 @@ async function loadPages(browser, files) {
     } else {
         console.error('error:', index);
     }
-
     await browser.close();
 })();

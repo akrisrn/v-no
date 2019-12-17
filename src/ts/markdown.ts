@@ -27,9 +27,8 @@ const markdownIt = new MarkdownIt({
                 }
                 const summary = markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
                 return `<details${classAttr}${open}><summary>${summary}</summary>`;
-            } else {
-                return '</details>';
             }
+            return '</details>';
         },
     });
 markdownIt.linkify.tlds([], false);
