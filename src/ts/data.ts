@@ -1,4 +1,4 @@
-import {getWrapRegExp} from '@/ts/utils';
+import {getWrapRegExp, splitTagsFromCodes} from '@/ts/utils';
 import axios from 'axios';
 
 export function getListFromData(data: string) {
@@ -8,18 +8,7 @@ export function getListFromData(data: string) {
             const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
             const title = m[1];
             const href = m[2];
-            let tags: string[] = [];
-            if (m[3]) {
-                tags = m[3].split(/`\s+`/);
-                tags[0] = tags[0].substr(1);
-                const last = tags.length - 1;
-                tags[last] = tags[last].substr(0, tags[last].length - 1);
-                tags = tags.map((tag) => {
-                    return tag.trim();
-                }).filter((tag) => {
-                    return tag;
-                });
-            }
+            const tags = m[3] ? splitTagsFromCodes(m[3]) : [];
             return {title, href, tags};
         });
     }
