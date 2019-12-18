@@ -435,6 +435,12 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                         a.href = item.href;
                         a.innerText = item.title;
                         li.append(a);
+                        item.tags.forEach((tag) => {
+                            const code = document.createElement('code');
+                            code.innerText = tag;
+                            li.append(' ');
+                            li.append(code);
+                        });
                         if (!queryType) {
                             const results = [''];
                             const regexp = new RegExp(queryContent, 'ig');

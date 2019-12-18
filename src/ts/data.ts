@@ -16,13 +16,14 @@ export function getListFromData(data: string) {
 }
 
 export function getMDFromData(data: string) {
-    const matches = data.match(/\[.*?]\(.*?\.md#\)/gm);
+    const matches = data.match(/\[.*?]\(.*?\.md#\)(\s*`.*?`\s*$)?/gm);
     if (matches) {
         return matches.map((match) => {
-            const m = match.match(/\[(.*?)]\((.*?)\)/)!;
+            const m = match.match(/\[(.*?)]\((.*?)\)(?:\s*(.*?)\s*$)/)!;
             const title = m[1];
             const href = m[2];
-            return {title, href};
+            const tags = m[3] ? splitTagsFromCodes(m[3]) : [];
+            return {title, href, tags};
         });
     }
     return [];
