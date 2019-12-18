@@ -1,25 +1,11 @@
 import {getWrapRegExp, splitTagsFromCodes} from '@/ts/utils';
 import axios from 'axios';
 
-export function getListFromData(data: string) {
-    const matches = data.match(/^-\s*\[.*?]\(.*?\.md#\)\s*(`.*?`)?\s*$/gm);
+export function getListFromData(data: string, isAll = false) {
+    const matches = data.match(isAll ? /\[.*?]\(.*?\.md#\)(\s*`.*?`\s*$)?/gm : /^-\s*\[.*?]\(.*?\.md#\)\s*(`.*?`)?\s*$/gm);
     if (matches) {
         return matches.map((match) => {
-            const m = match.match(/^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
-            const title = m[1];
-            const href = m[2];
-            const tags = m[3] ? splitTagsFromCodes(m[3]) : [];
-            return {title, href, tags};
-        });
-    }
-    return [];
-}
-
-export function getMDFromData(data: string) {
-    const matches = data.match(/\[.*?]\(.*?\.md#\)(\s*`.*?`\s*$)?/gm);
-    if (matches) {
-        return matches.map((match) => {
-            const m = match.match(/\[(.*?)]\((.*?)\)(?:\s*(.*?)\s*$)/)!;
+            const m = match.match(isAll ? /\[(.*?)]\((.*?)\)(?:\s*(.*?)\s*$)/ : /^-\s*\[(.*?)]\((.*?)\)\s*(.*?)\s*$/)!;
             const title = m[1];
             const href = m[2];
             const tags = m[3] ? splitTagsFromCodes(m[3]) : [];

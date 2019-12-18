@@ -1,4 +1,4 @@
-import {getIndexFileData, getListFromData, getMDFromData, setFlag} from '@/ts/data';
+import {getIndexFileData, getListFromData, setFlag} from '@/ts/data';
 import {getDateString, getTime} from '@/ts/date';
 import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
@@ -406,7 +406,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
         const queryContent = getQueryContent(params).toLowerCase();
         const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
         const resultUl = document.querySelector('ul#result')!;
-        const list = getMDFromData(pageData);
+        const list = getListFromData(pageData, true);
         if (list.length > 0) {
             const header = document.querySelector('header')!;
             let count = 0;
