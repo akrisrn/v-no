@@ -447,7 +447,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
                             let match = regexp.exec(data);
                             while (match !== null) {
                                 results.push(data.substring(match.index - 10, match.index) +
-                                    `<span style="color: red">${match[0]}</span>` +
+                                    `<span class="hl">${match[0]}</span>` +
                                     data.substring(match.index + match[0].length, regexp.lastIndex + 10));
                                 match = regexp.exec(data);
                             }
