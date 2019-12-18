@@ -55,6 +55,13 @@ export function updateToc() {
             }
         });
     });
+    document.querySelectorAll('#toc > ul.tags > li > a').forEach((a) => {
+        const count = a.querySelector('span.count');
+        if (count) {
+            a.removeChild(count);
+            a.parentElement!.append(count);
+        }
+    });
 }
 
 export function updatePre() {
@@ -385,13 +392,6 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
                 updateLinkPath(isCategory);
                 updateIndexList(isCategory);
                 updateTextCount();
-                document.querySelectorAll('#toc li > a').forEach((a) => {
-                    const count = a.querySelector('span.count');
-                    if (count) {
-                        a.removeChild(count);
-                        a.parentElement!.append(count);
-                    }
-                });
             }, 0);
         }
     };
