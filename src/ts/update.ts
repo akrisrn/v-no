@@ -55,11 +55,15 @@ export function updateToc() {
             }
         });
     });
-    document.querySelectorAll('#toc > ul.tags > li > a').forEach((a) => {
-        const count = a.querySelector('span.count');
+    document.querySelectorAll<HTMLLinkElement>('#toc > ul.tags > li > a').forEach((a) => {
+        const count = a.querySelector<HTMLSpanElement>('span.count');
         if (count) {
             a.removeChild(count);
             a.parentElement!.append(count);
+            const fontSize = Math.log10(parseInt(count.innerText.substr(1), 0)) + 1;
+            if (fontSize > 1) {
+                a.style.fontSize = fontSize + 'em';
+            }
         }
     });
 }
