@@ -9,7 +9,7 @@ const spawn = require('cross-spawn');
     try {
         const config = dotenv.parse(fs.readFileSync(filename));
         Object.keys(config).forEach((key) => {
-            process.env[key] = config[key]
+            process.env[key] = config[key];
         });
     } catch (e) {
     }
@@ -30,24 +30,24 @@ function getLastUpdatedDate(filepath) {
         let result = spawn.sync('git', ['log', '--format=%ct %s', filepath], {cwd: dir}).stdout.toString();
         result = result.split('\n').filter(commit => commit && !commit.endsWith('small fix'));
         if (result.length >= 2) {
-            return new Date(parseInt(result[0]) * 1000).toDateString()
+            return new Date(parseInt(result[0]) * 1000).toDateString();
         }
-        return null
+        return null;
     } catch (e) {
-        return null
+        return null;
     }
 }
 
 function getAbspath(filepath) {
-    return path.join(dir, filepath)
+    return path.join(dir, filepath);
 }
 
 function writeHtml(filepath, html) {
     const fileAbspath = getAbspath(filepath);
     console.log('write:', fileAbspath);
     fs.writeFile(fileAbspath, '<!DOCTYPE html>' + html, (err) => {
-        if (err) throw err
-    })
+        if (err) throw err;
+    });
 }
 
 async function getHtmlAndFiles(page, urlPath) {
@@ -63,31 +63,31 @@ async function getHtmlAndFiles(page, urlPath) {
     await page.goto(urlPath);
     await page.waitForSelector('main:not(.slide-fade-enter-active)');
     await page.waitForSelector('a.snippet', {
-        hidden: true
+        hidden: true,
     });
     if (urlPath.endsWith('#/' + categoryFile)) {
         await page.waitForSelector('ul');
     }
     return page.evaluate((lastUpdatedDate) => {
         if (document.querySelector('main.error')) {
-            return [null, null]
+            return [null, null];
         }
         if (lastUpdatedDate) {
             const date = document.querySelector('footer .date');
             if (date && date.innerText !== lastUpdatedDate) {
-                date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '')
+                date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '');
             }
             const bar = document.querySelector('#bar');
             if (!bar.querySelector('.item-date')) {
                 const code = document.createElement('code');
                 code.classList.add('item-date');
                 code.innerText = lastUpdatedDate;
-                bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0])
+                bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0]);
             }
         }
         document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
             code.innerHTML = code.innerText;
-            code.classList.add('nolink')
+            code.classList.add('nolink');
         });
         const files = [];
         for (const a of document.querySelectorAll('a')) {
@@ -100,15 +100,15 @@ async function getHtmlAndFiles(page, urlPath) {
                 filepath = href.substr(1);
                 a.href = filepath.replace(/\.md$/, '.html');
             } else if (href.startsWith('/') && href.endsWith('.html')) {
-                filepath = href.replace(/\.html$/, '.md')
+                filepath = href.replace(/\.html$/, '.md');
             } else {
                 continue;
             }
-            files.push(filepath)
+            files.push(filepath);
         }
         document.body.classList.add('prerender');
         document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
-            toolbar.outerHTML = toolbar.querySelector('pre').outerHTML
+            toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
         });
         return [document.documentElement.outerHTML, files];
     }, getLastUpdatedDate(urlPath.split('#/')[1]));
@@ -120,7 +120,7 @@ async function loadPages(browser, files) {
     const pages = [];
     for (const filepath of files) {
         if (hasLoaded.includes(filepath)) {
-            continue
+            continue;
         }
         hasLoaded.push(filepath);
         const urlPath = url.resolve(index, '#' + filepath);
@@ -129,7 +129,7 @@ async function loadPages(browser, files) {
             await page.close();
             if (html !== null) {
                 writeHtml(filepath.replace(/\.md$/, '.html'), html);
-                await loadPages(browser, newFiles)
+                await loadPages(browser, newFiles);
             } else {
                 console.error('error:', urlPath);
             }
