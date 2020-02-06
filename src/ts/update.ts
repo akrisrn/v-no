@@ -247,7 +247,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
                 });
             }
             axios.get(href).then((response) => {
-                const data = (response.data as string).split('\n').map((line) => {
+                let data = (response.data as string).split('\n').map((line) => {
                     const paramMatches = line.match(getWrapRegExp('{{', '}}', 'g'));
                     if (paramMatches) {
                         paramMatches.forEach((paramMatch) => {
@@ -269,6 +269,22 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
                     }
                     return line;
                 }).join('\n');
+                if (params.clip !== undefined) {
+                    const slips = data.split('--8<--');
+                    let num = parseInt(params.clip, 0);
+                    if (isNaN(num)) {
+                        if (params.clip === 'random') {
+                            num = Math.floor(Math.random() * slips.length);
+                        } else {
+                            num = 0;
+                        }
+                    } else if (num < 0) {
+                        num = 0;
+                    } else if (num >= slips.length) {
+                        num = slips.length - 1;
+                    }
+                    data = slips[num];
+                }
                 // 规避递归节点重复问题。
                 try {
                     a.parentElement!.outerHTML = renderMD(data, isCategory, true);
