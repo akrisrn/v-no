@@ -2,6 +2,10 @@
     <div>
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
+                <div id="cover" v-if="cover">
+                    <!--suppress HtmlUnknownTarget -->
+                    <img :src="cover" alt="cover"/>
+                </div>
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code class="item-home" v-if="!isHome">
                         <a @click.prevent="returnHome" href="/">«</a>
@@ -59,6 +63,7 @@
         public title = '';
         public author = '';
         public tags: string[] = [];
+        public cover = '';
         public isShow = false;
         public isError = false;
         public isDark = false;
@@ -257,6 +262,14 @@
             });
         }
 
+        public setCover(data: string) {
+            return setFlag(data, `@${EFlag.cover}:`, (match) => {
+                this.cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
+            }, () => {
+                this.cover = '';
+            });
+        }
+
         public setData(data: string) {
             this.isShow = true;
             this.data = this.setTitle(data);
@@ -266,7 +279,7 @@
             if (this.path.endsWith('.md')) {
                 axios.get(this.path).then((response) => {
                     this.isError = false;
-                    const data = this.setTags(this.setAuthor(response.data));
+                    const data = this.setCover(this.setTags(this.setAuthor(response.data)));
                     this.setData(data);
                 }).catch((error) => {
                     this.isError = true;
