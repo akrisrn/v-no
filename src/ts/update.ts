@@ -127,7 +127,7 @@ export function updateFootnote() {
 }
 
 export function updateImagePath() {
-    document.querySelectorAll<HTMLImageElement>('article img').forEach((img) => {
+    document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
         let parent = img.parentElement!;
         if (parent.tagName === 'A') {
             parent = parent.parentElement!;
