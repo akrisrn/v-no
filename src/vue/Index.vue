@@ -47,7 +47,6 @@
     import {error2markdown} from '@/ts/markdown';
     import {getQueryLink} from '@/ts/query';
     import resource from '@/ts/resource';
-    import {scroll} from '@/ts/scroll';
     import {splitTags} from '@/ts/utils';
     import Article from '@/vue/Article.vue';
     import axios from 'axios';
@@ -151,7 +150,7 @@
         @Watch('isShow')
         public onIsShowChanged() {
             if (this.isShow) {
-                scroll(0, false);
+                scrollTo(0, 0);
             }
         }
 
@@ -187,11 +186,11 @@
                 }
             });
             this.addInputBind('gg', () => {
-                scroll(document.body.offsetHeight);
+                scrollTo(0, document.body.offsetHeight);
                 this.keyInput += '_';
             });
             this.addInputBind('G', () => {
-                scroll(0);
+                scrollTo(0, 0);
             });
             this.addInputBind('dark', () => {
                 this.isDark = !this.isDark;
@@ -220,7 +219,7 @@
             });
             this.toTop = document.querySelector<HTMLElement>('#to-top')!;
             this.toTop.addEventListener('click', () => {
-                scroll(0);
+                scrollTo(0, 0);
             });
         }
 
