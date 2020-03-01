@@ -7,6 +7,7 @@ const spawn = require('cross-spawn');
 
 ['.env', '.env.local', '.env.production.local'].forEach((filename) => {
     try {
+        // noinspection JSCheckFunctionSignatures
         const config = dotenv.parse(fs.readFileSync(filename));
         Object.keys(config).forEach((key) => {
             process.env[key] = config[key];
@@ -85,10 +86,6 @@ async function getHtmlAndFiles(page, urlPath) {
                 bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0]);
             }
         }
-        document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
-            code.innerHTML = code.innerText;
-            code.classList.add('nolink');
-        });
         const files = [];
         for (const a of document.querySelectorAll('a')) {
             const href = a.getAttribute('href');
@@ -107,6 +104,10 @@ async function getHtmlAndFiles(page, urlPath) {
             files.push(filepath);
         }
         document.body.classList.add('prerender');
+        document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
+            code.innerHTML = code.innerText;
+            code.classList.add('nolink');
+        });
         document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
             toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
         });
