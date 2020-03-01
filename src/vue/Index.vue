@@ -282,10 +282,12 @@
                     this.setData(data);
                 }).catch((error) => {
                     this.isError = true;
+                    this.cover = '';
                     this.setData(error2markdown(error));
                 });
             } else {
                 this.isError = true;
+                this.cover = '';
                 this.setData(error2markdown({
                     response: {
                         status: 404,
