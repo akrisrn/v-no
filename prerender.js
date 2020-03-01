@@ -111,6 +111,23 @@ async function getHtmlAndFiles(page, urlPath) {
         document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
             toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
         });
+        const details = document.createElement('details');
+        details.classList.add('readonly');
+        details.classList.add('success');
+        details.open = true;
+        let hashPath = document.location.pathname;
+        if (hashPath.endsWith('index.html')) {
+            hashPath = hashPath.substring(0, hashPath.length - 10);
+        }
+        hashPath += document.location.hash;
+        if (hashPath.endsWith('index.md')) {
+            hashPath = hashPath.substring(0, hashPath.length - 10);
+        }
+        details.innerHTML = '<summary><strong>您正在访问本页的预渲染模式。</strong></summary><p>' +
+            '该模式下的页面加载速度较快，但是功能不全，主要提供给搜索引擎检索。<br>' +
+            `除此之外，您也可以访问<a href="${hashPath}">本页的 Hash 模式</a>以获得更好体验。</p>`;
+        const article = document.querySelector('article');
+        article.insertBefore(details, article.children[0]);
         return [document.documentElement.outerHTML, files];
     }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
