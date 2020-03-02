@@ -33,6 +33,7 @@
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
+                <Vssue :options="vssueOptions" :title="path" v-if="!isError && !isIndex"/>
             </main>
         </transition>
         <span id="toggle-dark">★</span>
@@ -51,12 +52,14 @@
     import Article from '@/vue/Article.vue';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {VssueComponent} from 'vssue';
+    import GithubV4 from '@vssue/api-github-v4';
 
     Component.registerHooks([
         'beforeRouteUpdate',
     ]);
 
-    @Component({components: {Article}})
+    @Component({components: {Article, Vssue: VssueComponent}})
     export default class Index extends Vue {
         public data = '';
         public title = '';
@@ -71,6 +74,13 @@
         public keyInput = '';
         public inputBinds: { [index: string]: () => void } = {};
         public params: { [index: string]: string | undefined } = {};
+        public vssueOptions = {
+            api: GithubV4,
+            owner: process.env.VUE_APP_VSSUE_OWNER,
+            repo: process.env.VUE_APP_VSSUE_REPO,
+            clientId: process.env.VUE_APP_VSSUE_CLIENT_ID,
+            clientSecret: process.env.VUE_APP_VSSUE_CLIENT_SECRET,
+        };
 
         public get path() {
             this.params = {};
