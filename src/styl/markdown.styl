@@ -1,15 +1,16 @@
 @import '~github-markdown-css/github-markdown.css';
+@import 'var.styl'
 
 .markdown-body
-  font-size 15px
+  font-size $font-size
   line-height 2
-  color #4a4a4a
+  color $font-color
 
   > :first-child dt:first-of-type
     margin-top 0 !important
 
   a
-    color #287BDE !important
+    color $link-font-color !important
     text-decoration none !important
     cursor pointer !important
 
@@ -19,31 +20,31 @@
   hr
     height 1px
     background-color transparent
-    border-bottom 1px solid lightgray
+    border-bottom 1px solid $border-color
 
   h1, h2
-    border-bottom-color lightgray
-    padding-bottom 8px
+    border-bottom-color $border-color
+    padding-bottom $unit
 
   p.left
     float left
-    margin-right 16px
+    margin-right $unit * 2
 
   p.right
     float right
-    margin-left 16px
+    margin-left $unit * 2
 
   p.left, p.right
     margin-bottom 0
 
-    @media screen and (max-width: 750px)
+    @media screen and (max-width: $media-max-width)
       float none
       margin-right 0
       margin-left 0
-      margin-bottom 16px
+      margin-bottom $unit * 2
 
   img
-    margin-top 8px
+    margin-top $unit
     background-color transparent
 
     for i in 1..6
@@ -57,8 +58,8 @@
 
   mark
     border-radius 3px
-    background-color rgba(255, 235, 59, 0.5)
-    box-shadow 0.25em 0 0 rgba(255, 235, 59, 0.5), -0.25em 0 0 rgba(255, 235, 59, 0.5)
+    background-color $mark-color-s
+    box-shadow 0.25em 0 0 $mark-color-s, -0.25em 0 0 $mark-color-s
 
   dl
     dt
@@ -66,26 +67,26 @@
       font-weight normal
 
     dd
-      font-size 13px
-      color gray
+      font-size $font-size-s
+      color $dim-gray-font-color
       padding 0
 
       &:before
         content '»'
-        margin-right 8px
+        margin-right $unit
 
       + dd
-        margin-top -16px
+        margin-top -($unit * 2)
 
     &.center dd:before
       content none
 
   pre
-    background-color #2b2b2b
+    background-color $pre-background-color
 
   blockquote
-    margin 24px 0
-    padding 0 32px
+    margin $unit * 3 0
+    padding 0 $unit * 4
     border-left none
     position relative
 
@@ -94,7 +95,7 @@
       content '“'
       font-size 4em
       position absolute
-      top -32px
+      top -($unit * 4)
       left 0
 
   kbd
@@ -102,13 +103,13 @@
 
   table
     thead tr
-      border-bottom 2px solid #c6cbd1
+      border-bottom 2px solid $border-color
 
     tr
       border-top none
 
     tr + tr
-      border-top 1px solid #c6cbd1
+      border-top 1px solid $border-color
 
     tr, tr:nth-child(2n)
       background-color transparent
@@ -121,11 +122,11 @@
 
   details
     overflow auto
-    margin 24px 0
-    padding 0 16px
-    box-shadow 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
+    margin $unit * 3 0
+    padding 0 $unit * 2
+    box-shadow 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px $shadow-color
     border-radius 3px
-    border-left 6px solid rgba(68, 138, 255, 0.5)
+    border-left $unit-s solid $info-color-s
 
     ::-webkit-details-marker
       display none
@@ -135,9 +136,9 @@
 
     summary
       outline none
-      margin 0 -16px
-      padding 6px 16px
-      background-color rgba(68, 138, 255, 0.1)
+      margin 0 (-($unit * 2))
+      padding $unit-s $unit * 2
+      background-color $info-color-xs
 
       h1, h2
         border-bottom none
@@ -147,13 +148,13 @@
         display inline
 
       + *
-        margin-top 16px
+        margin-top $unit * 2
 
       &:after
         content '▲'
         float right
-        font-size 13px
-        color rgba(68, 138, 255, 0.5)
+        font-size $font-size-s
+        color $info-color-s
 
     &:not([open])
       summary:after
@@ -169,67 +170,67 @@
       display none
 
     &.success
-      border-left-color rgba(0, 200, 83, 0.5)
+      border-left-color $success-color-s
 
       summary
-        background-color rgba(0, 200, 83, 0.1)
+        background-color $success-color-xs
 
         &:after
-          color rgba(0, 200, 83, 0.5)
+          color $success-color-s
 
     &.warning
-      border-left-color rgba(255, 145, 0, 0.5)
+      border-left-color $warning-color-s
 
       summary
-        background-color rgba(255, 145, 0, 0.1)
+        background-color $warning-color-xs
 
         &:after
-          color rgba(255, 145, 0, 0.5)
+          color $warning-color-s
 
     &.danger
-      border-left-color rgba(255, 23, 68, 0.5)
+      border-left-color $danger-color-s
 
       summary
-        background-color rgba(255, 23, 68, 0.1)
+        background-color $danger-color-xs
 
         &:after
-          color rgba(255, 23, 68, 0.5)
+          color $danger-color-s
 
   #toc
-    font-size 13px
-    margin-bottom 16px
+    font-size $font-size-s
+    margin-bottom $unit * 2
 
     .ul-a, .ul-b
       display inline-table
-      max-width 348px
+      max-width ($max-width / 2) - 2
 
-      @media screen and (max-width: 750px)
+      @media screen and (max-width: $media-max-width)
         max-width none
         width 100%
 
     .ul-a
-      margin-bottom .25em
+      margin-bottom 0.25em
 
     .ul-b
       margin-bottom 0
 
   .footnotes
-    font-size 13px
-    color gray
+    font-size $font-size-s
+    color $dim-gray-font-color
 
     ol
-      margin-top -8px
-      margin-bottom -16px
+      margin-top -($unit)
+      margin-bottom -($unit * 2)
 
       li + li p
         margin-top 0
 
     .footnote-backref
-      font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Segoe UI Symbol
+      font-family $font-family-no-emoji
 
   .count:before
     content '-'
-    margin-left 8px
+    margin-left $unit
 
   h1, h2, h3, h4, h5, h6
     &:hover
@@ -238,7 +239,7 @@
 
   .heading-link
     opacity 0
-    transition opacity 0.5s
+    transition opacity $transition-duration
 
     &:before
       content '#'
@@ -254,8 +255,8 @@
       outline none
 
     button, span
-      color darkgray
-      transition color 0.5s
+      color $gray-font-color
+      transition color $transition-duration
 
       &:hover
-        color lightgray
+        color $light-gray-font-color

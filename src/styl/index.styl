@@ -1,3 +1,5 @@
+@import 'var.styl'
+
 .index
   ul.toc.tags
     padding-left 0
@@ -7,7 +9,7 @@
 
       + li:before
         content '|'
-        margin-right 12px
+        margin-right $unit-s * 2
 
   ul:not(.toc)
     padding-left 0
@@ -20,50 +22,50 @@
 
       &:before
         content '»'
-        margin-right 8px
+        margin-right $unit
 
       blockquote
         font-style normal
         margin 0
-        padding-left 16px
+        padding-left $unit * 2
         padding-right 0
         white-space normal
-        font-size 13px
+        font-size $font-size-s
 
         &:before
           content none
 
       code
-        color darkgray
+        color $gray-font-color
         background-color transparent !important
         padding 0
-        font-size 12px
-        font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
+        font-size $font-size-xs
+        font-family $font-family
 
         &:before
           content '#'
           margin-right 2px
 
       .date
-        margin-left 8px
+        margin-left $unit
 
     .more
-      font-size 13px
-      color darkgray
+      font-size $font-size-s
+      color $gray-font-color
       border-top 1px dashed
-      margin-top 16px
-      height 8px
+      margin-top $unit * 2
+      height $unit
 
       span
-        background-color #f1f1f1
-        transition background-color 0.5s, color 0.5s
+        background-color $background-color
+        transition background-color $transition-duration, color $transition-duration
         position relative
-        top -16px
-        padding-right 8px
+        top -($unit * 2)
+        padding-right $unit
         cursor pointer
 
         &:hover
-          color gray
+          color $dim-gray-font-color
 
         &:before
           content '#'
@@ -76,4 +78,4 @@
     outline none
 
   #result span.hl
-    color red
+    color $danger-color

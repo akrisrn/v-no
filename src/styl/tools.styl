@@ -1,19 +1,21 @@
+@import 'var.styl'
+
 #toggle-dark, #to-top
   position fixed
-  right 16px
+  right $unit * 2
   cursor pointer
-  font-size 20px
+  font-size $unit * 3
   color transparent
-  transition color 0.5s
+  transition color $transition-duration
 
   &:hover
-    color #4a4a4a
+    color $font-color
 
   &.dark:hover
-    color #bebebe
+    color $dark-font-color
 
 #toggle-dark
-  top 16px
+  top $unit * 2
 
 #to-top
-  bottom 8px
+  bottom $unit

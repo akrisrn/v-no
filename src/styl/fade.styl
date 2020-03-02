@@ -1,8 +1,10 @@
+@import 'var.styl'
+
 .slide-fade-enter-active
-  transition all 0.5s !important
+  transition all $transition-duration !important
 
 .slide-fade-leave-active
-  transition all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0) !important
+  transition all $transition-duration * 2 cubic-bezier(1.0, 0.5, 0.8, 1.0) !important
 
 .slide-fade-enter, .slide-fade-leave-to
   transform translateY(10px) !important

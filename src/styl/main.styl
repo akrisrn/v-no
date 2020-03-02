@@ -1,31 +1,33 @@
-main
-  max-width 700px
-  margin 32px auto
-  transition margin 0.5s
+@import 'var.styl'
 
-  @media screen and (max-width: 750px)
-    margin 16px
+main
+  max-width $max-width
+  margin $unit * 4 auto
+  transition margin $transition-duration
+
+  @media screen and (max-width: $media-max-width)
+    margin $unit * 2
 
   header
-    color #4a4a4a
-    font-family -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol
-    font-size 32px
-    font-weight 600
-    margin 12px 0 16px
-    padding-bottom 12px
-    border-bottom 1px solid lightgray
+    color $font-color
+    font-family $font-family
+    font-size $unit * 4
+    font-weight $strong-font-weight
+    margin $unit-s * 2 0 $unit * 2
+    padding-bottom $unit-s * 2
+    border-bottom 1px solid $border-color
 
   footer
-    margin-top 16px
-    padding-top 8px
-    border-top 1px solid lightgray
+    margin-top $unit * 2
+    padding-top $unit
+    border-top 1px solid $border-color
 
     a.home:before
       content '« '
 
   .date
     float right
-    color darkgray
+    color $gray-font-color
 
   .hidden
     display none
@@ -34,7 +36,7 @@ main
     text-align center
 
   #cover
-    margin-bottom 12px
+    margin-bottom $unit-s * 2
 
     img
       max-width 100%
@@ -43,30 +45,30 @@ main
   #bar
     code
       display inline-block
-      font-size 12px
+      font-size $font-size-xs
       padding-top 0
       padding-bottom 0
-      margin-right 8px
+      margin-right $unit
 
       &.item-date
-        background-color rgba(68, 138, 255, 0.1)
+        background-color $info-color-xs
 
       &.item-author
-        background-color rgba(0, 200, 83, 0.1)
+        background-color $success-color-xs
 
         &:before
           content '@'
           margin-right 2px
 
       &.item-tag
-        background-color rgba(255, 145, 0, 0.1)
+        background-color $warning-color-xs
 
         &:before
           content '#'
           margin-right 2px
 
       &.item-count
-        background-color rgba(255, 23, 68, 0.1)
+        background-color $danger-color-xs
 
         &:after
           content 'W'

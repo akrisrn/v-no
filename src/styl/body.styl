@@ -1,53 +1,55 @@
+@import 'var.styl'
+
 body
   margin 0
 
   &, .markdown-body pre, .markdown-body code
-    transition background-color 0.5s
+    transition background-color $transition-duration
 
   header
-    transition color 0.5s, border-bottom-color 0.5s
+    transition color $transition-duration, border-bottom-color $transition-duration
 
   .markdown-body:not(footer), .markdown-body a
-    transition color 0.5s
+    transition color $transition-duration
 
   .markdown-body hr, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
-    transition border-bottom-color 0.5s
+    transition border-bottom-color $transition-duration
 
   .markdown-body table tr + tr, footer
-    transition border-top-color 0.5s
+    transition border-top-color $transition-duration
 
   .markdown-body img, .markdown-body kbd
-    transition filter 0.5s
+    transition filter $transition-duration
 
   &.dark
     header
-      border-bottom-color darkgray !important
+      border-bottom-color $dark-border-color !important
 
     header, .markdown-body
-      color #bebebe !important
+      color $dark-font-color !important
 
     .markdown-body
       a
-        color #6d9cbe !important
+        color $dark-link-font-color !important
 
       hr, h1, h2
-        border-bottom-color darkgray !important
+        border-bottom-color $dark-border-color !important
 
       pre, code
-        background-color #1e1e1e !important
+        background-color $dark-pre-background-color !important
 
       table
         thead tr
-          border-bottom-color darkgray !important
+          border-bottom-color $dark-border-color !important
 
         tr + tr
-          border-top-color darkgray !important
+          border-top-color $dark-border-color !important
 
       img, kbd
-        filter brightness(0.7) !important
+        filter brightness($dark-image-brightness) !important
 
     .index ul:not(.toc) .more span
-      background-color #2b2b2b !important
+      background-color $dark-background-color !important
 
     footer
-      border-top-color darkgray !important
+      border-top-color $dark-border-color !important

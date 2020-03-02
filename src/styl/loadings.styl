@@ -1,3 +1,5 @@
+@import 'var.styl'
+
 .lds-ellipsis
   position relative
   width 50px
@@ -10,22 +12,22 @@
     width 10px
     height 10px
     border-radius 50%
-    background-color darkgray
+    background-color $gray-font-color
     animation-timing-function cubic-bezier(0, 1, 1, 0)
 
     &:nth-child(1)
-      animation lds-ellipsis1 1s infinite
+      animation lds-ellipsis1 $loadings-duration infinite
 
     &:nth-child(2)
-      animation lds-ellipsis2 1s infinite
+      animation lds-ellipsis2 $loadings-duration infinite
 
     &:nth-child(3)
       left 20px
-      animation lds-ellipsis2 1s infinite
+      animation lds-ellipsis2 $loadings-duration infinite
 
     &:nth-child(4)
       left 40px
-      animation lds-ellipsis3 1s infinite
+      animation lds-ellipsis3 $loadings-duration infinite
 
     @keyframes lds-ellipsis1
       from
