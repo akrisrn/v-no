@@ -311,6 +311,6 @@
     }
 </script>
 
-<style lang="stylus">@import '../styl/fade.styl';</style>
-<style lang="stylus">@import '../styl/main.styl';</style>
-<style lang="stylus">@import '../styl/tools.styl';</style>
+<style lang="stylus">@import 'src/styl/_fade.styl';</style>
+<style lang="stylus">@import 'src/styl/_main.styl';</style>
+<style lang="stylus">@import 'src/styl/_tools.styl';</style>
