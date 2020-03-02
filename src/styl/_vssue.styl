@@ -1,0 +1,192 @@
+$vssue-text-color = $font-color
+$vssue-text-light-color = $gray-font-color
+$vssue-border-color = $border-color
+$vssue-font-size = $font-size
+$vssue-breakpoint-mobile = $media-max-width
+
+@import '~vssue/src/styles/index.styl';
+
+.vssue
+  padding 0
+  margin-top $unit * 2
+
+  @media screen and (max-width: $vssue-breakpoint-mobile)
+    margin-bottom $unit * 6
+
+  :not(.vssue-comment-content) a:hover
+    text-decoration underline
+
+  .vssue-comment-avatar img
+    border-radius 3px
+
+  .vssue-icon
+    transition fill $transition-duration
+
+  .vssue-header
+    padding 0
+    margin 0 0 $unit * 3
+    border none
+
+  .vssue-new-comment
+    margin 0 0 $unit * 3
+    border none
+
+    @media screen and (max-width: $vssue-breakpoint-mobile)
+      margin-bottom $unit * 2
+
+    .vssue-comment-avatar .vssue-icon
+      padding 0
+
+      &:hover
+        fill darken($vssue-theme-color, 10)
+
+    .vssue-new-comment-body
+      transition margin-left $transition-duration
+
+      .vssue-new-comment-input
+        padding 0
+        border none
+        background-color transparent
+
+        &:disabled
+          background-color transparent
+
+        &:focus
+          border none
+          box-shadow none
+          background-color transparent
+
+    .vssue-new-comment-footer
+      margin-top 0
+      margin-bottom 0
+
+      .vssue-current-user .vssue-logout
+        text-decoration none
+        color $vssue-theme-color
+
+        &:hover
+          text-decoration underline
+
+      .vssue-new-comment-operations
+        @media screen and (max-width: $vssue-breakpoint-mobile)
+          margin-top $unit * 2
+
+        .vssue-button
+          padding $unit $unit * 2
+          font-family $vssue-font-family
+          font-size $font-size-s
+          transition color $transition-duration, border-color $transition-duration, background-color $transition-duration
+
+          &:not(:disabled).vssue-button-primary:hover
+            color $background-color
+            background-color $vssue-theme-color
+
+  .vssue-notice
+    .vssue-progress
+      top -2px
+
+      @media screen and (max-width: $vssue-breakpoint-mobile)
+        top 2px
+
+    .vssue-alert
+      padding $unit $unit * 2
+      cursor auto
+      top -1px
+
+      @media screen and (max-width: $vssue-breakpoint-mobile)
+        top 0
+
+  .vssue-comments
+    .vssue-pagination
+      padding 0
+      cursor auto
+
+      .vssue-pagination-select
+        padding 0
+        border none
+        cursor pointer
+        color $vssue-theme-color
+        background-color $background-color
+        background-image none
+        appearance menulist
+
+      .vssue-pagination-per-page .vssue-pagination-select
+        margin-right $unit
+
+      .vssue-pagination-page
+        @media screen and (max-width: $vssue-breakpoint-mobile)
+          margin-top $unit * 2
+
+        .vssue-pagination-select
+          margin 0 $unit
+
+      .vssue-pagination-link
+        transition color $transition-duration
+
+        &:hover
+          color $info-color
+
+    .vssue-comment
+      margin $unit * 3 0 0
+
+      @media screen and (max-width: $vssue-breakpoint-mobile)
+        margin-top $unit * 2
+
+      &.vssue-comment-edit-mode .vssue-comment-main
+        box-shadow none
+
+      .vssue-comment-body
+        transition margin-left $transition-duration
+
+        .vssue-comment-header
+          padding 0
+          border none
+
+          .vssue-comment-author:before
+            content '@'
+
+          .vssue-comment-created-at
+            cursor auto
+
+        .vssue-comment-main
+          padding $unit * 2 0
+          border none
+          transition padding $transition-duration
+
+          @media screen and (max-width: $vssue-breakpoint-mobile)
+            padding $unit 0
+
+          .vssue-edit-comment-input
+            padding 0
+            font-family $vssue-font-family
+            font-size $vssue-font-size
+
+        .vssue-comment-footer
+          padding 0
+          border none
+
+          .vssue-comment-hint
+            cursor auto
+
+          .vssue-comment-reaction:hover .vssue-icon
+            &.vssue-icon-heart
+              fill $danger-color
+
+            &.vssue-icon-like, &.vssue-icon-unlike
+              fill $warning-color
+
+          .vssue-comment-operation:hover
+            text-decoration underline
+
+            .vssue-icon
+              &.vssue-icon-delete
+                fill $danger-color
+
+              &.vssue-icon-edit, &.vssue-icon-reply
+                fill $info-color
+
+  .vssue-status
+    padding 0
+
+    .vssue-status-info
+      margin $unit * 2 0 0
