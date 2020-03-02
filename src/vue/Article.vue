@@ -67,6 +67,4 @@
     }
 </script>
 
-<style lang="stylus">@import 'src/styl/_markdown.styl';</style>
-<style lang="stylus">@import 'src/styl/_index.styl';</style>
-<style lang="stylus">@import 'src/styl/_loadings.styl';</style>
+<style lang="stylus">@import '../styl/article.styl';</style>
