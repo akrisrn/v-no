@@ -322,4 +322,4 @@
     }
 </script>
 
-<style lang="stylus">@import '../styl/index.styl';</style>
+<style lang="stylus">@import '../styl/index.styl'</style>
