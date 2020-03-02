@@ -73,6 +73,10 @@ async function getHtmlAndFiles(page, urlPath) {
         if (document.querySelector('main.error')) {
             return [null, null];
         }
+        const vssue = document.querySelector('.vssue');
+        if (vssue) {
+            vssue.remove();
+        }
         if (lastUpdatedDate) {
             const date = document.querySelector('footer .date');
             if (date && date.innerText !== lastUpdatedDate) {
