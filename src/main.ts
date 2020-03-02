@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import router from '@/router';
-import Main from '@/vue/Main.vue';
 
 Vue.config.productionTip = false;
+
+const Main = () => import(/* webpackChunkName: "main" */ '@/vue/Main.vue');
 
 new Vue({
     router,

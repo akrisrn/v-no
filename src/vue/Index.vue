@@ -49,7 +49,6 @@
     import {getQueryLink} from '@/ts/query';
     import resource from '@/ts/resource';
     import {splitTags} from '@/ts/utils';
-    import Article from '@/vue/Article.vue';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {VssueComponent} from 'vssue';
@@ -58,6 +57,8 @@
     Component.registerHooks([
         'beforeRouteUpdate',
     ]);
+
+    const Article = () => import(/* webpackChunkName: "article" */ '@/vue/Article.vue');
 
     @Component({components: {Article, Vssue: VssueComponent}})
     export default class Index extends Vue {

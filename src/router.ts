@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
+const Index = () => import(/* webpackChunkName: "index" */ '@/vue/Index.vue');
+
 // noinspection JSUnusedGlobalSymbols
 export default new Router({
     mode: 'history',
@@ -10,6 +12,6 @@ export default new Router({
     routes: [{
         path: '*',
         name: 'index',
-        component: () => import(/* webpackChunkName: "index" */ '@/vue/Index.vue'),
+        component: Index,
     }],
 });
