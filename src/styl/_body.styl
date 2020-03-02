@@ -1,13 +1,13 @@
 body
   margin 0
 
-  &, .markdown-body pre, .markdown-body code
+  &, .markdown-body pre, .markdown-body code, .vssue-pagination-select
     transition background-color $transition-duration
 
   header
     transition color $transition-duration, border-bottom-color $transition-duration
 
-  .markdown-body:not(footer), .markdown-body a
+  .markdown-body:not(footer), .markdown-body a, .vssue, .vssue-new-comment-input, .vssue-edit-comment-input
     transition color $transition-duration
 
   .markdown-body hr, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
@@ -23,7 +23,7 @@ body
     header
       border-bottom-color $dark-border-color !important
 
-    header, .markdown-body
+    header, .markdown-body, .vssue, .vssue-new-comment-input, .vssue-edit-comment-input
       color $dark-font-color !important
 
     .markdown-body
@@ -46,8 +46,12 @@ body
       img, kbd
         filter brightness($dark-image-brightness) !important
 
-    .index ul:not(.toc) .more span
+    .index ul:not(.toc) .more span, .vssue-pagination-select
       background-color $dark-background-color !important
 
     footer
       border-top-color $dark-border-color !important
+
+    .vssue-button:disabled
+      color $dark-border-color !important
+      border-color $dark-border-color !important
