@@ -24,3 +24,7 @@ export function splitTagsFromCodes(codes: string) {
     tags[last] = tags[last].substr(0, tags[last].length - 1);
     return trimList(tags);
 }
+
+export function isHashMode() {
+    return !location.pathname.endsWith('.html');
+}
