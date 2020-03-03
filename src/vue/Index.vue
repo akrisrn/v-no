@@ -33,7 +33,7 @@
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
-                <Comment :path="path" v-if="!isError && !isIndex"/>
+                <Comment :path="path" v-if="enableComment && !isError && !isIndex"/>
             </main>
         </transition>
         <span id="toggle-dark">★</span>
@@ -74,6 +74,7 @@
         public keyInput = '';
         public inputBinds: { [index: string]: () => void } = {};
         public params: { [index: string]: string | undefined } = {};
+        public enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
 
         public get path() {
             this.params = {};
