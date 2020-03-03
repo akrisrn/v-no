@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import {getWrapRegExp} from '@/ts/utils';
+import {getWrapRegExp, isHashMode} from '@/ts/utils';
 import {AxiosError} from 'axios';
 import MarkdownIt from 'markdown-it';
 
@@ -63,7 +63,7 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
                         article.innerHTML = markdownIt.render(data);
                     }
                     // tslint:disable-next-line:no-eval
-                    result = eval(`(function(article){${m[1]}})`)(article);
+                    result = eval(`(function(article,isHashMode){${m[1]}})`)(article, isHashMode());
                 } catch (e) {
                     result = `${e.name}: ${e.message}`;
                 }
