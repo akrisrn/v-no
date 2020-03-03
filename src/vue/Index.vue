@@ -33,7 +33,7 @@
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
-                <Comment :path="path" v-if="enableComment && !isError && !isIndex"/>
+                <Comment :path="path" v-if="isHashMode && enableComment && !isError && !isIndex"/>
             </main>
         </transition>
         <span id="toggle-dark">★</span>
@@ -48,7 +48,7 @@
     import {error2markdown} from '@/ts/markdown';
     import {getQueryLink} from '@/ts/query';
     import resource from '@/ts/resource';
-    import {splitTags} from '@/ts/utils';
+    import {isHashMode, splitTags} from '@/ts/utils';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
 
@@ -75,6 +75,7 @@
         public inputBinds: { [index: string]: () => void } = {};
         public params: { [index: string]: string | undefined } = {};
         public enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
+        public isHashMode = isHashMode();
 
         public get path() {
             this.params = {};
@@ -147,6 +148,7 @@
 
         public beforeRouteUpdate(to: any, from: any, next: () => void) {
             next();
+            this.isHashMode = isHashMode();
             this.isShow = false;
             this.updateData();
         }
