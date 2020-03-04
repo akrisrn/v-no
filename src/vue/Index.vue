@@ -49,6 +49,7 @@
     import {getQueryLink} from '@/ts/query';
     import resource from '@/ts/resource';
     import {isHashMode, splitTags} from '@/ts/utils';
+    import {scroll} from '@/ts/scroll';
     import axios from 'axios';
     import {Component, Vue, Watch} from 'vue-property-decorator';
 
@@ -156,7 +157,7 @@
         @Watch('isShow')
         public onIsShowChanged() {
             if (this.isShow) {
-                scrollTo(0, 0);
+                scroll(0, false);
             }
         }
 
@@ -192,11 +193,11 @@
                 }
             });
             this.addInputBind('gg', () => {
-                scrollTo(0, document.body.offsetHeight);
+                scroll(document.body.offsetHeight);
                 this.keyInput += '_';
             });
             this.addInputBind('G', () => {
-                scrollTo(0, 0);
+                scroll(0);
             });
             this.addInputBind('dark', () => {
                 this.isDark = !this.isDark;
@@ -225,7 +226,7 @@
             });
             this.toTop = document.querySelector<HTMLElement>('#to-top')!;
             this.toTop.addEventListener('click', () => {
-                scrollTo(0, 0);
+                scroll(0);
             });
         }
 

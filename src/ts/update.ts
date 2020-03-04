@@ -4,6 +4,7 @@ import {EFlag} from '@/ts/enums';
 import {renderMD} from '@/ts/markdown';
 import {buildQueryContent, getQueryContent, getQueryTypeAndParam} from '@/ts/query';
 import resource from '@/ts/resource';
+import {scroll} from '@/ts/scroll';
 import {getWrapRegExp, splitTags} from '@/ts/utils';
 import axios from 'axios';
 
@@ -48,7 +49,7 @@ export function updateToc() {
             e.preventDefault();
             for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
                 if (h.innerText === innerText) {
-                    scrollTo(0, h.offsetTop - 10);
+                    scroll(h.offsetTop - 10);
                     break;
                 }
             }
@@ -102,7 +103,7 @@ export function updateHeading() {
             h.append(link);
         }
         link.addEventListener('click', () => {
-            scrollTo(0, h.offsetTop - 10);
+            scroll(h.offsetTop - 10);
         });
     });
 }
@@ -113,12 +114,12 @@ export function updateFootnote() {
         if (fnref) {
             fnref.addEventListener('click', (e) => {
                 e.preventDefault();
-                scrollTo(0, backref.offsetTop - 10);
+                scroll(backref.offsetTop - 10);
             });
             fnref.removeAttribute('href');
             backref.addEventListener('click', (e) => {
                 e.preventDefault();
-                scrollTo(0, fnref.offsetTop - 10);
+                scroll(fnref.offsetTop - 10);
             });
             backref.removeAttribute('href');
         }
