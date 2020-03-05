@@ -33,8 +33,10 @@
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
                     <span class="date" v-if="!isError">{{ date }}</span>
                 </footer>
-                <Comment :path="path" v-if="isHashMode && enableComment && !isError && !isIndex"/>
             </main>
+        </transition>
+        <transition name="slide-fade">
+            <Comment :path="path" v-if="isHashMode && enableComment && !isError && !isIndex"/>
         </transition>
         <span id="toggle-dark">★</span>
         <span id="to-top">〒</span>

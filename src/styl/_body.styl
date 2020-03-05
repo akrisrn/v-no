@@ -7,7 +7,7 @@ body
   header
     transition color $transition-duration, border-bottom-color $transition-duration
 
-  .markdown-body:not(footer), .markdown-body a, .vssue, .vssue-new-comment-input, .vssue-edit-comment-input
+  .markdown-body:not(footer), .markdown-body a, .vssue-new-comment-input, .vssue-edit-comment-input
     transition color $transition-duration
 
   .markdown-body hr, .markdown-body h1, .markdown-body h2, .markdown-body table thead tr
@@ -46,7 +46,7 @@ body
       img, kbd
         filter brightness($dark-image-brightness) !important
 
-    main, .index ul:not(.toc) .more span, .vssue-pagination-select
+    main, .index ul:not(.toc) .more span, .vssue, .vssue-pagination-select
       background-color $dark-main-background-color !important
 
     footer

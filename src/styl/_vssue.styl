@@ -7,11 +7,16 @@ $vssue-breakpoint-mobile = $media-max-width
 @import '~vssue/src/styles/index.styl'
 
 .vssue
-  padding 0
-  margin-top $unit * 2
+  max-width $max-width + $unit * 5 * 2
+  padding $unit * 5
+  margin 0 auto $unit * 5
+  box-shadow $box-shadow
+  background-color $main-background-color
+  transition padding $transition-duration, margin $transition-duration, color $transition-duration, background-color $transition-duration
 
   @media screen and (max-width: $vssue-breakpoint-mobile)
-    margin-bottom $unit * 6
+    padding $unit * 3
+    margin 0 auto
 
   :not(.vssue-comment-content) a:hover
     text-decoration underline
@@ -102,6 +107,7 @@ $vssue-breakpoint-mobile = $media-max-width
       cursor auto
 
       .vssue-pagination-select
+        font-size $vssue-font-size
         padding 0
         border none
         cursor pointer
@@ -127,10 +133,10 @@ $vssue-breakpoint-mobile = $media-max-width
           color $info-color
 
     .vssue-comment
-      margin $unit * 3 0 0
+      margin $unit * 3 0
 
       @media screen and (max-width: $vssue-breakpoint-mobile)
-        margin-top $unit * 2
+        margin $unit * 2 0
 
       &.vssue-comment-edit-mode .vssue-comment-main
         box-shadow none
@@ -141,9 +147,6 @@ $vssue-breakpoint-mobile = $media-max-width
         .vssue-comment-header
           padding 0
           border none
-
-          .vssue-comment-author:before
-            content '@'
 
           .vssue-comment-created-at
             cursor auto
