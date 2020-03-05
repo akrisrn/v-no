@@ -1,10 +1,14 @@
 main
   max-width $max-width
-  margin $unit * 4 auto
-  transition margin $transition-duration
+  padding $unit * 5
+  margin $unit * 5 auto
+  box-shadow $box-shadow
+  background-color $main-background-color
+  transition padding $transition-duration, margin $transition-duration, background-color $transition-duration
 
   @media screen and (max-width: $media-max-width)
-    margin $unit * 2
+    padding $unit * 3
+    margin 0 auto
 
   header
     color $font-color
