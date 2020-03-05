@@ -288,7 +288,15 @@
                 axios.get(this.path).then((response) => {
                     this.isError = false;
                     const data = this.setCover(this.setTags(this.setAuthor(response.data)));
-                    this.setData(data);
+                    if (process.env.VUE_APP_COMMON_FILE) {
+                        axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
+                            this.setData(data + '\n\n' + response2.data);
+                        }).catch(() => {
+                            this.setData(data);
+                        });
+                    } else {
+                        this.setData(data);
+                    }
                 }).catch((error) => {
                     this.isError = true;
                     this.cover = '';
