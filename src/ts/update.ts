@@ -301,15 +301,21 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
                 a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
             });
         } else if (a.innerText === '*') {
-            const script = document.createElement('script');
+            let script = document.querySelector<HTMLScriptElement>(`script[src='${href}']`);
+            if (script) {
+                script.remove();
+            }
+            script = document.createElement('script');
             script.src = href;
             document.head.appendChild(script);
             a.parentElement!.remove();
         } else if (a.innerText === '$') {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = href;
-            document.head.appendChild(link);
+            if (!document.querySelector(`link[href='${href}']`)) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = href;
+                document.head.appendChild(link);
+            }
             a.parentElement!.remove();
         } else if (href.startsWith('http://') || href.startsWith('https://')) {
             // noinspection JSDeprecatedSymbols
