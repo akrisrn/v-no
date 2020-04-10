@@ -39,6 +39,14 @@ function getLastUpdatedDate(filepath) {
   }
 }
 
+function getLastCommitHash() {
+  try {
+    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: __dirname}).stdout.toString();
+  } catch (e) {
+    return ''
+  }
+}
+
 function getAbspath(filepath) {
   return path.join(dir, filepath);
 }
