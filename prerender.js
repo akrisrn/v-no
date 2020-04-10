@@ -73,12 +73,12 @@ async function getHtmlAndFiles(page, urlPath) {
     if (document.querySelector('main.error')) {
       return [null, null];
     }
+    const bar = document.querySelector('#bar');
     if (lastUpdatedDate) {
       const date = document.querySelector('footer .date');
       if (date && date.innerText !== lastUpdatedDate) {
         date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '');
       }
-      const bar = document.querySelector('#bar');
       if (!bar.querySelector('.item-date')) {
         const code = document.createElement('code');
         code.classList.add('item-date');
@@ -111,10 +111,7 @@ async function getHtmlAndFiles(page, urlPath) {
     document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
-    const details = document.createElement('details');
-    details.classList.add('readonly');
-    details.classList.add('success');
-    details.open = true;
+    const code = document.createElement('code');
     let hashPath = document.location.pathname;
     if (hashPath.endsWith('index.html')) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
@@ -123,11 +120,8 @@ async function getHtmlAndFiles(page, urlPath) {
     if (hashPath.endsWith('index.md')) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
     }
-    details.innerHTML = '<summary><strong>您正在访问本页的预渲染模式。</strong></summary><p>' +
-      '该模式下的页面加载速度较快，但是功能不全，主要提供给搜索引擎检索。<br>' +
-      `除此之外，您也可以访问<a href="${hashPath}">本页的 Hash 模式</a>以获得更好体验。</p>`;
-    const article = document.querySelector('article');
-    article.insertBefore(details, article.children[0]);
+    code.innerHTML = `<a href="${hashPath}">#</a>`;
+    bar.append(code);
     return [document.documentElement.outerHTML, files];
   }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
