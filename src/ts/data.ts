@@ -1,4 +1,4 @@
-import {getWrapRegExp, splitTagsFromCodes} from '@/ts/utils';
+import { getWrapRegExp, splitTagsFromCodes } from '@/ts/utils';
 import axios from 'axios';
 
 export function getListFromData(data: string, isAll = false) {
@@ -9,7 +9,7 @@ export function getListFromData(data: string, isAll = false) {
             const title = m[1];
             const href = m[2];
             const tags = m[3] ? splitTagsFromCodes(m[3]) : [];
-            return {title, href, tags};
+            return { title, href, tags };
         });
     }
     return [];

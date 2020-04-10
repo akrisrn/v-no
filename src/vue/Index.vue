@@ -44,16 +44,16 @@
 </template>
 
 <script lang="ts">
-    import {setFlag} from '@/ts/data';
-    import {getDateString} from '@/ts/date';
-    import {EFlag} from '@/ts/enums';
-    import {error2markdown} from '@/ts/markdown';
-    import {getQueryLink} from '@/ts/query';
+    import { setFlag } from '@/ts/data';
+    import { getDateString } from '@/ts/date';
+    import { EFlag } from '@/ts/enums';
+    import { error2markdown } from '@/ts/markdown';
+    import { getQueryLink } from '@/ts/query';
     import resource from '@/ts/resource';
-    import {isHashMode, splitTags} from '@/ts/utils';
-    import {scroll} from '@/ts/scroll';
+    import { isHashMode, splitTags } from '@/ts/utils';
+    import { scroll } from '@/ts/scroll';
     import axios from 'axios';
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import { Component, Vue, Watch } from 'vue-property-decorator';
 
     Component.registerHooks([
         'beforeRouteUpdate',
@@ -62,7 +62,7 @@
     const Article = () => import(/* webpackChunkName: "article" */ '@/vue/Article.vue');
     const Comment = () => import(/* webpackChunkName: "comment" */ '@/vue/Comment.vue');
 
-    @Component({components: {Article, Comment}})
+    @Component({ components: { Article, Comment } })
     export default class Index extends Vue {
         public data = '';
         public title = '';

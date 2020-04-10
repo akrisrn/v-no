@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-    import {VssueComponent} from 'vssue';
+    import { VssueComponent } from 'vssue';
     import GithubV4 from '@vssue/api-github-v4';
-    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import { Component, Prop, Vue } from 'vue-property-decorator';
 
-    @Component({components: {Vssue: VssueComponent}})
+    @Component({ components: { Vssue: VssueComponent } })
     export default class Comment extends Vue {
         @Prop() public path!: string;
 

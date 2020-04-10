@@ -1,4 +1,4 @@
-import {EFlag} from '@/ts/enums';
+import { EFlag } from '@/ts/enums';
 
 export function buildQueryContent(content: string, isComplete = false) {
     return (isComplete ? `#/${process.env.VUE_APP_SEARCH_FILE}` : '') + `?content=${encodeURIComponent(content)}`;

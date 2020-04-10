@@ -1,6 +1,6 @@
 import resource from '@/ts/resource';
-import {getWrapRegExp, isHashMode} from '@/ts/utils';
-import {AxiosError} from 'axios';
+import { getWrapRegExp, isHashMode } from '@/ts/utils';
+import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 
 // tslint:disable no-var-requires

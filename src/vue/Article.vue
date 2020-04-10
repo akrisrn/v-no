@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-    import {renderMD} from '@/ts/markdown';
+    import { renderMD } from '@/ts/markdown';
     import {
         updateCategoryList,
         updateDD,
@@ -19,7 +19,7 @@
         updateToc,
     } from '@/ts/update';
     import Prism from 'prismjs';
-    import {Component, Prop, PropSync, Vue} from 'vue-property-decorator';
+    import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
 
     @Component
     export default class Article extends Vue {
