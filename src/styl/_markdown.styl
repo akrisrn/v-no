@@ -165,8 +165,11 @@
       &:after
         content none
 
-    &.empty summary
-      display none
+    &.empty
+      box-shadow $box-shadow-2
+
+      summary
+        display none
 
     &.success
       border-left-color $success-color-s
