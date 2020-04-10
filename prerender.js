@@ -77,7 +77,7 @@ async function getHtmlAndFiles(page, urlPath) {
   if (urlPath.endsWith('#/' + categoryFile)) {
     await page.waitForSelector('ul');
   }
-  return page.evaluate((lastUpdatedDate) => {
+  return page.evaluate((lastUpdatedDate, lastCommitHash) => {
     if (document.querySelector('main.error')) {
       return [null, null];
     }
@@ -119,7 +119,7 @@ async function getHtmlAndFiles(page, urlPath) {
     document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
-    const code = document.createElement('code');
+    let code = document.createElement('code');
     let hashPath = document.location.pathname;
     if (hashPath.endsWith('index.html')) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
@@ -130,8 +130,12 @@ async function getHtmlAndFiles(page, urlPath) {
     }
     code.innerHTML = `<a href="${hashPath}">#</a>`;
     bar.append(code);
+    code = document.createElement('code');
+    code.classList.add('item-version');
+    code.innerText = lastCommitHash.trim();
+    bar.append(code);
     return [document.documentElement.outerHTML, files];
-  }, getLastUpdatedDate(urlPath.split('#/')[1]));
+  }, getLastUpdatedDate(urlPath.split('#/')[1]), getLastCommitHash());
 }
 
 const hasLoaded = [];
