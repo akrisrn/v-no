@@ -41,7 +41,7 @@ function getLastUpdatedDate(filepath) {
 
 function getLastCommitHash() {
   try {
-    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: __dirname}).stdout.toString();
+    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: __dirname}).stdout.toString().trim();
   } catch (e) {
     return ''
   }
@@ -133,7 +133,7 @@ async function getHtmlAndFiles(page, urlPath) {
     bar.append(code);
     code = document.createElement('code');
     code.classList.add('item-version');
-    code.innerText = lastCommitHash.trim();
+    code.innerText = lastCommitHash;
     bar.append(code);
     return [document.documentElement.outerHTML, files];
   }, getLastUpdatedDate(urlPath.split('#/')[1]), getLastCommitHash());
