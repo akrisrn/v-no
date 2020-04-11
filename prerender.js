@@ -33,7 +33,8 @@ function getLastUpdatedDate(filepath) {
     let result = spawn.sync('git', ['log', '--format=%ct %s', filepath], {cwd: dir}).stdout.toString();
     result = result.split('\n').filter(commit => commit && !commit.endsWith('small fix'));
     if (result.length >= 2) {
-      return new Date(parseInt(result[0]) * 1000).toDateString();
+      const date = new Date(parseInt(result[0]) * 1000).toUTCString().split(' ');
+      return [date[0].substr(0, 3), date[2], date[1], date[3]].join(' ');
     }
     return '';
   } catch (e) {
