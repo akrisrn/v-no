@@ -16,8 +16,10 @@ const spawn = require('cross-spawn');
   }
 });
 
-let host = process.env.PRERENDER_HOST;
+const host = process.env.PRERENDER_HOST;
 const dir = process.env.PRERENDER_DIR;
+const outDir = dir;
+const sourceDir = __dirname;
 const indexPath = process.env.VUE_APP_INDEX_PATH;
 const indexFile = process.env.VUE_APP_INDEX_FILE;
 const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
@@ -33,28 +35,28 @@ function getLastUpdatedDate(filepath) {
     if (result.length >= 2) {
       return new Date(parseInt(result[0]) * 1000).toDateString();
     }
-    return null;
+    return '';
   } catch (e) {
-    return null;
+    return '';
   }
 }
 
 function getLastCommitHash() {
   try {
-    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: __dirname}).stdout.toString().trim();
+    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: sourceDir}).stdout.toString().trim();
   } catch (e) {
     return ''
   }
 }
 
-function getAbspath(filepath) {
-  return path.join(dir, filepath);
-}
-
 function writeHtml(filepath, html) {
-  const fileAbspath = getAbspath(filepath);
-  console.log('write:', fileAbspath);
-  fs.writeFile(fileAbspath, '<!DOCTYPE html>' + html, (err) => {
+  filepath = path.join(outDir, filepath);
+  const dirname = path.dirname(filepath);
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname, {recursive: true});
+  }
+  console.log('write:', filepath);
+  fs.writeFile(filepath, '<!DOCTYPE html>' + html, (err) => {
     if (err) throw err;
   });
 }
