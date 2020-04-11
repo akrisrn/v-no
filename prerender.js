@@ -19,7 +19,6 @@ const spawn = require('cross-spawn');
 const host = process.env.PRERENDER_HOST;
 const dir = process.env.PRERENDER_DIR;
 const outDir = dir;
-const sourceDir = __dirname;
 const indexPath = process.env.VUE_APP_INDEX_PATH;
 const indexFile = process.env.VUE_APP_INDEX_FILE;
 const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
@@ -39,14 +38,6 @@ function getLastUpdatedDate(filepath) {
     return '';
   } catch (e) {
     return '';
-  }
-}
-
-function getLastCommitHash() {
-  try {
-    return spawn.sync('git', ['rev-parse', '--short', 'HEAD'], {cwd: sourceDir}).stdout.toString().trim();
-  } catch (e) {
-    return ''
   }
 }
 
@@ -80,7 +71,7 @@ async function getHtmlAndFiles(page, urlPath) {
   if (urlPath.endsWith('#/' + categoryFile)) {
     await page.waitForSelector('ul');
   }
-  return page.evaluate((lastUpdatedDate, lastCommitHash) => {
+  return page.evaluate((lastUpdatedDate) => {
     if (document.querySelector('main.error')) {
       return [null, null];
     }
@@ -134,12 +125,8 @@ async function getHtmlAndFiles(page, urlPath) {
     }
     code.innerHTML = `<a href="${hashPath}">#</a>`;
     bar.append(code);
-    code = document.createElement('code');
-    code.classList.add('item-version');
-    code.innerText = lastCommitHash;
-    bar.append(code);
     return [document.documentElement.outerHTML, files];
-  }, getLastUpdatedDate(urlPath.split('#/')[1]), getLastCommitHash());
+  }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
 
 const hasLoaded = [];
