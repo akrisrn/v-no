@@ -7,11 +7,11 @@ const Index = () => import(/* webpackChunkName: "index" */ '@/vue/Index.vue');
 
 // noinspection JSUnusedGlobalSymbols
 export default new Router({
-    mode: 'history',
-    base: process.env.BASE_URL,
-    routes: [{
-        path: '*',
-        name: 'index',
-        component: Index,
-    }],
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes: [{
+    path: '*',
+    name: 'index',
+    component: Index,
+  }],
 });

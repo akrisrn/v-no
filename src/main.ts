@@ -6,6 +6,6 @@ Vue.config.productionTip = false;
 const Main = () => import(/* webpackChunkName: "main" */ '@/vue/Main.vue');
 
 new Vue({
-    router,
-    render: (h) => h(Main),
+  router,
+  render: (h) => h(Main),
 }).$mount('#app');
