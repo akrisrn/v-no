@@ -504,7 +504,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
 export function updateSearchList(params: { [index: string]: string | undefined }, isCategory: boolean) {
   const queryContent = getQueryContent(params);
   const resultUl = document.querySelector('ul#result');
-  const searchInput = document.querySelector('input#search-input') as HTMLInputElement | null;
+  const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
     searchInput.value = queryContent;
     searchInput.addEventListener('keyup', (event) => {
