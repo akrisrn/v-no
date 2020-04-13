@@ -431,7 +431,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
   return (pageData: string) => {
     const queryContent = getQueryContent(params).toLowerCase();
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
-    const resultUl = document.querySelector('ul#result')!;
+    const resultUl = document.querySelector<HTMLUListElement>('ul#result')!;
     const list = getListFromData(pageData, true);
     if (list.length > 0) {
       const header = document.querySelector('header')!;
@@ -497,6 +497,9 @@ export function updateSearchListActual(params: { [index: string]: string | undef
           }
         });
       });
+    }
+    if (resultUl.childElementCount === 0) {
+      resultUl.innerText = resource.searchNothing;
     }
   };
 }
