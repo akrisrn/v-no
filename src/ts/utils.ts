@@ -28,3 +28,15 @@ export function splitTagsFromCodes(codes: string) {
 export function isHashMode() {
   return !location.pathname.endsWith('.html');
 }
+
+export function escapeHTML(html: string) {
+  const symbols: { [index: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+  };
+  const regexp = new RegExp(`[${Object.keys(symbols).join('')}]`, 'g');
+  return html.replace(regexp, (symbol) => {
+    return symbols[symbol];
+  });
+}
