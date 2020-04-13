@@ -114,7 +114,7 @@ async function getHtmlAndFiles(page, urlPath) {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
     let code = document.createElement('code');
-    code.classList.add('item-hash')
+    code.classList.add('item-hash');
     let hashPath = document.location.pathname;
     if (hashPath.endsWith('index.html')) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
