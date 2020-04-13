@@ -438,7 +438,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
       let count = 0;
       list.forEach((item) => {
         axios.get(item.href).then((response) => {
-          const data = response.data as string;
+          const data = response.data.trim();
           let isFind: boolean;
           if (queryType === EFlag.author) {
             let dataAuthor = process.env.VUE_APP_AUTHOR;
@@ -468,16 +468,44 @@ export function updateSearchListActual(params: { [index: string]: string | undef
               li.append(code);
             });
             if (!queryType) {
-              const results = [''];
+              const results = [];
+              let prevEndIndex = 0;
               const regexp = new RegExp(queryContent, 'ig');
               let match = regexp.exec(data);
               while (match !== null) {
-                results.push(escapeHTML(data.substring(match.index - 10, match.index)) +
-                  `<span class="hl">${escapeHTML(match[0])}</span>` +
-                  escapeHTML(data.substring(match.index + match[0].length, regexp.lastIndex + 10)));
+                const offset = 10;
+                let startIndex = match.index - offset;
+                if (prevEndIndex === 0 && startIndex > 0) {
+                  results.push('');
+                }
+                const endIndex = regexp.lastIndex + offset;
+                const lastIndex = results.length - 1 as number;
+                let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
+                  escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+                if (startIndex <= prevEndIndex) {
+                  startIndex = prevEndIndex;
+                  if (startIndex > match.index) {
+                    if (lastIndex >= 0) {
+                      const lastResult = results[lastIndex] as string;
+                      results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
+                    }
+                  } else if (startIndex < match.index) {
+                    result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
+                  }
+                  if (lastIndex >= 0) {
+                    results[lastIndex] += result;
+                  } else {
+                    results.push(result);
+                  }
+                } else {
+                  results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
+                }
+                prevEndIndex = endIndex;
                 match = regexp.exec(data);
               }
-              results.push('');
+              if (prevEndIndex < data.length) {
+                results.push('');
+              }
               const blockquote = document.createElement('blockquote');
               const p = document.createElement('p');
               p.innerHTML = results.join('......');
