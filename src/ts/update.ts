@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { getWrapRegExp, splitTags } from '@/ts/utils';
+import { escapeHTML, getWrapRegExp, splitTags } from '@/ts/utils';
 import axios from 'axios';
 
 export function updateDD() {
@@ -472,15 +472,15 @@ export function updateSearchListActual(params: { [index: string]: string | undef
               const regexp = new RegExp(queryContent, 'ig');
               let match = regexp.exec(data);
               while (match !== null) {
-                results.push(data.substring(match.index - 10, match.index) +
-                  `<span class="hl">${match[0]}</span>` +
-                  data.substring(match.index + match[0].length, regexp.lastIndex + 10));
+                results.push(escapeHTML(data.substring(match.index - 10, match.index)) +
+                  `<span class="hl">${escapeHTML(match[0])}</span>` +
+                  escapeHTML(data.substring(match.index + match[0].length, regexp.lastIndex + 10)));
                 match = regexp.exec(data);
               }
               results.push('');
               const blockquote = document.createElement('blockquote');
               const p = document.createElement('p');
-              p.innerHTML = `${results.join('......')}`;
+              p.innerHTML = results.join('......');
               blockquote.append(p);
               li.append(blockquote);
             }
