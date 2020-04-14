@@ -12,11 +12,12 @@ $vssue-breakpoint-mobile = $media-max-width
   margin 0 auto $unit * 5
   box-shadow $box-shadow
   background-color $main-background-color
-  transition padding $transition-duration, margin $transition-duration, color $transition-duration, background-color $transition-duration
+  transition padding $transition-duration, margin $transition-duration, color $transition-duration, background-color $transition-duration, border-top-color $transition-duration
 
   @media screen and (max-width: $vssue-breakpoint-mobile)
     padding $unit * 3
     margin 0 auto
+    border-top 1px solid $border-color
 
   :not(.vssue-comment-content) a:hover
     text-decoration underline
