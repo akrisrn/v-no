@@ -77,5 +77,14 @@
     border-left 6px solid $info-color-s
     padding-left 16px
 
-  #result span.hl
-    color $danger-color
+  #result span
+    &.hl
+      color $danger-color
+      font-weight $strong-font-weight
+
+    &.ellipsis
+      color $info-color
+      font-weight $strong-font-weight
+      font-size 30px
+      line-height 0
+      margin 0 3px

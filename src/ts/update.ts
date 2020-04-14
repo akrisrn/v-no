@@ -508,7 +508,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
               }
               const blockquote = document.createElement('blockquote');
               const p = document.createElement('p');
-              p.innerHTML = results.join('......');
+              p.innerHTML = results.join('<span class="ellipsis">...</span>');
               blockquote.append(p);
               li.append(blockquote);
             }
