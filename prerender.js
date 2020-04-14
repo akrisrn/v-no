@@ -57,7 +57,7 @@ async function getHtmlAndFiles(page, urlPath) {
   console.log('load:', urlPath);
   await page.setRequestInterception(true);
   page.on('request', request => {
-    if (request.resourceType() === 'image') {
+    if (request.resourceType() === 'image' || request.url().endsWith('?abort')) {
       request.abort();
     } else {
       request.continue();
