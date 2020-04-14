@@ -436,6 +436,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
     if (list.length > 0) {
       const header = document.querySelector('header')!;
       let count = 0;
+      const timeStart = new Date().getTime();
       list.forEach((item) => {
         axios.get(item.href).then((response) => {
           const data = response.data.trim();
@@ -520,6 +521,14 @@ export function updateSearchListActual(params: { [index: string]: string | undef
         }).finally(() => {
           if (++count === list.length) {
             header.innerText = resource.searchDone;
+            const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
+            if (searchTime) {
+              searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
+            }
+            const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
+            if (searchCount) {
+              searchCount.innerText = `${resultUl.childElementCount}/${list.length}`;
+            }
           } else {
             header.innerText = `${resource.searching}(${count}/${list.length})`;
           }
