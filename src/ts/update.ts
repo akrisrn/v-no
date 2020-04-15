@@ -222,19 +222,20 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   // 4. text 为 *：将链接引入为 JavaScript 文件引用
   // 5. text 为 $：将链接引入为 CSS 文件引用
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
+    const text = a.innerText;
     const href = a.getAttribute('href')!;
     const pathname = new URL(a.href).pathname;
     if (href.endsWith('.md#')) {
       a.href = '#' + pathname;
     } else if (href.endsWith('.md#/')) {
       a.href = pathname.replace(/\.md$/, '.html');
-    } else if (a.innerText.match(/^\+(?:#.+)?$/)) {
+    } else if (text.match(/^\+(?:#.+)?$/)) {
       a.classList.add('snippet');
       if (updatedLinks.includes(href)) {
         continue;
       }
       const params: { [index: string]: string | undefined } = {};
-      const match = a.innerText.match(/#(.+)$/);
+      const match = text.match(/#(.+)$/);
       if (match) {
         match[1].split('|').forEach((seg, i) => {
           let param = seg;
@@ -300,7 +301,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       }).catch((error) => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
-    } else if (a.innerText === '*') {
+    } else if (text === '*') {
       let script = document.querySelector<HTMLScriptElement>(`script[src='${href}']`);
       if (script) {
         script.remove();
@@ -309,7 +310,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       script.src = href;
       document.head.appendChild(script);
       a.parentElement!.remove();
-    } else if (a.innerText === '$') {
+    } else if (text === '$') {
       if (!document.querySelector(`link[href='${href}']`)) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
