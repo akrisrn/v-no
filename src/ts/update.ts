@@ -302,18 +302,22 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
     } else if (text === '*') {
-      const script = document.createElement('script');
-      script.classList.add('custom');
-      script.src = href;
-      document.body.appendChild(script);
+      if (!document.querySelector(`script[src='${href}']`)) {
+        const script = document.createElement('script');
+        script.classList.add('custom');
+        script.src = href;
+        document.body.appendChild(script);
+      }
       a.parentElement!.remove();
     } else if (text === '$') {
-      const link = document.createElement('link');
-      link.classList.add('custom');
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = href;
-      document.head.appendChild(link);
+      if (!document.querySelector(`link[href='${href}']`)) {
+        const link = document.createElement('link');
+        link.classList.add('custom');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = href;
+        document.head.appendChild(link);
+      }
       a.parentElement!.remove();
     } else if (href.startsWith('http://') || href.startsWith('https://')) {
       // noinspection JSDeprecatedSymbols
