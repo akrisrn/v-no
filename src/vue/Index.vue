@@ -153,6 +153,9 @@
       next();
       this.isHashMode = isHashMode();
       this.isShow = false;
+      document.querySelectorAll('.custom').forEach((element) => {
+        element.remove();
+      });
       this.updateData();
     }
 
