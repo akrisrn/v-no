@@ -190,6 +190,8 @@
     public created() {
       // @ts-ignore
       window.addInputBind = this.addInputBind;
+      // @ts-ignore
+      window.axios = axios;
       this.addInputBind('home', () => {
         if (document.querySelector('.prerender')) {
           location.href = '/';

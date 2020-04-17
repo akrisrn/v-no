@@ -38,6 +38,23 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
+    public created() {
+      // @ts-ignore
+      window.renderMD = (data: string) => renderMD(data, false, true);
+      // @ts-ignore
+      window.updateMD = () => {
+        updateDD();
+        updatePre();
+        updateTable();
+        updateHeading();
+        updateImagePath();
+        updateLinkPath(false);
+        Prism.highlightAll();
+        updateTextCount();
+      };
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     public mounted() {
       // 规避 mount 后仍然可以查询到旧节点的问题。
       setTimeout(() => {
