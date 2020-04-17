@@ -265,3 +265,47 @@
 
       &:hover
         color $light-gray-font-color
+
+  button.btn
+    margin 0 $unit-s $unit-s 0
+    padding $unit-s $unit * 2
+    outline none
+    cursor pointer
+    font-family $font-family
+    font-size $font-size-s
+    font-weight $strong-font-weight
+    color $font-color
+    background-color transparent
+    border 2px solid $info-color-s
+    border-radius 10px
+    transition color $transition-duration, border-color $transition-duration, background-color $transition-duration
+
+    &:hover
+      background-color $info-color-s
+
+    &.success
+      border-color $success-color-s
+
+      &:hover
+        background-color $success-color-s
+
+    &.warning
+      border-color $warning-color-s
+
+      &:hover
+        background-color $warning-color-s
+
+    &.danger
+      border-color $danger-color-s
+
+      &:hover
+        background-color $danger-color-s
+
+    &:disabled
+      cursor not-allowed
+      color $light-gray-font-color
+      background-color $dim-gray-font-color
+      border-color $dim-gray-font-color
+
+      &:hover
+        background-color $dim-gray-font-color
