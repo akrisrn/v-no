@@ -94,7 +94,7 @@ export function updateTable() {
 
 export function updateHeading() {
   document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map((item) => {
-    return `article>h${item}`;
+    return `article h${item}`;
   }).join(',')).forEach((h) => {
     let link = h.querySelector('.heading-link');
     if (!link) {

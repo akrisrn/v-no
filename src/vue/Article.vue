@@ -49,8 +49,8 @@
         updateHeading();
         updateImagePath();
         updateLinkPath(false);
-        Prism.highlightAll();
         updateTextCount();
+        Prism.highlightAll();
       };
     }
 
@@ -73,8 +73,8 @@
         } else if (this.isIndex) {
           updateIndexList(this.isCategory);
         }
-        Prism.highlightAll();
         updateTextCount();
+        Prism.highlightAll();
       }, 0);
     }
 
