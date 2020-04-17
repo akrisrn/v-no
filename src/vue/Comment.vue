@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { VssueComponent } from 'vssue';
-  import GithubV4 from '@vssue/api-github-v4';
+  import GithubV3 from '@vssue/api-github-v3';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component({ components: { Vssue: VssueComponent } })
@@ -12,7 +12,7 @@
     @Prop() public path!: string;
 
     public options = {
-      api: GithubV4,
+      api: GithubV3,
       owner: process.env.VUE_APP_VSSUE_OWNER,
       repo: process.env.VUE_APP_VSSUE_REPO,
       clientId: process.env.VUE_APP_VSSUE_CLIENT_ID,

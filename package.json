@@ -9,7 +9,7 @@
     "prerender": "node prerender.js"
   },
   "dependencies": {
-    "@vssue/api-github-v4": "^1.4.0",
+    "@vssue/api-github-v3": "^1.4.3",
     "axios": "^0.18.1",
     "core-js": "^2.6.9",
     "github-markdown-css": "^3.0.1",
