@@ -281,6 +281,14 @@
       });
     }
 
+    public setComment(data: string) {
+      return setFlag(data, `@${EFlag.comment}:`, (match) => {
+        this.enableComment = match.toLowerCase() === 'enable';
+      }, () => {
+        this.enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
+      });
+    }
+
     public setData(data: string) {
       this.isShow = true;
       this.data = this.setTitle(data);
@@ -290,7 +298,7 @@
       if (this.path.endsWith('.md')) {
         axios.get(this.path).then((response) => {
           this.isError = false;
-          const data = this.setCover(this.setTags(this.setAuthor(response.data)));
+          const data = this.setComment(this.setCover(this.setTags(this.setAuthor(response.data))));
           if (process.env.VUE_APP_COMMON_FILE) {
             axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
               this.setData(data + '\n\n' + response2.data);
