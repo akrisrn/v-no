@@ -294,6 +294,21 @@
     public setData(data: string) {
       this.isShow = true;
       this.data = this.setTitle(data);
+      this.updateDescription();
+    }
+
+    public updateDescription() {
+      const content = [];
+      if (this.author) {
+        content.push(`Author: ${this.author}`);
+      }
+      if (this.tags.length > 0) {
+        content.push(`Tags: ${this.tags.join()}`);
+      }
+      if (this.date) {
+        content.push(`Published: ${this.date}`);
+      }
+      document.querySelector<HTMLMetaElement>('meta[name=description]')!.content = content.join(' | ');
     }
 
     public updateData() {
