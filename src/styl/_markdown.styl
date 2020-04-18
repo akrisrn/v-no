@@ -70,7 +70,7 @@
 
     dd
       font-size $font-size-s
-      color $dim-gray-font-color
+      color $gray-font-color
       padding 0
 
       &:before
@@ -91,6 +91,7 @@
     padding 0 $unit * 4
     border-left none
     position relative
+    color $gray-font-color
 
     &:before
       font-family Arial
@@ -221,7 +222,7 @@
 
   .footnotes
     font-size $font-size-s
-    color $dim-gray-font-color
+    color $gray-font-color
 
     ol
       margin-top -($unit)
@@ -262,6 +263,7 @@
       outline none
 
     button, span
+      background-color $font-color
       color $gray-font-color
       transition color $transition-duration
 
@@ -306,8 +308,8 @@
     &:disabled
       cursor not-allowed
       color $light-gray-font-color
-      background-color $dim-gray-font-color
-      border-color $dim-gray-font-color
+      background-color $font-color
+      border-color $font-color
 
       &:hover
-        background-color $dim-gray-font-color
+        background-color $font-color
