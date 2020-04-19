@@ -48,9 +48,7 @@ function writeHtml(filepath, html) {
     fs.mkdirSync(dirname, {recursive: true});
   }
   console.log('write:', filepath);
-  fs.writeFile(filepath, '<!DOCTYPE html>' + html, (err) => {
-    if (err) throw err;
-  });
+  fs.writeFileSync(filepath, '<!DOCTYPE html>' + html);
 }
 
 async function getHtmlAndFiles(page, urlPath) {
