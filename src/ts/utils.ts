@@ -13,8 +13,8 @@ export function trimList(list: string[]) {
   return result;
 }
 
-export function splitTags(tags: string) {
-  return trimList(tags.split(/\s*[,，]\s*/));
+export function splitFlag(flag: string) {
+  return trimList(flag.split(/\s*[,，]\s*/));
 }
 
 export function splitTagsFromCodes(codes: string) {

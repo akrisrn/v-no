@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { escapeHTML, getWrapRegExp, splitTags } from '@/ts/utils';
+import { escapeHTML, getWrapRegExp, splitFlag } from '@/ts/utils';
 import axios from 'axios';
 
 export function updateDD() {
@@ -452,7 +452,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
           } else if (queryType === EFlag.tags) {
             let dataTags: string[] = [];
             setFlag(data, `@${EFlag.tags}:`, (match) => {
-              dataTags = splitTags(match.toLowerCase());
+              dataTags = splitFlag(match.toLowerCase());
             });
             isFind = dataTags.includes(queryParam!);
           } else {

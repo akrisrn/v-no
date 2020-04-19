@@ -11,7 +11,7 @@
                         <a @click.prevent="returnHome" href="/">«</a>
                     </code>
                     <code class="item-date" v-if="date">{{ date }}</code>
-                    <code class="item-author">
+                    <code class="item-author" v-for="author in authors">
                         <a :href="getAuthorLink(author)">{{ author }}</a>
                     </code>
                     <code class="item-tag" v-for="tag in tags">
@@ -50,7 +50,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { isHashMode, splitTags } from '@/ts/utils';
+  import { isHashMode, splitFlag } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -66,7 +66,7 @@
   export default class Index extends Vue {
     public data = '';
     public title = '';
-    public author = '';
+    public authors: string[] = [];
     public tags: string[] = [];
     public cover = '';
     public isShow = false;
@@ -261,15 +261,15 @@
 
     public setAuthor(data: string) {
       return setFlag(data, `@${EFlag.author}:`, (match) => {
-        this.author = match;
+        this.authors = splitFlag(match);
       }, () => {
-        this.author = process.env.VUE_APP_AUTHOR;
+        this.authors = [process.env.VUE_APP_AUTHOR];
       });
     }
 
     public setTags(data: string) {
       return setFlag(data, `@${EFlag.tags}:`, (match) => {
-        this.tags = splitTags(match);
+        this.tags = splitFlag(match);
       }, () => {
         this.tags = [];
       });
@@ -299,8 +299,8 @@
 
     public updateDescription() {
       const content = [];
-      if (this.author) {
-        content.push(`Author: ${this.author}`);
+      if (this.authors.length > 0) {
+        content.push(`Author: ${this.authors.join()}`);
       }
       if (this.tags.length > 0) {
         content.push(`Tags: ${this.tags.join()}`);
