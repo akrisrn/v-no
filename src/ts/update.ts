@@ -132,6 +132,7 @@ export function updateImagePath() {
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
     }
+    let alterExt = 'jpg';
     const src = img.getAttribute('src')!;
     const match = src.match(/#(.+)$/);
     if (match) {
@@ -142,6 +143,8 @@ export function updateImagePath() {
             cls = cls.trim();
             if (['hidden', 'left', 'right'].includes(cls)) {
               parent.classList.add(cls);
+            } else if (cls.startsWith('$')) {
+              alterExt = cls.substr(1);
             } else {
               img.classList.add(cls);
             }
@@ -157,6 +160,16 @@ export function updateImagePath() {
       } else {
         img.src = new URL(img.src).pathname;
       }
+    }
+    if (img.src.endsWith('.webp')) {
+      const picture = document.createElement('picture');
+      const source = document.createElement('source');
+      source.type = 'image/webp';
+      source.srcset = img.src;
+      img.src = img.src.substr(0, img.src.length - 4) + alterExt;
+      picture.append(source);
+      picture.append(img.cloneNode());
+      img.outerHTML = picture.outerHTML;
     }
     let loadings = parent.previousElementSibling;
     if (!parent.classList.contains('hidden') || (loadings && loadings.classList.contains('lds-ellipsis'))) {
