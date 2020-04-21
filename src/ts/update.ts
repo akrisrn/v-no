@@ -129,7 +129,7 @@ export function updateFootnote() {
 export function updateImagePath() {
   document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
     let parent = img.parentElement!;
-    if (parent.tagName === 'A') {
+    if (['A', 'PICTURE'].includes(parent.tagName)) {
       parent = parent.parentElement!;
     }
     let alterExt = 'jpg';
@@ -189,7 +189,7 @@ export function updateImagePath() {
         loadings.remove();
       }
     }
-    if (parent.tagName === 'DT') {
+    if (['DT', 'PICTURE'].includes(parent.tagName)) {
       parent.parentElement!.classList.add('center');
     } else {
       if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
