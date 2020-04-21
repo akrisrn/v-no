@@ -133,7 +133,7 @@ export function updateImagePath() {
       parent = parent.parentElement!;
     }
     let alterExt = 'jpg';
-    const src = img.getAttribute('src')!;
+    let src = img.getAttribute('src')!;
     const match = src.match(/#(.+)$/);
     if (match) {
       const width = parseInt(match[1], 0);
@@ -155,18 +155,15 @@ export function updateImagePath() {
       } else {
         img.width = width;
       }
-      if (src.startsWith('http')) {
-        img.src = src.replace(/#.+$/, '');
-      } else {
-        img.src = new URL(img.src).pathname;
-      }
+      src = src.startsWith('http') ? src.replace(/#.+$/, '') : new URL(img.src).pathname;
+      img.src = src;
     }
-    if (img.src.endsWith('.webp')) {
+    if (src.endsWith('.webp')) {
       const picture = document.createElement('picture');
       const source = document.createElement('source');
       source.type = 'image/webp';
-      source.srcset = img.src;
-      img.src = img.src.substr(0, img.src.length - 4) + alterExt;
+      source.srcset = src;
+      img.src = src.substr(0, src.length - 4) + alterExt;
       picture.append(source);
       picture.append(img.cloneNode());
       img.outerHTML = picture.outerHTML;
