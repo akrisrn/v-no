@@ -28,18 +28,8 @@ export function updateDD() {
 }
 
 export function updateToc() {
-  const uls = document.querySelectorAll<HTMLUListElement>('#toc > ul');
-  if (uls.length === 2) {
-    uls[0].classList.add('ul-a');
-    uls[1].classList.add('ul-b');
-  }
   document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
-    let href = a.getAttribute('h');
-    if (href === null) {
-      href = a.getAttribute('href')!;
-      a.setAttribute('h', href);
-      a.removeAttribute('href');
-    }
+    const href = a.getAttribute('h');
     let innerText = a.innerText;
     const nextSibling = a.nextElementSibling as HTMLElement;
     if (nextSibling && nextSibling.classList.value === 'count') {
@@ -54,17 +44,6 @@ export function updateToc() {
         }
       }
     });
-  });
-  document.querySelectorAll<HTMLLinkElement>('#toc > ul.tags > li > a').forEach((a) => {
-    const count = a.querySelector<HTMLSpanElement>('span.count');
-    if (count) {
-      a.removeChild(count);
-      a.parentElement!.append(count);
-      const fontSize = Math.log10(parseInt(count.innerText.substr(1), 0)) + 1;
-      if (fontSize > 1) {
-        a.style.fontSize = fontSize + 'em';
-      }
-    }
   });
 }
 
