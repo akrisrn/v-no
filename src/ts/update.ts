@@ -68,24 +68,6 @@ export function updateToc() {
   });
 }
 
-export function updateTable() {
-  document.querySelectorAll('article table').forEach((table) => {
-    const thead = table.querySelector('thead');
-    if (thead) {
-      let isTheadEmpty = true;
-      for (const th of thead.querySelectorAll('th')) {
-        if (th.innerText) {
-          isTheadEmpty = false;
-          break;
-        }
-      }
-      if (isTheadEmpty) {
-        thead.remove();
-      }
-    }
-  });
-}
-
 export function updateHeading() {
   document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map((item) => {
     return `article h${item}`;
@@ -267,7 +249,6 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           return;
         }
         updateDD();
-        updateTable();
         updateImagePath();
         updateTextCount();
         updatedLinks.push(href);

@@ -96,6 +96,25 @@ markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   return defaultFenceRenderRule(tokens, idx, options, env, self);
 };
 
+const defaultTheadRenderRule = getDefaultRenderRule('thead_open');
+markdownIt.renderer.rules.thead_open = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  let isEmpty = true;
+  let i = idx + 2;
+  do {
+    const thToken = tokens[i];
+    if (thToken.type === 'inline' && thToken.content) {
+      isEmpty = false;
+      break;
+    }
+    i += 1;
+  } while (tokens[i].type !== 'tr_close');
+  if (isEmpty) {
+    token.attrJoin('class', 'hidden');
+  }
+  return defaultTheadRenderRule(tokens, idx, options, env, self);
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];

@@ -13,7 +13,6 @@
     updateIndexList,
     updateLinkPath,
     updateSearchList,
-    updateTable,
     updateTextCount,
     updateToc,
   } from '@/ts/update';
@@ -58,7 +57,6 @@
       setTimeout(() => {
         updateDD();
         updateToc();
-        updateTable();
         updateHeading();
         updateFootnote();
         updateImagePath();
