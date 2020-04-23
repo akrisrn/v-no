@@ -80,6 +80,15 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
+const defaultFenceRenderRule = markdownIt.renderer.rules.fence!;
+markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  if (token.tag === 'code') {
+    token.attrJoin('class', 'line-numbers');
+  }
+  return defaultFenceRenderRule(tokens, idx, options, env, self);
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];

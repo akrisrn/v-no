@@ -12,7 +12,6 @@
     updateImagePath,
     updateIndexList,
     updateLinkPath,
-    updatePre,
     updateSearchList,
     updateTable,
     updateTextCount,
@@ -44,7 +43,6 @@
       // @ts-ignore
       window.updateMD = () => {
         updateDD();
-        updatePre();
         updateTable();
         updateHeading();
         updateImagePath();
@@ -60,7 +58,6 @@
       setTimeout(() => {
         updateDD();
         updateToc();
-        updatePre();
         updateTable();
         updateHeading();
         updateFootnote();

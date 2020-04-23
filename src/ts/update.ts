@@ -68,12 +68,6 @@ export function updateToc() {
   });
 }
 
-export function updatePre() {
-  document.querySelectorAll('article pre').forEach((pre) => {
-    pre.classList.add('line-numbers');
-  });
-}
-
 export function updateTable() {
   document.querySelectorAll('article table').forEach((table) => {
     const thead = table.querySelector('thead');
