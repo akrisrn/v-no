@@ -40,6 +40,46 @@ const markdownIt = new MarkdownIt({
 });
 markdownIt.linkify.tlds([], false);
 
+const defaultImageRenderRule = markdownIt.renderer.rules.image!;
+markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  let src = token.attrGet('src')!;
+  let alterExt = 'jpg';
+  const match = src.match(/#(.+)$/);
+  if (match) {
+    const width = parseInt(match[1], 0);
+    if (isNaN(width)) {
+      if (match[1].startsWith('.')) {
+        match[1].substr(1).split('.').forEach((cls) => {
+          cls = cls.trim();
+          if (cls.startsWith('$')) {
+            alterExt = cls.substr(1);
+          } else {
+            token.attrJoin('class', cls);
+          }
+        });
+      } else {
+        token.attrSet('style', match[1]);
+      }
+    } else {
+      token.attrSet('width', width.toString());
+    }
+    src = src.replace(/#.+$/, '');
+    token.attrSet('src', src);
+  }
+  if (src.endsWith('.webp')) {
+    const picture = document.createElement('picture');
+    const source = document.createElement('source');
+    source.srcset = src;
+    source.type = 'image/webp';
+    token.attrSet('src', src.substr(0, src.length - 4) + alterExt);
+    picture.innerHTML = defaultImageRenderRule(tokens, idx, options, env, self);
+    picture.insertBefore(source, picture.children[0]);
+    return picture.outerHTML;
+  }
+  return defaultImageRenderRule(tokens, idx, options, env, self);
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];

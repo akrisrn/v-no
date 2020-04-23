@@ -132,42 +132,12 @@ export function updateImagePath() {
     if (['A', 'PICTURE'].includes(parent.tagName)) {
       parent = parent.parentElement!;
     }
-    let alterExt = 'jpg';
-    let src = img.getAttribute('src')!;
-    const match = src.match(/#(.+)$/);
-    if (match) {
-      const width = parseInt(match[1], 0);
-      if (isNaN(width)) {
-        if (match[1].startsWith('.')) {
-          match[1].substr(1).split('.').forEach((cls) => {
-            cls = cls.trim();
-            if (['hidden', 'left', 'right'].includes(cls)) {
-              parent.classList.add(cls);
-            } else if (cls.startsWith('$')) {
-              alterExt = cls.substr(1);
-            } else {
-              img.classList.add(cls);
-            }
-          });
-        } else {
-          img.setAttribute('style', match[1]);
-        }
-      } else {
-        img.width = width;
+    img.classList.forEach((cls) => {
+      if (['hidden', 'left', 'right'].includes(cls)) {
+        parent.classList.add(cls);
+        img.classList.remove(cls);
       }
-      src = src.startsWith('http') ? src.replace(/#.+$/, '') : new URL(img.src).pathname;
-      img.src = src;
-    }
-    if (src.endsWith('.webp')) {
-      const picture = document.createElement('picture');
-      const source = document.createElement('source');
-      source.type = 'image/webp';
-      source.srcset = src;
-      img.src = src.substr(0, src.length - 4) + alterExt;
-      picture.append(source);
-      picture.append(img.cloneNode());
-      img.outerHTML = picture.outerHTML;
-    }
+    });
     let loadings = parent.previousElementSibling;
     if (!parent.classList.contains('hidden') || (loadings && loadings.classList.contains('lds-ellipsis'))) {
       parent.classList.add('hidden');
