@@ -153,6 +153,11 @@ markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   return link.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
 };
 
+const defaultFootnoteRenderRule = getDefaultRenderRule('footnote_anchor');
+markdownIt.renderer.rules.footnote_anchor = (tokens, idx, options, env, self) => {
+  return defaultFootnoteRenderRule(tokens, idx, options, env, self).replace(/\shref=".*?"/, '');
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];

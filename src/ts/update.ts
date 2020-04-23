@@ -65,12 +65,10 @@ export function updateFootnote() {
         e.preventDefault();
         scroll(backref.offsetTop - 10);
       });
-      fnref.removeAttribute('href');
       backref.addEventListener('click', (e) => {
         e.preventDefault();
         scroll(fnref.offsetTop - 10);
       });
-      backref.removeAttribute('href');
     }
   });
 }
