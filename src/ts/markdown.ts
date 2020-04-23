@@ -2,35 +2,42 @@ import resource from '@/ts/resource';
 import { getWrapRegExp, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
+import Token from 'markdown-it/lib/token';
 
 // tslint:disable no-var-requires
+const footnote = require('markdown-it-footnote');
+const deflist = require('markdown-it-deflist');
+const taskLists = require('markdown-it-task-lists');
+const container = require('markdown-it-container');
+// tslint:enable no-var-requires
+
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
   html: true,
   breaks: true,
   linkify: true,
-}).use(require('markdown-it-footnote')).use(require('markdown-it-deflist'))
-  .use(require('markdown-it-task-lists')).use(require('markdown-it-container'), 'details', {
-    validate: (params: string) => {
-      return params.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
-    },
-    render: (tokens: { [index: number]: { nesting: number, info: string } }, idx: number) => {
-      if (tokens[idx].nesting === 1) {
-        const match = tokens[idx].info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/)!;
-        let open = '';
-        if (match[1]) {
-          open = ' open';
-        }
-        let classAttr = '';
-        if (match[2]) {
-          classAttr = ` class="${match[2].split('.').join(' ')}"`;
-        }
-        const summary = markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
-        return `<details${classAttr}${open}><summary>${summary}</summary>`;
+}).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
+  validate: (params: string) => {
+    return params.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
+  },
+  render: (tokens: Token[], idx: number) => {
+    const token = tokens[idx];
+    if (token.nesting === 1) {
+      const match = token.info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/)!;
+      let open = '';
+      if (match[1]) {
+        open = ' open';
       }
-      return '</details>';
-    },
-  });
+      let classAttr = '';
+      if (match[2]) {
+        classAttr = ` class="${match[2].split('.').join(' ')}"`;
+      }
+      const summary = markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
+      return `<details${classAttr}${open}><summary>${summary}</summary>`;
+    }
+    return '</details>';
+  },
+});
 markdownIt.linkify.tlds([], false);
 
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
