@@ -40,7 +40,14 @@ const markdownIt = new MarkdownIt({
 });
 markdownIt.linkify.tlds([], false);
 
-const defaultImageRenderRule = markdownIt.renderer.rules.image!;
+const getDefaultRenderRule = (name: string) => {
+  // tslint:disable-next-line:only-arrow-functions
+  return markdownIt.renderer.rules[name] || function(tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options);
+  };
+};
+
+const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
@@ -80,7 +87,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
-const defaultFenceRenderRule = markdownIt.renderer.rules.fence!;
+const defaultFenceRenderRule = getDefaultRenderRule('fence');
 markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   if (token.tag === 'code') {
