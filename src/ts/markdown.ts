@@ -146,6 +146,13 @@ markdownIt.renderer.rules.html_block = (tokens, idx, options, env, self) => {
   return defaultHtmlBlockRenderRule(tokens, idx, options, env, self);
 };
 
+const defaultHeadingRenderRule = getDefaultRenderRule('heading_close');
+markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
+  const link = document.createElement('a');
+  link.classList.add('heading-link');
+  return link.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];

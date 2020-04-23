@@ -51,13 +51,7 @@ export function updateHeading() {
   document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map((item) => {
     return `article h${item}`;
   }).join(',')).forEach((h) => {
-    let link = h.querySelector('.heading-link');
-    if (!link) {
-      link = document.createElement('a');
-      link.classList.add('heading-link');
-      h.append(link);
-    }
-    link.addEventListener('click', () => {
+    h.querySelector('.heading-link')!.addEventListener('click', () => {
       scroll(h.offsetTop - 10);
     });
   });
