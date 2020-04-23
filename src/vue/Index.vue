@@ -3,8 +3,17 @@
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
                 <div id="cover" v-if="cover">
-                    <!--suppress HtmlUnknownTarget -->
-                    <img :src="cover" alt="cover"/>
+                    <template v-if="coverAlter">
+                        <picture>
+                            <source :srcset="cover" type="image/webp">
+                            <!--suppress HtmlUnknownTarget -->
+                            <img :src="coverAlter" alt="cover"/>
+                        </picture>
+                    </template>
+                    <template v-else>
+                        <!--suppress HtmlUnknownTarget -->
+                        <img :src="cover" alt="cover"/>
+                    </template>
                 </div>
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code class="item-home" v-if="!isHome">
@@ -69,6 +78,7 @@
     public authors: string[] = [];
     public tags: string[] = [];
     public cover = '';
+    public coverAlter = '';
     public isShow = false;
     public isError = false;
     public isDark = false;
@@ -277,9 +287,18 @@
 
     public setCover(data: string) {
       return setFlag(data, `@${EFlag.cover}:`, (match) => {
-        this.cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
+        let cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
+        let alterExt = 'jpg';
+        const m = cover.match(/#(.+)$/);
+        if (m) {
+          alterExt = m[1];
+          cover = cover.replace(/#.+$/, '');
+        }
+        this.cover = cover;
+        this.coverAlter = cover.endsWith('.webp') ? cover.substr(0, cover.length - 4) + alterExt : '';
       }, () => {
         this.cover = '';
+        this.coverAlter = '';
       });
     }
 
