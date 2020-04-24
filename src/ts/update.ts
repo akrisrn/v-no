@@ -76,7 +76,7 @@ export function updateFootnote() {
 export function updateImagePath() {
   document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
     let parent = img.parentElement!;
-    if (['A', 'PICTURE'].includes(parent.tagName)) {
+    if (parent.tagName === 'A') {
       parent = parent.parentElement!;
     }
     img.classList.forEach((cls) => {
@@ -106,7 +106,7 @@ export function updateImagePath() {
         loadings.remove();
       }
     }
-    if (['DT', 'PICTURE'].includes(parent.tagName)) {
+    if (parent.tagName === 'DT') {
       parent.parentElement!.classList.add('center');
     } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
       parent.classList.add('center');
