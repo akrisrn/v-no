@@ -243,7 +243,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   }
 }
 
-export function updateIndexList(isCategory: boolean) {
+export function updateIndexList() {
   document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
     const lis: Array<{ node: HTMLLIElement, time: number }> = [];
     ul.querySelectorAll('li').forEach((li) => {
@@ -273,30 +273,7 @@ export function updateIndexList(isCategory: boolean) {
       });
       lis.push(item);
     });
-    let maxSize = process.env.VUE_APP_MAX_SIZE_OF_LIST;
-    if (isCategory) {
-      maxSize = 5;
-    }
-    ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li, i) => {
-      if (i >= maxSize) {
-        li.node.classList.add('hidden');
-      }
-      return li.node.outerHTML;
-    }).join('');
-    if (lis.length > maxSize) {
-      const more = document.createElement('div');
-      more.classList.add('more');
-      const moreSpan = document.createElement('span');
-      moreSpan.innerText = 'More';
-      moreSpan.addEventListener('click', () => {
-        ul.querySelectorAll('li.hidden').forEach((li) => {
-          li.classList.remove('hidden');
-        });
-        more.classList.add('hidden');
-      });
-      more.append(moreSpan);
-      ul.append(more);
-    }
+    ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li) => li.node.outerHTML).join('');
   });
 }
 
@@ -334,7 +311,7 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         updateToc();
         updateHeading();
         updateLinkPath(isCategory);
-        updateIndexList(isCategory);
+        updateIndexList();
         updateTextCount();
       }, 0);
     }
@@ -433,7 +410,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
             }
             resultUl.append(li);
             updateLinkPath(isCategory);
-            updateIndexList(isCategory);
+            updateIndexList();
             updateTextCount();
           }
         }).finally(() => {

@@ -65,7 +65,7 @@
         } else if (this.isSearch) {
           updateSearchList(this.params, this.isCategory);
         } else if (this.isIndex) {
-          updateIndexList(this.isCategory);
+          updateIndexList();
         }
         updateTextCount();
         Prism.highlightAll();
