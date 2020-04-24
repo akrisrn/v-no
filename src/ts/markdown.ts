@@ -158,6 +158,22 @@ markdownIt.renderer.rules.footnote_anchor = (tokens, idx, options, env, self) =>
   return defaultFootnoteRenderRule(tokens, idx, options, env, self).replace(/\shref=".*?"/, '');
 };
 
+const defaultLinkRenderRule = getDefaultRenderRule('link_open');
+markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  const href = token.attrGet('href')!;
+  const pathname = new URL(href, document.location.href).pathname;
+  if (href.endsWith('.md#')) {
+    token.attrSet('href', `#${pathname}`);
+  } else if (href.endsWith('.md#/')) {
+    token.attrSet('href', `${pathname.substr(0, href.length - 2)}html`);
+  } else if (href.startsWith('http://') || href.startsWith('https://')) {
+    token.attrSet('target', '_blank');
+    token.attrSet('rel', 'noopener noreferrer');
+  }
+  return defaultLinkRenderRule(tokens, idx, options, env, self);
+};
+
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];
