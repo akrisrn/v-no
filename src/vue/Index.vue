@@ -3,17 +3,12 @@
         <transition name="slide-fade">
             <main :class="{error: isError}" v-if="isShow">
                 <div id="cover" v-if="cover">
-                    <template v-if="coverAlter">
-                        <picture>
-                            <source :srcset="cover" type="image/webp">
-                            <!--suppress HtmlUnknownTarget -->
-                            <img :src="coverAlter" alt="cover"/>
-                        </picture>
-                    </template>
-                    <template v-else>
+                    <!--suppress HtmlUnknownTarget -->
+                    <picture :src="coverResize ? cover : false">
+                        <source v-if="coverResizeWebp" :srcset="coverResizeWebp" type="image/webp">
                         <!--suppress HtmlUnknownTarget -->
-                        <img :src="cover" alt="cover"/>
-                    </template>
+                        <img :src="coverResize || cover" alt="cover"/>
+                    </picture>
                 </div>
                 <div class="markdown-body" id="bar" v-if="!isError">
                     <code class="item-home" v-if="!isHome">
@@ -78,7 +73,8 @@
     public authors: string[] = [];
     public tags: string[] = [];
     public cover = '';
-    public coverAlter = '';
+    public coverResize = '';
+    public coverResizeWebp = '';
     public isShow = false;
     public isError = false;
     public isDark = false;
@@ -288,17 +284,22 @@
     public setCover(data: string) {
       return setFlag(data, `@${EFlag.cover}:`, (match) => {
         let cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
-        let alterExt = 'jpg';
-        const m = cover.match(/#(.+)$/);
+        const m = cover.match(/#\.(.+)$/);
         if (m) {
-          alterExt = m[1];
           cover = cover.replace(/#.+$/, '');
+          if (!cover.startsWith('http') && m[1].startsWith('$')) {
+            const index = cover.lastIndexOf('.');
+            this.coverResize = `${cover.substring(0, index)}.resize${cover.substring(index)}`;
+            if (m[1] === '$$') {
+              this.coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
+            }
+          }
         }
         this.cover = cover;
-        this.coverAlter = cover.endsWith('.webp') ? cover.substr(0, cover.length - 4) + alterExt : '';
       }, () => {
         this.cover = '';
-        this.coverAlter = '';
+        this.coverResize = '';
+        this.coverResizeWebp = '';
       });
     }
 

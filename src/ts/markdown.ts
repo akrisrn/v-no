@@ -51,7 +51,8 @@ const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
-  let alterExt = 'jpg';
+  let useResize = false;
+  let useWebp = false;
   const match = src.match(/#(.+)$/);
   if (match) {
     const width = parseInt(match[1], 0);
@@ -60,7 +61,10 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
         match[1].substr(1).split('.').forEach((cls) => {
           cls = cls.trim();
           if (cls.startsWith('$')) {
-            alterExt = cls.substr(1);
+            useResize = true;
+            if (cls === '$$') {
+              useWebp = true;
+            }
           } else {
             token.attrJoin('class', cls);
           }
@@ -74,17 +78,20 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
     src = src.replace(/#.+$/, '');
     token.attrSet('src', src);
   }
-  if (src.endsWith('.webp')) {
-    const picture = document.createElement('picture');
-    const source = document.createElement('source');
-    source.srcset = src;
-    source.type = 'image/webp';
-    token.attrSet('src', src.substr(0, src.length - 4) + alterExt);
-    picture.innerHTML = defaultImageRenderRule(tokens, idx, options, env, self);
-    picture.insertBefore(source, picture.children[0]);
-    return picture.outerHTML;
+  const picture = document.createElement('picture');
+  if (!src.startsWith('http') && useResize) {
+    picture.setAttribute('src', src);
+    const index = src.lastIndexOf('.');
+    if (useWebp) {
+      const source = document.createElement('source');
+      source.srcset = `${src.substring(0, index)}.resize.webp`;
+      source.type = 'image/webp';
+      picture.append(source);
+    }
+    token.attrSet('src', `${src.substring(0, index)}.resize${src.substring(index)}`);
   }
-  return defaultImageRenderRule(tokens, idx, options, env, self);
+  picture.innerHTML += defaultImageRenderRule(tokens, idx, options, env, self);
+  return picture.outerHTML;
 };
 
 const defaultFenceRenderRule = getDefaultRenderRule('fence');

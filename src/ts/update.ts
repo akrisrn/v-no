@@ -75,7 +75,8 @@ export function updateFootnote() {
 
 export function updateImagePath() {
   document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
-    let parent = img.parentElement!;
+    const picture = img.parentElement!;
+    let parent = picture.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
     }
@@ -110,6 +111,17 @@ export function updateImagePath() {
       parent.parentElement!.classList.add('center');
     } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
       parent.classList.add('center');
+    }
+    const originalSrc = picture.getAttribute('src');
+    if (originalSrc && !img.nextElementSibling) {
+      const original = document.createElement('div');
+      original.classList.add('original');
+      original.innerText = resource.original;
+      original.addEventListener('click', (e) => {
+        e.preventDefault();
+        open(originalSrc, '_blank');
+      });
+      picture.append(original);
     }
   });
 }
