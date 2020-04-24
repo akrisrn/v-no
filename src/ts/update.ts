@@ -156,10 +156,10 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
     } else if (href.endsWith('.md#/')) {
       a.href = pathname.replace(/\.md$/, '.html');
     } else if (text.match(/^\+(?:#.+)?$/)) {
-      a.classList.add('snippet');
       if (updatedLinks.includes(href)) {
         continue;
       }
+      a.classList.add('snippet');
       const params: { [index: string]: string | undefined } = {};
       const match = text.match(/#(.+)$/);
       if (match) {
@@ -173,6 +173,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           params[i + 1] = param;
         });
       }
+      updatedLinks.push(href);
       axios.get(href).then((response) => {
         let data = (response.data as string).split('\n').map((line) => {
           const paramMatches = line.match(getWrapRegExp('{{', '}}', 'g'));
@@ -221,7 +222,6 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         updateDD();
         updateImagePath();
         updateTextCount();
-        updatedLinks.push(href);
         updateLinkPath(isCategory, updatedLinks);
       }).catch((error) => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
