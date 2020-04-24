@@ -108,10 +108,8 @@ export function updateImagePath() {
     }
     if (['DT', 'PICTURE'].includes(parent.tagName)) {
       parent.parentElement!.classList.add('center');
-    } else {
-      if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
-        parent.classList.add('center');
-      }
+    } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
+      parent.classList.add('center');
     }
   });
 }
@@ -120,7 +118,8 @@ export function updateTextCount() {
   const textCount = document.querySelector<HTMLElement>('#text-count');
   if (textCount) {
     let count = 0;
-    document.querySelectorAll('article > *:not(#toc):not(pre)').forEach((element) => {
+    const exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
+    document.querySelectorAll(`article > *:${exclude.map((e) => `not(${e})`).join(':')}`).forEach((element) => {
       if (element.textContent) {
         count += element.textContent.replace(/\s/g, '').length;
       }
@@ -136,7 +135,7 @@ export function updateTextCount() {
       countList.push(countStr.substring(start, end));
       start = end;
     }
-    textCount.innerHTML = countList.join(',');
+    textCount.innerText = countList.join(',');
   }
 }
 

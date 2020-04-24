@@ -42,7 +42,6 @@
       // @ts-ignore
       window.updateMD = () => {
         updateDD();
-        updateTable();
         updateHeading();
         updateImagePath();
         updateLinkPath(false);
