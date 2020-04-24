@@ -19,8 +19,3 @@ export function getDateString(path: string) {
   const date = getDate(path);
   return date ? date.toDateString() : '';
 }
-
-export function getTime(path: string) {
-  const date = getDate(path);
-  return date ? date.getTime() : 0;
-}

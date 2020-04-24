@@ -1,5 +1,4 @@
 import { getIndexFileData, getListFromData, setFlag } from '@/ts/data';
-import { getDateString, getTime } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
@@ -245,25 +244,15 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 
 export function updateIndexList() {
   document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
-    const lis: Array<{ node: HTMLLIElement, time: number }> = [];
+    const lis: { node: HTMLLIElement, time: number }[] = [];
     ul.querySelectorAll('li').forEach((li) => {
       const item = {
         node: li,
         time: 0,
       };
-      let date = li.querySelector<HTMLSpanElement>('span.date');
-      if (!date) {
-        const link = li.querySelector('a');
-        if (link) {
-          const dateString = getDateString(link.href);
-          if (dateString) {
-            date = document.createElement('span');
-            date.classList.add('date');
-            date.innerText = dateString;
-            li.insertBefore(date, link);
-            item.time = getTime(link.href);
-          }
-        }
+      const date = li.querySelector<HTMLSpanElement>('span.date');
+      if (date) {
+        item.time = new Date(date.innerText).getTime();
       }
       li.querySelectorAll<HTMLElement>('code:not(.nolink)').forEach((code) => {
         const a = document.createElement('a');

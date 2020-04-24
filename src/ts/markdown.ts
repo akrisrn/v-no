@@ -3,6 +3,7 @@ import { getWrapRegExp, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
+import { getDateString } from '@/ts/date';
 
 // tslint:disable no-var-requires
 const footnote = require('markdown-it-footnote');
@@ -172,6 +173,34 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     token.attrSet('rel', 'noopener noreferrer');
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
+};
+
+const defaultListRenderRule = getDefaultRenderRule('list_item_open');
+markdownIt.renderer.rules.list_item_open = (tokens, idx, options, env, self) => {
+  const inline = tokens[idx + 2];
+  if (inline.type === 'inline' && inline.children) {
+    let link;
+    for (const child of inline.children) {
+      if (child.type === 'link_open') {
+        if (link) {
+          return defaultListRenderRule(tokens, idx, options, env, self);
+        }
+        link = child;
+      }
+    }
+    if (!link) {
+      return defaultListRenderRule(tokens, idx, options, env, self);
+    }
+    const href = link.attrGet('href')!;
+    const dateString = getDateString(href);
+    if (dateString) {
+      const date = document.createElement('span');
+      date.classList.add('date');
+      date.innerText = dateString;
+      return defaultListRenderRule(tokens, idx, options, env, self) + date.outerHTML;
+    }
+  }
+  return defaultListRenderRule(tokens, idx, options, env, self);
 };
 
 export function renderMD(data: string, isCategory: boolean, noToc = false) {
