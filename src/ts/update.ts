@@ -130,10 +130,13 @@ export function updateTextCount() {
   const textCount = document.querySelector<HTMLElement>('#text-count');
   if (textCount) {
     let count = 0;
-    const exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
+    let exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
     document.querySelectorAll(`article > *:${exclude.map((e) => `not(${e})`).join(':')}`).forEach((element) => {
-      if (element.textContent) {
-        count += element.textContent.replace(/\s/g, '').length;
+      exclude = ['PICTURE'];
+      for (const child of element.childNodes) {
+        if (child.nodeType === 3 || !exclude.includes((child as Element).tagName)) {
+          count += child.textContent!.replace(/\s/g, '').length;
+        }
       }
     });
     const countStr = count.toString();
