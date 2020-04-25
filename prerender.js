@@ -123,6 +123,9 @@ async function getHtmlAndFiles(page, urlPath) {
     }
     code.innerHTML = `<a href="${hashPath}">#</a>`;
     bar.append(code);
+    document.querySelectorAll('picture .original').forEach((div) => {
+      div.remove();
+    });
     return [document.documentElement.outerHTML, files];
   }, getLastUpdatedDate(urlPath.split('#/')[1]));
 }
