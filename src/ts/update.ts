@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { escapeHTML, getWrapRegExp, splitFlag } from '@/ts/utils';
+import { escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
 import axios from 'axios';
 
 export function updateDD() {
@@ -83,7 +83,7 @@ export function updateImagePath() {
     img.classList.forEach((cls) => {
       if (['hidden', 'left', 'right'].includes(cls)) {
         parent.classList.add(cls);
-        img.classList.remove(cls);
+        removeClass(img, cls);
       }
     });
     let loadings = parent.previousElementSibling;
@@ -99,11 +99,11 @@ export function updateImagePath() {
       }
       if (img.naturalWidth === 0) {
         img.onload = () => {
-          parent.classList.remove('hidden');
+          removeClass(parent, 'hidden');
           loadings!.remove();
         };
       } else {
-        parent.classList.remove('hidden');
+        removeClass(parent, 'hidden');
         loadings.remove();
       }
     }

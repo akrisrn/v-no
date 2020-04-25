@@ -40,3 +40,10 @@ export function escapeHTML(html: string) {
     return symbols[symbol];
   });
 }
+
+export function removeClass(element: HTMLElement, cls: string) {
+  element.classList.remove(cls);
+  if (element.classList.length === 0) {
+    element.removeAttribute('class');
+  }
+}
