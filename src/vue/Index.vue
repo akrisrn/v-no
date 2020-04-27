@@ -40,7 +40,7 @@
             </main>
         </transition>
         <transition name="slide-fade">
-            <Comment :path="path" v-if="isHashMode && enableComment && !isError && !isIndex"/>
+            <Comment :path="path" v-if="!isLocalhost && isHashMode && !isError && !isIndex && enableComment"/>
         </transition>
         <span id="toggle-dark">★</span>
         <span id="to-top">〒</span>
@@ -85,6 +85,7 @@
     public params: { [index: string]: string | undefined } = {};
     public enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
     public isHashMode = isHashMode();
+    public isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname);
 
     public get path() {
       this.params = {};
