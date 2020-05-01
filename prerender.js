@@ -3,7 +3,6 @@ const url = require('url');
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
-const spawn = require('cross-spawn');
 
 ['.env', '.env.local', '.env.production.local'].forEach((filename) => {
   try {
@@ -17,29 +16,14 @@ const spawn = require('cross-spawn');
 });
 
 const host = process.env.PRERENDER_HOST;
-const dir = process.env.PRERENDER_DIR;
-const outDir = dir;
+const outDir = process.env.PRERENDER_DIR;
 const indexPath = process.env.VUE_APP_INDEX_PATH;
 const indexFile = process.env.VUE_APP_INDEX_FILE;
 const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
 
-if (!host || !dir) return;
+if (!host || !outDir) return;
 
 const index = url.resolve(host, indexPath);
-
-function getLastUpdatedDate(filepath) {
-  try {
-    let result = spawn.sync('git', ['log', '--format=%ct %s', filepath], {cwd: dir}).stdout.toString();
-    result = result.split('\n').filter(commit => commit && !commit.endsWith('small fix'));
-    if (result.length >= 2) {
-      const date = new Date(parseInt(result[0]) * 1000).toUTCString().split(' ');
-      return [date[0].substr(0, 3), date[2], date[1], date[3]].join(' ');
-    }
-    return '';
-  } catch (e) {
-    return '';
-  }
-}
 
 function writeHtml(filepath, html) {
   filepath = path.join(outDir, filepath);
@@ -69,22 +53,9 @@ async function getHtmlAndFiles(page, urlPath) {
   if (urlPath.endsWith('#/' + categoryFile)) {
     await page.waitForSelector('ul');
   }
-  return page.evaluate((lastUpdatedDate) => {
+  return page.evaluate(() => {
     if (document.querySelector('main.error')) {
       return [null, null];
-    }
-    const bar = document.querySelector('#bar');
-    if (lastUpdatedDate) {
-      const date = document.querySelector('footer .date');
-      if (date && date.innerText !== lastUpdatedDate) {
-        date.innerText = lastUpdatedDate + (date.innerText ? ' (Last Updated)' : '');
-      }
-      if (!bar.querySelector('.item-date')) {
-        const code = document.createElement('code');
-        code.classList.add('item-date');
-        code.innerText = lastUpdatedDate;
-        bar.insertBefore(code, bar.children[bar.querySelector('.item-home') ? 1 : 0]);
-      }
     }
     const files = [];
     for (const a of document.querySelectorAll('a')) {
@@ -122,12 +93,13 @@ async function getHtmlAndFiles(page, urlPath) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
     }
     code.innerHTML = `<a href="${hashPath}">#</a>`;
+    const bar = document.querySelector('#bar');
     bar.append(code);
     document.querySelectorAll('picture .original').forEach((div) => {
       div.remove();
     });
     return [document.documentElement.outerHTML, files];
-  }, getLastUpdatedDate(urlPath.split('#/')[1]));
+  });
 }
 
 const hasLoaded = [];
