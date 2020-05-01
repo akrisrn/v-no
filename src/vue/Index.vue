@@ -4,8 +4,8 @@
             <main :class="{error: isError}" v-if="isShow">
                 <div id="cover" v-if="cover">
                     <!--suppress HtmlUnknownTarget -->
-                    <picture :src="coverResize ? cover : false">
-                        <source v-if="coverResizeWebp" :srcset="coverResizeWebp" type="image/webp">
+                    <picture :data-src="coverResize ? cover : false">
+                        <source :srcset="coverResizeWebp" type="image/webp" v-if="coverResizeWebp">
                         <!--suppress HtmlUnknownTarget -->
                         <img :src="coverResize || cover" alt="cover"/>
                     </picture>
@@ -266,7 +266,7 @@
       });
     }
 
-    public setAuthor(data: string) {
+    public setAuthors(data: string) {
       return setFlag(data, `@${EFlag.author}:`, (match) => {
         this.authors = splitFlag(match);
       }, () => {
@@ -336,7 +336,7 @@
       if (this.path.endsWith('.md')) {
         axios.get(this.path).then((response) => {
           this.isError = false;
-          const data = this.setComment(this.setCover(this.setTags(this.setAuthor(response.data))));
+          const data = this.setComment(this.setCover(this.setTags(this.setAuthors(response.data))));
           if (process.env.VUE_APP_COMMON_FILE) {
             axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
               this.setData(data + '\n\n' + response2.data);

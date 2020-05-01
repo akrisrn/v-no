@@ -80,7 +80,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   }
   const picture = document.createElement('picture');
   if (!src.startsWith('http') && useResize) {
-    picture.setAttribute('src', src);
+    picture.setAttribute('data-src', src);
     const index = src.lastIndexOf('.');
     if (useWebp) {
       const source = document.createElement('source');

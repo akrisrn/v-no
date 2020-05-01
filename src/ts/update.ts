@@ -112,7 +112,7 @@ export function updateImagePath() {
     } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
       parent.classList.add('center');
     }
-    const originalSrc = picture.getAttribute('src');
+    const originalSrc = picture.getAttribute('data-src');
     if (originalSrc && !img.nextElementSibling) {
       const original = document.createElement('div');
       original.classList.add('original');
