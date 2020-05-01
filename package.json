@@ -36,7 +36,6 @@
     "@vue/cli-plugin-typescript": "^4.3.1",
     "@vue/cli-service": "^4.3.1",
     "babel-plugin-prismjs": "^2.0.1",
-    "cross-spawn": "^7.0.2",
     "dotenv": "^8.2.0",
     "puppeteer": "^3.0.0",
     "stylus": "^0.54.7",

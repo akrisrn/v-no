@@ -2582,7 +2582,7 @@ cross-spawn@^6.0.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cross-spawn@^7.0.0, cross-spawn@^7.0.2:
+cross-spawn@^7.0.0:
   version "7.0.2"
   resolved "https://registry.npm.taobao.org/cross-spawn/download/cross-spawn-7.0.2.tgz#d0d7dcfa74e89115c7619f4f721a94e1fdb716d6"
   integrity sha1-0Nfc+nTokRXHYZ9PchqU4f23FtY=
