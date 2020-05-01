@@ -15,6 +15,7 @@
                         <a @click.prevent="returnHome" href="/">«</a>
                     </code>
                     <code class="item-date" v-if="date">{{ date }}</code>
+                    <code class="item-date" v-else-if="updated">{{ updated }}</code>
                     <code class="item-author" v-for="author in authors">
                         <a :href="getAuthorLink(author)">{{ author }}</a>
                     </code>
@@ -35,7 +36,10 @@
                 </Article>
                 <footer class="markdown-body" v-if="!isHome">
                     <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
-                    <span class="date" v-if="!isError">{{ date }}</span>
+                    <template v-if="!isError">
+                        <span class="date" v-if="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
+                        <span class="date" v-else-if="updated">{{ updated }}</span>
+                    </template>
                 </footer>
             </main>
         </transition>
@@ -72,6 +76,7 @@
     public title = '';
     public authors: string[] = [];
     public tags: string[] = [];
+    public updated = '';
     public cover = '';
     public coverResize = '';
     public coverResizeWebp = '';
@@ -282,6 +287,14 @@
       });
     }
 
+    public setUpdated(data: string) {
+      return setFlag(data, `@${EFlag.updated}:`, (match) => {
+        this.updated = new Date(match).toDateString();
+      }, () => {
+        this.updated = '';
+      });
+    }
+
     public setCover(data: string) {
       return setFlag(data, `@${EFlag.cover}:`, (match) => {
         let cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
@@ -336,7 +349,7 @@
       if (this.path.endsWith('.md')) {
         axios.get(this.path).then((response) => {
           this.isError = false;
-          const data = this.setComment(this.setCover(this.setTags(this.setAuthors(response.data))));
+          const data = this.setComment(this.setCover(this.setUpdated(this.setTags(this.setAuthors(response.data)))));
           if (process.env.VUE_APP_COMMON_FILE) {
             axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
               this.setData(data + '\n\n' + response2.data);
