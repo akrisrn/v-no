@@ -162,13 +162,15 @@
     }
 
     public beforeRouteUpdate(to: any, from: any, next: () => void) {
+      this.isShow = false;
       next();
       this.isHashMode = isHashMode();
-      this.isShow = false;
-      document.querySelectorAll('.custom').forEach((element) => {
-        element.remove();
-      });
       this.updateData();
+      setTimeout(() => {
+        document.querySelectorAll('.custom').forEach((element) => {
+          element.remove();
+        });
+      }, 100);
     }
 
     @Watch('isShow')
@@ -294,11 +296,13 @@
     }
 
     public setData(data: string) {
-      this.isShow = true;
       const { data: newData, result: flags } = getFlags(data);
       this.setFlags(flags);
       this.data = newData;
       this.updateDescription();
+      setTimeout(() => {
+        this.isShow = true;
+      }, 100);
     }
 
     public updateDescription() {
