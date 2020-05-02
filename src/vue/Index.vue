@@ -52,9 +52,9 @@
 </template>
 
 <script lang="ts">
-  import { setFlag } from '@/ts/data';
+  import { getFlags } from '@/ts/data';
   import { getDateString } from '@/ts/date';
-  import { EFlag } from '@/ts/enums';
+  import { EFlag, IFlags } from '@/ts/enums';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
@@ -261,73 +261,43 @@
       this.$router.push(home);
     }
 
-    public setTitle(data: string) {
-      return setFlag(data, '^#', (match) => {
-        this.title = match;
-      }, () => {
-        this.title = this.path.substr(1);
-      }, () => {
-        document.title = this.title;
-      });
-    }
-
-    public setAuthors(data: string) {
-      return setFlag(data, `@${EFlag.author}:`, (match) => {
-        this.authors = splitFlag(match);
-      }, () => {
-        this.authors = [process.env.VUE_APP_AUTHOR];
-      });
-    }
-
-    public setTags(data: string) {
-      return setFlag(data, `@${EFlag.tags}:`, (match) => {
-        this.tags = splitFlag(match);
-      }, () => {
-        this.tags = [];
-      });
-    }
-
-    public setUpdated(data: string) {
-      return setFlag(data, `@${EFlag.updated}:`, (match) => {
-        this.updated = new Date(match).toDateString();
-      }, () => {
-        this.updated = '';
-      });
-    }
-
-    public setCover(data: string) {
-      return setFlag(data, `@${EFlag.cover}:`, (match) => {
-        let cover = match.startsWith('![](') ? match.substring(4, match.length - 1) : match;
-        const m = cover.match(/#\.(.+)$/);
-        if (m) {
+    public setFlags(flags: IFlags) {
+      this.title = flags.title ? flags.title : this.path.substr(1);
+      document.title = this.title;
+      this.authors = flags.author ? splitFlag(flags.author) : [process.env.VUE_APP_AUTHOR];
+      this.tags = flags.tags ? splitFlag(flags.tags) : [];
+      this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
+      if (flags.cover) {
+        let cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
+        const match = cover.match(/#\.(.+)$/);
+        if (match) {
           cover = cover.replace(/#.+$/, '');
-          if (!cover.startsWith('http') && m[1].startsWith('$')) {
+          if (!cover.startsWith('http') && match[1].startsWith('$')) {
             const index = cover.lastIndexOf('.');
             this.coverResize = `${cover.substring(0, index)}.resize${cover.substring(index)}`;
-            if (m[1] === '$$') {
+            if (match[1] === '$$') {
               this.coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
             }
           }
         }
         this.cover = cover;
-      }, () => {
+      } else {
         this.cover = '';
         this.coverResize = '';
         this.coverResizeWebp = '';
-      });
-    }
-
-    public setComment(data: string) {
-      return setFlag(data, `@${EFlag.comment}:`, (match) => {
-        this.enableComment = match.toLowerCase() === 'enable';
-      }, () => {
+      }
+      if (flags.comment) {
+        this.enableComment = flags.comment.toLowerCase() === 'enable';
+      } else {
         this.enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
-      });
+      }
     }
 
     public setData(data: string) {
       this.isShow = true;
-      this.data = this.setTitle(data);
+      const { data: newData, result: flags } = getFlags(data);
+      this.setFlags(flags);
+      this.data = newData;
       this.updateDescription();
     }
 
@@ -349,15 +319,14 @@
       if (this.path.endsWith('.md')) {
         axios.get(this.path).then((response) => {
           this.isError = false;
-          const data = this.setComment(this.setCover(this.setUpdated(this.setTags(this.setAuthors(response.data)))));
           if (process.env.VUE_APP_COMMON_FILE) {
             axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
-              this.setData(data + '\n\n' + response2.data);
+              this.setData(response.data + '\n\n' + response2.data);
             }).catch(() => {
-              this.setData(data);
+              this.setData(response.data);
             });
           } else {
-            this.setData(data);
+            this.setData(response.data);
           }
         }).catch((error) => {
           this.isError = true;
