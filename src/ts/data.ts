@@ -28,23 +28,12 @@ export function getIndexFileData(func: (data: string) => void) {
   });
 }
 
-export function setFlag(data: string, flag: string, onMatch?: (match: string) => void, onNotMatch?: () => void,
-                        onDone?: () => void) {
-  const match = data.match(getWrapRegExp(flag, '\n'));
+export function getFlag(data: string, flag: EFlag) {
+  const match = data.match(getWrapRegExp(`^@${flag}:`, '$', 'm'));
   if (match) {
-    if (onMatch) {
-      onMatch(match[1]);
-    }
-    data = data.replace(match[0], '');
-  } else {
-    if (onNotMatch) {
-      onNotMatch();
-    }
+    return match[1];
   }
-  if (onDone) {
-    onDone();
-  }
-  return data;
+  return '';
 }
 
 export function getFlags(data: string) {

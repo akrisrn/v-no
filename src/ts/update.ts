@@ -1,4 +1,4 @@
-import { getIndexFileData, getListFromData, setFlag } from '@/ts/data';
+import { getFlag, getIndexFileData, getListFromData } from '@/ts/data';
 import { getDateString, getTime } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
@@ -357,16 +357,13 @@ export function updateSearchListActual(params: { [index: string]: string | undef
           const data = response.data.trim();
           let isFind: boolean;
           if (queryType === EFlag.author) {
-            let dataAuthor = process.env.VUE_APP_AUTHOR;
-            setFlag(data, `@${EFlag.author}:`, (match) => {
-              dataAuthor = match;
-            });
-            isFind = dataAuthor.toLowerCase() === queryParam;
+            const dataAuthors = splitFlag(getFlag(data, EFlag.author).toLowerCase());
+            if (dataAuthors.length === 0) {
+              dataAuthors.push(process.env.VUE_APP_AUTHOR.toLowerCase());
+            }
+            isFind = dataAuthors.includes(queryParam!);
           } else if (queryType === EFlag.tags) {
-            let dataTags: string[] = [];
-            setFlag(data, `@${EFlag.tags}:`, (match) => {
-              dataTags = splitFlag(match.toLowerCase());
-            });
+            const dataTags = splitFlag(getFlag(data, EFlag.tags).toLowerCase());
             isFind = dataTags.includes(queryParam!);
           } else {
             isFind = data.toLowerCase().indexOf(queryContent) >= 0;
