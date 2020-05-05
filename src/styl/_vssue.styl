@@ -12,7 +12,7 @@ $vssue-breakpoint-mobile = $media-max-width
   margin 0 auto $unit * 5
   box-shadow $box-shadow
   background-color $main-background-color
-  transition padding $transition-duration, margin $transition-duration, color $transition-duration, background-color $transition-duration, border-top-color $transition-duration
+  transition padding 0.5s, margin 0.5s, color 0.5s, background-color 0.5s, border-top-color 0.5s
 
   @media screen and (max-width: $vssue-breakpoint-mobile)
     padding $unit * 3
@@ -26,7 +26,7 @@ $vssue-breakpoint-mobile = $media-max-width
     border-radius 3px
 
   .vssue-icon
-    transition fill $transition-duration
+    transition fill 0.5s
 
   .vssue-header
     padding 0
@@ -47,7 +47,7 @@ $vssue-breakpoint-mobile = $media-max-width
         fill darken($vssue-theme-color, 10)
 
     .vssue-new-comment-body
-      transition margin-left $transition-duration
+      transition margin-left 0.5s
 
       .vssue-new-comment-input
         padding 0
@@ -81,7 +81,7 @@ $vssue-breakpoint-mobile = $media-max-width
           padding $unit $unit * 2
           font-family $vssue-font-family
           font-size $font-size-s
-          transition color $transition-duration, border-color $transition-duration, background-color $transition-duration
+          transition color 0.5s, border-color 0.5s, background-color 0.5s
 
           &:not(:disabled).vssue-button-primary:hover
             color $background-color
@@ -128,7 +128,7 @@ $vssue-breakpoint-mobile = $media-max-width
           margin 0 $unit
 
       .vssue-pagination-link
-        transition color $transition-duration
+        transition color 0.5s
 
         &:hover
           color $info-color
@@ -143,7 +143,7 @@ $vssue-breakpoint-mobile = $media-max-width
         box-shadow none
 
       .vssue-comment-body
-        transition margin-left $transition-duration
+        transition margin-left 0.5s
 
         .vssue-comment-header
           padding 0
@@ -155,7 +155,7 @@ $vssue-breakpoint-mobile = $media-max-width
         .vssue-comment-main
           padding $unit * 2 0
           border none
-          transition padding $transition-duration
+          transition padding 0.5s
 
           @media screen and (max-width: $vssue-breakpoint-mobile)
             padding $unit 0

@@ -4,7 +4,7 @@ main
   margin $unit * 5 auto
   box-shadow $box-shadow
   background-color $main-background-color
-  transition padding $transition-duration, margin $transition-duration, background-color $transition-duration
+  transition padding 0.5s, margin 0.5s, background-color 0.5s
 
   @media screen and (max-width: $media-max-width)
     padding $unit * 3
@@ -78,7 +78,7 @@ main
 
       &.item-version
         opacity 0
-        transition opacity $transition-duration
+        transition opacity 0.5s
 
         &:hover
           opacity 1
@@ -105,4 +105,4 @@ main
       color $font-color
       cursor pointer
       opacity 0
-      transition opacity $transition-duration
+      transition opacity 0.5s
