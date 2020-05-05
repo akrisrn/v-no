@@ -18,11 +18,16 @@ main
     margin $unit-s * 2 0 $unit * 2
     padding-bottom $unit-s * 2
     border-bottom 1px solid $border-color
+    transition color 0.5s, border-bottom-color 0.5s
+
+  article
+    transition color 0.5s
 
   footer
     margin-top $unit * 2
     padding-top $unit
     border-top 1px solid $border-color
+    transition border-top-color 0.5s
 
     a.home:before
       content '« '
@@ -45,6 +50,8 @@ main
       max-height 600px
 
   #bar
+    transition color 0.5s
+
     code
       display inline-block
       font-size $font-size-xs

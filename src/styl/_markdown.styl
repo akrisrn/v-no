@@ -15,6 +15,7 @@
     color $link-font-color !important
     text-decoration none !important
     cursor pointer !important
+    transition color 0.5s
 
     &:hover
       text-decoration underline !important
@@ -23,10 +24,12 @@
     height 1px
     background-color transparent
     border-bottom 1px solid $border-color
+    transition border-bottom-color 0.5s
 
   h1, h2
     border-bottom-color $border-color
     padding-bottom $unit
+    transition border-bottom-color 0.5s
 
   p.left
     float left
@@ -48,6 +51,7 @@
   img
     margin-top $unit
     background-color transparent
+    transition filter 0.5s
 
     for i in 1..6
       {'&.w' + i * 100}
@@ -85,6 +89,10 @@
 
   pre
     background-color $pre-background-color
+    transition background-color 0.5s
+
+  code
+    transition background-color 0.5s
 
   blockquote
     margin $unit * 3 0
@@ -103,16 +111,19 @@
 
   kbd
     margin-bottom 3px
+    transition filter 0.5s
 
   table
     thead tr
       border-bottom 2px solid $border-color
+      transition border-bottom-color 0.5s
 
     tr
       border-top none
 
     tr + tr
       border-top 1px solid $border-color
+      transition border-top-color 0.5s
 
     tr, tr:nth-child(2n)
       background-color transparent
