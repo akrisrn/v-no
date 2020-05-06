@@ -36,6 +36,8 @@
     "babel-plugin-prismjs": "^2.0.1",
     "dotenv": "^8.2.0",
     "puppeteer": "^3.0.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "typescript": "^3.8.3",
