@@ -78,4 +78,4 @@
   }
 </script>
 
-<style lang="stylus">@import '../styl/article.styl'</style>
+<style lang="scss">@import "../scss/article";</style>

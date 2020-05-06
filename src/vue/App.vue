@@ -2,4 +2,4 @@
     <router-view/>
 </template>
 
-<style lang="stylus">@import '../styl/app.styl'</style>
+<style lang="scss">@import "../scss/app";</style>

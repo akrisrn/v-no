@@ -360,4 +360,4 @@
   }
 </script>
 
-<style lang="stylus">@import '../styl/home.styl'</style>
+<style lang="scss">@import "../scss/home";</style>

@@ -1,0 +1,413 @@
+@import "~github-markdown-css/github-markdown.css";
+@import "var";
+
+.markdown-body {
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $font-color;
+
+  > :first-child dt:first-of-type {
+    margin-top: 0 !important;
+  }
+
+  > :last-child dd:last-of-type {
+    margin-bottom: 0 !important;
+  }
+
+  a {
+    color: $link-font-color !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: color 0.5s;
+
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+
+  hr {
+    height: 1px;
+    background-color: transparent;
+    border-bottom: 1px solid $border-color;
+    transition: border-bottom-color 0.5s;
+  }
+
+  h1, h2 {
+    border-bottom-color: $border-color;
+    padding-bottom: $unit;
+    transition: border-bottom-color 0.5s, padding-bottom 0.5s;
+  }
+
+  p {
+    &.left {
+      float: left;
+      margin-right: $unit * 2;
+    }
+
+    &.right {
+      float: right;
+      margin-left: $unit * 2;
+    }
+
+    &.left, &.right {
+      margin-bottom: 0;
+
+      @media screen and (max-width: $media-max-width) {
+        float: none;
+        margin-right: 0;
+        margin-left: 0;
+        margin-bottom: $unit * 2;
+      }
+    }
+  }
+
+  img {
+    margin-top: $unit;
+    background-color: transparent;
+    transition: filter 0.5s;
+
+    @for $i from 1 through 6 {
+      &.w#{$i * 100} {
+        width: 100%;
+        max-width: $i * 100px;
+      }
+    }
+
+    @for $i from 1 through 5 {
+      &.h#{$i * 100} {
+        height: $i * 100px;
+      }
+    }
+  }
+
+  mark {
+    border-radius: 3px;
+    background-color: $mark-color-s;
+    box-shadow: 0.25em 0 0 $mark-color-s, -0.25em 0 0 $mark-color-s;
+  }
+
+  dl {
+    dt {
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    dd {
+      font-size: $font-size-s;
+      color: $gray-font-color;
+      padding: 0;
+
+      &:before {
+        content: "»";
+        margin-right: $unit;
+      }
+
+      + dd {
+        margin-top: -($unit * 2);
+      }
+    }
+
+    &.center dd:before {
+      content: none;
+    }
+  }
+
+  pre {
+    background-color: $pre-background-color;
+    transition: background-color 0.5s;
+  }
+
+  code {
+    transition: color 0.5s, background-color 0.5s;
+  }
+
+  blockquote {
+    margin: $unit * 3 0;
+    padding: 0 $unit * 4;
+    border-left: none;
+    position: relative;
+    color: $gray-font-color;
+
+    &:before {
+      font-family: Arial, serif;
+      content: "“";
+      font-size: 4em;
+      position: absolute;
+      top: -($unit * 4);
+      left: 0;
+    }
+  }
+
+  kbd {
+    margin-bottom: 3px;
+    transition: filter 0.5s;
+  }
+
+  table {
+    thead tr {
+      border-bottom: 2px solid $border-color;
+      transition: border-bottom-color 0.5s;
+    }
+
+    tr {
+      border-top: none;
+    }
+
+    tr + tr {
+      border-top: 1px solid $border-color;
+      transition: border-top-color 0.5s;
+    }
+
+    tr, tr:nth-child(2n) {
+      background-color: transparent;
+    }
+
+    td, th {
+      border: none;
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+
+  details {
+    overflow: auto;
+    margin: $unit * 3 0;
+    padding: 0 $unit * 2;
+    box-shadow: $box-shadow;
+    border-radius: 3px;
+    border-left: $unit-s solid $info-color-s;
+
+    ::-webkit-details-marker {
+      display: none;
+    }
+
+    ::-moz-list-bullet {
+      font-size: 0;
+    }
+
+    summary {
+      outline: none;
+      margin: 0 (-($unit * 2));
+      padding: $unit-s $unit * 2;
+      background-color: $info-color-xs;
+
+      h1, h2 {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        display: inline;
+      }
+
+      + * {
+        margin-top: $unit * 2;
+      }
+
+      &:after {
+        content: "▲";
+        float: right;
+        font-size: $font-size-s;
+        color: $info-color-s;
+      }
+    }
+
+    &:not([open]) summary:after {
+      content: "▼";
+    }
+
+    &.readonly summary {
+      pointer-events: none;
+
+      &:after {
+        content: none;
+      }
+    }
+
+    &.empty {
+      box-shadow: $box-shadow-2;
+
+      summary {
+        display: none;
+      }
+    }
+
+    &.success {
+      border-left-color: $success-color-s;
+
+      summary {
+        background-color: $success-color-xs;
+
+        &:after {
+          color: $success-color-s;
+        }
+      }
+    }
+
+    &.warning {
+      border-left-color: $warning-color-s;
+
+      summary {
+        background-color: $warning-color-xs;
+
+        &:after {
+          color: $warning-color-s;
+        }
+      }
+    }
+
+    &.danger {
+      border-left-color: $danger-color-s;
+
+      summary {
+        background-color: $danger-color-xs;
+
+        &:after {
+          color: $danger-color-s;
+        }
+      }
+    }
+  }
+
+  #toc {
+    font-size: $font-size-s;
+    margin-bottom: $unit * 2;
+
+    .ul-a, .ul-b {
+      display: inline-table;
+      max-width: ($max-width / 2) - 2;
+
+      @media screen and (max-width: $media-max-width) {
+        max-width: none;
+        width: 100%;
+      }
+    }
+
+    .ul-a {
+      margin-bottom: 0.25em;
+    }
+
+    .ul-b {
+      margin-bottom: 0;
+    }
+  }
+
+  .footnotes {
+    font-size: $font-size-s;
+    color: $gray-font-color;
+
+    ol {
+      margin-top: -($unit);
+      margin-bottom: -($unit * 2);
+
+      li + li p {
+        margin-top: 0;
+      }
+    }
+
+    .footnote-backref {
+      font-family: $font-family-no-emoji;
+    }
+  }
+
+  .count:before {
+    content: "-";
+    margin-left: $unit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    &:hover .heading-link {
+      opacity: 1;
+    }
+
+    .heading-link {
+      opacity: 0;
+      transition: opacity 0.5s;
+
+      &:before {
+        content: "#";
+        margin-left: 0.3em;
+        cursor: pointer;
+      }
+    }
+  }
+
+  div.code-toolbar > .toolbar {
+    margin-right: $unit;
+
+    .toolbar-item + .toolbar-item {
+      margin-left: 3px;
+    }
+
+    button {
+      cursor: pointer;
+      outline: none;
+    }
+
+    button, span {
+      background-color: $font-color;
+      color: $gray-font-color;
+      transition: color 0.5s;
+
+      &:hover {
+        color: $light-gray-font-color;
+      }
+    }
+  }
+
+  button.btn {
+    margin: 0 $unit-s $unit-s 0;
+    padding: $unit-s $unit * 2;
+    outline: none;
+    cursor: pointer;
+    font-family: $font-family;
+    font-size: $font-size-s;
+    font-weight: $strong-font-weight;
+    color: $font-color;
+    background-color: transparent;
+    border: 2px solid $info-color-s;
+    border-radius: 10px;
+    transition: color 0.5s, border-color 0.5s, background-color 0.5s;
+
+    &:hover {
+      background-color: $info-color-s;
+    }
+
+    &.success {
+      border-color: $success-color-s;
+
+      &:hover {
+        background-color: $success-color-s;
+      }
+    }
+
+    &.warning {
+      border-color: $warning-color-s;
+
+      &:hover {
+        background-color: $warning-color-s;
+      }
+    }
+
+    &.danger {
+      border-color: $danger-color-s;
+
+      &:hover {
+        background-color: $danger-color-s;
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: $light-gray-font-color;
+      background-color: $font-color;
+      border-color: $font-color;
+
+      &:hover {
+        background-color: $font-color;
+      }
+    }
+  }
+}
