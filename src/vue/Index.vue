@@ -46,9 +46,9 @@
         <transition name="slide-fade">
             <Comment :path="path" v-if="!isLocalhost && isHashMode && !isError && !isIndex && enableComment"/>
         </transition>
-        <span id="toggle-dark">★</span>
-        <span id="toggle-zen">◈</span>
-        <span id="to-top">〒</span>
+        <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ darkChars[isDark ? 1 : 0] }}</span>
+        <span :class="{dark: isDark, spin: isZen}" @click="isZen = !isZen" id="toggle-zen">{{ zenChar }}</span>
+        <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">{{ toTopChar }}</span>
     </div>
 </template>
 
@@ -85,9 +85,9 @@
     public isError = false;
     public isDark = false;
     public isZen = false;
-    public toggleDark: HTMLElement | null = null;
-    public toggleZen: HTMLElement | null = null;
-    public toTop: HTMLElement | null = null;
+    public darkChars = ['★', '☆'];
+    public zenChar = '◈';
+    public toTopChar = '〒';
     public keyInput = '';
     public inputBinds: { [index: string]: () => void } = {};
     public params: { [index: string]: string | undefined } = {};
@@ -188,18 +188,10 @@
       const metaThemeColor = document.querySelector('meta[name=theme-color]')!;
       if (this.isDark) {
         metaThemeColor.setAttribute('content', '#3B3B3B');
-        this.toggleDark!.innerText = '☆';
-        this.toggleDark!.classList.add('dark');
-        this.toggleZen!.classList.add('dark');
-        this.toTop!.classList.add('dark');
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
         metaThemeColor.setAttribute('content', '#FFFFFF');
-        this.toggleDark!.innerText = '★';
-        this.toggleDark!.classList.remove('dark');
-        this.toggleZen!.classList.remove('dark');
-        this.toTop!.classList.remove('dark');
         document.body.classList.remove('dark');
         localStorage.removeItem('dark');
       }
@@ -208,11 +200,9 @@
     @Watch('isZen')
     public onIsZenChanged() {
       if (this.isZen) {
-        this.toggleZen!.classList.add('spin');
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
-        this.toggleZen!.classList.remove('spin');
         document.body.classList.remove('zen');
         localStorage.removeItem('zen');
       }
@@ -225,7 +215,7 @@
       // @ts-ignore
       window.axios = axios;
       this.addInputBind('home', () => {
-        if (document.querySelector('.prerender')) {
+        if (document.body.classList.contains('prerender')) {
           location.href = '/';
         } else {
           this.returnHome();
@@ -262,18 +252,6 @@
             break;
           }
         }
-      });
-      this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
-      this.toggleDark.addEventListener('click', () => {
-        this.isDark = !this.isDark;
-      });
-      this.toggleZen = document.querySelector<HTMLElement>('#toggle-zen')!;
-      this.toggleZen.addEventListener('click', () => {
-        this.isZen = !this.isZen;
-      });
-      this.toTop = document.querySelector<HTMLElement>('#to-top')!;
-      this.toTop.addEventListener('click', () => {
-        this.scrollToTop()
       });
     }
 
