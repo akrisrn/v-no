@@ -47,6 +47,7 @@
             <Comment :path="path" v-if="!isLocalhost && isHashMode && !isError && !isIndex && enableComment"/>
         </transition>
         <span id="toggle-dark">★</span>
+        <span id="toggle-zen">◈</span>
         <span id="to-top">〒</span>
     </div>
 </template>
@@ -83,7 +84,9 @@
     public isShow = false;
     public isError = false;
     public isDark = false;
+    public isZen = false;
     public toggleDark: HTMLElement | null = null;
+    public toggleZen: HTMLElement | null = null;
     public toTop: HTMLElement | null = null;
     public keyInput = '';
     public inputBinds: { [index: string]: () => void } = {};
@@ -187,6 +190,7 @@
         metaThemeColor.setAttribute('content', '#3B3B3B');
         this.toggleDark!.innerText = '☆';
         this.toggleDark!.classList.add('dark');
+        this.toggleZen!.classList.add('dark');
         this.toTop!.classList.add('dark');
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
@@ -194,9 +198,23 @@
         metaThemeColor.setAttribute('content', '#FFFFFF');
         this.toggleDark!.innerText = '★';
         this.toggleDark!.classList.remove('dark');
+        this.toggleZen!.classList.remove('dark');
         this.toTop!.classList.remove('dark');
         document.body.classList.remove('dark');
         localStorage.removeItem('dark');
+      }
+    }
+
+    @Watch('isZen')
+    public onIsZenChanged() {
+      if (this.isZen) {
+        this.toggleZen!.classList.add('spin');
+        document.body.classList.add('zen');
+        localStorage.setItem('zen', String(true));
+      } else {
+        this.toggleZen!.classList.remove('spin');
+        document.body.classList.remove('zen');
+        localStorage.removeItem('zen');
       }
     }
 
@@ -223,10 +241,14 @@
       this.addInputBind('dark', () => {
         this.isDark = !this.isDark;
       });
+      this.addInputBind('zen', () => {
+        this.isZen = !this.isZen;
+      });
       this.addInputBind('Backspace', () => {
         this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
       });
       this.isDark = !!localStorage.getItem('dark');
+      this.isZen = !!localStorage.getItem('zen');
       this.updateData();
     }
 
@@ -244,6 +266,10 @@
       this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
       this.toggleDark.addEventListener('click', () => {
         this.isDark = !this.isDark;
+      });
+      this.toggleZen = document.querySelector<HTMLElement>('#toggle-zen')!;
+      this.toggleZen.addEventListener('click', () => {
+        this.isZen = !this.isZen;
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {

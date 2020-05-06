@@ -1,4 +1,4 @@
-#toggle-dark, #to-top
+#toggle-dark, #toggle-zen, #to-top
   position fixed
   right $unit * 2
   cursor pointer
@@ -14,6 +14,14 @@
 
 #toggle-dark
   top $unit * 2
+
+#toggle-zen
+  top $unit * 6
+  transform rotate(-45deg)
+  transition color 0.5s, transform 0.5s
+
+  &.spin
+    transform rotate(0deg)
 
 #to-top
   bottom $unit
