@@ -15,10 +15,10 @@
   }
 
   a {
-    color: $link-font-color !important;
-    text-decoration: none !important;
     cursor: pointer !important;
     transition: color 0.5s;
+    text-decoration: none !important;
+    color: $link-font-color !important;
 
     &:hover {
       text-decoration: underline !important;
@@ -27,15 +27,15 @@
 
   hr {
     height: 1px;
-    background-color: transparent;
-    border-bottom: 1px solid $border-color;
     transition: border-bottom-color 0.5s;
+    border-bottom: 1px solid $border-color;
+    background-color: transparent;
   }
 
   h1, h2 {
-    border-bottom-color: $border-color;
     padding-bottom: $unit;
     transition: border-bottom-color 0.5s, padding-bottom 0.5s;
+    border-bottom-color: $border-color;
   }
 
   p {
@@ -55,16 +55,16 @@
       @media screen and (max-width: $media-max-width) {
         float: none;
         margin-right: 0;
-        margin-left: 0;
         margin-bottom: $unit * 2;
+        margin-left: 0;
       }
     }
   }
 
   img {
     margin-top: $unit;
-    background-color: transparent;
     transition: filter 0.5s;
+    background-color: transparent;
 
     @for $i from 1 through 6 {
       &.w#{$i * 100} {
@@ -88,18 +88,18 @@
 
   dl {
     dt {
-      font-style: normal;
       font-weight: normal;
+      font-style: normal;
     }
 
     dd {
       font-size: $font-size-s;
-      color: $gray-font-color;
       padding: 0;
+      color: $gray-font-color;
 
       &:before {
-        content: "»";
         margin-right: $unit;
+        content: "»";
       }
 
       + dd {
@@ -113,8 +113,8 @@
   }
 
   pre {
-    background-color: $pre-background-color;
     transition: background-color 0.5s;
+    background-color: $pre-background-color;
   }
 
   code {
@@ -122,19 +122,19 @@
   }
 
   blockquote {
+    position: relative;
     margin: $unit * 3 0;
     padding: 0 $unit * 4;
-    border-left: none;
-    position: relative;
     color: $gray-font-color;
+    border-left: none;
 
     &:before {
       font-family: Arial, serif;
-      content: "“";
       font-size: 4em;
       position: absolute;
       top: -($unit * 4);
       left: 0;
+      content: "“";
     }
   }
 
@@ -145,8 +145,8 @@
 
   table {
     thead tr {
-      border-bottom: 2px solid $border-color;
       transition: border-bottom-color 0.5s;
+      border-bottom: 2px solid $border-color;
     }
 
     tr {
@@ -154,8 +154,8 @@
     }
 
     tr + tr {
-      border-top: 1px solid $border-color;
       transition: border-top-color 0.5s;
+      border-top: 1px solid $border-color;
     }
 
     tr, tr:nth-child(2n) {
@@ -175,9 +175,9 @@
     overflow: auto;
     margin: $unit * 3 0;
     padding: 0 $unit * 2;
-    box-shadow: $box-shadow;
-    border-radius: 3px;
     border-left: $unit-s solid $info-color-s;
+    border-radius: 3px;
+    box-shadow: $box-shadow;
 
     ::-webkit-details-marker {
       display: none;
@@ -188,14 +188,14 @@
     }
 
     summary {
-      outline: none;
       margin: 0 (-($unit * 2));
       padding: $unit-s $unit * 2;
+      outline: none;
       background-color: $info-color-xs;
 
       h1, h2 {
-        border-bottom: none;
         padding-bottom: 0;
+        border-bottom: none;
       }
 
       h1, h2, h3, h4, h5, h6 {
@@ -207,9 +207,9 @@
       }
 
       &:after {
-        content: "▲";
-        float: right;
         font-size: $font-size-s;
+        float: right;
+        content: "▲";
         color: $info-color-s;
       }
     }
@@ -280,8 +280,8 @@
       max-width: ($max-width / 2) - 2;
 
       @media screen and (max-width: $media-max-width) {
-        max-width: none;
         width: 100%;
+        max-width: none;
       }
     }
 
@@ -313,8 +313,8 @@
   }
 
   .count:before {
-    content: "-";
     margin-left: $unit;
+    content: "-";
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -323,12 +323,12 @@
     }
 
     .heading-link {
-      opacity: 0;
       transition: opacity 0.5s;
+      opacity: 0;
 
       &:before {
-        content: "#";
         margin-left: 0.3em;
+        content: "#";
         cursor: pointer;
       }
     }
@@ -347,9 +347,9 @@
     }
 
     button, span {
-      background-color: $font-color;
-      color: $gray-font-color;
       transition: color 0.5s;
+      color: $gray-font-color;
+      background-color: $font-color;
 
       &:hover {
         color: $light-gray-font-color;
@@ -358,18 +358,18 @@
   }
 
   button.btn {
-    margin: 0 $unit-s $unit-s 0;
-    padding: $unit-s $unit * 2;
-    outline: none;
-    cursor: pointer;
     font-family: $font-family;
     font-size: $font-size-s;
     font-weight: $strong-font-weight;
+    margin: 0 $unit-s $unit-s 0;
+    padding: $unit-s $unit * 2;
+    cursor: pointer;
+    transition: color 0.5s, border-color 0.5s, background-color 0.5s;
     color: $font-color;
-    background-color: transparent;
     border: 2px solid $info-color-s;
     border-radius: 10px;
-    transition: color 0.5s, border-color 0.5s, background-color 0.5s;
+    outline: none;
+    background-color: transparent;
 
     &:hover {
       background-color: $info-color-s;
@@ -402,8 +402,8 @@
     &:disabled {
       cursor: not-allowed;
       color: $light-gray-font-color;
-      background-color: $font-color;
       border-color: $font-color;
+      background-color: $font-color;
 
       &:hover {
         background-color: $font-color;

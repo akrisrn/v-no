@@ -1,12 +1,12 @@
 @import "var";
 
 #toggle-dark, #toggle-zen, #to-top {
+  font-size: $unit * 3;
   position: fixed;
   right: $unit * 2;
   cursor: pointer;
-  font-size: $unit * 3;
-  color: transparent;
   transition: color 0.5s;
+  color: transparent;
 
   &:hover {
     color: $font-color;
@@ -23,8 +23,8 @@
 
 #toggle-zen {
   top: $unit * 6;
-  transform: rotate(-45deg);
   transition: color 0.5s, transform 0.5s;
+  transform: rotate(-45deg);
 
   &.spin {
     transform: rotate(0deg);

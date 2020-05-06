@@ -2,26 +2,26 @@
 
 main {
   max-width: $max-width;
-  padding: $unit * 5 $unit * 7;
   margin: $unit * 5 auto;
-  box-shadow: $box-shadow;
-  background-color: $main-background-color;
+  padding: $unit * 5 $unit * 7;
   transition: padding 0.5s, margin 0.5s, background-color 0.5s, box-shadow 0.5s;
+  background-color: $main-background-color;
+  box-shadow: $box-shadow;
 
   @media screen and (max-width: $media-max-width) {
-    padding: $unit * 3;
     margin: 0 auto;
+    padding: $unit * 3;
   }
 
   header {
-    color: $font-color;
     font-family: $font-family;
     font-size: $unit * 4;
     font-weight: $strong-font-weight;
     margin: $unit-s * 2 0 $unit * 2;
     padding-bottom: $unit-s * 2;
-    border-bottom: 1px solid $border-color;
     transition: color 0.5s, border-bottom-color 0.5s, padding-bottom 0.5s;
+    color: $font-color;
+    border-bottom: 1px solid $border-color;
   }
 
   article {
@@ -29,12 +29,12 @@ main {
   }
 
   footer {
-    opacity: 1;
     height: 27px;
     margin-top: $unit * 2;
     padding-top: $unit;
-    border-top: 1px solid $border-color;
     transition: border-top-color 0.5s, opacity 0.5s, height 0.5s, margin-top 0.5s, padding-top 0.5s;
+    opacity: 1;
+    border-top: 1px solid $border-color;
 
     a.home:before {
       content: "« ";
@@ -43,8 +43,8 @@ main {
 
   .date {
     float: right;
-    color: $gray-font-color;
     transition: color 0.5s;
+    color: $gray-font-color;
   }
 
   .hidden {
@@ -66,16 +66,16 @@ main {
   }
 
   #bar {
-    opacity: 1;
     height: 27px;
     transition: color 0.5s, opacity 0.5s, height 0.5s;
+    opacity: 1;
 
     code {
-      display: inline-block;
       font-size: $font-size-xs;
+      display: inline-block;
+      margin-right: $unit;
       padding-top: 0;
       padding-bottom: 0;
-      margin-right: $unit;
 
       &.item-date {
         background-color: $info-color-xs;
@@ -85,8 +85,8 @@ main {
         background-color: $success-color-xs;
 
         &:before {
-          content: "@";
           margin-right: 2px;
+          content: "@";
         }
       }
 
@@ -94,8 +94,8 @@ main {
         background-color: $warning-color-xs;
 
         &:before {
-          content: "#";
           margin-right: 2px;
+          content: "#";
         }
       }
 
@@ -103,14 +103,14 @@ main {
         background-color: $danger-color-xs;
 
         &:after {
-          content: "W";
           margin-left: 2px;
+          content: "W";
         }
       }
 
       &.item-version {
-        opacity: 0;
         transition: opacity 0.5s;
+        opacity: 0;
 
         &:hover {
           opacity: 1;
@@ -129,21 +129,21 @@ main {
     }
 
     .original {
+      font-family: $font-family;
+      font-size: $font-size-xs;
+      font-weight: $strong-font-weight;
+      line-height: $line-height;
       position: absolute;
       right: 0;
       bottom: 0;
       margin: 0 $unit $unit * 2 0;
       padding: 0 $unit;
-      background-color: $main-background-color;
-      border-radius: 10px;
-      font-family: $font-family;
-      font-size: $font-size-xs;
-      font-weight: $strong-font-weight;
-      line-height: $line-height;
-      color: $font-color;
       cursor: pointer;
-      opacity: 0;
       transition: opacity 0.5s;
+      opacity: 0;
+      color: $font-color;
+      border-radius: 10px;
+      background-color: $main-background-color;
     }
   }
 }

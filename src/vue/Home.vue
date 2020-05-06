@@ -1,52 +1,52 @@
 <template>
-    <div>
-        <transition name="slide-fade">
-            <main :class="{error: isError}" v-if="isShow">
-                <div id="cover" v-if="cover">
-                    <!--suppress HtmlUnknownTarget -->
-                    <picture :data-src="coverResize ? cover : false">
-                        <source :srcset="coverResizeWebp" type="image/webp" v-if="coverResizeWebp">
-                        <!--suppress HtmlUnknownTarget -->
-                        <img :src="coverResize || cover" alt="cover"/>
-                    </picture>
-                </div>
-                <div class="markdown-body" id="bar" v-if="!isError">
-                    <code class="item-home" v-if="!isHome">
-                        <a @click.prevent="returnHome" href="/">«</a>
-                    </code>
-                    <code class="item-date" v-if="date">{{ date }}</code>
-                    <code class="item-date" v-else-if="updated">{{ updated }}</code>
-                    <code class="item-author" v-for="author in authors">
-                        <a :href="getAuthorLink(author)">{{ author }}</a>
-                    </code>
-                    <code class="item-tag" v-for="tag in tags">
-                        <a :href="getTagLink(tag)">{{ tag }}</a>
-                    </code>
-                    <code class="item-count">
-                        <span id="text-count"/>
-                    </code>
-                    <code class="item-raw">
-                        <a :href="path" target="_blank">Raw</a>
-                    </code>
-                </div>
-                <header>{{ title }}</header>
-                <!--suppress JSUnresolvedVariable -->
-                <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
-                         @update:data="data = $event">
-                </Article>
-                <footer class="markdown-body" v-if="!isHome">
-                    <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
-                    <template v-if="!isError">
-                        <span class="date" v-if="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
-                        <span class="date" v-else-if="updated">{{ updated }}</span>
-                    </template>
-                </footer>
-            </main>
-        </transition>
-        <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ darkChars[isDark ? 1 : 0] }}</span>
-        <span :class="{dark: isDark, spin: isZen}" @click="isZen = !isZen" id="toggle-zen">{{ zenChar }}</span>
-        <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">{{ toTopChar }}</span>
-    </div>
+  <div>
+    <transition name="slide-fade">
+      <main :class="{error: isError}" v-if="isShow">
+        <div id="cover" v-if="cover">
+          <!--suppress HtmlUnknownTarget -->
+          <picture :data-src="coverResize ? cover : false">
+            <source :srcset="coverResizeWebp" type="image/webp" v-if="coverResizeWebp">
+            <!--suppress HtmlUnknownTarget -->
+            <img :src="coverResize || cover" alt="cover"/>
+          </picture>
+        </div>
+        <div class="markdown-body" id="bar" v-if="!isError">
+          <code class="item-home" v-if="!isHome">
+            <a @click.prevent="returnHome" href="/">«</a>
+          </code>
+          <code class="item-date" v-if="date">{{ date }}</code>
+          <code class="item-date" v-else-if="updated">{{ updated }}</code>
+          <code class="item-author" v-for="author in authors">
+            <a :href="getAuthorLink(author)">{{ author }}</a>
+          </code>
+          <code class="item-tag" v-for="tag in tags">
+            <a :href="getTagLink(tag)">{{ tag }}</a>
+          </code>
+          <code class="item-count">
+            <span id="text-count"/>
+          </code>
+          <code class="item-raw">
+            <a :href="path" target="_blank">Raw</a>
+          </code>
+        </div>
+        <header>{{ title }}</header>
+        <!--suppress JSUnresolvedVariable -->
+        <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
+                 @update:data="data = $event">
+        </Article>
+        <footer class="markdown-body" v-if="!isHome">
+          <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
+          <template v-if="!isError">
+            <span class="date" v-if="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
+            <span class="date" v-else-if="updated">{{ updated }}</span>
+          </template>
+        </footer>
+      </main>
+    </transition>
+    <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ darkChars[isDark ? 1 : 0] }}</span>
+    <span :class="{dark: isDark, spin: isZen}" @click="isZen = !isZen" id="toggle-zen">{{ zenChar }}</span>
+    <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">{{ toTopChar }}</span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -181,11 +181,11 @@
     public onIsDarkChanged() {
       const metaThemeColor = document.querySelector('meta[name=theme-color]')!;
       if (this.isDark) {
-        metaThemeColor.setAttribute('content', '#3B3B3B');
+        metaThemeColor.setAttribute('content', '#3b3b3b');
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
-        metaThemeColor.setAttribute('content', '#FFFFFF');
+        metaThemeColor.setAttribute('content', '#ffffff');
         document.body.classList.remove('dark');
         localStorage.removeItem('dark');
       }

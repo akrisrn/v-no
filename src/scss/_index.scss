@@ -9,8 +9,8 @@
         display: inline;
 
         + li:before {
-          content: "|";
           margin-right: $unit-s * 2;
+          content: "|";
         }
       }
     }
@@ -19,23 +19,23 @@
       padding-left: 0;
 
       li {
-        list-style: none;
         overflow: hidden;
-        text-overflow: ellipsis;
+        list-style: none;
         white-space: nowrap;
+        text-overflow: ellipsis;
 
         &:before {
-          content: "»";
           margin-right: $unit;
+          content: "»";
         }
 
         blockquote {
+          font-size: $font-size-s;
           font-style: normal;
           margin: 0;
-          padding-left: $unit * 2;
           padding-right: 0;
+          padding-left: $unit * 2;
           white-space: normal;
-          font-size: $font-size-s;
 
           &:before {
             content: none;
@@ -43,15 +43,15 @@
         }
 
         code {
+          font-family: $font-family;
+          font-size: $font-size-xs;
+          padding: 0;
           color: $gray-font-color;
           background-color: transparent !important;
-          padding: 0;
-          font-size: $font-size-xs;
-          font-family: $font-family;
 
           &:before {
-            content: "#";
             margin-right: 2px;
+            content: "#";
           }
         }
 
@@ -64,26 +64,26 @@
 
   #search-input {
     width: 100%;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    border-left: 6px solid $info-color-s;
     padding-left: 16px;
     transition: color 0.5s;
+    border: none;
+    border-left: 6px solid $info-color-s;
+    outline: none;
+    background-color: transparent;
   }
 
   #result span {
     &.hl {
-      color: $danger-color;
       font-weight: $strong-font-weight;
+      color: $danger-color;
     }
 
     &.ellipsis {
-      color: $info-color;
-      font-weight: $strong-font-weight;
       font-size: 30px;
+      font-weight: $strong-font-weight;
       line-height: 0;
       margin: 0 3px;
+      color: $info-color;
     }
   }
 }

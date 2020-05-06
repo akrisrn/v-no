@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="<%= VUE_APP_LANG %>">
 <head>
-    <meta charset="utf-8">
-    <meta content="#efefef" name="theme-color">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width,initial-scale=1.0" name="viewport">
-    <meta content="" name="description">
-    <!--suppress HtmlUnknownTarget -->
-    <link href="<%= VUE_APP_FAVICON %>" rel="icon">
-    <title></title>
-    <!--@formatter:off-->
+  <meta charset="utf-8">
+  <meta content="#efefef" name="theme-color">
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <meta content="" name="description">
+  <!--suppress HtmlUnknownTarget -->
+  <link href="<%= VUE_APP_FAVICON %>" rel="icon">
+  <title></title>
+  <!--@formatter:off-->
     <!--suppress CssUnusedSymbol -->
     <style>body{background-color:#F1F1F1}body.dark{background-color:#2B2B2B}</style>
     <!--@formatter:on-->
 </head>
 <body>
 <!--@formatter:off-->
-<script>document.querySelector('meta[name=theme-color]').setAttribute('content',localStorage.getItem('dark')?'#3B3B3B':'#FFFFFF');if(localStorage.getItem('dark')){document.body.classList.add('dark')}else{document.body.classList.remove('dark')}</script>
+<script>document.querySelector('meta[name=theme-color]').setAttribute('content',localStorage.getItem('dark')?'#3b3b3b':'#ffffff');if(localStorage.getItem('dark')){document.body.classList.add('dark')}else{document.body.classList.remove('dark')}</script>
 <!--@formatter:on-->
 <noscript>
-    <strong>
-        We're sorry but this application doesn't work properly without JavaScript enabled. Please enable it to continue.
-    </strong>
+  <strong>
+    We're sorry but this application doesn't work properly without JavaScript enabled. Please enable it to continue.
+  </strong>
 </noscript>
 <div id="app"></div>
 <!-- built files will be auto injected -->

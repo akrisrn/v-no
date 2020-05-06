@@ -1,5 +1,5 @@
 <template>
-    <article :class="classObject" v-html="markdown"/>
+  <article :class="classObject" v-html="markdown"/>
 </template>
 
 <script lang="ts">
