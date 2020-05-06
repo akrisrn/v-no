@@ -31,22 +31,23 @@
     padding-bottom $unit
     transition border-bottom-color 0.5s, padding-bottom 0.5s
 
-  p.left
-    float left
-    margin-right $unit * 2
+  p
+    &.left
+      float left
+      margin-right $unit * 2
 
-  p.right
-    float right
-    margin-left $unit * 2
+    &.right
+      float right
+      margin-left $unit * 2
 
-  p.left, p.right
-    margin-bottom 0
+    &.left, &.right
+      margin-bottom 0
 
-    @media screen and (max-width: $media-max-width)
-      float none
-      margin-right 0
-      margin-left 0
-      margin-bottom $unit * 2
+      @media screen and (max-width: $media-max-width)
+        float none
+        margin-right 0
+        margin-left 0
+        margin-bottom $unit * 2
 
   img
     margin-top $unit
@@ -92,7 +93,7 @@
     transition background-color 0.5s
 
   code
-    transition background-color 0.5s
+    transition color 0.5s, background-color 0.5s
 
   blockquote
     margin $unit * 3 0
@@ -102,7 +103,7 @@
     color $gray-font-color
 
     &:before
-      font-family Arial
+      font-family Arial, serif
       content '“'
       font-size 4em
       position absolute
@@ -170,9 +171,8 @@
         font-size $font-size-s
         color $info-color-s
 
-    &:not([open])
-      summary:after
-        content '▼'
+    &:not([open]) summary:after
+      content '▼'
 
     &.readonly summary
       pointer-events none
@@ -250,18 +250,17 @@
     margin-left $unit
 
   h1, h2, h3, h4, h5, h6
-    &:hover
-      .heading-link
-        opacity 1
+    &:hover .heading-link
+      opacity 1
 
-  .heading-link
-    opacity 0
-    transition opacity 0.5s
+    .heading-link
+      opacity 0
+      transition opacity 0.5s
 
-    &:before
-      content '#'
-      margin-left 0.3em
-      cursor pointer
+      &:before
+        content '#'
+        margin-left 0.3em
+        cursor pointer
 
   div.code-toolbar > .toolbar
     margin-right $unit

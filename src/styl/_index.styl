@@ -1,51 +1,52 @@
 .index
-  ul.toc.tags
-    padding-left 0
+  ul
+    &.toc.tags
+      padding-left 0
 
-    li
-      display inline
+      li
+        display inline
 
-      + li:before
-        content '|'
-        margin-right $unit-s * 2
+        + li:before
+          content '|'
+          margin-right $unit-s * 2
 
-  ul:not(.toc)
-    padding-left 0
+    &:not(.toc)
+      padding-left 0
 
-    li
-      list-style none
-      overflow hidden
-      text-overflow ellipsis
-      white-space nowrap
-
-      &:before
-        content '»'
-        margin-right $unit
-
-      blockquote
-        font-style normal
-        margin 0
-        padding-left $unit * 2
-        padding-right 0
-        white-space normal
-        font-size $font-size-s
+      li
+        list-style none
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
 
         &:before
-          content none
+          content '»'
+          margin-right $unit
 
-      code
-        color $gray-font-color
-        background-color transparent !important
-        padding 0
-        font-size $font-size-xs
-        font-family $font-family
+        blockquote
+          font-style normal
+          margin 0
+          padding-left $unit * 2
+          padding-right 0
+          white-space normal
+          font-size $font-size-s
 
-        &:before
-          content '#'
-          margin-right 2px
+          &:before
+            content none
 
-      .date
-        margin-left $unit
+        code
+          color $gray-font-color
+          background-color transparent !important
+          padding 0
+          font-size $font-size-xs
+          font-family $font-family
+
+          &:before
+            content '#'
+            margin-right 2px
+
+        .date
+          margin-left $unit
 
   #search-input
     width 100%

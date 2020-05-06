@@ -1,33 +1,25 @@
-body
-  main footer, main #bar, .custom
-    opacity: 1;
+body.zen
+  main
+    padding-top 0
+    padding-bottom 0
+    box-shadow none
+    background-color transparent !important
 
-  &.zen
-    main
-      padding-top: 0;
-      padding-bottom: 0;
-      box-shadow: none;
+    #cover
+      margin-bottom 0
 
-      #cover
-        margin-bottom: 0;
+    header, article h1, article h2
+      padding-bottom 0
+      border-bottom-color transparent !important
 
-      header, .markdown-body h1, .markdown-body h2
-        padding-bottom: 0;
+    footer, #bar
+      overflow hidden
+      height 0
+      opacity 0
 
-      footer, #bar
-        overflow: hidden;
-        height: 0;
-        opacity: 0;
+    footer
+      margin-top 0
+      padding-top 0
 
-      footer
-        margin-top: 0;
-        padding-top: 0;
-
-      &, body.dark &
-        background-color: transparent !important;
-
-        header, .markdown-body h1, .markdown-body h2
-          border-bottom-color: transparent !important;
-
-    .custom
-      opacity: 0;
+  .custom
+    opacity 0

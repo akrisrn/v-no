@@ -1,32 +1,51 @@
 body.dark
-  header
-    border-bottom-color $dark-border-color !important
-
-  header, .markdown-body, .btn, #search-input
-    color $dark-font-color !important
-
-  .markdown-body
-    a
-      color $dark-link-font-color !important
-
-    hr, h1, h2
-      border-bottom-color $dark-border-color !important
-
-    pre, code
-      background-color $dark-pre-background-color !important
-
-    table
-      thead tr
-        border-bottom-color $dark-border-color !important
-
-      tr + tr
-        border-top-color $dark-border-color !important
-
-    img, kbd
-      filter brightness($dark-image-brightness) !important
-
   main
     background-color $dark-main-background-color !important
 
-  footer
-    border-top-color $dark-border-color !important
+    #bar
+      code
+        color $dark-font-color !important
+        background-color $dark-pre-background-color !important
+
+        a
+          color $dark-link-font-color !important
+
+    header
+      color $dark-font-color !important
+      border-bottom-color $dark-border-color !important
+
+    article
+      &, .btn, #search-input
+        color $dark-font-color !important
+
+      a
+        color $dark-link-font-color !important
+
+      hr, h1, h2
+        border-bottom-color $dark-border-color !important
+
+      pre, code
+        background-color $dark-pre-background-color !important
+
+      table
+        thead tr
+          border-bottom-color $dark-border-color !important
+
+        tr + tr
+          border-top-color $dark-border-color !important
+
+      img, kbd
+        filter brightness($dark-image-brightness) !important
+
+    footer
+      border-top-color $dark-border-color !important
+
+      a
+        color $dark-link-font-color !important
+
+    .date
+      color $dark-font-color !important
+
+  .custom
+    img
+      filter brightness($dark-image-brightness) !important
