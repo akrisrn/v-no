@@ -236,7 +236,7 @@
         this.keyInput += '_';
       });
       this.addInputBind('G', () => {
-        scroll(0);
+        this.scrollToTop();
       });
       this.addInputBind('dark', () => {
         this.isDark = !this.isDark;
@@ -273,7 +273,7 @@
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
-        scroll(0);
+        this.scrollToTop()
       });
     }
 
@@ -385,6 +385,10 @@
 
     public getTagLink(tag: string) {
       return getQueryLink(EFlag.tags, tag);
+    }
+
+    public scrollToTop() {
+      scroll(0);
     }
   }
 </script>
