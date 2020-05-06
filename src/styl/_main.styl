@@ -4,7 +4,7 @@ main
   margin $unit * 5 auto
   box-shadow $box-shadow
   background-color $main-background-color
-  transition padding 0.5s, margin 0.5s, background-color 0.5s
+  transition padding 0.5s, margin 0.5s, background-color 0.5s, box-shadow 0.5s
 
   @media screen and (max-width: $media-max-width)
     padding $unit * 3
@@ -18,16 +18,17 @@ main
     margin $unit-s * 2 0 $unit * 2
     padding-bottom $unit-s * 2
     border-bottom 1px solid $border-color
-    transition color 0.5s, border-bottom-color 0.5s
+    transition color 0.5s, border-bottom-color 0.5s, padding-bottom 0.5s
 
   article
     transition color 0.5s
 
   footer
+    height: 27px;
     margin-top $unit * 2
     padding-top $unit
     border-top 1px solid $border-color
-    transition border-top-color 0.5s
+    transition border-top-color 0.5s, opacity 0.5s, height 0.5s, margin-top 0.5s, padding-top 0.5s
 
     a.home:before
       content '« '
@@ -44,13 +45,15 @@ main
 
   #cover
     margin-bottom $unit-s * 2
+    transition margin-bottom 0.5s
 
     img
       max-width 100%
       max-height 600px
 
   #bar
-    transition color 0.5s
+    height: 27px;
+    transition color 0.5s, opacity 0.5s, height 0.5s
 
     code
       display inline-block
