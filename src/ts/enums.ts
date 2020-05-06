@@ -4,7 +4,6 @@ export enum EFlag {
   tags = 'tags',
   updated = 'updated',
   cover = 'cover',
-  comment = 'comment',
 }
 
 export interface IFlags {
@@ -13,7 +12,6 @@ export interface IFlags {
   tags?: string;
   updated?: string;
   cover?: string;
-  comment?: string;
 
   [index: string]: string | undefined;
 }

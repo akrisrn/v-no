@@ -953,22 +953,6 @@
   dependencies:
     "@types/node" "*"
 
-"@vssue/api-github-v3@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.npm.taobao.org/@vssue/api-github-v3/download/@vssue/api-github-v3-1.4.3.tgz#c441036dd99463573d1b99c6d91eaa5e5920fabe"
-  integrity sha1-xEEDbdmUY1c9G5nG2R6qXlkg+r4=
-  dependencies:
-    "@vssue/utils" "^1.4.0"
-    axios "^0.18.1"
-
-"@vssue/utils@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npm.taobao.org/@vssue/utils/download/@vssue/utils-1.4.0.tgz#3cc2fd8492a3409e343289981e2209b6ca2f8313"
-  integrity sha1-PML9hJKjQJ40MomYHiIJtsovgxM=
-  dependencies:
-    date-fns "^1.29.0"
-    qs "^6.6.0"
-
 "@vue/babel-helper-vue-jsx-merge-props@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/@vue/babel-helper-vue-jsx-merge-props/download/@vue/babel-helper-vue-jsx-merge-props-1.0.0.tgz#048fe579958da408fb7a8b2a3ec050b50a661040"
@@ -1636,14 +1620,6 @@ aws4@^1.8.0:
   version "1.9.1"
   resolved "https://registry.npm.taobao.org/aws4/download/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
   integrity sha1-fjPY99RJs/ZzzXLeuavcVS2+Uo4=
-
-axios@^0.18.1:
-  version "0.18.1"
-  resolved "https://registry.npm.taobao.org/axios/download/axios-0.18.1.tgz#ff3f0de2e7b5d180e757ad98000f1081b87bcea3"
-  integrity sha1-/z8N4ue10YDnV62YAA8Qgbh7zqM=
-  dependencies:
-    follow-redirects "1.5.10"
-    is-buffer "^2.0.2"
 
 axios@^0.19.2:
   version "0.19.2"
@@ -2800,11 +2776,6 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^1.29.0:
-  version "1.30.1"
-  resolved "https://registry.npm.taobao.org/date-fns/download/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
-  integrity sha1-LnG/CxGRU9u0zE6I2epaz7UNwFw=
-
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/de-indent/download/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -3759,11 +3730,6 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-github-markdown-css@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.npm.taobao.org/github-markdown-css/download/github-markdown-css-3.0.1.tgz#d08db1060d2e182025e0d07d547cfe2afed30205"
-  integrity sha1-0I2xBg0uGCAl4NB9VHz+Kv7TAgU=
-
 github-markdown-css@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/github-markdown-css/download/github-markdown-css-4.0.0.tgz#be9f4caf7a389228d4c368336260ffc909061f35"
@@ -4361,11 +4327,6 @@ is-buffer@^1.1.5:
   version "1.1.6"
   resolved "https://registry.npm.taobao.org/is-buffer/download/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
   integrity sha1-76ouqdqg16suoTqXsritUf776L4=
-
-is-buffer@^2.0.2:
-  version "2.0.4"
-  resolved "https://registry.npm.taobao.org/is-buffer/download/is-buffer-2.0.4.tgz#3e572f23c8411a5cfd9557c849e3665e0b290623"
-  integrity sha1-PlcvI8hBGlz9lVfISeNmXgspBiM=
 
 is-callable@^1.1.4, is-callable@^1.1.5:
   version "1.1.5"
@@ -6436,11 +6397,6 @@ qs@6.7.0:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz?cache=0&sync_timestamp=1585168908480&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
-qs@^6.6.0:
-  version "6.9.3"
-  resolved "https://registry.npm.taobao.org/qs/download/qs-6.9.3.tgz?cache=0&sync_timestamp=1585168908480&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.9.3.tgz#bfadcd296c2d549f1dffa560619132c977f5008e"
-  integrity sha1-v63NKWwtVJ8d/6VgYZEyyXf1AI4=
-
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz?cache=0&sync_timestamp=1585168908480&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -7971,17 +7927,6 @@ vm-browserify@^1.0.1:
   resolved "https://registry.npm.taobao.org/vm-browserify/download/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha1-eGQcSIuObKkadfUR56OzKobl3aA=
 
-vssue@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.npm.taobao.org/vssue/download/vssue-1.4.3.tgz#861203a95e6b60fe2af661a07d800c0d51965e13"
-  integrity sha1-hhIDqV5rYP4q9mGgfYAMDVGWXhM=
-  dependencies:
-    "@vssue/utils" "^1.4.0"
-    github-markdown-css "^3.0.1"
-    vue "^2.6.10"
-    vue-i18n "^8.11.2"
-    vue-property-decorator "^8.1.1"
-
 vue-class-component@^7.1.0, vue-class-component@^7.2.3:
   version "7.2.3"
   resolved "https://registry.npm.taobao.org/vue-class-component/download/vue-class-component-7.2.3.tgz#a5b1abd53513a72ad51098752e2dedd499807cca"
@@ -7991,11 +7936,6 @@ vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.npm.taobao.org/vue-hot-reload-api/download/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha1-UylVzB6yCKPZkLOp+acFdGV+CPI=
-
-vue-i18n@^8.11.2:
-  version "8.17.1"
-  resolved "https://registry.npm.taobao.org/vue-i18n/download/vue-i18n-8.17.1.tgz#6caa66fb277ccbe133a270bdeb8fd614dd546dbf"
-  integrity sha1-bKpm+yd8y+EzonC964/WFN1Ubb8=
 
 vue-loader@^15.9.1:
   version "15.9.1"
@@ -8008,7 +7948,7 @@ vue-loader@^15.9.1:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-property-decorator@^8.1.1, vue-property-decorator@^8.4.1:
+vue-property-decorator@^8.4.1:
   version "8.4.1"
   resolved "https://registry.npm.taobao.org/vue-property-decorator/download/vue-property-decorator-8.4.1.tgz#fd8045b8678e1348fed57f9149279e00e404ed38"
   integrity sha1-/YBFuGeOE0j+1X+RSSeeAOQE7Tg=
@@ -8041,7 +7981,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
 
-vue@^2.6.10, vue@^2.6.11:
+vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha1-dllNh31LEiNEBuhONSdcbVFBJcU=

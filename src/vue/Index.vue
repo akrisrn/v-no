@@ -43,9 +43,6 @@
                 </footer>
             </main>
         </transition>
-        <transition name="slide-fade">
-            <Comment :path="path" v-if="!isLocalhost && isHashMode && !isError && !isIndex && enableComment"/>
-        </transition>
         <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ darkChars[isDark ? 1 : 0] }}</span>
         <span :class="{dark: isDark, spin: isZen}" @click="isZen = !isZen" id="toggle-zen">{{ zenChar }}</span>
         <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">{{ toTopChar }}</span>
@@ -69,9 +66,8 @@
   ]);
 
   const Article = () => import(/* webpackChunkName: "article" */ '@/vue/Article.vue');
-  const Comment = () => import(/* webpackChunkName: "comment" */ '@/vue/Comment.vue');
 
-  @Component({ components: { Article, Comment } })
+  @Component({ components: { Article } })
   export default class Index extends Vue {
     public data = '';
     public title = '';
@@ -91,9 +87,7 @@
     public keyInput = '';
     public inputBinds: { [index: string]: () => void } = {};
     public params: { [index: string]: string | undefined } = {};
-    public enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
     public isHashMode = isHashMode();
-    public isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname);
 
     public get path() {
       this.params = {};
@@ -291,11 +285,6 @@
         this.cover = '';
         this.coverResize = '';
         this.coverResizeWebp = '';
-      }
-      if (flags.comment) {
-        this.enableComment = flags.comment.toLowerCase() === 'enable';
-      } else {
-        this.enableComment = process.env.VUE_APP_VSSUE.toLowerCase() === 'enable';
       }
     }
 
