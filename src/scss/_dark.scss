@@ -2,12 +2,12 @@
 
 body.dark {
   main {
-    background-color: $dark-main-background-color !important;
+    background-color: $dark-main-background-color;
 
     #bar {
       code {
-        color: $dark-font-color !important;
-        background-color: $dark-pre-background-color !important;
+        color: $dark-font-color;
+        background-color: $dark-code-background-color;
 
         a {
           color: $dark-link-font-color !important;
@@ -16,13 +16,13 @@ body.dark {
     }
 
     header {
-      color: $dark-font-color !important;
-      border-bottom-color: $dark-border-color !important
+      color: $dark-font-color;
+      border-bottom-color: $dark-border-color
     }
 
     article {
       &, .btn, #search-input {
-        color: $dark-font-color !important;
+        color: $dark-font-color;
       }
 
       a {
@@ -30,30 +30,38 @@ body.dark {
       }
 
       hr, h1, h2 {
-        border-bottom-color: $dark-border-color !important;
+        border-bottom-color: $dark-border-color;
       }
 
-      pre, code {
-        background-color: $dark-pre-background-color !important;
+      blockquote, dl dd, .footnotes {
+        color: $light-gray-font-color;
+      }
+
+      pre code {
+        background-color: $pre-background-color;
+      }
+
+      code {
+        background-color: $dark-code-background-color;
       }
 
       table {
         thead tr {
-          border-bottom-color: $dark-border-color !important;
+          border-bottom-color: $dark-border-color;
         }
 
         tr + tr {
-          border-top-color: $dark-border-color !important;
+          border-top-color: $dark-border-color;
         }
       }
 
       img, kbd {
-        filter: brightness($dark-image-brightness) !important;
+        filter: brightness($dark-image-brightness);
       }
     }
 
     footer {
-      border-top-color: $dark-border-color !important;
+      border-top-color: $dark-border-color;
 
       a {
         color: $dark-link-font-color !important;
@@ -61,13 +69,13 @@ body.dark {
     }
 
     .date {
-      color: $dark-font-color !important;
+      color: $dark-font-color;
     }
   }
 
   .custom {
     img {
-      filter: brightness($dark-image-brightness) !important;
+      filter: brightness($dark-image-brightness);
     }
   }
 }

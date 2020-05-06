@@ -2,7 +2,7 @@ body.zen {
   main {
     padding-top: 0;
     padding-bottom: 0;
-    background-color: transparent !important;
+    background-color: transparent;
     box-shadow: none;
 
     #cover {
@@ -11,7 +11,7 @@ body.zen {
 
     header, article h1, article h2 {
       padding-bottom: 0;
-      border-bottom-color: transparent !important;
+      border-bottom-color: transparent;
     }
 
     footer, #bar {

@@ -15,13 +15,13 @@
   }
 
   a {
-    cursor: pointer !important;
+    cursor: pointer;
     transition: color 0.5s;
-    text-decoration: none !important;
+    text-decoration: none;
     color: $link-font-color !important;
 
     &:hover {
-      text-decoration: underline !important;
+      text-decoration: underline;
     }
   }
 
@@ -95,6 +95,7 @@
     dd {
       font-size: $font-size-s;
       padding: 0;
+      transition: color 0.5s;
       color: $gray-font-color;
 
       &:before {
@@ -118,13 +119,14 @@
   }
 
   code {
-    transition: color 0.5s, background-color 0.5s;
+    transition: background-color 0.5s;
   }
 
   blockquote {
     position: relative;
     margin: $unit * 3 0;
     padding: 0 $unit * 4;
+    transition: color 0.5s;
     color: $gray-font-color;
     border-left: none;
 

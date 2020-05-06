@@ -76,6 +76,7 @@ main {
       margin-right: $unit;
       padding-top: 0;
       padding-bottom: 0;
+      transition: color 0.5s, background-color 0.5s;
 
       &.item-date {
         background-color: $info-color-xs;
