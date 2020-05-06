@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-const Index = () => import(/* webpackChunkName: "index" */ '@/vue/Index.vue');
+const Home = () => import(/* webpackChunkName: "home" */ '@/vue/Home.vue');
 
 // noinspection JSUnusedGlobalSymbols
 export default new Router({
@@ -11,7 +11,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [{
     path: '*',
-    name: 'index',
-    component: Index,
+    name: 'home',
+    component: Home,
   }],
 });

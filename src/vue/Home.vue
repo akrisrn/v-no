@@ -360,4 +360,4 @@
   }
 </script>
 
-<style lang="stylus">@import '../styl/index.styl'</style>
+<style lang="stylus">@import '../styl/home.styl'</style>
