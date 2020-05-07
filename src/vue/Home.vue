@@ -228,6 +228,8 @@
       window.addInputBind = this.addInputBind;
       // @ts-ignore
       window.axios = axios;
+      // @ts-ignore
+      window.isHashMode = this.isHashMode;
       this.addInputBind('home', () => {
         if (document.body.classList.contains('prerender')) {
           location.href = '/';
