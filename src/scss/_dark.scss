@@ -1,6 +1,12 @@
 @import "var";
 
 body.dark {
+  #top {
+    img {
+      filter: brightness($dark-image-brightness);
+    }
+  }
+
   main {
     background-color: $dark-main-background-color;
 

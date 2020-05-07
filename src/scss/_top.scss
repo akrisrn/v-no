@@ -18,9 +18,15 @@
     transition: height 0.5s, opacity 0.5s;
     opacity: 1;
 
+    @media screen and (max-width: $media-max-width) {
+      height: 0;
+      opacity: 0;
+    }
+
     img {
       height: $unit * 3;
       margin-right: $unit;
+      transition: filter 0.5s;
     }
 
     span {
