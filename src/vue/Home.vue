@@ -289,7 +289,7 @@
 
     public setFlags(flags: IFlags) {
       this.title = flags.title ? flags.title : this.path.substr(1);
-      document.title = this.title;
+      document.title = `${this.title} - ${this.siteName}`;
       this.authors = flags.author ? splitFlag(flags.author) : [this.author];
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
