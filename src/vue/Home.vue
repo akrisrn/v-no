@@ -55,9 +55,9 @@
         </footer>
       </main>
     </transition>
-    <span :class="{dark: isDark}" @click="isDark = !isDark" id="toggle-dark">{{ darkChars[isDark ? 1 : 0] }}</span>
-    <span :class="{dark: isDark, spin: isZen}" @click="isZen = !isZen" id="toggle-zen">{{ zenChar }}</span>
-    <span :class="{dark: isDark}" @click="scrollToTop" id="to-top">{{ toTopChar }}</span>
+    <span id="toggle-dark">★</span>
+    <span id="toggle-zen">◈</span>
+    <span id="to-top">〒</span>
   </div>
 </template>
 
@@ -93,9 +93,9 @@
     public isError = false;
     public isDark = false;
     public isZen = false;
-    public darkChars = ['★', '☆'];
-    public zenChar = '◈';
-    public toTopChar = '〒';
+    public toggleDark: HTMLElement | null = null;
+    public toggleZen: HTMLElement | null = null;
+    public toTop: HTMLElement | null = null;
     public keyInput = '';
     public inputBinds: { [index: string]: () => void } = {};
     public params: { [index: string]: string | undefined } = {};
@@ -200,13 +200,20 @@
     @Watch('isDark')
     public onIsDarkChanged() {
       const metaThemeColor = document.querySelector('meta[name=theme-color]')!;
+      const elements = [this.toggleDark, this.toggleZen, this.toTop, document.body] as HTMLElement[];
       if (this.isDark) {
         metaThemeColor.setAttribute('content', '#3b3b3b');
-        document.body.classList.add('dark');
+        this.toggleDark!.innerText = '☆';
+        elements.forEach((element) => {
+          element.classList.add('dark');
+        });
         localStorage.setItem('dark', String(true));
       } else {
         metaThemeColor.setAttribute('content', '#ffffff');
-        document.body.classList.remove('dark');
+        this.toggleDark!.innerText = '★';
+        elements.forEach((element) => {
+          element.classList.remove('dark');
+        });
         localStorage.removeItem('dark');
       }
     }
@@ -214,9 +221,11 @@
     @Watch('isZen')
     public onIsZenChanged() {
       if (this.isZen) {
+        this.toggleZen!.classList.add('spin');
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
+        this.toggleZen!.classList.remove('spin');
         document.body.classList.remove('zen');
         localStorage.removeItem('zen');
       }
@@ -268,6 +277,19 @@
             break;
           }
         }
+      });
+      // vue bind does't work on prerender page
+      this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
+      this.toggleDark.addEventListener('click', () => {
+        this.isDark = !this.isDark;
+      });
+      this.toggleZen = document.querySelector<HTMLElement>('#toggle-zen')!;
+      this.toggleZen.addEventListener('click', () => {
+        this.isZen = !this.isZen;
+      });
+      this.toTop = document.querySelector<HTMLElement>('#to-top')!;
+      this.toTop.addEventListener('click', () => {
+        this.scrollToTop();
       });
     }
 
