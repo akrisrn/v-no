@@ -1,5 +1,17 @@
 <template>
   <div>
+    <div id="top">
+      <div>
+        <!--suppress HtmlUnknownTarget -->
+        <img :src="this.favicon" alt=""/>
+        <a @click.prevent="returnHome" href="/">{{ siteName }}</a>
+        <span></span>
+        <a :href="`#/${readmeFile}`">README</a>
+        <a :href="`#/${categoryFile}`">CATEGORIES</a>
+        <a :href="`#/${archiveFile}`">ARCHIVES</a>
+        <a :href="`#/${searchFile}`" v-if="isHashMode">SEARCH</a>
+      </div>
+    </div>
     <transition name="slide-fade">
       <main :class="{error: isError}" v-if="isShow">
         <div id="cover" v-if="cover">
@@ -90,10 +102,13 @@
     public isHashMode = isHashMode();
     public indexPath = process.env.VUE_APP_INDEX_PATH;
     public indexFile = process.env.VUE_APP_INDEX_FILE;
+    public readmeFile = process.env.VUE_APP_README_FILE;
     public categoryFile = process.env.VUE_APP_CATEGORY_FILE;
     public archiveFile = process.env.VUE_APP_ARCHIVE_FILE;
     public searchFile = process.env.VUE_APP_SEARCH_FILE;
     public commonFile = process.env.VUE_APP_COMMON_FILE;
+    public favicon = process.env.VUE_APP_FAVICON;
+    public siteName = process.env.VUE_APP_SITE_NAME;
     public author = process.env.VUE_APP_AUTHOR;
 
     public get path() {

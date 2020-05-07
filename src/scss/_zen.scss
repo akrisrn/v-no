@@ -1,4 +1,13 @@
 body.zen {
+  #top {
+    box-shadow: none;
+
+    & > div {
+      height: 0;
+      opacity: 0;
+    }
+  }
+
   main {
     padding-top: 0;
     padding-bottom: 0;

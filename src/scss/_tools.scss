@@ -18,11 +18,11 @@
 }
 
 #toggle-dark {
-  top: $unit * 2;
+  top: $unit * 5;
 }
 
 #toggle-zen {
-  top: $unit * 6;
+  top: $unit * 9;
   transition: color 0.5s, transform 0.5s;
   transform: rotate(-45deg);
 
