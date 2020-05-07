@@ -29,7 +29,7 @@ function writeHtml(filepath, html) {
   filepath = path.join(outDir, filepath);
   const dirname = path.dirname(filepath);
   if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, {recursive: true});
+    fs.mkdirSync(dirname, { recursive: true });
   }
   console.log('write:', filepath);
   fs.writeFileSync(filepath, '<!DOCTYPE html>' + html);
@@ -45,7 +45,7 @@ async function getHtmlAndFiles(page, urlPath) {
       request.continue();
     }
   });
-  await page.goto(urlPath);
+  await page.goto(urlPath + '?prerender');
   await page.waitForSelector('main:not(.slide-fade-enter-active)');
   await page.waitForSelector('a.snippet', {
     hidden: true,
@@ -89,6 +89,9 @@ async function getHtmlAndFiles(page, urlPath) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
     }
     hashPath += document.location.hash;
+    if (hashPath.endsWith('?prerender')) {
+      hashPath = hashPath.substring(0, hashPath.length - 10);
+    }
     if (hashPath.endsWith('index.md')) {
       hashPath = hashPath.substring(0, hashPath.length - 10);
     }
