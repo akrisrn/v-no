@@ -88,6 +88,13 @@
     public inputBinds: { [index: string]: () => void } = {};
     public params: { [index: string]: string | undefined } = {};
     public isHashMode = isHashMode();
+    public indexPath = process.env.VUE_APP_INDEX_PATH;
+    public indexFile = process.env.VUE_APP_INDEX_FILE;
+    public categoryFile = process.env.VUE_APP_CATEGORY_FILE;
+    public archiveFile = process.env.VUE_APP_ARCHIVE_FILE;
+    public searchFile = process.env.VUE_APP_SEARCH_FILE;
+    public commonFile = process.env.VUE_APP_COMMON_FILE;
+    public author = process.env.VUE_APP_AUTHOR;
 
     public get path() {
       this.params = {};
@@ -116,7 +123,7 @@
             return path;
           }
         }
-        return '/' + process.env.VUE_APP_INDEX_FILE;
+        return '/' + this.indexFile;
       }
       if (path.endsWith('.html')) {
         return path.replace(/\.html$/, '.md');
@@ -129,29 +136,28 @@
       if (path.endsWith('/')) {
         path += 'index.html';
       }
-      return path === '/' + process.env.VUE_APP_INDEX_PATH;
+      return path === '/' + this.indexPath;
     }
 
     public get isIndex() {
-      return [process.env.VUE_APP_INDEX_FILE, process.env.VUE_APP_CATEGORY_FILE,
-        process.env.VUE_APP_ARCHIVE_FILE, process.env.VUE_APP_SEARCH_FILE].includes(this.path.substr(1));
+      return [this.indexFile, this.categoryFile, this.archiveFile, this.searchFile].includes(this.path.substr(1));
     }
 
     public get isHome() {
-      return this.path.substr(1) === process.env.VUE_APP_INDEX_FILE;
+      return this.path.substr(1) === this.indexFile;
     }
 
     public get isCategory() {
-      return this.path.substr(1) === process.env.VUE_APP_CATEGORY_FILE;
+      return this.path.substr(1) === this.categoryFile;
     }
 
     // noinspection JSUnusedGlobalSymbols
     public get isArchive() {
-      return this.path.substr(1) === process.env.VUE_APP_ARCHIVE_FILE;
+      return this.path.substr(1) === this.archiveFile;
     }
 
     public get isSearch() {
-      return this.path.substr(1) === process.env.VUE_APP_SEARCH_FILE;
+      return this.path.substr(1) === this.searchFile;
     }
 
     public get date() {
@@ -252,7 +258,7 @@
     public returnHome() {
       let home = '/';
       if (this.isIndexPath) {
-        let indexPath = process.env.VUE_APP_INDEX_PATH;
+        let indexPath = this.indexPath;
         if (indexPath.endsWith('index.html')) {
           indexPath = indexPath.replace(/index\.html$/, '');
         }
@@ -264,7 +270,7 @@
     public setFlags(flags: IFlags) {
       this.title = flags.title ? flags.title : this.path.substr(1);
       document.title = this.title;
-      this.authors = flags.author ? splitFlag(flags.author) : [process.env.VUE_APP_AUTHOR];
+      this.authors = flags.author ? splitFlag(flags.author) : [this.author];
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
       if (flags.cover) {
@@ -316,8 +322,8 @@
       if (this.path.endsWith('.md')) {
         axios.get(this.path).then((response) => {
           this.isError = false;
-          if (process.env.VUE_APP_COMMON_FILE) {
-            axios.get('/' + process.env.VUE_APP_COMMON_FILE).then((response2) => {
+          if (this.commonFile) {
+            axios.get('/' + this.commonFile).then((response2) => {
               this.setData(response.data + '\n\n' + response2.data);
             }).catch(() => {
               this.setData(response.data);
