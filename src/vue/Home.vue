@@ -182,7 +182,6 @@
     public beforeRouteUpdate(to: any, from: any, next: () => void) {
       this.isShow = false;
       next();
-      this.isHashMode = isHashMode();
       this.updateData();
       setTimeout(() => {
         document.querySelectorAll('.custom').forEach((element) => {

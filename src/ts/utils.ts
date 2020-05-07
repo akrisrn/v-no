@@ -26,7 +26,7 @@ export function splitTagsFromCodes(codes: string) {
 }
 
 export function isHashMode() {
-  return !location.pathname.endsWith('.html');
+  return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
 
 export function escapeHTML(html: string) {
