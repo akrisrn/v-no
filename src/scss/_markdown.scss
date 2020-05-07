@@ -26,7 +26,8 @@
   }
 
   hr {
-    height: 1px;
+    max-width: $unit * 6;
+    height: 0;
     transition: border-bottom-color 0.5s;
     border-bottom: 1px solid $border-color;
     background-color: transparent;
