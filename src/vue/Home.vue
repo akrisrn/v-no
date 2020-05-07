@@ -264,7 +264,11 @@
         }
         home += indexPath;
       }
-      this.$router.push(home);
+      if (home === this.$route.fullPath) {
+        this.$router.go(0);
+      } else {
+        this.$router.push(home);
+      }
     }
 
     public setFlags(flags: IFlags) {
