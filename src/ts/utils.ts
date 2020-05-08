@@ -31,6 +31,10 @@ export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
 
+export function isLocalhost() {
+  return ['localhost', '127.0.0.1'].includes(location.hostname);
+}
+
 export function escapeHTML(html: string) {
   const symbols: { [index: string]: string } = {
     '&': '&amp;',
