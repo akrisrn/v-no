@@ -55,7 +55,7 @@ export function removeClass(element: HTMLElement, cls: string) {
 }
 
 export function axiosGet(url: string) {
-  return axios.get(url);
+  return axios.get(useCDN ? getCDN(url) : url);
 }
 
 export function getCDN(url: string) {

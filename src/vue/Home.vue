@@ -68,7 +68,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, isHashMode, splitFlag } from '@/ts/utils';
+  import { axiosGet, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -107,7 +107,7 @@
     public archiveFile = process.env.VUE_APP_ARCHIVE_FILE;
     public searchFile = process.env.VUE_APP_SEARCH_FILE;
     public commonFile = process.env.VUE_APP_COMMON_FILE;
-    public favicon = process.env.VUE_APP_FAVICON;
+    public favicon = useCDN ? getCDN(process.env.VUE_APP_FAVICON) : process.env.VUE_APP_FAVICON;
     public siteName = process.env.VUE_APP_SITE_NAME;
     public author = process.env.VUE_APP_AUTHOR;
 
@@ -322,13 +322,15 @@
           cover = cover.replace(/#.+$/, '');
           if (!cover.startsWith('http') && match[1].startsWith('$')) {
             const index = cover.lastIndexOf('.');
-            this.coverResize = `${cover.substring(0, index)}.resize${cover.substring(index)}`;
+            const coverResize = `${cover.substring(0, index)}.resize${cover.substring(index)}`;
+            this.coverResize = useCDN ? getCDN(coverResize) : coverResize;
             if (match[1] === '$$') {
-              this.coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
+              const coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
+              this.coverResizeWebp = useCDN ? getCDN(coverResizeWebp) : coverResizeWebp;
             }
           }
         }
-        this.cover = cover;
+        this.cover = useCDN ? getCDN(cover) : cover;
       } else {
         this.cover = '';
         this.coverResize = '';

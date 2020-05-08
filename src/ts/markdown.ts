@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import { getWrapRegExp, isHashMode } from '@/ts/utils';
+import { getCDN, getWrapRegExp, isHashMode, useCDN } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -79,16 +79,22 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
     token.attrSet('src', src);
   }
   const picture = document.createElement('picture');
-  if (!src.startsWith('http') && useResize) {
-    picture.setAttribute('data-src', src);
-    const index = src.lastIndexOf('.');
-    if (useWebp) {
-      const source = document.createElement('source');
-      source.srcset = `${src.substring(0, index)}.resize.webp`;
-      source.type = 'image/webp';
-      picture.append(source);
+  if (!src.startsWith('http')) {
+    if (useResize) {
+      picture.setAttribute('data-src', useCDN ? getCDN(src) : src);
+      const index = src.lastIndexOf('.');
+      if (useWebp) {
+        const source = document.createElement('source');
+        const srcset = `${src.substring(0, index)}.resize.webp`;
+        source.srcset = useCDN ? getCDN(srcset) : srcset;
+        source.type = 'image/webp';
+        picture.append(source);
+      }
+      token.attrSet('src', `${src.substring(0, index)}.resize${src.substring(index)}`);
     }
-    token.attrSet('src', `${src.substring(0, index)}.resize${src.substring(index)}`);
+    if (useCDN) {
+      token.attrSet('src', getCDN(token.attrGet('src')!));
+    }
   }
   picture.innerHTML += defaultImageRenderRule(tokens, idx, options, env, self);
   return picture.outerHTML;
