@@ -57,3 +57,16 @@ export function removeClass(element: HTMLElement, cls: string) {
 export function axiosGet(url: string) {
   return axios.get(url);
 }
+
+export function getCDN(url: string) {
+  if (process.env.VUE_APP_CDN.endsWith('/')) {
+    if (url.startsWith('/')) {
+      url = url.substr(1);
+    }
+  } else if (!url.startsWith('/')) {
+    url += '/' + url;
+  }
+  return process.env.VUE_APP_CDN + url;
+}
+
+export const useCDN = process.env.VUE_APP_CDN && !isLocalhost();
