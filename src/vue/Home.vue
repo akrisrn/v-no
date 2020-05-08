@@ -364,17 +364,13 @@
 
     public updateData() {
       if (this.path.endsWith('.md')) {
-        axiosGet(this.path).then((response) => {
+        const promises = [axiosGet(this.path)];
+        if (this.commonFile) {
+          promises.push(axiosGet('/' + this.commonFile));
+        }
+        Promise.all(promises).then((responses) => {
           this.isError = false;
-          if (this.commonFile) {
-            axiosGet('/' + this.commonFile).then((response2) => {
-              this.setData(response.data + '\n\n' + response2.data);
-            }).catch(() => {
-              this.setData(response.data);
-            });
-          } else {
-            this.setData(response.data);
-          }
+          this.setData(responses.map((response) => response.data).join('\n'));
         }).catch((error) => {
           this.isError = true;
           this.cover = '';

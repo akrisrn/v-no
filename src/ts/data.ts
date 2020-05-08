@@ -18,12 +18,11 @@ export function getListFromData(data: string, isAll = false) {
 }
 
 export function getIndexFileData(func: (data: string) => void) {
-  axiosGet('/' + process.env.VUE_APP_INDEX_FILE).then((response) => {
-    axiosGet('/' + process.env.VUE_APP_ARCHIVE_FILE).then((response2) => {
-      func(response.data + response2.data);
-    }).catch(() => {
-      func(response.data);
-    });
+  Promise.all([
+    axiosGet('/' + process.env.VUE_APP_INDEX_FILE),
+    axiosGet('/' + process.env.VUE_APP_ARCHIVE_FILE),
+  ]).then((responses) => {
+    func(responses.map((response) => response.data).join('\n'));
   });
 }
 
