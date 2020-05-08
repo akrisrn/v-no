@@ -241,7 +241,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
     } else if (text === '*') {
-      if (!document.querySelector(`script[src='${href}']`)) {
+      if (!document.querySelector(`script[src$='${href}']`)) {
         const script = document.createElement('script');
         script.classList.add('custom');
         script.src = (useCDN && !href.startsWith('http')) ? getCDN(href) : href;
@@ -249,7 +249,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       }
       a.parentElement!.remove();
     } else if (text === '$') {
-      if (!document.querySelector(`link[href='${href}']`)) {
+      if (!document.querySelector(`link[href$='${href}']`)) {
         const link = document.createElement('link');
         link.classList.add('custom');
         link.rel = 'stylesheet';
