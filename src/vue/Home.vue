@@ -183,11 +183,9 @@
       this.isShow = false;
       next();
       this.updateData();
-      setTimeout(() => {
-        document.querySelectorAll('.custom').forEach((element) => {
-          element.remove();
-        });
-      }, 100);
+      document.querySelectorAll('.custom').forEach((element) => {
+        element.remove();
+      });
     }
 
     @Watch('isShow')
@@ -347,9 +345,7 @@
       this.setFlags(flags);
       this.data = newData;
       this.updateDescription();
-      setTimeout(() => {
-        this.isShow = true;
-      }, 100);
+      this.isShow = true;
     }
 
     public updateDescription() {
