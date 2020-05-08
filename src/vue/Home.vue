@@ -68,7 +68,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { isHashMode, splitFlag } from '@/ts/utils';
+  import { axiosGet, isHashMode, splitFlag } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -362,10 +362,10 @@
 
     public updateData() {
       if (this.path.endsWith('.md')) {
-        axios.get(this.path).then((response) => {
+        axiosGet(this.path).then((response) => {
           this.isError = false;
           if (this.commonFile) {
-            axios.get('/' + this.commonFile).then((response2) => {
+            axiosGet('/' + this.commonFile).then((response2) => {
               this.setData(response.data + '\n\n' + response2.data);
             }).catch(() => {
               this.setData(response.data);

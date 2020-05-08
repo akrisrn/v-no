@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
   return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }
@@ -46,4 +48,8 @@ export function removeClass(element: HTMLElement, cls: string) {
   if (element.classList.length === 0) {
     element.removeAttribute('class');
   }
+}
+
+export function axiosGet(url: string) {
+  return axios.get(url);
 }

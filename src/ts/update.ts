@@ -5,8 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
-import axios from 'axios';
+import { axiosGet, escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
 
 export function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
@@ -189,7 +188,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         });
       }
       updatedLinks.push(href);
-      axios.get(href).then((response) => {
+      axiosGet(href).then((response) => {
         let data = (response.data as string).split('\n').map((line) => {
           const paramMatches = line.match(getWrapRegExp('{{', '}}', 'g'));
           if (paramMatches) {
@@ -353,7 +352,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
       let count = 0;
       const timeStart = new Date().getTime();
       list.forEach((item) => {
-        axios.get(item.href).then((response) => {
+        axiosGet(item.href).then((response) => {
           const data = response.data.trim();
           let isFind: boolean;
           if (queryType === EFlag.author) {
