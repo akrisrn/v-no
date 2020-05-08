@@ -239,6 +239,10 @@
       window.axios = axios;
       // @ts-ignore
       window.isHashMode = this.isHashMode;
+      // @ts-ignore
+      window.useCDN = useCDN;
+      // @ts-ignore
+      window.getCDN = getCDN;
       this.addInputBind('home', () => {
         if (document.body.classList.contains('prerender')) {
           location.href = '/';
