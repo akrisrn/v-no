@@ -334,7 +334,7 @@
             }
           }
         }
-        this.cover = useCDN ? getCDN(cover) : cover;
+        this.cover = (useCDN && !cover.startsWith('http')) ? getCDN(cover) : cover;
       } else {
         this.cover = '';
         this.coverResize = '';

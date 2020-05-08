@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { axiosGet, escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
+import { axiosGet, escapeHTML, getCDN, getWrapRegExp, removeClass, splitFlag, useCDN } from '@/ts/utils';
 
 export function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
@@ -244,7 +244,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       if (!document.querySelector(`script[src='${href}']`)) {
         const script = document.createElement('script');
         script.classList.add('custom');
-        script.src = href;
+        script.src = (useCDN && !href.startsWith('http')) ? getCDN(href) : href;
         document.body.appendChild(script);
       }
       a.parentElement!.remove();
@@ -254,7 +254,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         link.classList.add('custom');
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = href;
+        link.href = (useCDN && !href.startsWith('http')) ? getCDN(href) : href;
         document.head.appendChild(link);
       }
       a.parentElement!.remove();
