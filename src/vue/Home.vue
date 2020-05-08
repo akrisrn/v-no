@@ -182,10 +182,7 @@
     public beforeRouteUpdate(to: any, from: any, next: () => void) {
       this.isShow = false;
       next();
-      this.updateData();
-      document.querySelectorAll('.custom').forEach((element) => {
-        element.remove();
-      });
+      this.updateData(false);
     }
 
     @Watch('isShow')
@@ -362,7 +359,7 @@
       document.querySelector<HTMLMetaElement>('meta[name=description]')!.content = content.join(' | ');
     }
 
-    public updateData() {
+    public updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet(this.path)];
         if (this.commonFile) {
@@ -371,6 +368,11 @@
         Promise.all(promises).then((responses) => {
           this.isError = false;
           this.setData(responses.map((response) => response.data).join('\n'));
+          if (!isFirst) {
+            document.querySelectorAll('.custom').forEach((element) => {
+              element.remove();
+            });
+          }
         }).catch((error) => {
           this.isError = true;
           this.cover = '';
