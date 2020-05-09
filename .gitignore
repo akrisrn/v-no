@@ -24,3 +24,4 @@ yarn-error.log*
 public/**/*.md
 public/articles
 public/uploads
+public/assets/config.js
