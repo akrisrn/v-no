@@ -7,6 +7,11 @@ export function exposeToWindow(vars: { [index: string]: any }) {
   });
 }
 
+export function setToWindow(name: string, value: any) {
+  // @ts-ignore
+  window[name] = value;
+}
+
 export function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];
