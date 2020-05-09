@@ -307,7 +307,11 @@
 
     public setFlags(flags: IFlags) {
       this.title = flags.title ? flags.title : this.path.substr(1);
-      document.title = `${this.title}${this.config.siteName ? ` - ${this.config.siteName}` : ''}`;
+      if (this.config.siteName && this.config.siteName !== this.title) {
+        document.title = `${this.title} - ${this.config.siteName}`;
+      } else {
+        document.title = `${this.title}`;
+      }
       this.authors = flags.author ? splitFlag(flags.author) : [this.config.author];
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
