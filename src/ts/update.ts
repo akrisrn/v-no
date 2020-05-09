@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { axiosGet, escapeHTML, getCDN, getWrapRegExp, removeClass, splitFlag, useCDN } from '@/ts/utils';
+import { axiosGet, config, escapeHTML, getCDN, getWrapRegExp, removeClass, splitFlag, useCDN } from '@/ts/utils';
 
 export function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
@@ -319,8 +319,8 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
       }
       const sortedKeys = Object.keys(tagDict).sort();
       if (untagged.length > 0) {
-        sortedKeys.unshift(process.env.VUE_APP_UNTAGGED);
-        tagDict[process.env.VUE_APP_UNTAGGED] = untagged;
+        sortedKeys.unshift(config.untagged);
+        tagDict[config.untagged] = untagged;
       }
       updateData(syncData.replace('[list]', sortedKeys.map((key) => {
         const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
@@ -358,7 +358,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
           if (queryType === EFlag.author) {
             const dataAuthors = splitFlag(getFlag(data, EFlag.author).toLowerCase());
             if (dataAuthors.length === 0) {
-              dataAuthors.push(process.env.VUE_APP_AUTHOR.toLowerCase());
+              dataAuthors.push(config.author.toLowerCase());
             }
             isFind = dataAuthors.includes(queryParam!);
           } else if (queryType === EFlag.tags) {

@@ -4,12 +4,12 @@
       <div>
         <!--suppress HtmlUnknownTarget -->
         <img :src="this.favicon" alt=""/>
-        <a @click.prevent="returnHome" href="/">{{ siteName ? siteName : 'HOME' }}</a>
+        <a @click.prevent="returnHome" href="/">{{ config.siteName ? config.siteName : 'HOME' }}</a>
         <span></span>
-        <a :href="`#/${readmeFile}`">README</a>
-        <a :href="`#/${categoryFile}`">CATEGORIES</a>
-        <a :href="`#/${archiveFile}`">ARCHIVES</a>
-        <a :href="`#/${searchFile}`" v-if="isHashMode">SEARCH</a>
+        <a :href="`#/${config.readmeFile}`">README</a>
+        <a :href="`#/${config.categoryFile}`">CATEGORIES</a>
+        <a :href="`#/${config.archiveFile}`">ARCHIVES</a>
+        <a :href="`#/${config.searchFile}`" v-if="isHashMode">SEARCH</a>
       </div>
     </div>
     <transition name="slide-fade">
@@ -68,7 +68,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, exposeToWindow, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
+  import { axiosGet, config, exposeToWindow, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -101,15 +101,8 @@
     public params: { [index: string]: string | undefined } = {};
     public isHashMode = isHashMode();
     public indexPath = process.env.VUE_APP_INDEX_PATH;
-    public indexFile = process.env.VUE_APP_INDEX_FILE;
-    public readmeFile = process.env.VUE_APP_README_FILE;
-    public categoryFile = process.env.VUE_APP_CATEGORY_FILE;
-    public archiveFile = process.env.VUE_APP_ARCHIVE_FILE;
-    public searchFile = process.env.VUE_APP_SEARCH_FILE;
-    public commonFile = process.env.VUE_APP_COMMON_FILE;
     public favicon = useCDN ? getCDN(process.env.VUE_APP_FAVICON) : process.env.VUE_APP_FAVICON;
-    public siteName = process.env.VUE_APP_SITE_NAME;
-    public author = process.env.VUE_APP_AUTHOR;
+    public config = config;
 
     public get path() {
       this.params = {};
@@ -138,7 +131,7 @@
             return path;
           }
         }
-        return '/' + this.indexFile;
+        return '/' + this.config.indexFile;
       }
       if (path.endsWith('.html')) {
         return path.replace(/\.html$/, '.md');
@@ -155,24 +148,24 @@
     }
 
     public get isIndex() {
-      return [this.indexFile, this.categoryFile, this.archiveFile, this.searchFile].includes(this.path.substr(1));
+      return [this.config.indexFile, this.config.categoryFile, this.config.archiveFile, this.config.searchFile].includes(this.path.substr(1));
     }
 
     public get isHome() {
-      return this.path.substr(1) === this.indexFile;
+      return this.path.substr(1) === this.config.indexFile;
     }
 
     public get isCategory() {
-      return this.path.substr(1) === this.categoryFile;
+      return this.path.substr(1) === this.config.categoryFile;
     }
 
     // noinspection JSUnusedGlobalSymbols
     public get isArchive() {
-      return this.path.substr(1) === this.archiveFile;
+      return this.path.substr(1) === this.config.archiveFile;
     }
 
     public get isSearch() {
-      return this.path.substr(1) === this.searchFile;
+      return this.path.substr(1) === this.config.searchFile;
     }
 
     public get date() {
@@ -314,8 +307,8 @@
 
     public setFlags(flags: IFlags) {
       this.title = flags.title ? flags.title : this.path.substr(1);
-      document.title = `${this.title}${this.siteName ? ` - ${this.siteName}` : ''}`;
-      this.authors = flags.author ? splitFlag(flags.author) : [this.author];
+      document.title = `${this.title}${this.config.siteName ? ` - ${this.config.siteName}` : ''}`;
+      this.authors = flags.author ? splitFlag(flags.author) : [this.config.author];
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
       if (flags.cover) {
@@ -366,8 +359,8 @@
     public updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet(this.path)];
-        if (this.commonFile) {
-          promises.push(axiosGet('/' + this.commonFile));
+        if (this.config.commonFile) {
+          promises.push(axiosGet('/' + this.config.commonFile));
         }
         Promise.all(promises).then((responses) => {
           this.isError = false;

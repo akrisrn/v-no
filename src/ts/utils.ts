@@ -95,14 +95,14 @@ export function axiosGet(url: string) {
 }
 
 export function getCDN(url: string) {
-  if (process.env.VUE_APP_CDN.endsWith('/')) {
+  if (config.cdn.endsWith('/')) {
     if (url.startsWith('/')) {
       url = url.substr(1);
     }
   } else if (!url.startsWith('/')) {
     url += '/' + url;
   }
-  return process.env.VUE_APP_CDN + url;
+  return config.cdn + url;
 }
 
-export const useCDN = !!process.env.VUE_APP_CDN && !isLocalhost();
+export const useCDN = !!config.cdn && !isLocalhost();

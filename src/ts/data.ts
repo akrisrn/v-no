@@ -1,4 +1,4 @@
-import { axiosGet, getWrapRegExp, splitTagsFromCodes } from '@/ts/utils';
+import { axiosGet, config, getWrapRegExp, splitTagsFromCodes } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
 export function getListFromData(data: string, isAll = false) {
@@ -19,8 +19,8 @@ export function getListFromData(data: string, isAll = false) {
 
 export function getIndexFileData(func: (data: string) => void) {
   Promise.all([
-    axiosGet('/' + process.env.VUE_APP_INDEX_FILE),
-    axiosGet('/' + process.env.VUE_APP_ARCHIVE_FILE),
+    axiosGet('/' + config.indexFile),
+    axiosGet('/' + config.archiveFile),
   ]).then((responses) => {
     func(responses.map((response) => response.data).join('\n'));
   });
