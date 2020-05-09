@@ -148,7 +148,12 @@
     }
 
     public get isIndex() {
-      return [this.config.indexFile, this.config.categoryFile, this.config.archiveFile, this.config.searchFile].includes(this.path.substr(1));
+      return [
+        this.config.indexFile,
+        this.config.categoryFile,
+        this.config.archiveFile,
+        this.config.searchFile,
+      ].includes(this.path.substr(1));
     }
 
     public get isHome() {

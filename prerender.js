@@ -39,8 +39,7 @@ async function getHtmlAndFiles(page, urlPath) {
   console.log('load:', urlPath);
   await page.setRequestInterception(true);
   page.on('request', request => {
-    if (request.resourceType() === 'image' ||
-        request.url().endsWith('?abort')) {
+    if (request.resourceType() === 'image' || request.url().endsWith('?abort')) {
       request.abort();
     } else {
       request.continue();
@@ -76,11 +75,10 @@ async function getHtmlAndFiles(page, urlPath) {
       files.push(filepath);
     }
     document.body.classList.add('prerender');
-    document.querySelectorAll('code.item-author,code.item-tag,.index li>code').
-        forEach((code) => {
-          code.innerHTML = code.innerText;
-          code.classList.add('nolink');
-        });
+    document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
+      code.innerHTML = code.innerText;
+      code.classList.add('nolink');
+    });
     document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
@@ -134,8 +132,7 @@ async function loadPages(browser, files) {
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  const [html, files] = await getHtmlAndFiles(page,
-      url.resolve(index, '#/' + indexFile));
+  const [html, files] = await getHtmlAndFiles(page, url.resolve(index, '#/' + indexFile));
   await page.close();
   if (html !== null) {
     writeHtml('index.html', html);
