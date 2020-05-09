@@ -179,6 +179,10 @@
       return getDateString(this.path);
     }
 
+    get metaThemeColor() {
+      return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
+    }
+
     public beforeRouteUpdate(to: any, from: any, next: () => void) {
       this.isShow = false;
       next();
@@ -194,17 +198,15 @@
 
     @Watch('isDark')
     public onIsDarkChanged() {
-      const metaThemeColor = document.querySelector('meta[name=theme-color]')!;
+      document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
       const elements = [this.toggleDark, this.toggleZen, this.toTop, document.body] as HTMLElement[];
       if (this.isDark) {
-        metaThemeColor.setAttribute('content', '#3b3b3b');
         this.toggleDark!.innerText = '☆';
         elements.forEach((element) => {
           element.classList.add('dark');
         });
         localStorage.setItem('dark', String(true));
       } else {
-        metaThemeColor.setAttribute('content', '#ffffff');
         this.toggleDark!.innerText = '★';
         elements.forEach((element) => {
           element.classList.remove('dark');
@@ -215,6 +217,7 @@
 
     @Watch('isZen')
     public onIsZenChanged() {
+      document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
         this.toggleZen!.classList.add('spin');
         document.body.classList.add('zen');
