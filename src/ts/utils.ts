@@ -1,5 +1,20 @@
 import axios from 'axios';
 
+interface Config {
+  indexFile: string;
+  readmeFile: string;
+  categoryFile: string;
+  archiveFile: string;
+  searchFile: string;
+  commonFile: string;
+  untagged: string;
+  siteName: string;
+  author: string;
+  cdn: string;
+}
+
+export const config: Config = getFromWindow('vnoConfig');
+
 export function exposeToWindow(vars: { [index: string]: any }) {
   let vno = getFromWindow('vno');
   if (!vno) {
