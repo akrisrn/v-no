@@ -19,7 +19,7 @@ main {
     font-weight: $strong-font-weight;
     margin: $unit-s * 2 0 $unit * 2;
     padding-bottom: $unit-s * 2;
-    transition: color 0.5s, border-bottom-color 0.5s, padding-bottom 0.5s;
+    transition: color 0.5s, border-bottom-color 0.5s, margin-top 0.5s, padding-bottom 0.5s;
     color: $font-color;
     border-bottom: 1px solid $border-color;
   }
@@ -66,8 +66,8 @@ main {
   }
 
   #bar {
-    height: 27px;
-    transition: color 0.5s, opacity 0.5s, height 0.5s;
+    max-height: 27px * 2;
+    transition: color 0.5s, opacity 0.5s, max-height 0.5s;
     opacity: 1;
 
     code {

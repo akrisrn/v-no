@@ -1,3 +1,5 @@
+@import "var";
+
 body.zen {
   #top {
     box-shadow: none;
@@ -15,6 +17,14 @@ body.zen {
 
     #cover {
       margin-bottom: 0;
+
+      & + #bar + header {
+        margin-top: $unit-s * 2;
+      }
+    }
+
+    header {
+      margin-top: 0;
     }
 
     header, article h1, article h2 {
@@ -22,13 +32,17 @@ body.zen {
       border-bottom-color: transparent;
     }
 
-    footer, #bar {
+    #bar, footer {
       overflow: hidden;
-      height: 0;
       opacity: 0;
     }
 
+    #bar {
+      max-height: 0;
+    }
+
     footer {
+      height: 0;
       margin-top: 0;
       padding-top: 0;
     }
