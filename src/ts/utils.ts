@@ -1,9 +1,13 @@
 import axios from 'axios';
 
 export function exposeToWindow(vars: { [index: string]: any }) {
+  let vno = getFromWindow('vno');
+  if (!vno) {
+    vno = {};
+    setToWindow('vno', vno);
+  }
   Object.keys(vars).forEach((key) => {
-    // @ts-ignore
-    window[key] = vars[key];
+    vno[key] = vars[key];
   });
 }
 
