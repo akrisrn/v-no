@@ -7,6 +7,11 @@ export function exposeToWindow(vars: { [index: string]: any }) {
   });
 }
 
+export function getFromWindow(name: string) {
+  // @ts-ignore
+  return window[name];
+}
+
 export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
   return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }
