@@ -84,7 +84,7 @@ async function getHtmlAndFiles(page, urlPath) {
     document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
-    let code = document.createElement('code');
+    const code = document.createElement('code');
     code.classList.add('item-hash');
     let hashPath = document.location.pathname;
     if (hashPath.endsWith('index.html')) {

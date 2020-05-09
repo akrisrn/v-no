@@ -28,10 +28,10 @@
           </code>
           <code class="item-date" v-if="date">{{ date }}</code>
           <code class="item-date" v-else-if="updated">{{ updated }}</code>
-          <code class="item-author" v-for="author in authors">
+          <code :key="index" class="item-author" v-for="(author, index) in authors">
             <a :href="getAuthorLink(author)">{{ author }}</a>
           </code>
-          <code class="item-tag" v-for="tag in tags">
+          <code :key="index" class="item-tag" v-for="(tag, index) in tags">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-count">
@@ -179,7 +179,7 @@
       return getDateString(this.path);
     }
 
-    get metaThemeColor() {
+    public get metaThemeColor() {
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 

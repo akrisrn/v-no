@@ -243,18 +243,18 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
     } else if (text === '*') {
       if (!document.querySelector(`script[src$='${href}']`)) {
         const script = document.createElement('script');
-        script.classList.add('custom');
         script.src = (useCDN && !href.startsWith('http')) ? getCDN(href) : href;
+        script.classList.add('custom');
         document.body.appendChild(script);
       }
       a.parentElement!.remove();
     } else if (text === '$') {
       if (!document.querySelector(`link[href$='${href}']`)) {
         const link = document.createElement('link');
-        link.classList.add('custom');
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = (useCDN && !href.startsWith('http')) ? getCDN(href) : href;
+        link.classList.add('custom');
         document.head.appendChild(link);
       }
       a.parentElement!.remove();
@@ -264,7 +264,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 
 export function updateIndexList() {
   document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
-    const lis: Array<{ node: HTMLLIElement, time: number }> = [];
+    const lis: Array<{ node: HTMLLIElement; time: number }> = [];
     ul.querySelectorAll('li').forEach((li) => {
       const item = {
         node: li,

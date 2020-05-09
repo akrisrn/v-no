@@ -69,4 +69,4 @@ export function getCDN(url: string) {
   return process.env.VUE_APP_CDN + url;
 }
 
-export const useCDN = process.env.VUE_APP_CDN && !isLocalhost();
+export const useCDN = !!process.env.VUE_APP_CDN && !isLocalhost();
