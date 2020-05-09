@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+export function exposeToWindow(vars: { [index: string]: any }) {
+  Object.keys(vars).forEach((key) => {
+    // @ts-ignore
+    window[key] = vars[key];
+  });
+}
+
 export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
   return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }

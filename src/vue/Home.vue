@@ -68,7 +68,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
+  import { axiosGet, exposeToWindow, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -231,16 +231,14 @@
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
-      // @ts-ignore
-      window.addInputBind = this.addInputBind;
-      // @ts-ignore
-      window.axios = axios;
-      // @ts-ignore
-      window.isHashMode = this.isHashMode;
-      // @ts-ignore
-      window.useCDN = useCDN;
-      // @ts-ignore
-      window.getCDN = getCDN;
+      // noinspection JSUnusedGlobalSymbols
+      exposeToWindow({
+        addInputBind: this.addInputBind,
+        axios,
+        isHashMode: this.isHashMode,
+        useCDN,
+        getCDN,
+      });
       this.addInputBind('home', () => {
         if (document.body.classList.contains('prerender')) {
           location.href = '/';

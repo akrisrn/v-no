@@ -18,6 +18,7 @@
   } from '@/ts/update';
   import Prism from 'prismjs';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
+  import { exposeToWindow } from '@/ts/utils';
 
   @Component
   export default class Article extends Vue {
@@ -37,17 +38,18 @@
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
-      // @ts-ignore
-      window.renderMD = (data: string) => renderMD(data, false, true);
-      // @ts-ignore
-      window.updateMD = () => {
-        updateDD();
-        updateHeading();
-        updateImagePath();
-        updateLinkPath(false);
-        updateTextCount();
-        Prism.highlightAll();
-      };
+      // noinspection JSUnusedGlobalSymbols
+      exposeToWindow({
+        renderMD: (data: string) => renderMD(data, false, true),
+        updateMD: () => {
+          updateDD();
+          updateHeading();
+          updateImagePath();
+          updateLinkPath(false);
+          updateTextCount();
+          Prism.highlightAll();
+        },
+      });
     }
 
     // noinspection JSUnusedGlobalSymbols
