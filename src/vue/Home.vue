@@ -239,28 +239,31 @@
         useCDN,
         getCDN,
       });
-      this.addInputBind('home', () => {
-        if (document.body.classList.contains('prerender')) {
-          location.href = '/';
-        } else {
-          this.returnHome();
-        }
-      });
-      this.addInputBind('gg', () => {
-        scroll(document.body.offsetHeight);
-        this.keyInput += '_';
-      });
-      this.addInputBind('G', () => {
-        this.scrollToTop();
-      });
-      this.addInputBind('dark', () => {
-        this.isDark = !this.isDark;
-      });
-      this.addInputBind('zen', () => {
-        this.isZen = !this.isZen;
-      });
-      this.addInputBind('Backspace', () => {
-        this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
+      // noinspection JSUnusedGlobalSymbols
+      this.addInputBinds({
+        home: () => {
+          if (document.body.classList.contains('prerender')) {
+            location.href = '/';
+          } else {
+            this.returnHome();
+          }
+        },
+        gg: () => {
+          scroll(document.body.offsetHeight);
+          this.keyInput += '_';
+        },
+        G: () => {
+          this.scrollToTop();
+        },
+        dark: () => {
+          this.isDark = !this.isDark;
+        },
+        zen: () => {
+          this.isZen = !this.isZen;
+        },
+        Backspace: () => {
+          this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
+        },
       });
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
@@ -393,6 +396,12 @@
 
     public addInputBind(input: string, bind: () => void) {
       this.inputBinds[input] = bind;
+    }
+
+    public addInputBinds(binds: { [index: string]: () => void }) {
+      Object.keys(binds).forEach((key) => {
+        this.inputBinds[key] = binds[key];
+      });
     }
 
     public getAuthorLink(author: string) {
