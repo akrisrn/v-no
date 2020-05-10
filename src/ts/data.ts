@@ -18,9 +18,10 @@ export function getListFromData(data: string, isAll = false) {
 }
 
 export function getIndexFileData(func: (data: string) => void) {
+  const baseUrl = process.env.BASE_URL;
   Promise.all([
-    axiosGet('/' + config.indexFile),
-    axiosGet('/' + config.archiveFile),
+    axiosGet(baseUrl + config.indexFile),
+    axiosGet(baseUrl + config.archiveFile),
   ]).then((responses) => {
     func(responses.map((response) => response.data).join('\n'));
   });

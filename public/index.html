@@ -12,7 +12,7 @@
   <style>body{background-color:#F1F1F1}body.dark{background-color:#2B2B2B}</style>
   <!--@formatter:on-->
   <!--suppress HtmlUnknownTarget -->
-  <link href="<%= VUE_APP_FAVICON %>" rel="icon">
+  <link href="<%= BASE_URL %><%= VUE_APP_FAVICON %>" rel="icon">
 </head>
 <body>
 <noscript>
@@ -25,7 +25,7 @@
 <script>document.querySelector('meta[name=theme-color]').setAttribute('content',localStorage.getItem('dark')?'#3b3b3b':'#ffffff');if(localStorage.getItem('dark')){document.body.classList.add('dark')}else{document.body.classList.remove('dark')}if(localStorage.getItem('zen')){document.body.classList.add('zen')}else{document.body.classList.remove('zen')}</script>
 <!--@formatter:on-->
 <!--suppress HtmlUnknownTarget -->
-<script src="/assets/config.js"></script>
+<script src="<%= BASE_URL %>assets/config.js"></script>
 <!-- built files will be auto injected -->
 </body>
 </html>

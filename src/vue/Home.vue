@@ -100,8 +100,9 @@
     public inputBinds: { [index: string]: () => void } = {};
     public params: { [index: string]: string | undefined } = {};
     public isHashMode = isHashMode();
-    public indexPath = process.env.VUE_APP_INDEX_PATH;
-    public favicon = useCDN ? getCDN(process.env.VUE_APP_FAVICON) : process.env.VUE_APP_FAVICON;
+    public baseUrl: string = process.env.BASE_URL;
+    public indexPath: string = process.env.VUE_APP_INDEX_PATH;
+    public favicon: string = this.baseUrl + process.env.VUE_APP_FAVICON;
     public config = config;
 
     public get path() {
@@ -128,11 +129,12 @@
             if (path.endsWith('/')) {
               path += 'index.md';
             }
-            return path;
+            return this.baseUrl + path.substr(1);
           }
         }
-        return '/' + this.config.indexFile;
+        return this.baseUrl + this.config.indexFile;
       }
+      path = this.baseUrl + path.substr(1);
       if (path.endsWith('.html')) {
         return path.replace(/\.html$/, '.md');
       }
@@ -153,24 +155,24 @@
         this.config.categoryFile,
         this.config.archiveFile,
         this.config.searchFile,
-      ].includes(this.path.substr(1));
+      ].map((file) => this.baseUrl + file).includes(this.path);
     }
 
     public get isHome() {
-      return this.path.substr(1) === this.config.indexFile;
+      return this.path === this.baseUrl + this.config.indexFile;
     }
 
     public get isCategory() {
-      return this.path.substr(1) === this.config.categoryFile;
+      return this.path === this.baseUrl + this.config.categoryFile;
     }
 
     // noinspection JSUnusedGlobalSymbols
     public get isArchive() {
-      return this.path.substr(1) === this.config.archiveFile;
+      return this.path === this.baseUrl + this.config.archiveFile;
     }
 
     public get isSearch() {
-      return this.path.substr(1) === this.config.searchFile;
+      return this.path === this.baseUrl + this.config.searchFile;
     }
 
     public get date() {
@@ -229,6 +231,9 @@
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
+      if (useCDN) {
+        this.favicon = getCDN(this.favicon);
+      }
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         addInputBind: this.addInputBind,
@@ -241,7 +246,7 @@
       this.addInputBinds({
         home: () => {
           if (document.body.classList.contains('prerender')) {
-            location.href = '/';
+            location.href = this.baseUrl;
           } else {
             this.returnHome();
           }
@@ -369,7 +374,7 @@
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet(this.path)];
         if (this.config.commonFile) {
-          promises.push(axiosGet('/' + this.config.commonFile));
+          promises.push(axiosGet(this.baseUrl + this.config.commonFile));
         }
         Promise.all(promises).then((responses) => {
           this.isError = false;
