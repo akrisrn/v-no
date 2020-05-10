@@ -118,7 +118,7 @@
           if (path !== '/') {
             const indexOf = path.indexOf('?');
             if (indexOf >= 0) {
-              path.substring(indexOf + 1).split('&').forEach((param) => {
+              path.substr(indexOf + 1).split('&').forEach((param) => {
                 const indexOfEQ = param.indexOf('=');
                 if (indexOfEQ >= 0) {
                   this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
@@ -304,7 +304,7 @@
       if (this.isIndexPath) {
         let indexPath = this.indexPath;
         if (indexPath.endsWith('index.html')) {
-          indexPath = indexPath.replace(/index\.html$/, '');
+          indexPath = indexPath.substring(0, indexPath.length - 10);
         }
         home += indexPath;
       }
@@ -332,7 +332,7 @@
           cover = cover.replace(/#.+$/, '');
           if (!cover.startsWith('http') && match[1].startsWith('$')) {
             const index = cover.lastIndexOf('.');
-            const coverResize = `${cover.substring(0, index)}.resize${cover.substring(index)}`;
+            const coverResize = `${cover.substring(0, index)}.resize${cover.substr(index)}`;
             this.coverResize = useCDN ? getCDN(coverResize) : coverResize;
             if (match[1] === '$$') {
               const coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
