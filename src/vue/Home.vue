@@ -28,10 +28,10 @@
           </code>
           <code class="item-date" v-if="date">{{ date }}</code>
           <code class="item-date" v-else-if="updated">{{ updated }}</code>
-          <code :key="index" class="item-author" v-for="(author, index) in authors">
+          <code class="item-author" v-for="author in authors">
             <a :href="getAuthorLink(author)">{{ author }}</a>
           </code>
-          <code :key="index" class="item-tag" v-for="(tag, index) in tags">
+          <code class="item-tag" v-for="tag in tags">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-count">
