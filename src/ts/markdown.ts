@@ -175,7 +175,7 @@ const defaultLinkRenderRule = getDefaultRenderRule('link_open');
 markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   const href = token.attrGet('href')!;
-  if (href.startsWith('http://') || href.startsWith('https://')) {
+  if (href.startsWith('http')) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
   }
