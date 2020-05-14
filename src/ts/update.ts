@@ -161,12 +161,17 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   //      #a=1|b=2|3 会被转化成 {1: 1, 2: 2, 3: 3, a: 1, b: 2}
   // 4. text 为 *：将链接引入为 JavaScript 文件引用
   // 5. text 为 $：将链接引入为 CSS 文件引用
+  const baseUrl = process.env.BASE_URL;
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
     const pathname = new URL(a.href).pathname;
     if (href.endsWith('.md#')) {
-      a.href = '#' + pathname;
+      if (baseUrl !== '/' && pathname.startsWith(baseUrl)) {
+        a.href = '#/' + pathname.substr(baseUrl.length);
+      } else {
+        a.href = '#' + pathname;
+      }
     } else if (href.endsWith('.md#/')) {
       a.href = pathname.replace(/\.md$/, '.html');
     } else if (text.match(/^\+(?:#.+)?$/)) {
