@@ -13,7 +13,7 @@ interface Config {
   cdn: string;
 }
 
-export const config: Config = getFromWindow('vnoConfig');
+export const config: Config = Object.assign({}, getFromWindow('vnoConfig'));
 
 export function exposeToWindow(vars: { [index: string]: any }) {
   let vno = getFromWindow('vno');
