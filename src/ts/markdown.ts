@@ -201,24 +201,23 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
       }
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
-    const jsExpMatches = line.match(getWrapRegExp('\\$', '\\$', 'g'));
-    if (jsExpMatches) {
-      jsExpMatches.forEach((jsExpMatch) => {
-        const m = jsExpMatch.match(getWrapRegExp('\\$', '\\$'))!;
-        let result: string;
-        try {
-          if (!article) {
-            article = document.createElement('article');
-            article.innerHTML = markdownIt.render(data);
-          }
-          // tslint:disable-next-line:no-eval
-          result = eval(`(function(article,isHashMode){${m[1]}})`)(article, isHashMode());
-        } catch (e) {
-          result = `${e.name}: ${e.message}`;
+    const regexp = getWrapRegExp('\\$', '\\$', 'g');
+    const lineCopy = line;
+    let jsExpMatch = regexp.exec(lineCopy);
+    while (jsExpMatch) {
+      let result: string;
+      try {
+        if (!article) {
+          article = document.createElement('article');
+          article.innerHTML = markdownIt.render(data);
         }
-        line = line.replace(m[0], result);
-      });
-      return line;
+        // tslint:disable-next-line:no-eval
+        result = eval(`(function(article,isHashMode){${jsExpMatch[1]}})`)(article, isHashMode());
+      } catch (e) {
+        result = `${e.name}: ${e.message}`;
+      }
+      line = line.replace(jsExpMatch[0], result);
+      jsExpMatch = regexp.exec(lineCopy);
     }
     return line;
   }).join('\n');

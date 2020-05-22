@@ -195,24 +195,23 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       updatedLinks.push(href);
       axiosGet(href).then((response) => {
         let data = (response.data as string).split('\n').map((line) => {
-          const paramMatches = line.match(getWrapRegExp('{{', '}}', 'g'));
-          if (paramMatches) {
-            paramMatches.forEach((paramMatch) => {
-              const m = paramMatch.match(getWrapRegExp('{{', '}}'))!;
-              let defaultValue;
-              [m[1], defaultValue] = m[1].split('|');
-              const param = params[m[1]];
-              let result: string;
-              if (param !== undefined) {
-                result = param;
-              } else if (defaultValue !== undefined) {
-                result = defaultValue;
-              } else {
-                result = 'undefined';
-              }
-              line = line.replace(m[0], result.replace(/\\n/g, '\n'));
-            });
-            return line;
+          const regexp = getWrapRegExp('{{', '}}', 'g');
+          const lineCopy = line;
+          let paramMatch = regexp.exec(lineCopy);
+          while (paramMatch) {
+            let defaultValue;
+            [paramMatch[1], defaultValue] = paramMatch[1].split('|');
+            const param = params[paramMatch[1]];
+            let result: string;
+            if (param !== undefined) {
+              result = param;
+            } else if (defaultValue !== undefined) {
+              result = defaultValue;
+            } else {
+              result = 'undefined';
+            }
+            line = line.replace(paramMatch[0], result.replace(/\\n/g, '\n'));
+            paramMatch = regexp.exec(lineCopy);
           }
           return line;
         }).join('\n');
