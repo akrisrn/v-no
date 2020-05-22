@@ -3,7 +3,7 @@ import { EFlag, IFlags } from '@/ts/enums';
 
 export function getListFromData(data: string, isAll = false) {
   const results = [];
-  const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*?\`)?`, 'gm');
+  const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*\`)?`, 'gm');
   let match = regexp.exec(data);
   while (match) {
     const title = match[1];
