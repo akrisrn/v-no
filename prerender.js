@@ -45,10 +45,20 @@ async function getHtmlAndFiles(page, urlPath) {
   console.log('load:', urlPath);
   await page.setRequestInterception(true);
   page.on('request', request => {
-    if (request.resourceType() === 'image' || request.url().endsWith('?abort')) {
-      request.abort();
-    } else {
-      request.continue();
+    switch (request.resourceType()) {
+      case 'image':
+        request.abort();
+        break;
+      case 'script':
+        const pathname = new URL(request.url()).pathname;
+        if (!pathname.startsWith('/assets/')) {
+          request.abort();
+        } else {
+          request.continue();
+        }
+        break;
+      default:
+        request.continue();
     }
   });
   await page.goto(urlPath + '?prerender');
