@@ -62,6 +62,7 @@ main {
     img {
       max-width: 100%;
       max-height: 600px;
+      transition: filter 0.5s;
     }
   }
 

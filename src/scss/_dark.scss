@@ -10,6 +10,12 @@ body.dark {
   main {
     background-color: $dark-main-background-color;
 
+    #cover {
+      img {
+        filter: brightness($dark-image-brightness);
+      }
+    }
+
     #bar {
       code {
         color: $dark-font-color;
