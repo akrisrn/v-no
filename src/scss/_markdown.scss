@@ -20,6 +20,14 @@
     text-decoration: none;
     color: $link-font-color !important;
 
+    &[href^="http://"], &[href^="https://"] {
+      padding-right: $unit * 2 + 2;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAABBElEQVRIie3VrU7EUBAF4K+EkLU4NC+AWEFQFAlPggAUD0CCQWBg14DkFUj4SZCboBAYXgONWgS3pGnavdOCg5NM0uaeOWdmMu3lHxkUA/PWU7ThBe8Ddb9xgnlHlHXi8kCDG8zSc4FTbLYRmwarGAcM3vCUxC+T+DO2coml7tareMSoJj7HFXb0GNExXjvOZvhI4geY4gjbuerrHZQLOM3Kq02M5GZJBSaJM0nvI6z5Wtsz3eubNWirfAW3uaojBoPHshQwLXCBQ1xjP4mGEDHYTeLTvuLEvuQ77OGhr3jUAO77CleIjOhH6OpgvOCsjo2hBucB8RCaF070b9rEr1wyfxSfvoVAIPkA6ioAAAAASUVORK5CYII=);
+      background-repeat: no-repeat;
+      background-position: center right;
+      background-size: $font-size;
+    }
+
     &:hover {
       text-decoration: underline;
     }
