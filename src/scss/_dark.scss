@@ -39,6 +39,10 @@ body.dark {
 
       a {
         color: $dark-link-font-color !important;
+
+        svg {
+          fill: $dark-font-color;
+        }
       }
 
       hr, h1, h2 {

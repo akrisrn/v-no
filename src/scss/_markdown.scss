@@ -28,6 +28,8 @@
       width: $unit + 2;
       height: $unit + $unit-s;
       margin: 0 $unit / 2;
+      transition: fill 0.5s;
+      fill: $font-color;
     }
   }
 
