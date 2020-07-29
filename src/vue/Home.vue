@@ -80,7 +80,7 @@
   const Article = () => import(/* webpackChunkName: "article" */ '@/vue/Article.vue');
 
   @Component({ components: { Article } })
-  export default class Index extends Vue {
+  export default class Home extends Vue {
     public data = '';
     public title = '';
     public authors: string[] = [];
