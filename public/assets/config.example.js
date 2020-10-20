@@ -8,5 +8,4 @@ vnoConfig = {
   untagged: 'untagged',
   siteName: '',
   author: 'root',
-  cdn: '',
 };

@@ -63,7 +63,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, config, exposeToWindow, getCDN, isHashMode, splitFlag, useCDN } from '@/ts/utils';
+  import { axiosGet, config, exposeToWindow, isHashMode, splitFlag } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -224,16 +224,11 @@
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
-      if (useCDN) {
-        this.favicon = getCDN(this.favicon);
-      }
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         addInputBind: this.addInputBind,
         axios,
         isHashMode: this.isHashMode,
-        useCDN,
-        getCDN,
       });
       // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
@@ -319,8 +314,7 @@
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
       if (flags.cover) {
-        let cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
-        this.cover = (useCDN && !cover.startsWith('http')) ? getCDN(cover) : cover;
+        this.cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
       } else {
         this.cover = '';
       }

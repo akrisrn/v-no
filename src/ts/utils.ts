@@ -10,7 +10,6 @@ interface Config {
   untagged: string;
   siteName: string;
   author: string;
-  cdn: string;
 }
 
 export const config: Config = Object.assign({}, getFromWindow('vnoConfig'));
@@ -67,10 +66,6 @@ export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
 
-export function isLocalhost() {
-  return ['localhost', '127.0.0.1'].includes(location.hostname);
-}
-
 export function escapeHTML(html: string) {
   const symbols: { [index: string]: string } = {
     '&': '&amp;',
@@ -91,18 +86,5 @@ export function removeClass(element: HTMLElement, cls: string) {
 }
 
 export function axiosGet(url: string) {
-  return axios.get((useCDN && !url.startsWith('http')) ? getCDN(url) : url);
+  return axios.get(url);
 }
-
-export function getCDN(url: string) {
-  if (config.cdn.endsWith('/')) {
-    if (url.startsWith('/')) {
-      url = url.substr(1);
-    }
-  } else if (!url.startsWith('/')) {
-    url += '/' + url;
-  }
-  return config.cdn + url;
-}
-
-export const useCDN = !!config.cdn && !isLocalhost();
