@@ -120,32 +120,4 @@ main {
       }
     }
   }
-
-  picture {
-    position: relative;
-
-    &:hover {
-      .original {
-        opacity: 0.7;
-      }
-    }
-
-    .original {
-      font-family: $font-family;
-      font-size: $font-size-xs;
-      font-weight: $strong-font-weight;
-      line-height: $line-height;
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      margin: 0 $unit $unit * 2 0;
-      padding: 0 $unit;
-      cursor: pointer;
-      transition: opacity 0.5s;
-      opacity: 0;
-      color: $font-color;
-      border-radius: 10px;
-      background-color: $main-background-color;
-    }
-  }
 }

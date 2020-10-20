@@ -74,8 +74,7 @@ export function updateFootnote() {
 
 export function updateImagePath() {
   document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
-    const picture = img.parentElement!;
-    let parent = picture.parentElement!;
+    let parent = img.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
     }
@@ -111,17 +110,6 @@ export function updateImagePath() {
     } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
       parent.classList.add('center');
     }
-    const originalSrc = picture.getAttribute('data-src');
-    if (originalSrc && !img.nextElementSibling) {
-      const original = document.createElement('div');
-      original.classList.add('original');
-      original.innerText = resource.original;
-      original.addEventListener('click', (e) => {
-        e.preventDefault();
-        open(originalSrc, '_blank');
-      });
-      picture.append(original);
-    }
   });
 }
 
@@ -131,11 +119,8 @@ export function updateTextCount() {
     let count = 0;
     let exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
     document.querySelectorAll(`article > *:${exclude.map((e) => `not(${e})`).join(':')}`).forEach((element) => {
-      exclude = ['PICTURE'];
       for (const child of element.childNodes) {
-        if (child.nodeType === 3 || !exclude.includes((child as Element).tagName)) {
-          count += child.textContent!.replace(/\s/g, '').length;
-        }
+        count += child.textContent!.replace(/\s/g, '').length;
       }
     });
     const countStr = count.toString();

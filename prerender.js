@@ -114,9 +114,6 @@ async function getHtmlAndFiles(page, urlPath) {
     code.innerHTML = `<a href="${hashPath}">Hash</a>`;
     const bar = document.querySelector('#bar');
     bar.append(code);
-    document.querySelectorAll('picture .original').forEach((div) => {
-      div.remove();
-    });
     return [document.documentElement.outerHTML, files];
   });
 }

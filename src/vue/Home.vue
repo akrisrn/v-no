@@ -15,12 +15,7 @@
     <transition name="slide-fade">
       <main :class="{error: isError}" v-if="isShow">
         <div id="cover" v-if="cover">
-          <!--suppress HtmlUnknownTarget -->
-          <picture :data-src="coverResize ? cover : false">
-            <source :srcset="coverResizeWebp" type="image/webp" v-if="coverResizeWebp">
-            <!--suppress HtmlUnknownTarget -->
-            <img :src="coverResize || cover" alt="cover"/>
-          </picture>
+          <img :src="cover" alt="cover"/>
         </div>
         <div class="markdown-body" id="bar" v-if="!isError">
           <code class="item-home" v-if="!isHome">
@@ -87,8 +82,6 @@
     public tags: string[] = [];
     public updated = '';
     public cover = '';
-    public coverResize = '';
-    public coverResizeWebp = '';
     public isShow = false;
     public isError = false;
     public isDark = false;
@@ -327,24 +320,9 @@
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
       if (flags.cover) {
         let cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
-        const match = cover.match(/#\.(.+)$/);
-        if (match) {
-          cover = cover.replace(/#.+$/, '');
-          if (!cover.startsWith('http') && match[1].startsWith('$')) {
-            const index = cover.lastIndexOf('.');
-            const coverResize = `${cover.substring(0, index)}.resize${cover.substr(index)}`;
-            this.coverResize = useCDN ? getCDN(coverResize) : coverResize;
-            if (match[1] === '$$') {
-              const coverResizeWebp = `${cover.substring(0, index)}.resize.webp`;
-              this.coverResizeWebp = useCDN ? getCDN(coverResizeWebp) : coverResizeWebp;
-            }
-          }
-        }
         this.cover = (useCDN && !cover.startsWith('http')) ? getCDN(cover) : cover;
       } else {
         this.cover = '';
-        this.coverResize = '';
-        this.coverResizeWebp = '';
       }
     }
 

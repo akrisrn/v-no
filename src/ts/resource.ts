@@ -4,5 +4,4 @@ export default {
   searching: 'Searching...',
   searchDone: 'Search done',
   searchNothing: 'Nothing.',
-  original: 'ORIGINAL',
 };

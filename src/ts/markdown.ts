@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import { getCDN, getWrapRegExp, isHashMode, useCDN } from '@/ts/utils';
+import { getWrapRegExp, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -51,8 +51,6 @@ const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
-  let useResize = false;
-  let useWebp = false;
   const match = src.match(/#(.+)$/);
   if (match) {
     const width = parseInt(match[1], 0);
@@ -60,14 +58,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
       if (match[1].startsWith('.')) {
         match[1].substr(1).split('.').forEach((cls) => {
           cls = cls.trim();
-          if (cls.startsWith('$')) {
-            useResize = true;
-            if (cls === '$$') {
-              useWebp = true;
-            }
-          } else {
-            token.attrJoin('class', cls);
-          }
+          token.attrJoin('class', cls);
         });
       } else {
         token.attrSet('style', match[1]);
@@ -78,26 +69,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
     src = src.replace(/#.+$/, '');
     token.attrSet('src', src);
   }
-  const picture = document.createElement('picture');
-  if (!src.startsWith('http')) {
-    if (useResize) {
-      picture.setAttribute('data-src', useCDN ? getCDN(src) : src);
-      const index = src.lastIndexOf('.');
-      if (useWebp) {
-        const source = document.createElement('source');
-        const srcset = `${src.substring(0, index)}.resize.webp`;
-        source.srcset = useCDN ? getCDN(srcset) : srcset;
-        source.type = 'image/webp';
-        picture.append(source);
-      }
-      token.attrSet('src', `${src.substring(0, index)}.resize${src.substring(index)}`);
-    }
-    if (useCDN) {
-      token.attrSet('src', getCDN(token.attrGet('src')!));
-    }
-  }
-  picture.innerHTML += defaultImageRenderRule(tokens, idx, options, env, self);
-  return picture.outerHTML;
+  return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultFenceRenderRule = getDefaultRenderRule('fence');
