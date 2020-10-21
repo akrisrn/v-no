@@ -4,12 +4,10 @@ import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
-// tslint:disable no-var-requires
 const footnote = require('markdown-it-footnote');
 const deflist = require('markdown-it-deflist');
 const taskLists = require('markdown-it-task-lists');
 const container = require('markdown-it-container');
-// tslint:enable no-var-requires
 
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
@@ -41,7 +39,6 @@ const markdownIt = new MarkdownIt({
 markdownIt.linkify.tlds([], false);
 
 const getDefaultRenderRule = (name: string) => {
-  // tslint:disable-next-line:only-arrow-functions
   return markdownIt.renderer.rules[name] || function(tokens, idx, options, env, self) {
     return self.renderToken(tokens, idx, options);
   };
@@ -195,7 +192,6 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
           article = document.createElement('article');
           article.innerHTML = markdownIt.render(data);
         }
-        // tslint:disable-next-line:no-eval
         result = eval(`(function(article,isHashMode){${jsExpMatch[1]}})`)(article, isHashMode());
       } catch (e) {
         result = `${e.name}: ${e.message}`;
