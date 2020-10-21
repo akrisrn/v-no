@@ -88,3 +88,11 @@ export function removeClass(element: HTMLElement, cls: string) {
 export function axiosGet(url: string) {
   return axios.get(url);
 }
+
+export function toggleClass(element: HTMLElement, className: string) {
+  if (element.classList.contains(className)) {
+    element.classList.remove(className);
+  } else {
+    element.classList.add(className);
+  }
+}
