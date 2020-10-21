@@ -246,7 +246,7 @@
         },
         G: () => {
           toggleClass(this.toTop, 'spin');
-          this.scrollToTop();
+          scroll(0);
         },
         dark: () => {
           this.isDark = !this.isDark;
@@ -286,7 +286,7 @@
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
         toggleClass(this.toTop, 'spin');
-        this.scrollToTop();
+        scroll(0);
       });
     }
 
@@ -377,10 +377,6 @@
 
     public getTagLink(tag: string) {
       return getQueryLink(EFlag.tags, tag);
-    }
-
-    public scrollToTop() {
-      scroll(0);
     }
   }
 </script>
