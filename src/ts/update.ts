@@ -113,31 +113,6 @@ export function updateImagePath() {
   });
 }
 
-export function updateTextCount() {
-  const textCount = document.querySelector<HTMLElement>('#text-count');
-  if (textCount) {
-    let count = 0;
-    const exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
-    document.querySelectorAll(`article > *:${exclude.map((e) => `not(${e})`).join(':')}`).forEach((element) => {
-      for (const child of element.childNodes) {
-        count += child.textContent!.replace(/\s/g, '').length;
-      }
-    });
-    const countStr = count.toString();
-    const countList = [];
-    let start = 0;
-    for (let i = Math.floor(countStr.length / 3); i >= 0; i--) {
-      const end = countStr.length - i * 3;
-      if (end === 0) {
-        continue;
-      }
-      countList.push(countStr.substring(start, end));
-      start = end;
-    }
-    textCount.innerText = countList.join(',');
-  }
-}
-
 export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = []) {
   // 匹配模式：
   // 1. 链接地址以 # 结尾：将链接转换成 hash 路由形式
@@ -224,7 +199,6 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         }
         updateDD();
         updateImagePath();
-        updateTextCount();
         updateLinkPath(isCategory, updatedLinks);
       }).catch((error) => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
@@ -320,7 +294,6 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         updateHeading();
         updateLinkPath(isCategory);
         updateIndexList();
-        updateTextCount();
       }, 0);
     } else {
       updateData(syncData.replace(/\[list]/i, ''));
@@ -418,7 +391,6 @@ export function updateSearchListActual(params: { [index: string]: string | undef
             resultUl.append(li);
             updateLinkPath(isCategory);
             updateIndexList();
-            updateTextCount();
           }
         }).finally(() => {
           if (++count === list.length) {

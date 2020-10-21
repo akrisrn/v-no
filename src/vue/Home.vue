@@ -29,9 +29,6 @@
           <code v-for="tag in tags" class="item-tag" :key="tag">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
-          <code class="item-count">
-            <span id="text-count"/>
-          </code>
           <code class="item-raw">
             <a :href="path" target="_blank">Raw</a>
           </code>

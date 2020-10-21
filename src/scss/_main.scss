@@ -100,15 +100,6 @@ main {
           content: "#";
         }
       }
-
-      &.item-count {
-        background-color: $danger-color-xs;
-
-        &:after {
-          margin-left: 2px;
-          content: "W";
-        }
-      }
     }
   }
 }

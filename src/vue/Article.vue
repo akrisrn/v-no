@@ -13,7 +13,6 @@
     updateIndexList,
     updateLinkPath,
     updateSearchList,
-    updateTextCount,
     updateToc,
   } from '@/ts/update';
   import Prism from 'prismjs';
@@ -46,7 +45,6 @@
           updateHeading();
           updateImagePath();
           updateLinkPath(false);
-          updateTextCount();
           Prism.highlightAll();
         },
       });
@@ -69,7 +67,6 @@
         } else if (this.isIndex) {
           updateIndexList();
         }
-        updateTextCount();
         Prism.highlightAll();
       }, 0);
     }
