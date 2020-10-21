@@ -202,20 +202,24 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
     return line;
   }).join('\n');
   if (!noToc) {
-    let tocHtml = '<div id="toc">';
-    if (toc.length > 7 && !isCategory) {
-      let mid = Math.ceil(toc.length / 2);
-      while (toc[mid] && !toc[mid].startsWith('-')) {
-        mid += 1;
+    if (toc.length > 0) {
+      let tocHtml = '<div id="toc">';
+      if (toc.length > 7 && !isCategory) {
+        let mid = Math.ceil(toc.length / 2);
+        while (toc[mid] && !toc[mid].startsWith('-')) {
+          mid += 1;
+        }
+        tocHtml += markdownIt.render(toc.slice(0, mid).join('\n')) +
+          markdownIt.render(toc.slice(mid, toc.length).join('\n'));
+      } else {
+        tocHtml += markdownIt.render(toc.join('\n'));
       }
-      tocHtml += markdownIt.render(toc.slice(0, mid).join('\n')) +
-        markdownIt.render(toc.slice(mid, toc.length).join('\n'));
+      tocHtml += '</div>';
+      tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
+      data = data.replace(/\[toc]/i, tocHtml);
     } else {
-      tocHtml += markdownIt.render(toc.join('\n'));
+      data = data.replace(/\[toc]/i, '');
     }
-    tocHtml += '</div>';
-    tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
-    data = data.replace(/\[toc]/i, tocHtml);
   }
   return markdownIt.render(data);
 }

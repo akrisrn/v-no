@@ -322,6 +322,8 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         updateIndexList();
         updateTextCount();
       }, 0);
+    } else {
+      updateData(syncData.replace(/\[list]/i, ''));
     }
   };
 }
