@@ -274,7 +274,7 @@
           }
         }
       });
-      // vue bind does't work on prerender page
+      // vue bind doesn't work on prerender page
       this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
       this.toggleDark.addEventListener('click', () => {
         this.isDark = !this.isDark;
