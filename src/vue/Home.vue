@@ -52,7 +52,7 @@
     </transition>
     <span id="toggle-dark">★</span>
     <span id="toggle-zen">◈</span>
-    <span id="to-top">〒</span>
+    <span id="to-top">と</span>
   </div>
 </template>
 
@@ -63,7 +63,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, config, exposeToWindow, isHashMode, splitFlag } from '@/ts/utils';
+  import { axiosGet, config, exposeToWindow, isHashMode, splitFlag, toggleClass } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -240,10 +240,12 @@
           }
         },
         gg: () => {
+          toggleClass(this.toTop, 'spin');
           scroll(document.body.offsetHeight);
           this.keyInput += '_';
         },
         G: () => {
+          toggleClass(this.toTop, 'spin');
           this.scrollToTop();
         },
         dark: () => {
@@ -283,6 +285,7 @@
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
+        toggleClass(this.toTop, 'spin');
         this.scrollToTop();
       });
     }
