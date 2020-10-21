@@ -117,7 +117,7 @@ export function updateTextCount() {
   const textCount = document.querySelector<HTMLElement>('#text-count');
   if (textCount) {
     let count = 0;
-    let exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
+    const exclude = ['#toc', 'pre', '.code-toolbar', '.footnotes'];
     document.querySelectorAll(`article > *:${exclude.map((e) => `not(${e})`).join(':')}`).forEach((element) => {
       for (const child of element.childNodes) {
         count += child.textContent!.replace(/\s/g, '').length;

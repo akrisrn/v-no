@@ -23,10 +23,10 @@
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
-          <code v-for="author in authors" class="item-author">
+          <code v-for="author in authors" class="item-author" :key="author">
             <a :href="getAuthorLink(author)">{{ author }}</a>
           </code>
-          <code v-for="tag in tags" class="item-tag">
+          <code v-for="tag in tags" class="item-tag" :key="tag">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-count">
@@ -65,8 +65,9 @@
   import resource from '@/ts/resource';
   import { axiosGet, config, exposeToWindow, isHashMode, splitFlag, toggleClass } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
-  import axios from 'axios';
+  import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { RawLocation, Route } from 'vue-router';
 
   Component.registerHooks([
     'beforeRouteUpdate',
@@ -176,7 +177,7 @@
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
-    public beforeRouteUpdate(to: any, from: any, next: () => void) {
+    public beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
       this.updateData(false);
@@ -240,12 +241,12 @@
           }
         },
         gg: () => {
-          toggleClass(this.toTop, 'spin');
+          toggleClass(this.toTop!, 'spin');
           scroll(document.body.offsetHeight);
           this.keyInput += '_';
         },
         G: () => {
-          toggleClass(this.toTop, 'spin');
+          toggleClass(this.toTop!, 'spin');
           scroll(0);
         },
         dark: () => {
@@ -285,7 +286,7 @@
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
-        toggleClass(this.toTop, 'spin');
+        toggleClass(this.toTop!, 'spin');
         scroll(0);
       });
     }
@@ -357,7 +358,7 @@
             status: 404,
             statusText: resource.notFound,
           },
-        } as any));
+        } as AxiosError));
       }
     }
 

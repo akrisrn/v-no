@@ -12,6 +12,16 @@ interface Config {
   author: string;
 }
 
+export function getFromWindow(name: string) {
+  // @ts-ignore
+  return window[name];
+}
+
+export function setToWindow(name: string, value: any) {
+  // @ts-ignore
+  window[name] = value;
+}
+
 export const config: Config = Object.assign({}, getFromWindow('vnoConfig'));
 
 export function exposeToWindow(vars: { [index: string]: any }) {
@@ -23,16 +33,6 @@ export function exposeToWindow(vars: { [index: string]: any }) {
   Object.keys(vars).forEach((key) => {
     vno[key] = vars[key];
   });
-}
-
-export function setToWindow(name: string, value: any) {
-  // @ts-ignore
-  window[name] = value;
-}
-
-export function getFromWindow(name: string) {
-  // @ts-ignore
-  return window[name];
 }
 
 export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
