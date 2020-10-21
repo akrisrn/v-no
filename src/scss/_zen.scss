@@ -4,7 +4,7 @@ body.zen {
   #top {
     box-shadow: none;
 
-    & > div {
+    > div {
       height: 0;
       opacity: 0;
     }
@@ -15,21 +15,12 @@ body.zen {
     background-color: transparent;
     box-shadow: none;
 
-    #cover {
-      margin-bottom: 0;
-
-      & + #bar + header {
-        margin-top: 12px;
-      }
-    }
-
-    header {
+    > :first-child:not(#cover) + header {
       margin-top: 0;
     }
 
-    header, article h1, article h2 {
-      padding-bottom: 0;
-      border-bottom-color: transparent;
+    #cover {
+      margin-bottom: 0;
     }
 
     #bar, footer {
@@ -44,7 +35,6 @@ body.zen {
     footer {
       height: 0;
       margin-top: 0;
-      padding-top: 0;
     }
   }
 

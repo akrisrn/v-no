@@ -6,8 +6,14 @@
   line-height: 1.8;
   color: $font-color;
 
-  > :first-child dt:first-of-type {
-    margin-top: 0 !important;
+  > :first-child {
+    dt:first-of-type {
+      margin-top: 0 !important;
+    }
+
+    img {
+      margin-top: 0;
+    }
   }
 
   > :last-child dd:last-of-type {
@@ -34,17 +40,17 @@
   }
 
   hr {
-    max-width: 48px;
+    max-width: 56px;
     height: 0;
+    margin: 24px auto;
     transition: border-bottom-color 0.5s;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 4px solid $border-color;
     background-color: transparent;
   }
 
   h1, h2 {
-    padding-bottom: 8px;
-    transition: border-bottom-color 0.5s, padding-bottom 0.5s;
-    border-bottom-color: $border-color;
+    padding-bottom: 0;
+    border-bottom: none;
   }
 
   p {
@@ -309,8 +315,12 @@
     font-size: $font-size-s;
     color: $gray-font-color;
 
+    &:before {
+      font-weight: 600;
+      content: "Footnotes:";
+    }
+
     ol {
-      margin-top: -8px;
       margin-bottom: -16px;
 
       li + li p {
@@ -366,10 +376,10 @@
     button, span {
       transition: color 0.5s;
       color: $gray-font-color;
-      background-color: $font-color;
+      background-color: $light-gray-font-color;
 
       &:hover {
-        color: $light-gray-font-color;
+        color: $font-color;
       }
     }
   }
@@ -419,11 +429,10 @@
     &:disabled {
       cursor: not-allowed;
       color: $light-gray-font-color;
-      border-color: $font-color;
-      background-color: $font-color;
+      border-color: $light-gray-font-color;
 
       &:hover {
-        background-color: $font-color;
+        background-color: transparent;
       }
     }
   }

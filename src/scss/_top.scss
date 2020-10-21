@@ -8,7 +8,7 @@
   background-color: $dark-main-background-color;
   box-shadow: $box-shadow;
 
-  & > div {
+  > div {
     display: flex;
     overflow: hidden;
     align-items: center;

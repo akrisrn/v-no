@@ -67,7 +67,7 @@
     padding-left: 16px;
     transition: color 0.5s;
     border: none;
-    border-left: 6px solid $info-color-s;
+    border-left: 4px solid $info-color-s;
     outline: none;
     background-color: transparent;
   }
@@ -75,7 +75,7 @@
   #result span {
     &.hl {
       font-weight: 600;
-      color: $danger-color;
+      color: $danger-color-s;
     }
 
     &.ellipsis {
@@ -83,7 +83,11 @@
       font-weight: 600;
       line-height: 0;
       margin: 0 3px;
-      color: $info-color;
+      color: $info-color-s;
+
+      &:first-of-type {
+        margin-left: 0;
+      }
     }
   }
 }

@@ -29,7 +29,6 @@ body.dark {
 
     header {
       color: $dark-font-color;
-      border-bottom-color: $dark-border-color
     }
 
     article {
@@ -45,7 +44,7 @@ body.dark {
         }
       }
 
-      hr, h1, h2 {
+      hr {
         border-bottom-color: $dark-border-color;
       }
 
@@ -77,8 +76,6 @@ body.dark {
     }
 
     footer {
-      border-top-color: $dark-border-color;
-
       a {
         color: $dark-link-font-color !important;
       }

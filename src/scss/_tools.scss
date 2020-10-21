@@ -3,9 +3,7 @@
 #toggle-dark, #toggle-zen, #to-top {
   font-size: 24px;
   position: fixed;
-  right: 16px;
   cursor: pointer;
-  transition: color 0.5s;
   color: transparent;
 
   &:hover {
@@ -18,11 +16,14 @@
 }
 
 #toggle-dark {
-  top: 40px;
+  right: 16px;
+  bottom: 72px;
+  transition: color 0.5s;
 }
 
 #toggle-zen {
-  top: 72px;
+  right: 16px;
+  bottom: 40px;
   transition: color 0.5s, transform 0.5s;
   transform: rotate(-45deg);
 
@@ -32,5 +33,12 @@
 }
 
 #to-top {
+  right: 14px;
   bottom: 8px;
+  transition: color 0.5s, transform 0.5s;
+  transform: rotate(0deg);
+
+  &.spin {
+    transform: rotate(360deg);
+  }
 }
