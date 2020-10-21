@@ -3,7 +3,7 @@
 body.dark {
   #top {
     img {
-      filter: brightness($dark-image-brightness);
+      filter: brightness(0.7);
     }
   }
 
@@ -12,7 +12,7 @@ body.dark {
 
     #cover {
       img {
-        filter: brightness($dark-image-brightness);
+        filter: brightness(0.7);
       }
     }
 
@@ -72,7 +72,7 @@ body.dark {
       }
 
       img, kbd {
-        filter: brightness($dark-image-brightness);
+        filter: brightness(0.7);
       }
     }
 
@@ -91,7 +91,7 @@ body.dark {
 
   .custom {
     img {
-      filter: brightness($dark-image-brightness);
+      filter: brightness(0.7);
     }
   }
 }

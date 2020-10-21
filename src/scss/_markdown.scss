@@ -3,7 +3,7 @@
 
 .markdown-body {
   font-size: $font-size;
-  line-height: $line-height;
+  line-height: 1.8;
   color: $font-color;
 
   > :first-child dt:first-of-type {
@@ -25,16 +25,16 @@
     }
 
     svg {
-      width: $unit + 2;
-      height: $unit + $unit-s;
-      margin: 0 $unit / 2;
+      width: 10px;
+      height: 14px;
+      margin: 0 4px;
       transition: fill 0.5s;
       fill: $font-color;
     }
   }
 
   hr {
-    max-width: $unit * 6;
+    max-width: 48px;
     height: 0;
     transition: border-bottom-color 0.5s;
     border-bottom: 1px solid $border-color;
@@ -42,7 +42,7 @@
   }
 
   h1, h2 {
-    padding-bottom: $unit;
+    padding-bottom: 8px;
     transition: border-bottom-color 0.5s, padding-bottom 0.5s;
     border-bottom-color: $border-color;
   }
@@ -50,12 +50,12 @@
   p {
     &.left {
       float: left;
-      margin-right: $unit * 2;
+      margin-right: 16px;
     }
 
     &.right {
       float: right;
-      margin-left: $unit * 2;
+      margin-left: 16px;
     }
 
     &.left, &.right {
@@ -64,14 +64,14 @@
       @media screen and (max-width: $media-max-width) {
         float: none;
         margin-right: 0;
-        margin-bottom: $unit * 2;
+        margin-bottom: 16px;
         margin-left: 0;
       }
     }
   }
 
   img {
-    margin-top: $unit;
+    margin-top: 8px;
     transition: filter 0.5s;
     background-color: transparent;
 
@@ -108,12 +108,12 @@
       color: $gray-font-color;
 
       &:before {
-        margin-right: $unit;
+        margin-right: 8px;
         content: "»";
       }
 
       + dd {
-        margin-top: -($unit * 2);
+        margin-top: -16px;
       }
     }
 
@@ -133,8 +133,8 @@
 
   blockquote {
     position: relative;
-    margin: $unit * 3 0;
-    padding: 0 $unit * 4;
+    margin: 24px 0;
+    padding: 0 32px;
     transition: color 0.5s;
     color: $gray-font-color;
     border-left: none;
@@ -143,7 +143,7 @@
       font-family: Arial, serif;
       font-size: 4em;
       position: absolute;
-      top: -($unit * 4);
+      top: -32px;
       left: 0;
       content: "“";
     }
@@ -184,9 +184,9 @@
 
   details {
     overflow: auto;
-    margin: $unit * 3 0;
-    padding: 0 $unit * 2;
-    border-left: $unit-s solid $info-color-s;
+    margin: 24px 0;
+    padding: 0 16px;
+    border-left: 6px solid $info-color-s;
     border-radius: 3px;
     box-shadow: $box-shadow;
 
@@ -199,8 +199,8 @@
     }
 
     summary {
-      margin: 0 (-($unit * 2));
-      padding: $unit-s $unit * 2;
+      margin: 0 -16px;
+      padding: 6px 16px;
       outline: none;
       background-color: $info-color-xs;
 
@@ -214,7 +214,7 @@
       }
 
       + * {
-        margin-top: $unit * 2;
+        margin-top: 16px;
       }
 
       &:after {
@@ -238,7 +238,7 @@
     }
 
     &.empty {
-      box-shadow: $box-shadow-2;
+      box-shadow: $box-shadow, 0 -3px 6px 0 $shadow-color;
 
       summary {
         display: none;
@@ -284,7 +284,7 @@
 
   #toc {
     font-size: $font-size-s;
-    margin-bottom: $unit * 2;
+    margin-bottom: 16px;
 
     .ul-a, .ul-b {
       display: inline-table;
@@ -310,8 +310,8 @@
     color: $gray-font-color;
 
     ol {
-      margin-top: -($unit);
-      margin-bottom: -($unit * 2);
+      margin-top: -8px;
+      margin-bottom: -16px;
 
       li + li p {
         margin-top: 0;
@@ -324,7 +324,7 @@
   }
 
   .count:before {
-    margin-left: $unit;
+    margin-left: 8px;
     content: "-";
   }
 
@@ -338,21 +338,21 @@
       opacity: 0;
 
       svg {
-        width: $unit * 2;
-        height: $unit * 2;
+        width: 16px;
+        height: 16px;
       }
     }
   }
 
   h3, h4, h5, h6 {
     .heading-link svg {
-      width: $unit + $unit-s;
-      height: $unit + $unit-s;
+      width: 14px;
+      height: 14px;
     }
   }
 
   div.code-toolbar > .toolbar {
-    margin-right: $unit;
+    margin-right: 8px;
 
     .toolbar-item + .toolbar-item {
       margin-left: 3px;
@@ -377,9 +377,9 @@
   button.btn {
     font-family: $font-family;
     font-size: $font-size-s;
-    font-weight: $strong-font-weight;
-    margin: 0 $unit-s $unit-s 0;
-    padding: $unit-s $unit * 2;
+    font-weight: 600;
+    margin: 0 6px 6px 0;
+    padding: 6px 16px;
     cursor: pointer;
     transition: color 0.5s, border-color 0.5s, background-color 0.5s;
     color: $font-color;

@@ -9,7 +9,7 @@
         display: inline;
 
         + li:before {
-          margin-right: $unit-s * 2;
+          margin-right: 12px;
           content: "|";
         }
       }
@@ -25,7 +25,7 @@
         text-overflow: ellipsis;
 
         &:before {
-          margin-right: $unit;
+          margin-right: 8px;
           content: "»";
         }
 
@@ -34,7 +34,7 @@
           font-style: normal;
           margin: 0;
           padding-right: 0;
-          padding-left: $unit * 2;
+          padding-left: 16px;
           white-space: normal;
 
           &:before {
@@ -56,7 +56,7 @@
         }
 
         .date {
-          margin-left: $unit;
+          margin-left: 8px;
         }
       }
     }
@@ -74,13 +74,13 @@
 
   #result span {
     &.hl {
-      font-weight: $strong-font-weight;
+      font-weight: 600;
       color: $danger-color;
     }
 
     &.ellipsis {
       font-size: 30px;
-      font-weight: $strong-font-weight;
+      font-weight: 600;
       line-height: 0;
       margin: 0 3px;
       color: $info-color;

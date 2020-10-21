@@ -1,11 +1,7 @@
-$line-height: 1.8;
 $max-width: 700px;
 $media-max-width: $max-width + 50;
-$unit: 8px;
-$unit-s: 6px;
 $shadow-color: rgba(#000000, 0.1);
 $box-shadow: 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px $shadow-color;
-$box-shadow-2: $box-shadow, 0 -3px 6px 0 $shadow-color;
 
 $background-color: #f1f1f1;
 $main-background-color: #ffffff;
@@ -35,7 +31,6 @@ $font-color: #464646;
 $gray-font-color: #737373;
 $light-gray-font-color: #969696;
 $link-font-color: #2864dc;
-$strong-font-weight: 600;
 
 $dark-background-color: #2b2b2b;
 $dark-main-background-color: #3b3b3b;
@@ -43,4 +38,3 @@ $dark-code-background-color: #1e1e1e;
 $dark-border-color: #787878;
 $dark-font-color: #bebebe;
 $dark-link-font-color: #82b4e6;
-$dark-image-brightness: 0.7;
