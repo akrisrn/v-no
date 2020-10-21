@@ -327,22 +327,7 @@
       const { data: newData, result: flags } = getFlags(data);
       this.setFlags(flags);
       this.data = newData;
-      this.updateDescription();
       this.isShow = true;
-    }
-
-    public updateDescription() {
-      const content = [];
-      if (this.authors.length > 0) {
-        content.push(`Author: ${this.authors.join()}`);
-      }
-      if (this.tags.length > 0) {
-        content.push(`Tags: ${this.tags.join()}`);
-      }
-      if (this.date) {
-        content.push(`Published: ${this.date}`);
-      }
-      document.querySelector<HTMLMetaElement>('meta[name=description]')!.content = content.join(' | ');
     }
 
     public updateData(isFirst = true) {
