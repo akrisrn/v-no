@@ -311,7 +311,7 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         sortedKeys.unshift(config.untagged);
         tagDict[config.untagged] = untagged;
       }
-      updateData(syncData.replace('[list]', sortedKeys.map((key) => {
+      updateData(syncData.replace(/\[list]/i, sortedKeys.map((key) => {
         const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
         return `###### ${key}${count}\n\n${tagDict[key]!.join('\n')}`;
       }).join('\n\n')));
