@@ -4,29 +4,29 @@
       <div>
         <!--suppress HtmlUnknownTarget -->
         <img :src="this.favicon" alt=""/>
-        <a @click.prevent="returnHome" href="/">{{ config.siteName ? config.siteName : 'HOME' }}</a>
+        <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'HOME' }}</a>
         <span></span>
         <a :href="`#/${config.readmeFile}`">README</a>
         <a :href="`#/${config.categoryFile}`">CATEGORIES</a>
         <a :href="`#/${config.archiveFile}`">ARCHIVES</a>
-        <a :href="`#/${config.searchFile}`" v-if="isHashMode">SEARCH</a>
+        <a v-if="isHashMode" :href="`#/${config.searchFile}`">SEARCH</a>
       </div>
     </div>
     <transition name="slide-fade">
-      <main :class="{error: isError}" v-if="isShow">
-        <div id="cover" v-if="cover">
+      <main v-if="isShow" :class="{error: isError}">
+        <div v-if="cover" id="cover">
           <img :src="cover" alt="cover"/>
         </div>
-        <div class="markdown-body" id="bar" v-if="!isError">
-          <code class="item-home" v-if="!isHome">
-            <a @click.prevent="returnHome" href="/">«</a>
+        <div v-if="!isError" id="bar" class="markdown-body">
+          <code v-if="!isHome" class="item-home">
+            <a href="/" @click.prevent="returnHome">«</a>
           </code>
-          <code class="item-date" v-if="date">{{ date }}</code>
-          <code class="item-date" v-else-if="updated">{{ updated }}</code>
-          <code class="item-author" v-for="author in authors">
+          <code v-if="date" class="item-date">{{ date }}</code>
+          <code v-else-if="updated" class="item-date">{{ updated }}</code>
+          <code v-for="author in authors" class="item-author">
             <a :href="getAuthorLink(author)">{{ author }}</a>
           </code>
-          <code class="item-tag" v-for="tag in tags">
+          <code v-for="tag in tags" class="item-tag">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-count">
@@ -41,11 +41,11 @@
         <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
                  @update:data="data = $event">
         </Article>
-        <footer class="markdown-body" v-if="!isHome">
-          <a @click.prevent="returnHome" class="home" href="/">Return to home</a>
+        <footer v-if="!isHome" class="markdown-body">
+          <a class="home" href="/" @click.prevent="returnHome">Return to home</a>
           <template v-if="!isError">
-            <span class="date" v-if="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
-            <span class="date" v-else-if="updated">{{ updated }}</span>
+            <span v-if="date" class="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
+            <span v-else-if="updated" class="date">{{ updated }}</span>
           </template>
         </footer>
       </main>
