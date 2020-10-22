@@ -23,7 +23,7 @@
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
-          <code v-for="tag in tags" class="item-tag" :key="tag">
+          <code v-for="tag in tags" :key="tag" class="item-tag">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-raw">
@@ -38,7 +38,7 @@
         <footer v-if="!isHome" class="markdown-body">
           <a class="home" href="/" @click.prevent="returnHome">Return to home</a>
           <template v-if="!isError">
-            <span v-if="date" class="date">{{ updated ? `${updated}  (Last Updated)` : date }}</span>
+            <span v-if="date" class="date">{{ updated ? `${updated} | Last updated` : date }}</span>
             <span v-else-if="updated" class="date">{{ updated }}</span>
           </template>
         </footer>
