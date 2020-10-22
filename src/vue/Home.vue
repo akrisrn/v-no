@@ -307,8 +307,18 @@
       } else {
         document.title = `${this.title}`;
       }
-      this.tags = flags.tags ? splitFlag(flags.tags) : [];
-      this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
+      this.tags = flags.tags ? Array.from(new Set(splitFlag(flags.tags))) : [];
+      if (flags.updated) {
+        const updatedList = Array.from(new Set(splitFlag(flags.updated)));
+        const timeList = updatedList.map((updated) => new Date(updated).getTime()).filter((time) => !isNaN(time));
+        if (timeList.length > 1) {
+          this.updated = new Date(Math.max(...timeList)).toDateString();
+        } else {
+          this.updated = timeList.length === 1 ? new Date(timeList[0]).toDateString() : '';
+        }
+      } else {
+        this.updated = '';
+      }
       if (flags.cover) {
         this.cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
       } else {

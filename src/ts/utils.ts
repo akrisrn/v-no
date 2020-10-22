@@ -50,7 +50,7 @@ export function trimList(list: string[]) {
 }
 
 export function splitFlag(flag: string) {
-  return trimList(flag.split(/\s*[,，]\s*/));
+  return trimList(flag.split(/\s*[,，、]\s*/));
 }
 
 export function splitTagsFromCodes(codes: string) {
