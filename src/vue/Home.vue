@@ -23,9 +23,6 @@
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
-          <code v-for="author in authors" class="item-author" :key="author">
-            <a :href="getAuthorLink(author)">{{ author }}</a>
-          </code>
           <code v-for="tag in tags" class="item-tag" :key="tag">
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
@@ -76,7 +73,6 @@
   export default class Home extends Vue {
     public data = '';
     public title = '';
-    public authors: string[] = [];
     public tags: string[] = [];
     public updated = '';
     public cover = '';
@@ -311,7 +307,6 @@
       } else {
         document.title = `${this.title}`;
       }
-      this.authors = flags.author ? splitFlag(flags.author) : [this.config.author];
       this.tags = flags.tags ? splitFlag(flags.tags) : [];
       this.updated = flags.updated ? new Date(flags.updated).toDateString() : '';
       if (flags.cover) {
@@ -367,10 +362,6 @@
       Object.keys(binds).forEach((key) => {
         this.inputBinds[key] = binds[key];
       });
-    }
-
-    public getAuthorLink(author: string) {
-      return getQueryLink(EFlag.author, author);
     }
 
     public getTagLink(tag: string) {

@@ -83,17 +83,8 @@ main {
         background-color: $info-color-xs;
       }
 
-      &.item-author {
-        background-color: $success-color-xs;
-
-        &:before {
-          margin-right: 2px;
-          content: "@";
-        }
-      }
-
       &.item-tag {
-        background-color: $warning-color-xs;
+        background-color: $success-color-xs;
 
         &:before {
           margin-right: 2px;

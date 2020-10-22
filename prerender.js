@@ -91,7 +91,7 @@ async function getHtmlAndFiles(page, urlPath) {
       files.push(filepath);
     }
     document.body.classList.add('prerender');
-    document.querySelectorAll('code.item-author,code.item-tag,.index li>code').forEach((code) => {
+    document.querySelectorAll('code.item-tag,.index li>code').forEach((code) => {
       code.innerHTML = code.innerText;
       code.classList.add('nolink');
     });

@@ -9,7 +9,6 @@ interface Config {
   commonFile: string;
   untagged: string;
   siteName: string;
-  author: string;
 }
 
 export function getFromWindow(name: string) {

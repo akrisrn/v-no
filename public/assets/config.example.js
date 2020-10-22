@@ -7,5 +7,4 @@ vnoConfig = {
   commonFile: '',
   untagged: 'untagged',
   siteName: '',
-  author: 'root',
 };

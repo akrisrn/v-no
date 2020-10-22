@@ -319,13 +319,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
         axiosGet(item.href).then((response) => {
           const data = response.data.trim();
           let isFind: boolean;
-          if (queryType === EFlag.author) {
-            const dataAuthors = splitFlag(getFlag(data, EFlag.author).toLowerCase());
-            if (dataAuthors.length === 0) {
-              dataAuthors.push(config.author.toLowerCase());
-            }
-            isFind = dataAuthors.includes(queryParam!);
-          } else if (queryType === EFlag.tags) {
+          if (queryType === EFlag.tags) {
             const dataTags = splitFlag(getFlag(data, EFlag.tags).toLowerCase());
             isFind = dataTags.includes(queryParam!);
           } else {
