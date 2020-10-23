@@ -2,30 +2,12 @@ const puppeteer = require('puppeteer');
 const url = require('url');
 const path = require('path');
 const fs = require('fs');
-const dotenv = require('dotenv');
 
-['.env', '.env.local', '.env.production.local', 'public/assets/config.js'].forEach((filename) => {
-  try {
-    const configFile = fs.readFileSync(filename);
-    if (filename.endsWith('js')) {
-      const config = eval(configFile.toString());
-      process.env.VUE_APP_INDEX_FILE = config.indexFile;
-      process.env.VUE_APP_CATEGORY_FILE = config.categoryFile;
-    } else {
-      const config = dotenv.parse(configFile);
-      Object.keys(config).forEach((key) => {
-        process.env[key] = config[key];
-      });
-    }
-  } catch (e) {
-  }
-});
-
-const host = process.env.PRERENDER_HOST;
-const outDir = process.env.PRERENDER_DIR;
-const indexPath = process.env.VUE_APP_INDEX_PATH;
-const indexFile = process.env.VUE_APP_INDEX_FILE;
-const categoryFile = process.env.VUE_APP_CATEGORY_FILE;
+const host = '';
+const outDir = '';
+const indexPath = 'hash/index.html';
+const indexFile = 'index.md';
+const categoryFile = 'categories.md';
 
 if (!host || !outDir) return;
 
