@@ -4,7 +4,7 @@
       <div>
         <!--suppress HtmlUnknownTarget -->
         <img :src="this.favicon" alt=""/>
-        <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'HOME' }}</a>
+        <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>
         <a :href="`#/${config.readmeFile}`">README</a>
         <a :href="`#/${config.categoryFile}`">CATEGORIES</a>
