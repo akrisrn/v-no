@@ -35,7 +35,7 @@ function writeHtml(filepath, html) {
   filepath = path.join(outDir, filepath);
   const dirname = path.dirname(filepath);
   if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, {recursive: true});
+    fs.mkdirSync(dirname, { recursive: true });
   }
   console.log('write:', filepath);
   fs.writeFileSync(filepath, '<!DOCTYPE html>' + html);
@@ -45,12 +45,12 @@ async function getHtmlAndFiles(page, urlPath) {
   console.log('load:', urlPath);
   await page.setRequestInterception(true);
   page.on('request', request => {
+    const pathname = new URL(request.url()).pathname;
     switch (request.resourceType()) {
       case 'image':
         request.abort();
         break;
       case 'script':
-        const pathname = new URL(request.url()).pathname;
         if (!pathname.startsWith('/assets/')) {
           request.abort();
         } else {
