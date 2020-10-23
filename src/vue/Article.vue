@@ -15,9 +15,9 @@
     updateSearchList,
     updateToc,
   } from '@/ts/update';
+  import { exposeToWindow } from '@/ts/utils';
   import Prism from 'prismjs';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
-  import { exposeToWindow } from '@/ts/utils';
 
   @Component
   export default class Article extends Vue {

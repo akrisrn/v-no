@@ -3,7 +3,7 @@
     <div id="top">
       <div>
         <!--suppress HtmlUnknownTarget -->
-        <img :src="this.favicon" alt=""/>
+        <img :src="favicon" alt=""/>
         <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>
         <a :href="`#/${config.readmeFile}`">README</a>
