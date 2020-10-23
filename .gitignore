@@ -21,7 +21,6 @@ yarn-error.log*
 *.sln
 *.sw?
 
-public/**/*.md
-public/articles
 public/uploads
-public/assets/config.js
+public/**/*.md
+scripts/yarn.lock
