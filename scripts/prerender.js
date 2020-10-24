@@ -3,14 +3,14 @@ const url = require('url');
 const path = require('path');
 const fs = require('fs');
 
+const outDir = '';
 const host = '';
 const publicPath = '/';
-const outDir = '';
 const indexPath = 'hash/index.html';
 const indexFile = 'index.md';
 const categoryFile = 'categories.md';
 
-if (!host || !outDir) return;
+if (!outDir || !host) return;
 
 const index = url.resolve(host + publicPath, indexPath);
 
@@ -49,7 +49,7 @@ async function getHtmlAndFiles(page, urlPath) {
   await page.waitForSelector('a.snippet', {
     hidden: true,
   });
-  if (urlPath.endsWith('#/' + categoryFile)) {
+  if (urlPath.endsWith(`#/${categoryFile}`)) {
     await page.waitForSelector('ul');
   }
   return page.evaluate(() => {
