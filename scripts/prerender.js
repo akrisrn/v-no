@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const host = '';
+const publicPath = '/';
 const outDir = '';
 const indexPath = 'hash/index.html';
 const indexFile = 'index.md';
@@ -11,7 +12,7 @@ const categoryFile = 'categories.md';
 
 if (!host || !outDir) return;
 
-const index = url.resolve(host, indexPath);
+const index = url.resolve(host + publicPath, indexPath);
 
 function writeHtml(filepath, html) {
   filepath = path.join(outDir, filepath);
@@ -64,7 +65,11 @@ async function getHtmlAndFiles(page, urlPath) {
       let filepath;
       if (href.startsWith('#/') && href.endsWith('.md')) {
         filepath = href.substr(1);
-        a.href = filepath.replace(/\.md$/, '.html');
+        let newHref = filepath.replace(/\.md$/, '.html');
+        if (publicPath !== '/' && !newHref.startsWith(publicPath)) {
+          newHref = publicPath + newHref;
+        }
+        a.href = newHref;
       } else if (href.startsWith('/') && href.endsWith('.html')) {
         filepath = href.replace(/\.html$/, '.md');
       } else {
