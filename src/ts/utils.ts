@@ -99,3 +99,12 @@ export function toggleClass(element: HTMLElement, className: string) {
 export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
+
+export function fixAbsPath(path: string) {
+  if (path.startsWith('/') && process.env.VUE_APP_PUBLIC_PATH !== '/' &&
+    !path.startsWith(process.env.VUE_APP_PUBLIC_PATH)) {
+    return process.env.VUE_APP_PUBLIC_PATH + path;
+  } else {
+    return path;
+  }
+}

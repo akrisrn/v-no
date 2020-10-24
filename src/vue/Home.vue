@@ -57,7 +57,16 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, config, exposeToWindow, isHashMode, splitFlag, toggleClass } from '@/ts/utils';
+  import {
+    axiosGet,
+    config,
+    exposeToWindow,
+    fixAbsPath,
+    isExternalLink,
+    isHashMode,
+    splitFlag,
+    toggleClass,
+  } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -320,7 +329,8 @@
         this.updated = '';
       }
       if (flags.cover) {
-        this.cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
+        const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
+        this.cover = !isExternalLink(cover) ? fixAbsPath(cover) : cover;
       } else {
         this.cover = '';
       }

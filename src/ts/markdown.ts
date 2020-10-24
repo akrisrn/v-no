@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import { getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
+import { fixAbsPath, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -48,6 +48,9 @@ const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
+  if (!isExternalLink(src)) {
+    src = fixAbsPath(src);
+  }
   const match = src.match(/#(.+)$/);
   if (match) {
     const width = parseInt(match[1], 0);
@@ -64,8 +67,8 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
       token.attrSet('width', width.toString());
     }
     src = src.replace(/#.+$/, '');
-    token.attrSet('src', src);
   }
+  token.attrSet('src', src);
   return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
@@ -149,6 +152,8 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     tokens[idx + 2].attrSet('external', 'true');
+  } else {
+    token.attrSet('href', fixAbsPath(href));
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
 };
