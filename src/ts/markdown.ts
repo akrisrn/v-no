@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import { getWrapRegExp, isHashMode } from '@/ts/utils';
+import { getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -145,7 +145,7 @@ const defaultLinkRenderRule = getDefaultRenderRule('link_open');
 markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   const href = token.attrGet('href')!;
-  if (href.startsWith('http')) {
+  if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     tokens[idx + 2].attrSet('external', 'true');

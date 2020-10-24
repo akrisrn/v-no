@@ -95,3 +95,7 @@ export function toggleClass(element: HTMLElement, className: string) {
     element.classList.add(className);
   }
 }
+
+export function isExternalLink(href: string) {
+  return href.indexOf(':') >= 0;
+}
