@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const url = require('url');
 const path = require('path');
 const fs = require('fs');
 
@@ -12,7 +11,7 @@ const categoryFile = 'categories.md';
 
 if (!outDir || !host) return;
 
-const index = url.resolve(host + publicPath, indexPath);
+const index = `${host}${publicPath}${publicPath !== '/' ? '/' : ''}${indexPath}`;
 
 function writeHtml(filepath, html) {
   filepath = path.join(outDir, filepath);
@@ -114,7 +113,7 @@ async function loadPages(browser, files) {
       continue;
     }
     hasLoaded.push(filepath);
-    const urlPath = url.resolve(index, '#' + filepath);
+    const urlPath = `${index}#${filepath}`;
     pages.push(browser.newPage().then(async (page) => {
       const [html, newFiles] = await getHtmlAndFiles(page, urlPath);
       await page.close();
@@ -132,7 +131,7 @@ async function loadPages(browser, files) {
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  const [html, files] = await getHtmlAndFiles(page, url.resolve(index, '#/' + indexFile));
+  const [html, files] = await getHtmlAndFiles(page, `${index}#/${indexFile}`);
   await page.close();
   if (html !== null) {
     writeHtml('index.html', html);
