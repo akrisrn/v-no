@@ -1,1 +1,3 @@
 # INDEX
+
+@cover: ![](logo.png)
