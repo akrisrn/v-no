@@ -6,5 +6,5 @@ vnoConfig = {
   searchFile: 'search.md',
   commonFile: '',
   untagged: 'untagged',
-  siteName: '',
+  siteName: 'v-no',
 };
