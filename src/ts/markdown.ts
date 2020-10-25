@@ -207,8 +207,8 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
     return line;
   }).join('\n');
   if (!noToc) {
+    let tocHtml = '<div id="toc">';
     if (toc.length > 0) {
-      let tocHtml = '<div id="toc">';
       if (toc.length > 7 && !isCategory) {
         let mid = Math.ceil(toc.length / 2);
         while (toc[mid] && !toc[mid].startsWith('-')) {
@@ -219,12 +219,10 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
       } else {
         tocHtml += markdownIt.render(toc.join('\n'));
       }
-      tocHtml += '</div>';
       tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
-      data = data.replace(/\[toc]/i, tocHtml);
-    } else {
-      data = data.replace(/\[toc]/i, '');
     }
+    tocHtml += '</div>';
+    data = data.replace(/\[toc]/i, tocHtml);
   }
   return markdownIt.render(data);
 }
