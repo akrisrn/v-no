@@ -2,6 +2,8 @@
 
 body.dark {
   #top {
+    background-color: $dark-background-color;
+
     img {
       filter: brightness(0.7);
     }

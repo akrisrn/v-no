@@ -4,7 +4,7 @@
   font-family: $font-family;
   font-size: $font-size-s;
   padding: 0 16px;
-  transition: box-shadow 0.5s;
+  transition: background-color 0.5s, box-shadow 0.5s;
   background-color: $dark-main-background-color;
   box-shadow: $box-shadow;
 
@@ -17,11 +17,6 @@
     margin: 0 auto;
     transition: height 0.5s, opacity 0.5s;
     opacity: 1;
-
-    @media screen and (max-width: $media-max-width) {
-      height: 0;
-      opacity: 0;
-    }
 
     img {
       height: 24px;
