@@ -2,7 +2,6 @@
   <div>
     <div id="top">
       <div>
-        <!--suppress HtmlUnknownTarget -->
         <img :src="favicon" alt=""/>
         <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>

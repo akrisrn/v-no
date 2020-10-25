@@ -1,3 +1,3 @@
 # v-no
 
-@cover: ![](logo.png)
+@cover: ![](/logo.png)
