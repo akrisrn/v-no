@@ -4,7 +4,7 @@ vnoConfig = {
   categoryFile: 'categories.md',
   archiveFile: 'archives.md',
   searchFile: 'search.md',
-  commonFile: '',
+  commonFile: 'common.md',
   untagged: 'untagged',
   siteName: 'v-no',
 };
