@@ -3,7 +3,7 @@
     <div id="top">
       <div>
         <img :src="favicon" alt=""/>
-        <a href="/" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
+        <a :href="publicPath" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>
         <a :href="`#/${config.readmeFile}`">README</a>
         <a :href="`#/${config.categoryFile}`">CATEGORIES</a>
@@ -18,7 +18,7 @@
         </div>
         <div v-if="!isError" id="bar" class="markdown-body">
           <code v-if="!isHome" class="item-home">
-            <a href="/" @click.prevent="returnHome">«</a>
+            <a :href="publicPath" @click.prevent="returnHome">«</a>
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
@@ -35,7 +35,7 @@
                  @update:data="data = $event">
         </Article>
         <footer v-if="!isHome" class="markdown-body">
-          <a class="home" href="/" @click.prevent="returnHome">Return to home</a>
+          <a class="home" :href="publicPath" @click.prevent="returnHome">Return to home</a>
           <template v-if="!isError">
             <span v-if="date" class="date">{{ updated ? `${updated} | Last updated` : date }}</span>
             <span v-else-if="updated" class="date">{{ updated }}</span>
@@ -96,6 +96,7 @@
     public params: { [index: string]: string | undefined } = {};
     public isHashMode = isHashMode();
     public baseUrl: string = process.env.BASE_URL;
+    public publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
     public indexPath: string = process.env.VUE_APP_INDEX_PATH;
     public favicon: string = this.baseUrl + process.env.VUE_APP_FAVICON;
     public config = config;
