@@ -302,9 +302,7 @@
         }
         home += indexPath;
       }
-      if (home === this.$route.fullPath) {
-        this.$router.go(0);
-      } else {
+      if (this.$route.fullPath !== home) {
         this.$router.push(home);
       }
     }
