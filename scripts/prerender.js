@@ -28,12 +28,16 @@ async function getHtmlAndFiles(page, urlPath) {
   await page.setRequestInterception(true);
   page.on('request', request => {
     const pathname = new URL(request.url()).pathname;
+    let assetsPath = '/assets/';
     switch (request.resourceType()) {
       case 'image':
         request.abort();
         break;
       case 'script':
-        if (!pathname.startsWith('/assets/')) {
+        if (publicPath !== '/') {
+          assetsPath = publicPath + assetsPath;
+        }
+        if (!pathname.startsWith(assetsPath)) {
           request.abort();
         } else {
           request.continue();
@@ -49,9 +53,9 @@ async function getHtmlAndFiles(page, urlPath) {
     hidden: true,
   });
   if (urlPath.endsWith(`#/${categoryFile}`)) {
-    await page.waitForSelector('ul');
+    await page.waitForSelector('#toc');
   }
-  return page.evaluate(() => {
+  return page.evaluate((publicPath) => {
     if (document.querySelector('main.error')) {
       return [null, null];
     }
@@ -101,7 +105,7 @@ async function getHtmlAndFiles(page, urlPath) {
     const bar = document.querySelector('#bar');
     bar.append(code);
     return [document.documentElement.outerHTML, files];
-  });
+  }, publicPath);
 }
 
 const hasLoaded = [];
