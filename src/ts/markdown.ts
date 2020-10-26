@@ -222,7 +222,7 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
       tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
     }
     tocHtml += '</div>';
-    data = data.replace(/\[toc]/i, tocHtml);
+    data = data.replace(/^\[toc]$/im, tocHtml);
   }
   return markdownIt.render(data);
 }
