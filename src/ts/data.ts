@@ -33,7 +33,7 @@ export function getFlag(data: string, flag: EFlag) {
   return '';
 }
 
-export function getFlags(data: string) {
+export function getFlags(data: string, onlyClean = false) {
   const result: IFlags = {};
   const flags = Object.values(EFlag).map((flag) => `@${flag}:`);
   flags.push('# ');
@@ -42,13 +42,19 @@ export function getFlags(data: string) {
   const dataCopy = data;
   let match = regexp.exec(dataCopy);
   while (match) {
-    if (match[1].startsWith('@')) {
-      result[match[1].substring(1, match[1].length - 1)] = match[2];
-    } else {
-      result.title = match[2];
+    if (!onlyClean) {
+      if (match[1].startsWith('@')) {
+        result[match[1].substring(1, match[1].length - 1)] = match[2];
+      } else {
+        result.title = match[2];
+      }
     }
     data = data.replace(match[0], '');
     match = regexp.exec(dataCopy);
   }
   return { data, result };
+}
+
+export function cleanFlags(data: string) {
+  return getFlags(data, true).data;
 }
