@@ -227,35 +227,38 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 
 export function updateIndexList() {
   document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
+    let needSort = false;
     const lis: Array<{ node: HTMLLIElement; time: number }> = [];
     ul.querySelectorAll('li').forEach((li) => {
-      const item = {
-        node: li,
-        time: 0,
-      };
-      let date = li.querySelector<HTMLSpanElement>('span.date');
-      if (!date) {
-        const link = li.querySelector('a');
-        if (link) {
+      const item = { node: li, time: 0 };
+      if (!li.classList.contains('article')) {
+        const firstChild = li.firstChild;
+        if (firstChild && firstChild.nodeType === 1 && (firstChild as HTMLElement).tagName === 'A' &&
+          (firstChild as HTMLLinkElement).getAttribute('href')!.startsWith('#/')) {
+          const link = firstChild as HTMLLinkElement;
           const dateString = getDateString(link.href);
           if (dateString) {
-            date = document.createElement('span');
+            const date = document.createElement('span');
             date.classList.add('date');
             date.innerText = dateString;
             li.insertBefore(date, link);
             item.time = getTime(link.href);
           }
+          li.querySelectorAll<HTMLElement>('code').forEach((code) => {
+            const a = document.createElement('a');
+            a.href = buildQueryContent(`@${EFlag.tags}:${code.innerText}`, true);
+            a.innerText = code.innerText;
+            code.innerHTML = a.outerHTML;
+          });
+          li.classList.add('article');
+          needSort = true;
         }
       }
-      li.querySelectorAll<HTMLElement>('code:not(.nolink)').forEach((code) => {
-        const a = document.createElement('a');
-        a.href = buildQueryContent(`@${EFlag.tags}:${code.innerText}`, true);
-        a.innerText = code.innerText;
-        code.innerHTML = a.outerHTML;
-      });
       lis.push(item);
     });
-    ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li) => li.node.outerHTML).join('');
+    if (needSort) {
+      ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li) => li.node.outerHTML).join('');
+    }
   });
 }
 

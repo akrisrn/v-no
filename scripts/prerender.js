@@ -83,7 +83,6 @@ async function getHtmlAndFiles(page, urlPath) {
     document.body.classList.add('prerender');
     document.querySelectorAll('code.item-tag,.index li>code').forEach((code) => {
       code.innerHTML = code.innerText;
-      code.classList.add('nolink');
     });
     document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
