@@ -101,9 +101,9 @@ export function isExternalLink(href: string) {
 }
 
 export function fixAbsPath(path: string) {
-  if (path.startsWith('/') && process.env.VUE_APP_PUBLIC_PATH !== '/' &&
-    !path.startsWith(process.env.VUE_APP_PUBLIC_PATH)) {
-    return process.env.VUE_APP_PUBLIC_PATH + path;
+  const baseUrl = process.env.BASE_URL;
+  if (path.startsWith('/') && baseUrl !== '/' && !path.startsWith(baseUrl)) {
+    return baseUrl + path.substr(1);
   } else {
     return path;
   }
