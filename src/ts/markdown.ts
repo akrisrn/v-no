@@ -168,23 +168,21 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return svg + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
-export function renderMD(path: string, data: string, isCategory: boolean, noToc = false) {
+export function renderMD(path: string, data: string, isCategory: boolean) {
   let article: HTMLElement;
   const toc: string[] = [];
   let firstHeader = '';
   data = data.split('\n').map((line) => {
-    if (!noToc) {
-      const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
-      if (tocMatch) {
-        if (!firstHeader) {
-          firstHeader = tocMatch[1];
-        }
-        let prefix = '-';
-        if (tocMatch[1] !== firstHeader) {
-          prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
-        }
-        toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
+    const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
+    if (tocMatch) {
+      if (!firstHeader) {
+        firstHeader = tocMatch[1];
       }
+      let prefix = '-';
+      if (tocMatch[1] !== firstHeader) {
+        prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
+      }
+      toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
     const regexp = getWrapRegExp('\\$', '\\$', 'g');
@@ -206,24 +204,22 @@ export function renderMD(path: string, data: string, isCategory: boolean, noToc 
     }
     return line;
   }).join('\n');
-  if (!noToc) {
-    let tocHtml = '<div id="toc">';
-    if (toc.length > 0) {
-      if (toc.length > 7 && !isCategory) {
-        let mid = Math.ceil(toc.length / 2);
-        while (toc[mid] && !toc[mid].startsWith('-')) {
-          mid += 1;
-        }
-        tocHtml += markdownIt.render(toc.slice(0, mid).join('\n')) +
-          markdownIt.render(toc.slice(mid, toc.length).join('\n'));
-      } else {
-        tocHtml += markdownIt.render(toc.join('\n'));
+  let tocHtml = '<div id="toc">';
+  if (toc.length > 0) {
+    if (toc.length > 7 && !isCategory) {
+      let mid = Math.ceil(toc.length / 2);
+      while (toc[mid] && !toc[mid].startsWith('-')) {
+        mid += 1;
       }
-      tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
+      tocHtml += markdownIt.render(toc.slice(0, mid).join('\n')) +
+        markdownIt.render(toc.slice(mid, toc.length).join('\n'));
+    } else {
+      tocHtml += markdownIt.render(toc.join('\n'));
     }
-    tocHtml += '</div>';
-    data = data.replace(/^\[toc]$/im, tocHtml);
+    tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
   }
+  tocHtml += '</div>';
+  data = data.replace(/^\[toc]$/im, tocHtml);
   return markdownIt.render(data);
 }
 
