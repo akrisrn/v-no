@@ -193,8 +193,6 @@
     margin: 24px 0;
     padding: 0 16px;
     border-left: 6px solid $info-color-s;
-    border-radius: 3px;
-    box-shadow: $box-shadow;
 
     ::-webkit-details-marker {
       display: none;
@@ -202,6 +200,10 @@
 
     ::-moz-list-bullet {
       font-size: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
     }
 
     summary {
@@ -244,10 +246,12 @@
     }
 
     &.empty {
-      box-shadow: $box-shadow, 0 -3px 6px 0 $shadow-color;
-
       summary {
         display: none;
+
+        + * {
+          margin-top: 0;
+        }
       }
     }
 
@@ -376,10 +380,10 @@
     button, span {
       transition: color 0.5s;
       color: $gray-font-color;
-      background-color: $light-gray-font-color;
+      background-color: #000000;
 
       &:hover {
-        color: $font-color;
+        color: $light-gray-font-color;
       }
     }
   }
@@ -394,7 +398,7 @@
     transition: color 0.5s, border-color 0.5s, background-color 0.5s;
     color: $font-color;
     border: 2px solid $info-color-s;
-    border-radius: 10px;
+    border-radius: 3px;
     outline: none;
     background-color: transparent;
 
