@@ -3,13 +3,17 @@ import { EFlag, IFlags } from '@/ts/enums';
 
 export function getListFromData(data: string, isAll = false) {
   const results = [];
+  const hrefs: string[] = [];
   const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*\`)?`, 'gm');
   let match = regexp.exec(data);
   while (match) {
-    const title = match[1];
     const href = match[2];
-    const tags = match[3] ? splitTagsFromCodes(match[3]) : [];
-    results.push({ title, href, tags });
+    if (!hrefs.includes(href)) {
+      const title = match[1];
+      const tags = match[3] ? splitTagsFromCodes(match[3]) : [];
+      results.push({ title, href, tags });
+      hrefs.push(href);
+    }
     match = regexp.exec(data);
   }
   return results;
