@@ -1,4 +1,4 @@
-import { getFlag, getIndexFileData, getListFromData } from '@/ts/data';
+import { cleanFlags, getFlag, getIndexFileData, getListFromData } from '@/ts/data';
 import { getDateString, getTime } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
@@ -6,6 +6,7 @@ import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/q
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
 import { axiosGet, config, escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
+import Prism from 'prismjs';
 
 export function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
@@ -154,7 +155,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
       }
       updatedLinks.push(href);
       axiosGet(href).then((response) => {
-        let data = (response.data as string).split('\n').map((line) => {
+        let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map((line) => {
           const regexp = getWrapRegExp('{{', '}}', 'g');
           const lineCopy = line;
           let paramMatch = regexp.exec(lineCopy);
@@ -193,13 +194,16 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         }
         // 规避递归节点重复问题。
         try {
-          a.parentElement!.outerHTML = renderMD(href, data, isCategory, true);
+          a.parentElement!.outerHTML = renderMD(href, data, isCategory);
         } catch (e) {
           return;
         }
         updateDD();
+        updateToc();
+        updateHeading();
         updateImagePath();
         updateLinkPath(isCategory, updatedLinks);
+        Prism.highlightAll();
       }).catch((error) => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
