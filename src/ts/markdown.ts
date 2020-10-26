@@ -168,7 +168,7 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return svg + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
-export function renderMD(data: string, isCategory: boolean, noToc = false) {
+export function renderMD(path: string, data: string, isCategory: boolean, noToc = false) {
   let article: HTMLElement;
   const toc: string[] = [];
   let firstHeader = '';
@@ -197,7 +197,7 @@ export function renderMD(data: string, isCategory: boolean, noToc = false) {
           article = document.createElement('article');
           article.innerHTML = markdownIt.render(data);
         }
-        result = eval(`(function(article,isHashMode){${jsExpMatch[1]}})`)(article, isHashMode());
+        result = eval(`(function(path,article,isHashMode){${jsExpMatch[1]}})`)(path, article, isHashMode());
       } catch (e) {
         result = `${e.name}: ${e.message}`;
       }

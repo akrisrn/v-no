@@ -193,7 +193,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         }
         // 规避递归节点重复问题。
         try {
-          a.parentElement!.outerHTML = renderMD(data, isCategory, true);
+          a.parentElement!.outerHTML = renderMD(href, data, isCategory, true);
         } catch (e) {
           return;
         }

@@ -32,7 +32,7 @@
         <header>{{ title }}</header>
         <!--suppress JSUnresolvedVariable -->
         <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
-                 @update:data="data = $event">
+                 :path="path" @update:data="data = $event">
         </Article>
         <footer v-if="!isHome" class="markdown-body">
           <a :href="baseUrl" class="home" @click.prevent="returnHome">Return to home</a>

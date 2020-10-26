@@ -22,6 +22,7 @@
   @Component
   export default class Article extends Vue {
     @PropSync('data') public syncData!: string;
+    @Prop() public path!: string;
     @Prop() public isIndex!: boolean;
     @Prop() public isCategory!: boolean;
     @Prop() public isSearch!: boolean;
@@ -32,14 +33,14 @@
     }, 'markdown-body'];
 
     public get markdown() {
-      return renderMD(this.syncData, this.isCategory);
+      return renderMD(this.path, this.syncData, this.isCategory);
     }
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        renderMD: (data: string) => renderMD(data, false, true),
+        renderMD: (data: string) => renderMD(this.path, data, false, true),
         updateMD: () => {
           updateDD();
           updateHeading();
