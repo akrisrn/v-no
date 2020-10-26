@@ -40,9 +40,10 @@
     public created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        renderMD: (data: string) => renderMD(this.path, data, false, true),
+        renderMD: (data: string) => renderMD(this.path, data, false),
         updateMD: () => {
           updateDD();
+          updateToc();
           updateHeading();
           updateImagePath();
           updateLinkPath(false);
