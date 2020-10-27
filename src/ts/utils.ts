@@ -9,6 +9,7 @@ interface Config {
   commonFile: string;
   untagged: string;
   siteName: string;
+  favicon: string;
 }
 
 export function getFromWindow(name: string) {

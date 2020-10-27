@@ -97,7 +97,7 @@
     public isHashMode = isHashMode();
     public baseUrl: string = process.env.BASE_URL;
     public indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    public favicon: string = this.baseUrl + process.env.VUE_APP_FAVICON;
+    public favicon: string = this.baseUrl + config.favicon;
     public config = config;
 
     public get path() {
@@ -226,6 +226,8 @@
 
     // noinspection JSUnusedGlobalSymbols
     public created() {
+      const icon = document.querySelector('link[rel="icon"]')!;
+      icon.setAttribute('href', this.favicon);
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         addInputBind: this.addInputBind,

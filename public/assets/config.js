@@ -7,4 +7,5 @@ vnoConfig = {
   commonFile: 'common.md',
   untagged: 'untagged',
   siteName: 'v-no',
+  favicon: 'favicon.png',
 };
