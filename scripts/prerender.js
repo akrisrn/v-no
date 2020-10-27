@@ -55,7 +55,7 @@ async function getHtmlAndFiles(page, urlPath) {
   if (urlPath.endsWith(`#/${categoryFile}`)) {
     await page.waitForSelector('#toc');
   }
-  return page.evaluate((publicPath) => {
+  return page.evaluate(publicPath => {
     if (document.querySelector('main.error')) {
       return [null, null];
     }
@@ -81,10 +81,10 @@ async function getHtmlAndFiles(page, urlPath) {
       files.push(filepath);
     }
     document.body.classList.add('prerender');
-    document.querySelectorAll('code.item-tag,.index li>code').forEach((code) => {
+    document.querySelectorAll('code.item-tag,.index li>code').forEach(code => {
       code.innerHTML = code.innerText;
     });
-    document.querySelectorAll('div.code-toolbar').forEach((toolbar) => {
+    document.querySelectorAll('div.code-toolbar').forEach(toolbar => {
       toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
     });
     const code = document.createElement('code');
@@ -117,7 +117,7 @@ async function loadPages(browser, files) {
     }
     hasLoaded.push(filepath);
     const urlPath = `${index}#${filepath}`;
-    pages.push(browser.newPage().then(async (page) => {
+    pages.push(browser.newPage().then(async page => {
       const [html, newFiles] = await getHtmlAndFiles(page, urlPath);
       await page.close();
       if (html !== null) {

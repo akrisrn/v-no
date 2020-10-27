@@ -5,8 +5,7 @@ Vue.use(Router);
 
 const Home = () => import(/* webpackChunkName: "home" */ '@/vue/Home.vue');
 
-// noinspection JSUnusedGlobalSymbols
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [{
@@ -15,3 +14,5 @@ export default new Router({
     component: Home,
   }],
 });
+
+export default router;

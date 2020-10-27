@@ -1,5 +1,4 @@
 export enum EFlag {
-  // noinspection JSUnusedGlobalSymbols
   tags = 'tags',
   updated = 'updated',
   cover = 'cover',

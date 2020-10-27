@@ -24,8 +24,8 @@ export function getIndexFileData(func: (data: string) => void) {
   Promise.all([
     axiosGet(baseUrl + config.indexFile),
     axiosGet(baseUrl + config.archiveFile),
-  ]).then((responses) => {
-    func(responses.map((response) => response.data).join('\n'));
+  ]).then(responses => {
+    func(responses.map(response => response.data).join('\n'));
   });
 }
 
@@ -39,7 +39,7 @@ export function getFlag(data: string, flag: EFlag) {
 
 export function getFlags(data: string, onlyClean = false) {
   const result: IFlags = {};
-  const flags = Object.values(EFlag).map((flag) => `@${flag}:`);
+  const flags = Object.values(EFlag).map(flag => `@${flag}:`);
   flags.push('# ');
   const flagsStr = flags.join('|');
   const regexp = getWrapRegExp(`^(${flagsStr})`, '$', 'gm');

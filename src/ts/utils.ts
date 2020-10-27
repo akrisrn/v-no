@@ -30,7 +30,7 @@ export function exposeToWindow(vars: { [index: string]: any }) {
     vno = {};
     setToWindow('vno', vno);
   }
-  Object.keys(vars).forEach((key) => {
+  Object.keys(vars).forEach(key => {
     vno[key] = vars[key];
   });
 }
@@ -41,7 +41,7 @@ export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, fl
 
 export function trimList(list: string[]) {
   const result: string[] = [];
-  list.forEach((item) => {
+  list.forEach(item => {
     const trim = item.trim();
     if (trim) {
       result.push(trim);
@@ -73,7 +73,7 @@ export function escapeHTML(html: string) {
     '>': '&gt;',
   };
   const regexp = new RegExp(`[${Object.keys(symbols).join('')}]`, 'g');
-  return html.replace(regexp, (symbol) => {
+  return html.replace(regexp, symbol => {
     return symbols[symbol];
   });
 }

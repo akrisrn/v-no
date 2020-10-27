@@ -56,7 +56,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
     const width = parseInt(match[1], 0);
     if (isNaN(width)) {
       if (match[1].startsWith('.')) {
-        match[1].substr(1).split('.').forEach((cls) => {
+        match[1].substr(1).split('.').forEach(cls => {
           cls = cls.trim();
           token.attrJoin('class', cls);
         });
@@ -111,11 +111,11 @@ markdownIt.renderer.rules.html_block = (tokens, idx, options, env, self) => {
       uls[0].classList.add('ul-a');
       uls[1].classList.add('ul-b');
     }
-    div.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
+    div.querySelectorAll<HTMLLinkElement>('#toc a').forEach(a => {
       a.setAttribute('h', a.getAttribute('href')!);
       a.removeAttribute('href');
     });
-    div.querySelectorAll<HTMLLinkElement>('#toc > ul.tags > li > a').forEach((a) => {
+    div.querySelectorAll<HTMLLinkElement>('#toc > ul.tags > li > a').forEach(a => {
       const count = a.querySelector<HTMLSpanElement>('span.count');
       if (count) {
         a.removeChild(count);
@@ -172,7 +172,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
   let article: HTMLElement;
   const toc: string[] = [];
   let firstHeader = '';
-  data = data.split('\n').map((line) => {
+  data = data.split('\n').map(line => {
     const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
     if (tocMatch) {
       if (!firstHeader) {

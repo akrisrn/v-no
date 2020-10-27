@@ -21,23 +21,23 @@
 
   @Component
   export default class Article extends Vue {
-    @PropSync('data') public syncData!: string;
-    @Prop() public path!: string;
-    @Prop() public isIndex!: boolean;
-    @Prop() public isCategory!: boolean;
-    @Prop() public isSearch!: boolean;
-    @Prop() public params!: { [index: string]: string | undefined };
+    @PropSync('data') syncData!: string;
+    @Prop() path!: string;
+    @Prop() isIndex!: boolean;
+    @Prop() isCategory!: boolean;
+    @Prop() isSearch!: boolean;
+    @Prop() params!: { [index: string]: string | undefined };
 
-    public classObject = [{
+    classObject = [{
       index: this.isIndex,
     }, 'markdown-body'];
 
-    public get markdown() {
+    get markdown() {
       return renderMD(this.path, this.syncData, this.isCategory);
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public created() {
+    created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         renderMD: (data: string) => renderMD(this.path, data, false),
@@ -53,7 +53,7 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public mounted() {
+    mounted() {
       // 规避 mount 后仍然可以查询到旧节点的问题。
       setTimeout(() => {
         updateDD();
@@ -73,7 +73,7 @@
       }, 0);
     }
 
-    public updateData(data: string) {
+    updateData(data: string) {
       this.syncData = data;
     }
   }

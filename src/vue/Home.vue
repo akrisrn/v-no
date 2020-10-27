@@ -30,7 +30,6 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <!--suppress JSUnresolvedVariable -->
         <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
                  :path="path" @update:data="data = $event">
         </Article>
@@ -79,28 +78,28 @@
 
   @Component({ components: { Article } })
   export default class Home extends Vue {
-    public data = '';
-    public title = '';
-    public tags: string[] = [];
-    public updated = '';
-    public cover = '';
-    public isShow = false;
-    public isError = false;
-    public isDark = false;
-    public isZen = false;
-    public toggleDark: HTMLElement | null = null;
-    public toggleZen: HTMLElement | null = null;
-    public toTop: HTMLElement | null = null;
-    public keyInput = '';
-    public inputBinds: { [index: string]: () => void } = {};
-    public params: { [index: string]: string | undefined } = {};
-    public isHashMode = isHashMode();
-    public baseUrl: string = process.env.BASE_URL;
-    public indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    public favicon: string = this.baseUrl + config.favicon;
-    public config = config;
+    data = '';
+    title = '';
+    tags: string[] = [];
+    updated = '';
+    cover = '';
+    isShow = false;
+    isError = false;
+    isDark = false;
+    isZen = false;
+    toggleDark: HTMLElement | null = null;
+    toggleZen: HTMLElement | null = null;
+    toTop: HTMLElement | null = null;
+    keyInput = '';
+    inputBinds: { [index: string]: () => void } = {};
+    params: { [index: string]: string | undefined } = {};
+    isHashMode = isHashMode();
+    baseUrl: string = process.env.BASE_URL;
+    indexPath: string = process.env.VUE_APP_INDEX_PATH;
+    favicon: string = this.baseUrl + config.favicon;
+    config = config;
 
-    public get path() {
+    get path() {
       this.params = {};
       let path = this.$route.path;
       const hash = this.$route.hash;
@@ -113,7 +112,7 @@
           if (path !== '/') {
             const indexOf = path.indexOf('?');
             if (indexOf >= 0) {
-              path.substr(indexOf + 1).split('&').forEach((param) => {
+              path.substr(indexOf + 1).split('&').forEach(param => {
                 const indexOfEQ = param.indexOf('=');
                 if (indexOfEQ >= 0) {
                   this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
@@ -136,7 +135,7 @@
       return path;
     }
 
-    public get isIndexPath() {
+    get isIndexPath() {
       let path = this.$route.path;
       if (path.endsWith('/')) {
         path += 'index.html';
@@ -144,66 +143,67 @@
       return path === '/' + this.indexPath;
     }
 
-    public get isIndex() {
+    get isIndex() {
       return [
         this.config.indexFile,
         this.config.categoryFile,
         this.config.archiveFile,
         this.config.searchFile,
-      ].map((file) => this.baseUrl + file).includes(this.path);
+      ].map(file => this.baseUrl + file).includes(this.path);
     }
 
-    public get isHome() {
+    get isHome() {
       return this.path === this.baseUrl + this.config.indexFile;
     }
 
-    public get isCategory() {
+    get isCategory() {
       return this.path === this.baseUrl + this.config.categoryFile;
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public get isArchive() {
+    get isArchive() {
       return this.path === this.baseUrl + this.config.archiveFile;
     }
 
-    public get isSearch() {
+    get isSearch() {
       return this.path === this.baseUrl + this.config.searchFile;
     }
 
-    public get date() {
+    get date() {
       return getDateString(this.path);
     }
 
-    public get metaThemeColor() {
+    get metaThemeColor() {
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
-    public beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
+    // noinspection JSUnusedGlobalSymbols
+    beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
       this.updateData(false);
     }
 
     @Watch('isShow')
-    public onIsShowChanged() {
+    onIsShowChanged() {
       if (this.isShow) {
         scroll(0, false);
       }
     }
 
     @Watch('isDark')
-    public onIsDarkChanged() {
+    onIsDarkChanged() {
       document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
       const elements = [this.toggleDark, this.toggleZen, this.toTop, document.body] as HTMLElement[];
       if (this.isDark) {
         this.toggleDark!.innerText = '☆';
-        elements.forEach((element) => {
+        elements.forEach(element => {
           element.classList.add('dark');
         });
         localStorage.setItem('dark', String(true));
       } else {
         this.toggleDark!.innerText = '★';
-        elements.forEach((element) => {
+        elements.forEach(element => {
           element.classList.remove('dark');
         });
         localStorage.removeItem('dark');
@@ -211,7 +211,7 @@
     }
 
     @Watch('isZen')
-    public onIsZenChanged() {
+    onIsZenChanged() {
       document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
         this.toggleZen!.classList.add('spin');
@@ -225,7 +225,7 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public created() {
+    created() {
       const icon = document.querySelector('link[rel="icon"]')!;
       icon.setAttribute('href', this.favicon);
       // noinspection JSUnusedGlobalSymbols
@@ -268,8 +268,8 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    public mounted() {
-      addEventListener('keydown', (event) => {
+    mounted() {
+      addEventListener('keydown', event => {
         this.keyInput += event.key;
         for (const key of Object.keys(this.inputBinds)) {
           if (this.keyInput.endsWith(key)) {
@@ -294,7 +294,7 @@
       });
     }
 
-    public returnHome() {
+    returnHome() {
       let home = '/';
       if (this.isIndexPath) {
         let indexPath = this.indexPath;
@@ -308,7 +308,7 @@
       }
     }
 
-    public setFlags(flags: IFlags) {
+    setFlags(flags: IFlags) {
       this.title = flags.title ? flags.title : this.path.substr(1);
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title = `${this.title} - ${this.config.siteName}`;
@@ -318,9 +318,9 @@
       this.tags = flags.tags ? Array.from(new Set(splitFlag(flags.tags))) : [];
       if (flags.updated) {
         const updatedList = Array.from(new Set(splitFlag(flags.updated)));
-        const timeList = updatedList.map((updated) => {
+        const timeList = updatedList.map(updated => {
           return new Date(updated.match(/^[0-9]+$/) ? parseInt(updated) : updated).getTime();
-        }).filter((time) => !isNaN(time));
+        }).filter(time => !isNaN(time));
         if (timeList.length > 1) {
           this.updated = new Date(Math.max(...timeList)).toDateString();
         } else {
@@ -337,28 +337,28 @@
       }
     }
 
-    public setData(data: string) {
+    setData(data: string) {
       const { data: newData, result: flags } = getFlags(data);
       this.setFlags(flags);
       this.data = newData;
       this.isShow = true;
     }
 
-    public updateData(isFirst = true) {
+    updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet(this.path)];
         if (this.config.commonFile) {
           promises.push(axiosGet(this.baseUrl + this.config.commonFile));
         }
-        Promise.all(promises).then((responses) => {
+        Promise.all(promises).then(responses => {
           this.isError = false;
-          this.setData(responses.map((response) => response.data).join('\n'));
+          this.setData(responses.map(response => response.data).join('\n'));
           if (!isFirst) {
-            document.querySelectorAll('.custom').forEach((element) => {
+            document.querySelectorAll('.custom').forEach(element => {
               element.remove();
             });
           }
-        }).catch((error) => {
+        }).catch(error => {
           this.isError = true;
           this.cover = '';
           this.setData(error2markdown(error));
@@ -375,17 +375,17 @@
       }
     }
 
-    public addInputBind(input: string, bind: () => void) {
+    addInputBind(input: string, bind: () => void) {
       this.inputBinds[input] = bind;
     }
 
-    public addInputBinds(binds: { [index: string]: () => void }) {
-      Object.keys(binds).forEach((key) => {
+    addInputBinds(binds: { [index: string]: () => void }) {
+      Object.keys(binds).forEach(key => {
         this.inputBinds[key] = binds[key];
       });
     }
 
-    public getTagLink(tag: string) {
+    getTagLink(tag: string) {
       return getQueryLink(EFlag.tags, tag);
     }
   }

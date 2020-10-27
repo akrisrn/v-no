@@ -9,7 +9,7 @@ import { axiosGet, config, escapeHTML, getWrapRegExp, removeClass, splitFlag } f
 import Prism from 'prismjs';
 
 export function updateDD() {
-  document.querySelectorAll<HTMLParagraphElement>('article p').forEach((p) => {
+  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
     if (p.innerText.startsWith(': ')) {
       const dl = document.createElement('dl');
       const dd = document.createElement('dd');
@@ -18,7 +18,7 @@ export function updateDD() {
       p.outerHTML = dl.outerHTML;
     }
   });
-  document.querySelectorAll<HTMLDetailsElement>('article dt').forEach((dt) => {
+  document.querySelectorAll<HTMLDetailsElement>('article dt').forEach(dt => {
     if (dt.innerText.startsWith(': ')) {
       const dd = document.createElement('dd');
       dd.innerHTML = dt.innerHTML.substr(2);
@@ -28,14 +28,14 @@ export function updateDD() {
 }
 
 export function updateToc() {
-  document.querySelectorAll<HTMLLinkElement>('#toc a').forEach((a) => {
+  document.querySelectorAll<HTMLLinkElement>('#toc a').forEach(a => {
     const href = a.getAttribute('h');
     let innerText = a.innerText;
     const nextSibling = a.nextElementSibling as HTMLElement;
     if (nextSibling && nextSibling.classList.value === 'count') {
       innerText += nextSibling.innerText;
     }
-    a.addEventListener('click', (e) => {
+    a.addEventListener('click', e => {
       e.preventDefault();
       for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
         if (h.innerText === innerText) {
@@ -48,9 +48,9 @@ export function updateToc() {
 }
 
 export function updateHeading() {
-  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map((item) => {
+  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(item => {
     return `article h${item}`;
-  }).join(',')).forEach((h) => {
+  }).join(',')).forEach(h => {
     h.querySelector('.heading-link')!.addEventListener('click', () => {
       scroll(h.offsetTop - 10);
     });
@@ -61,11 +61,11 @@ export function updateFootnote() {
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach((backref, i) => {
     const fnref = document.getElementById(`fnref${i + 1}`);
     if (fnref) {
-      fnref.addEventListener('click', (e) => {
+      fnref.addEventListener('click', e => {
         e.preventDefault();
         scroll(backref.offsetTop - 10);
       });
-      backref.addEventListener('click', (e) => {
+      backref.addEventListener('click', e => {
         e.preventDefault();
         scroll(fnref.offsetTop - 10);
       });
@@ -74,19 +74,19 @@ export function updateFootnote() {
 }
 
 export function updateImagePath() {
-  document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach((img) => {
+  document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach(img => {
     let parent = img.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
     }
-    img.classList.forEach((cls) => {
+    img.classList.forEach(cls => {
       if (['hidden', 'left', 'right'].includes(cls)) {
         parent.classList.add(cls);
         removeClass(img, cls);
       }
     });
     let loadings = parent.previousElementSibling;
-    if (!parent.classList.contains('hidden') || (loadings && loadings.classList.contains('lds-ellipsis'))) {
+    if (!parent.classList.contains('hidden') || loadings && loadings.classList.contains('lds-ellipsis')) {
       parent.classList.add('hidden');
       if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
         loadings = document.createElement('div');
@@ -154,8 +154,8 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         });
       }
       updatedLinks.push(href);
-      axiosGet(href).then((response) => {
-        let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map((line) => {
+      axiosGet(href).then(response => {
+        let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map(line => {
           const regexp = getWrapRegExp('{{', '}}', 'g');
           const lineCopy = line;
           let paramMatch = regexp.exec(lineCopy);
@@ -204,7 +204,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         updateImagePath();
         updateLinkPath(isCategory, updatedLinks);
         Prism.highlightAll();
-      }).catch((error) => {
+      }).catch(error => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
     } else if (text === '*') {
@@ -230,10 +230,10 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 }
 
 export function updateIndexList() {
-  document.querySelectorAll('article ul:not(.toc)').forEach((ul) => {
+  document.querySelectorAll('article ul:not(.toc)').forEach(ul => {
     let needSort = false;
     const lis: Array<{ node: HTMLLIElement; time: number }> = [];
-    ul.querySelectorAll('li').forEach((li) => {
+    ul.querySelectorAll('li').forEach(li => {
       const item = { node: li, time: 0 };
       if (!li.classList.contains('article')) {
         const firstChild = li.firstChild;
@@ -248,7 +248,7 @@ export function updateIndexList() {
             li.insertBefore(date, link);
             item.time = getTime(link.href);
           }
-          li.querySelectorAll<HTMLElement>('code').forEach((code) => {
+          li.querySelectorAll<HTMLElement>('code').forEach(code => {
             const a = document.createElement('a');
             a.href = buildQueryContent(`@${EFlag.tags}:${code.innerText}`, true);
             a.innerText = code.innerText;
@@ -261,7 +261,7 @@ export function updateIndexList() {
       lis.push(item);
     });
     if (needSort) {
-      ul.innerHTML = lis.sort((a, b) => b.time - a.time).map((li) => li.node.outerHTML).join('');
+      ul.innerHTML = lis.sort((a, b) => b.time - a.time).map(li => li.node.outerHTML).join('');
     }
   });
 }
@@ -277,10 +277,10 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
           untagged.push(`- [${item.title}](${item.href})`);
           continue;
         }
-        const tags = item.tags.map((tag) => {
+        const tags = item.tags.map(tag => {
           return '`' + tag + '`';
         }).join(' ');
-        item.tags.forEach((tag) => {
+        item.tags.forEach(tag => {
           if (tagDict[tag] === undefined) {
             tagDict[tag] = [];
           }
@@ -292,7 +292,7 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         sortedKeys.unshift(config.untagged);
         tagDict[config.untagged] = untagged;
       }
-      updateData(syncData.replace(/^\[list]$/im, sortedKeys.map((key) => {
+      updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
         const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
         return `###### ${key}${count}\n\n${tagDict[key]!.join('\n')}`;
       }).join('\n\n')));
@@ -325,8 +325,8 @@ export function updateSearchListActual(params: { [index: string]: string | undef
       const header = document.querySelector('header')!;
       let count = 0;
       const timeStart = new Date().getTime();
-      list.forEach((item) => {
-        axiosGet(item.href).then((response) => {
+      list.forEach(item => {
+        axiosGet(item.href).then(response => {
           const data = response.data.trim();
           let isFind: boolean;
           if (queryType === EFlag.tags) {
@@ -341,7 +341,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
             a.href = item.href;
             a.innerText = item.title;
             li.append(a);
-            item.tags.forEach((tag) => {
+            item.tags.forEach(tag => {
               const code = document.createElement('code');
               code.innerText = tag;
               li.append(' ');
@@ -425,13 +425,13 @@ export function updateSearchList(params: { [index: string]: string | undefined }
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
     searchInput.value = queryContent;
-    searchInput.addEventListener('keyup', (event) => {
+    searchInput.addEventListener('keyup', event => {
       if (event.key === 'Enter') {
         event.preventDefault();
         searchInput.value = searchInput.value.trim();
         const param = searchInput.value ? buildQueryContent(searchInput.value) : '';
         const indexOf = location.href.indexOf('?');
-        location.href = ((indexOf >= 0) ? location.href.substring(0, indexOf) : location.href) + param;
+        location.href = (indexOf >= 0 ? location.href.substring(0, indexOf) : location.href) + param;
       }
     });
   }
