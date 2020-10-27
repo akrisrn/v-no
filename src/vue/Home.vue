@@ -316,7 +316,9 @@
       this.tags = flags.tags ? Array.from(new Set(splitFlag(flags.tags))) : [];
       if (flags.updated) {
         const updatedList = Array.from(new Set(splitFlag(flags.updated)));
-        const timeList = updatedList.map((updated) => new Date(updated).getTime()).filter((time) => !isNaN(time));
+        const timeList = updatedList.map((updated) => {
+          return new Date(updated.match(/^[0-9]+$/) ? parseInt(updated) : updated).getTime();
+        }).filter((time) => !isNaN(time));
         if (timeList.length > 1) {
           this.updated = new Date(Math.max(...timeList)).toDateString();
         } else {
