@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 interface Config {
+  siteName: string;
+  favicon: string;
   indexFile: string;
   readmeFile: string;
   categoryFile: string;
@@ -8,8 +10,6 @@ interface Config {
   searchFile: string;
   commonFile: string;
   untagged: string;
-  siteName: string;
-  favicon: string;
 }
 
 export function getFromWindow(name: string) {

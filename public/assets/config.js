@@ -1,4 +1,6 @@
 vnoConfig = {
+  siteName: 'v-no',
+  favicon: 'favicon.png',
   indexFile: 'index.md',
   readmeFile: 'README.md',
   categoryFile: 'categories.md',
@@ -6,6 +8,4 @@ vnoConfig = {
   searchFile: 'search.md',
   commonFile: 'common.md',
   untagged: 'untagged',
-  siteName: 'v-no',
-  favicon: 'favicon.png',
 };
