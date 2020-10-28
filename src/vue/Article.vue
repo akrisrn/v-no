@@ -8,7 +8,6 @@
     updateCategoryList,
     updateDD,
     updateFootnote,
-    updateHeading,
     updateImagePath,
     updateLinkPath,
     updateSearchList,
@@ -38,7 +37,6 @@
         updateMD: () => {
           updateDD();
           updateToc();
-          updateHeading();
           updateImagePath();
           updateLinkPath(false);
           Prism.highlightAll();
@@ -52,7 +50,6 @@
       setTimeout(() => {
         updateDD();
         updateToc();
-        updateHeading();
         updateFootnote();
         updateImagePath();
         updateLinkPath(this.isCategory);

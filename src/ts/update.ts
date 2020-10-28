@@ -45,9 +45,6 @@ export function updateToc() {
       }
     });
   });
-}
-
-export function updateHeading() {
   document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(item => {
     return `article h${item}`;
   }).join(',')).forEach(h => {
@@ -219,7 +216,6 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           }
           updateDD();
           updateToc();
-          updateHeading();
           updateImagePath();
           updateLinkPath(isCategory, updatedLinks);
           Prism.highlightAll();
@@ -286,7 +282,6 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
       }).join('\n\n')));
       setTimeout(() => {
         updateToc();
-        updateHeading();
         updateLinkPath(isCategory);
       }, 0);
     } else {
