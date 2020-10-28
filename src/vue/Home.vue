@@ -30,7 +30,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :isCategory="isCategory" :isIndex="isIndex" :isSearch="isSearch" :params="params"
+        <Article :data="data" :isCategory="isCategory" :isSearch="isSearch" :params="params"
                  :path="path" @update:data="data = $event">
         </Article>
         <footer v-if="!isHome" class="markdown-body">
@@ -132,15 +132,6 @@
         path += 'index.html';
       }
       return path === '/' + this.indexPath;
-    }
-
-    get isIndex() {
-      return [
-        this.config.indexFile,
-        this.config.categoryFile,
-        this.config.archiveFile,
-        this.config.searchFile,
-      ].map(file => this.baseUrl + file).includes(this.path);
     }
 
     get isHome() {

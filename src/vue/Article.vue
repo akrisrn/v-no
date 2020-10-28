@@ -1,5 +1,5 @@
 <template>
-  <article :class="classObject" v-html="markdown"/>
+  <article class="markdown-body" v-html="markdown"/>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,6 @@
     updateFootnote,
     updateHeading,
     updateImagePath,
-    updateIndexList,
     updateLinkPath,
     updateSearchList,
     updateToc,
@@ -23,14 +22,9 @@
   export default class Article extends Vue {
     @PropSync('data') syncData!: string;
     @Prop() path!: string;
-    @Prop() isIndex!: boolean;
     @Prop() isCategory!: boolean;
     @Prop() isSearch!: boolean;
     @Prop() params!: { [index: string]: string | undefined };
-
-    classObject = [{
-      index: this.isIndex,
-    }, 'markdown-body'];
 
     get markdown() {
       return renderMD(this.path, this.syncData, this.isCategory);
@@ -66,8 +60,6 @@
           updateCategoryList(this.syncData, this.updateData, this.isCategory);
         } else if (this.isSearch) {
           updateSearchList(this.params, this.isCategory);
-        } else if (this.isIndex) {
-          updateIndexList();
         }
         Prism.highlightAll();
       }, 0);

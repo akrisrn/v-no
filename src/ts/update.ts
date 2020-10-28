@@ -1,5 +1,5 @@
 import { cleanFlags, getFlag, getFlags, getIndexFileData, getListFromData } from '@/ts/data';
-import { getDateString, getTime } from '@/ts/date';
+import { getDateString } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
@@ -130,6 +130,25 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
             if (result.title) {
               a.innerText = result.title;
             }
+            const parent = a.parentElement!;
+            if (parent.tagName === 'LI' && parent.childNodes.length === 1) {
+              parent.classList.add('article');
+              const dateString = getDateString(href);
+              if (dateString) {
+                const date = document.createElement('span');
+                date.classList.add('date');
+                date.innerText = dateString;
+                parent.append(date);
+              }
+              result.tags.forEach(tag => {
+                const code = document.createElement('code');
+                const a = document.createElement('a');
+                a.innerText = tag;
+                a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+                code.append(a);
+                parent.append(code);
+              });
+            }
           }).finally(() => {
             a.classList.remove('snippet');
           });
@@ -235,43 +254,6 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   }
 }
 
-export function updateIndexList() {
-  document.querySelectorAll('article ul:not(.toc)').forEach(ul => {
-    let needSort = false;
-    const lis: Array<{ node: HTMLLIElement; time: number }> = [];
-    ul.querySelectorAll('li').forEach(li => {
-      const item = { node: li, time: 0 };
-      if (!li.classList.contains('article')) {
-        const firstChild = li.firstChild;
-        if (firstChild && firstChild.nodeType === 1 && (firstChild as HTMLElement).tagName === 'A' &&
-          (firstChild as HTMLLinkElement).getAttribute('href')!.startsWith('#/')) {
-          const link = firstChild as HTMLLinkElement;
-          const dateString = getDateString(link.href);
-          if (dateString) {
-            const date = document.createElement('span');
-            date.classList.add('date');
-            date.innerText = dateString;
-            li.insertBefore(date, link);
-            item.time = getTime(link.href);
-          }
-          li.querySelectorAll<HTMLElement>('code').forEach(code => {
-            const a = document.createElement('a');
-            a.href = buildQueryContent(`@${EFlag.tags}:${code.innerText}`, true);
-            a.innerText = code.innerText;
-            code.innerHTML = a.outerHTML;
-          });
-          li.classList.add('article');
-          needSort = true;
-        }
-      }
-      lis.push(item);
-    });
-    if (needSort) {
-      ul.innerHTML = lis.sort((a, b) => b.time - a.time).map(li => li.node.outerHTML).join('');
-    }
-  });
-}
-
 export function updateCategoryListActual(syncData: string, updateData: (data: string) => void, isCategory: boolean) {
   return (pageData: string) => {
     const list = getListFromData(pageData);
@@ -306,7 +288,6 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
         updateToc();
         updateHeading();
         updateLinkPath(isCategory);
-        updateIndexList();
       }, 0);
     } else {
       updateData(syncData.replace(/^\[list]$/im, ''));
@@ -400,7 +381,6 @@ export function updateSearchListActual(params: { [index: string]: string | undef
             }
             resultUl.append(li);
             updateLinkPath(isCategory);
-            updateIndexList();
           }
         }).finally(() => {
           if (++count === list.length) {
