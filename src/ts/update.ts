@@ -115,18 +115,10 @@ export function updateImagePath() {
 }
 
 export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = []) {
-  const baseUrl = process.env.BASE_URL;
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
-    const pathname = new URL(a.href).pathname;
-    if (href.endsWith('.md#')) {
-      if (baseUrl !== '/' && pathname.startsWith(baseUrl)) {
-        a.href = '#/' + pathname.substr(baseUrl.length);
-      } else {
-        a.href = '#' + pathname;
-      }
-    } else if (text.match(/^\+(?:#.+)?$/)) {
+    if (text.match(/^\+(?:#.+)?$/)) {
       if (updatedLinks.includes(href)) {
         continue;
       }

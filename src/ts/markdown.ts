@@ -149,11 +149,15 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   const textToken = tokens[idx + 1];
   const closeToken = textToken.type === 'text' ? tokens[idx + 2] : textToken;
+  const text = textToken.content;
   const href = token.attrGet('href')!;
   if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     closeToken.attrSet('external', 'true');
+  } else if (text.endsWith('#') && href.startsWith('/') && href.endsWith('.md')) {
+    textToken.content = text.substr(0, text.length - 1);
+    token.attrSet('href', `#${href}`);
   } else {
     token.attrSet('href', fixAbsPath(href));
   }
