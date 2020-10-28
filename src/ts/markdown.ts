@@ -147,11 +147,13 @@ markdownIt.renderer.rules.footnote_anchor = (tokens, idx, options, env, self) =>
 const defaultLinkRenderRule = getDefaultRenderRule('link_open');
 markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
+  const textToken = tokens[idx + 1];
+  const closeToken = textToken.type === 'text' ? tokens[idx + 2] : textToken;
   const href = token.attrGet('href')!;
   if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
-    tokens[idx + 2].attrSet('external', 'true');
+    closeToken.attrSet('external', 'true');
   } else {
     token.attrSet('href', fixAbsPath(href));
   }
@@ -175,6 +177,10 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
   data = data.split('\n').map(line => {
     const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
     if (tocMatch) {
+      const linkMatch = tocMatch[2].match(/^\[(.*?)]\(.*?\)$/);
+      if (linkMatch) {
+        tocMatch[2] = linkMatch[1];
+      }
       if (!firstHeader) {
         firstHeader = tocMatch[1];
       }

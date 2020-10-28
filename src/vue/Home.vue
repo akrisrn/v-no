@@ -226,8 +226,8 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
-      const icon = document.querySelector('link[rel="icon"]')!;
-      icon.setAttribute('href', this.favicon);
+      const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
+      icon.href = this.favicon;
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         addInputBind: this.addInputBind,
