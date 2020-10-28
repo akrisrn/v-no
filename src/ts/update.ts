@@ -5,7 +5,7 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { axiosGet, config, escapeHTML, getWrapRegExp, removeClass, splitFlag } from '@/ts/utils';
+import { axiosGet, config, escapeHTML, getWrapRegExp, isExternalLink, removeClass, splitFlag } from '@/ts/utils';
 import Prism from 'prismjs';
 
 export function updateDD() {
@@ -118,109 +118,119 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
-    if (text === '') {
-      if (href.startsWith('#/')) {
-        a.innerText = href.substr(1);
+    let isPass = false;
+    if (!isExternalLink(href) && href.endsWith('.md')) {
+      if (text === '') {
+        isPass = true;
+        if (href.startsWith('#/')) {
+          a.innerText = href.substr(1);
+          a.classList.add('snippet');
+          axiosGet(process.env.BASE_URL + href.substr(2)).then(response => {
+            const result = getFlags(response.data).result;
+            if (result.title) {
+              a.innerText = result.title;
+            }
+          }).finally(() => {
+            a.classList.remove('snippet');
+          });
+        }
+      } else if (text.match(/^\+(?:#.+)?$/)) {
+        isPass = true;
+        if (updatedLinks.includes(href)) {
+          continue;
+        }
         a.classList.add('snippet');
-        axiosGet(process.env.BASE_URL + href.substr(2)).then(response => {
-          const result = getFlags(response.data).result;
-          if (result.title) {
-            a.innerText = result.title;
-          }
-        }).finally(() => {
-          a.classList.remove('snippet');
-        });
-      }
-    } else if (text.match(/^\+(?:#.+)?$/)) {
-      if (updatedLinks.includes(href)) {
-        continue;
-      }
-      a.classList.add('snippet');
-      const params: { [index: string]: string | undefined } = {};
-      const match = text.match(/#(.+)$/);
-      if (match) {
-        match[1].split('|').forEach((seg, i) => {
-          let param = seg;
-          const paramMatch = seg.match(/(.+?)=(.+)/);
-          if (paramMatch) {
-            param = paramMatch[2];
-            params[paramMatch[1]] = param;
-          }
-          params[i + 1] = param;
-        });
-      }
-      updatedLinks.push(href);
-      axiosGet(href).then(response => {
-        let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map(line => {
-          const regexp = getWrapRegExp('{{', '}}', 'g');
-          const lineCopy = line;
-          let paramMatch = regexp.exec(lineCopy);
-          while (paramMatch) {
-            let defaultValue;
-            [paramMatch[1], defaultValue] = paramMatch[1].split('|');
-            const param = params[paramMatch[1]];
-            let result: string;
-            if (param !== undefined) {
-              result = param;
-            } else if (defaultValue !== undefined) {
-              result = defaultValue;
-            } else {
-              result = 'undefined';
+        const params: { [index: string]: string | undefined } = {};
+        const match = text.match(/#(.+)$/);
+        if (match) {
+          match[1].split('|').forEach((seg, i) => {
+            let param = seg;
+            const paramMatch = seg.match(/(.+?)=(.+)/);
+            if (paramMatch) {
+              param = paramMatch[2];
+              params[paramMatch[1]] = param;
             }
-            line = line.replace(paramMatch[0], result.replace(/\\n/g, '\n'));
-            paramMatch = regexp.exec(lineCopy);
-          }
-          return line;
-        }).join('\n');
-        if (params.clip !== undefined) {
-          const slips = data.split('--8<--');
-          let num = parseInt(params.clip, 0);
-          if (isNaN(num)) {
-            if (params.clip === 'random') {
-              num = Math.floor(Math.random() * slips.length);
-            } else {
+            params[i + 1] = param;
+          });
+        }
+        updatedLinks.push(href);
+        axiosGet(href).then(response => {
+          let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map(line => {
+            const regexp = getWrapRegExp('{{', '}}', 'g');
+            const lineCopy = line;
+            let paramMatch = regexp.exec(lineCopy);
+            while (paramMatch) {
+              let defaultValue;
+              [paramMatch[1], defaultValue] = paramMatch[1].split('|');
+              const param = params[paramMatch[1]];
+              let result: string;
+              if (param !== undefined) {
+                result = param;
+              } else if (defaultValue !== undefined) {
+                result = defaultValue;
+              } else {
+                result = 'undefined';
+              }
+              line = line.replace(paramMatch[0], result.replace(/\\n/g, '\n'));
+              paramMatch = regexp.exec(lineCopy);
+            }
+            return line;
+          }).join('\n');
+          if (params.clip !== undefined) {
+            const slips = data.split('--8<--');
+            let num = parseInt(params.clip, 0);
+            if (isNaN(num)) {
+              if (params.clip === 'random') {
+                num = Math.floor(Math.random() * slips.length);
+              } else {
+                num = 0;
+              }
+            } else if (num < 0) {
               num = 0;
+            } else if (num >= slips.length) {
+              num = slips.length - 1;
             }
-          } else if (num < 0) {
-            num = 0;
-          } else if (num >= slips.length) {
-            num = slips.length - 1;
+            data = slips[num];
           }
-          data = slips[num];
-        }
-        // 规避递归节点重复问题。
-        try {
-          a.parentElement!.outerHTML = renderMD(href, data, isCategory);
-        } catch (e) {
-          return;
-        }
-        updateDD();
-        updateToc();
-        updateHeading();
-        updateImagePath();
-        updateLinkPath(isCategory, updatedLinks);
-        Prism.highlightAll();
-      }).catch(error => {
-        a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
-      });
-    } else if (text === '*') {
-      if (!document.querySelector(`script[src$='${href}']`)) {
-        const script = document.createElement('script');
-        script.src = href;
-        script.classList.add('custom');
-        document.body.appendChild(script);
+          // 规避递归节点重复问题。
+          try {
+            a.parentElement!.outerHTML = renderMD(href, data, isCategory);
+          } catch (e) {
+            return;
+          }
+          updateDD();
+          updateToc();
+          updateHeading();
+          updateImagePath();
+          updateLinkPath(isCategory, updatedLinks);
+          Prism.highlightAll();
+        }).catch(error => {
+          a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
+        });
       }
-      a.parentElement!.remove();
-    } else if (text === '$') {
-      if (!document.querySelector(`link[href$='${href}']`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = href;
-        link.classList.add('custom');
-        document.head.appendChild(link);
+    }
+    if (!isPass) {
+      if (text === '*') {
+        if (href.endsWith('js')) {
+          if (!document.querySelector(`script[src$='${href}']`)) {
+            const script = document.createElement('script');
+            script.src = href;
+            script.classList.add('custom');
+            document.body.appendChild(script);
+          }
+          a.parentElement!.remove();
+        }
+      } else if (text === '$' && href.endsWith('css')) {
+        if (!document.querySelector(`link[href$='${href}']`)) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.type = 'text/css';
+          link.href = href;
+          link.classList.add('custom');
+          document.head.appendChild(link);
+        }
+        a.parentElement!.remove();
       }
-      a.parentElement!.remove();
     }
   }
 }
