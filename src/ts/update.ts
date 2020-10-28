@@ -1,4 +1,4 @@
-import { cleanFlags, getFlag, getIndexFileData, getListFromData } from '@/ts/data';
+import { cleanFlags, getFlag, getFlags, getIndexFileData, getListFromData } from '@/ts/data';
 import { getDateString, getTime } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
@@ -118,7 +118,20 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
-    if (text.match(/^\+(?:#.+)?$/)) {
+    if (text === '') {
+      if (href.startsWith('#/')) {
+        a.innerText = href.substr(1);
+        a.classList.add('snippet');
+        axiosGet(process.env.BASE_URL + href.substr(2)).then(response => {
+          const result = getFlags(response.data).result;
+          if (result.title) {
+            a.innerText = result.title;
+          }
+        }).finally(() => {
+          a.classList.remove('snippet');
+        });
+      }
+    } else if (text.match(/^\+(?:#.+)?$/)) {
       if (updatedLinks.includes(href)) {
         continue;
       }
