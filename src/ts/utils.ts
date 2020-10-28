@@ -47,7 +47,7 @@ export function trimList(list: string[]) {
       result.push(trim);
     }
   });
-  return result;
+  return Array.from(new Set(result));
 }
 
 export function splitFlag(flag: string) {

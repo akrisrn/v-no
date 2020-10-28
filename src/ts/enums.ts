@@ -5,10 +5,10 @@ export enum EFlag {
 }
 
 export interface IFlags {
-  title?: string;
-  tags?: string;
-  updated?: string;
-  cover?: string;
+  title: string;
+  tags: string[];
+  updated: string[];
+  cover: string;
 
-  [index: string]: string | undefined;
+  [index: string]: string[] | string;
 }

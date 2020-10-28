@@ -1,4 +1,4 @@
-import { axiosGet, config, getWrapRegExp, splitTagsFromCodes } from '@/ts/utils';
+import { axiosGet, config, getWrapRegExp, splitFlag, splitTagsFromCodes } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
 export function getListFromData(data: string, isAll = false) {
@@ -38,7 +38,12 @@ export function getFlag(data: string, flag: EFlag) {
 }
 
 export function getFlags(data: string, onlyClean = false) {
-  const result: IFlags = {};
+  const result: IFlags = {
+    title: '',
+    tags: [],
+    updated: [],
+    cover: '',
+  };
   const flags = Object.values(EFlag).map(flag => `@${flag}:`);
   flags.push('# ');
   const flagsStr = flags.join('|');
@@ -48,7 +53,12 @@ export function getFlags(data: string, onlyClean = false) {
   while (match) {
     if (!onlyClean) {
       if (match[1].startsWith('@')) {
-        result[match[1].substring(1, match[1].length - 1)] = match[2];
+        const flag = match[1].substring(1, match[1].length - 1);
+        if ([EFlag.tags, EFlag.updated].map(flag => `@${flag}:`).includes(match[1])) {
+          result[flag] = splitFlag(match[2]);
+        } else {
+          result[flag] = match[2];
+        }
       } else {
         result.title = match[2];
       }

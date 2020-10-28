@@ -55,16 +55,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import {
-    axiosGet,
-    config,
-    exposeToWindow,
-    fixAbsPath,
-    isExternalLink,
-    isHashMode,
-    splitFlag,
-    toggleClass,
-  } from '@/ts/utils';
+  import { axiosGet, config, exposeToWindow, fixAbsPath, isExternalLink, isHashMode, toggleClass } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -315,9 +306,9 @@
       } else {
         document.title = `${this.title}`;
       }
-      this.tags = flags.tags ? Array.from(new Set(splitFlag(flags.tags))) : [];
-      if (flags.updated) {
-        const updatedList = Array.from(new Set(splitFlag(flags.updated)));
+      this.tags = flags.tags;
+      if (flags.updated.length !== 0) {
+        const updatedList = flags.updated;
         const timeList = updatedList.map(updated => {
           return new Date(updated.match(/^[0-9]+$/) ? parseInt(updated) : updated).getTime();
         }).filter(time => !isNaN(time));
