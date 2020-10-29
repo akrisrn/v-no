@@ -6,10 +6,10 @@ import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/q
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
 import {
+  addBaseUrl,
   axiosGet,
   config,
   escapeHTML,
-  fixAbsPath,
   getWrapRegExp,
   isExternalLink,
   removeClass,
@@ -131,7 +131,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         if (href.startsWith('#/')) {
           a.innerText = href.substr(1);
           a.classList.add('snippet');
-          axiosGet<string>(fixAbsPath(href.substr(1))).then(response => {
+          axiosGet<string>(addBaseUrl(href.substr(1))).then(response => {
             const result = getFlags(response.data).result;
             if (result.title) {
               a.innerText = result.title;

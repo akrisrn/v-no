@@ -55,7 +55,7 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { axiosGet, config, exposeToWindow, fixAbsPath, isExternalLink, isHashMode, toggleClass } from '@/ts/utils';
+  import { addBaseUrl, axiosGet, config, exposeToWindow, isExternalLink, isHashMode, toggleClass } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -87,7 +87,7 @@
     isHashMode = isHashMode();
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    favicon: string = fixAbsPath(config.favicon);
+    favicon: string = addBaseUrl(config.favicon);
     config = config;
 
     get path() {
@@ -114,12 +114,12 @@
             if (path.endsWith('/')) {
               path += 'index.md';
             }
-            return fixAbsPath(path);
+            return addBaseUrl(path);
           }
         }
-        return fixAbsPath(this.config.indexFile);
+        return addBaseUrl(this.config.indexFile);
       }
-      path = fixAbsPath(path);
+      path = addBaseUrl(path);
       if (path.endsWith('.html')) {
         return path.replace(/\.html$/, '.md');
       }
@@ -135,20 +135,20 @@
     }
 
     get isHome() {
-      return this.path === fixAbsPath(this.config.indexFile);
+      return this.path === addBaseUrl(this.config.indexFile);
     }
 
     get isCategory() {
-      return this.path === fixAbsPath(this.config.categoryFile);
+      return this.path === addBaseUrl(this.config.categoryFile);
     }
 
     // noinspection JSUnusedGlobalSymbols
     get isArchive() {
-      return this.path === fixAbsPath(this.config.archiveFile);
+      return this.path === addBaseUrl(this.config.archiveFile);
     }
 
     get isSearch() {
-      return this.path === fixAbsPath(this.config.searchFile);
+      return this.path === addBaseUrl(this.config.searchFile);
     }
 
     get date() {
@@ -313,7 +313,7 @@
       }
       if (flags.cover) {
         const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
-        this.cover = !isExternalLink(cover) ? fixAbsPath(cover) : cover;
+        this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;
       } else {
         this.cover = '';
       }
@@ -330,7 +330,7 @@
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet<string>(this.path)];
         if (this.config.commonFile) {
-          promises.push(axiosGet<string>(fixAbsPath(this.config.commonFile)));
+          promises.push(axiosGet<string>(addBaseUrl(this.config.commonFile)));
         }
         Promise.all(promises).then(responses => {
           this.isError = false;

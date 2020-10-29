@@ -101,11 +101,10 @@ export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
 
-export function fixAbsPath(path: string) {
+export function addBaseUrl(path: string) {
   const baseUrl = process.env.BASE_URL;
   if (path.startsWith('/') && baseUrl !== '/' && !path.startsWith(baseUrl)) {
     return baseUrl + path.substr(1);
-  } else {
-    return path;
   }
+  return path;
 }

@@ -1,5 +1,5 @@
 import resource from '@/ts/resource';
-import { fixAbsPath, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
+import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -49,7 +49,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
   if (!isExternalLink(src)) {
-    src = fixAbsPath(src);
+    src = addBaseUrl(src);
   }
   const match = src.match(/#(.+)$/);
   if (match) {
@@ -159,7 +159,7 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     textToken.content = text.substr(0, text.length - 1);
     token.attrSet('href', `#${href}`);
   } else {
-    token.attrSet('href', fixAbsPath(href));
+    token.attrSet('href', addBaseUrl(href));
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
 };
