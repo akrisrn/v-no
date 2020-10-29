@@ -1,33 +1,6 @@
 import { addBaseUrl, axiosGet, config, getWrapRegExp, splitFlag, splitTagsFromCodes } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
-export function getListFromData(data: string, isAll = false) {
-  const results = [];
-  const hrefs: string[] = [];
-  const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*\`)?`, 'gm');
-  let match = regexp.exec(data);
-  while (match) {
-    const href = match[2];
-    if (!hrefs.includes(href)) {
-      const title = match[1];
-      const tags = match[3] ? splitTagsFromCodes(match[3]) : [];
-      results.push({ title, href, tags });
-      hrefs.push(href);
-    }
-    match = regexp.exec(data);
-  }
-  return results;
-}
-
-export function getIndexFileData(func: (data: string) => void) {
-  Promise.all([
-    axiosGet<string>(addBaseUrl(config.indexFile)),
-    axiosGet<string>(addBaseUrl(config.archiveFile)),
-  ]).then(responses => {
-    func(responses.map(response => response.data).join('\n'));
-  });
-}
-
 export function getFlag(data: string, flag: EFlag) {
   const match = data.match(getWrapRegExp(`^@${flag}:`, '$', 'm'));
   if (match) {
@@ -72,4 +45,31 @@ export function getFlags(data: string, cleanData = true, onlyClean = false) {
 
 export function cleanFlags(data: string) {
   return getFlags(data, true, true).data;
+}
+
+export function getListFromData(data: string, isAll = false) {
+  const results = [];
+  const hrefs: string[] = [];
+  const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*\`)?`, 'gm');
+  let match = regexp.exec(data);
+  while (match) {
+    const href = match[2];
+    if (!hrefs.includes(href)) {
+      const title = match[1];
+      const tags = match[3] ? splitTagsFromCodes(match[3]) : [];
+      results.push({ title, href, tags });
+      hrefs.push(href);
+    }
+    match = regexp.exec(data);
+  }
+  return results;
+}
+
+export function getIndexFileData(func: (data: string) => void) {
+  Promise.all([
+    axiosGet<string>(addBaseUrl(config.indexFile)),
+    axiosGet<string>(addBaseUrl(config.archiveFile)),
+  ]).then(responses => {
+    func(responses.map(response => response.data).join('\n'));
+  });
 }

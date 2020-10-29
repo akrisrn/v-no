@@ -132,7 +132,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           a.innerText = href.substr(1);
           a.classList.add('snippet');
           axiosGet<string>(addBaseUrl(href.substr(1))).then(response => {
-            const result = getFlags(response.data).result;
+            const result = getFlags(response.data, false).result;
             if (result.title) {
               a.innerText = result.title;
             }
