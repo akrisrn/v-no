@@ -55,7 +55,16 @@
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
-  import { addBaseUrl, axiosGet, config, exposeToWindow, isExternalLink, isHashMode, toggleClass } from '@/ts/utils';
+  import {
+    addBaseUrl,
+    axiosGet,
+    config,
+    exposeToWindow,
+    getSnippetData,
+    isExternalLink,
+    isHashMode,
+    toggleClass,
+  } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -330,11 +339,18 @@
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet<string>(this.path)];
         if (this.config.commonFile) {
-          promises.push(axiosGet<string>(addBaseUrl(this.config.commonFile)));
+          const commonFile = addBaseUrl(this.config.commonFile);
+          if (this.path !== commonFile) {
+            promises.push(axiosGet<string>(commonFile));
+          }
         }
         Promise.all(promises).then(responses => {
           this.isError = false;
-          this.setData(responses.map(response => response.data).join('\n'));
+          let data = responses[0].data;
+          if (responses.length > 1) {
+            data += '\n\n' + getSnippetData(responses[1].data);
+          }
+          this.setData(data);
           if (!isFirst) {
             document.querySelectorAll('.custom').forEach(element => {
               element.remove();
