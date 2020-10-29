@@ -85,8 +85,8 @@ export function removeClass(element: HTMLElement, cls: string) {
   }
 }
 
-export function axiosGet(url: string) {
-  return axios.get(url);
+export function axiosGet<T>(url: string) {
+  return axios.get<T>(url);
 }
 
 export function toggleClass(element: HTMLElement, className: string) {

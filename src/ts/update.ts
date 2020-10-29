@@ -131,7 +131,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         if (href.startsWith('#/')) {
           a.innerText = href.substr(1);
           a.classList.add('snippet');
-          axiosGet(fixAbsPath(href.substr(1))).then(response => {
+          axiosGet<string>(fixAbsPath(href.substr(1))).then(response => {
             const result = getFlags(response.data).result;
             if (result.title) {
               a.innerText = result.title;
@@ -179,7 +179,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           });
         }
         updatedLinks.push(href);
-        axiosGet(href).then(response => {
+        axiosGet<string>(href).then(response => {
           let data = cleanFlags(response.data).replace(/^(#{1,5}) /gm, '$1# ').split('\n').map(line => {
             const regexp = getWrapRegExp('{{', '}}', 'g');
             const lineCopy = line;
@@ -317,7 +317,7 @@ export function updateSearchListActual(params: { [index: string]: string | undef
       let count = 0;
       const timeStart = new Date().getTime();
       list.forEach(item => {
-        axiosGet(item.href).then(response => {
+        axiosGet<string>(item.href).then(response => {
           const data = response.data.trim();
           let isFind: boolean;
           if (queryType === EFlag.tags) {

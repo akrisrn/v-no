@@ -328,9 +328,9 @@
 
     updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
-        const promises = [axiosGet(this.path)];
+        const promises = [axiosGet<string>(this.path)];
         if (this.config.commonFile) {
-          promises.push(axiosGet(fixAbsPath(this.config.commonFile)));
+          promises.push(axiosGet<string>(fixAbsPath(this.config.commonFile)));
         }
         Promise.all(promises).then(responses => {
           this.isError = false;

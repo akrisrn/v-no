@@ -21,8 +21,8 @@ export function getListFromData(data: string, isAll = false) {
 
 export function getIndexFileData(func: (data: string) => void) {
   Promise.all([
-    axiosGet(fixAbsPath(config.indexFile)),
-    axiosGet(fixAbsPath(config.archiveFile)),
+    axiosGet<string>(fixAbsPath(config.indexFile)),
+    axiosGet<string>(fixAbsPath(config.archiveFile)),
   ]).then(responses => {
     func(responses.map(response => response.data).join('\n'));
   });
