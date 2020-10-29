@@ -133,9 +133,9 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           a.innerText = href.substr(1);
           a.classList.add('snippet');
           axiosGet<string>(addBaseUrl(href.substr(1))).then(response => {
-            const result = getFlags(response.data, false).result;
-            if (result.title) {
-              a.innerText = result.title;
+            const flags = getFlags(response.data, false).flags;
+            if (flags.title) {
+              a.innerText = flags.title;
             }
             const parent = a.parentElement!;
             if (parent.tagName === 'LI' && parent.childNodes.length === 1) {
@@ -147,7 +147,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
                 date.innerText = dateString;
                 parent.append(date);
               }
-              result.tags.forEach(tag => {
+              flags.tags.forEach(tag => {
                 const code = document.createElement('code');
                 const a = document.createElement('a');
                 a.innerText = tag;

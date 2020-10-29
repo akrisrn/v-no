@@ -40,7 +40,7 @@ export function getFlags(data: string, cleanData = true, onlyClean = false) {
     }
     match = regexp.exec(dataCopy);
   }
-  return { data, result };
+  return { data, flags: result };
 }
 
 export function cleanFlags(data: string) {

@@ -320,7 +320,7 @@
     }
 
     setData(data: string) {
-      const { data: newData, result: flags } = getFlags(data);
+      const { data: newData, flags } = getFlags(data);
       this.setFlags(flags);
       this.data = newData;
       this.isShow = true;
