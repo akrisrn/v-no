@@ -5,10 +5,10 @@
         <img :src="favicon" alt=""/>
         <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>
-        <a :href="`#/${config.readmeFile}`">README</a>
-        <a :href="`#/${config.categoryFile}`">CATEGORIES</a>
-        <a :href="`#/${config.archiveFile}`">ARCHIVES</a>
-        <a v-if="isHashMode" :href="`#/${config.searchFile}`">SEARCH</a>
+        <a :href="`#${config.readmeFile}`">README</a>
+        <a :href="`#${config.categoryFile}`">CATEGORIES</a>
+        <a :href="`#${config.archiveFile}`">ARCHIVES</a>
+        <a v-if="isHashMode" :href="`#${config.searchFile}`">SEARCH</a>
       </div>
     </div>
     <transition name="slide-fade">
@@ -87,7 +87,7 @@
     isHashMode = isHashMode();
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    favicon: string = this.baseUrl + config.favicon;
+    favicon: string = fixAbsPath(config.favicon);
     config = config;
 
     get path() {
@@ -114,12 +114,12 @@
             if (path.endsWith('/')) {
               path += 'index.md';
             }
-            return this.baseUrl + path.substr(1);
+            return fixAbsPath(path);
           }
         }
-        return this.baseUrl + this.config.indexFile;
+        return fixAbsPath(this.config.indexFile);
       }
-      path = this.baseUrl + path.substr(1);
+      path = fixAbsPath(path);
       if (path.endsWith('.html')) {
         return path.replace(/\.html$/, '.md');
       }
@@ -135,20 +135,20 @@
     }
 
     get isHome() {
-      return this.path === this.baseUrl + this.config.indexFile;
+      return this.path === fixAbsPath(this.config.indexFile);
     }
 
     get isCategory() {
-      return this.path === this.baseUrl + this.config.categoryFile;
+      return this.path === fixAbsPath(this.config.categoryFile);
     }
 
     // noinspection JSUnusedGlobalSymbols
     get isArchive() {
-      return this.path === this.baseUrl + this.config.archiveFile;
+      return this.path === fixAbsPath(this.config.archiveFile);
     }
 
     get isSearch() {
-      return this.path === this.baseUrl + this.config.searchFile;
+      return this.path === fixAbsPath(this.config.searchFile);
     }
 
     get date() {
@@ -330,7 +330,7 @@
       if (this.path.endsWith('.md')) {
         const promises = [axiosGet(this.path)];
         if (this.config.commonFile) {
-          promises.push(axiosGet(this.baseUrl + this.config.commonFile));
+          promises.push(axiosGet(fixAbsPath(this.config.commonFile)));
         }
         Promise.all(promises).then(responses => {
           this.isError = false;

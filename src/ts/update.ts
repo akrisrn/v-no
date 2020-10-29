@@ -5,7 +5,16 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
-import { axiosGet, config, escapeHTML, getWrapRegExp, isExternalLink, removeClass, splitFlag } from '@/ts/utils';
+import {
+  axiosGet,
+  config,
+  escapeHTML,
+  fixAbsPath,
+  getWrapRegExp,
+  isExternalLink,
+  removeClass,
+  splitFlag,
+} from '@/ts/utils';
 import Prism from 'prismjs';
 
 export function updateDD() {
@@ -122,7 +131,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         if (href.startsWith('#/')) {
           a.innerText = href.substr(1);
           a.classList.add('snippet');
-          axiosGet(process.env.BASE_URL + href.substr(2)).then(response => {
+          axiosGet(fixAbsPath(href.substr(1))).then(response => {
             const result = getFlags(response.data).result;
             if (result.title) {
               a.innerText = result.title;

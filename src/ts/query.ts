@@ -2,7 +2,7 @@ import { EFlag } from '@/ts/enums';
 import { config } from '@/ts/utils';
 
 export function buildQueryContent(content: string, isComplete = false) {
-  return (isComplete ? `#/${config.searchFile}` : '') + `?content=${encodeURIComponent(content)}`;
+  return (isComplete ? `#${config.searchFile}` : '') + `?content=${encodeURIComponent(content)}`;
 }
 
 export function getQueryContent(params: { [index: string]: string | undefined }) {

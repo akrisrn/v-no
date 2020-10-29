@@ -1,4 +1,4 @@
-import { axiosGet, config, getWrapRegExp, splitFlag, splitTagsFromCodes } from '@/ts/utils';
+import { axiosGet, config, fixAbsPath, getWrapRegExp, splitFlag, splitTagsFromCodes } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
 export function getListFromData(data: string, isAll = false) {
@@ -20,10 +20,9 @@ export function getListFromData(data: string, isAll = false) {
 }
 
 export function getIndexFileData(func: (data: string) => void) {
-  const baseUrl = process.env.BASE_URL;
   Promise.all([
-    axiosGet(baseUrl + config.indexFile),
-    axiosGet(baseUrl + config.archiveFile),
+    axiosGet(fixAbsPath(config.indexFile)),
+    axiosGet(fixAbsPath(config.archiveFile)),
   ]).then(responses => {
     func(responses.map(response => response.data).join('\n'));
   });
