@@ -101,10 +101,18 @@ export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
 
+const baseUrl = process.env.BASE_URL;
+
 export function addBaseUrl(path: string) {
-  const baseUrl = process.env.BASE_URL;
   if (path.startsWith('/') && baseUrl !== '/' && !path.startsWith(baseUrl)) {
     return baseUrl + path.substr(1);
+  }
+  return path;
+}
+
+export function cleanBaseUrl(path: string) {
+  if (path.startsWith('/') && baseUrl !== '/' && path.startsWith(baseUrl)) {
+    return path.substr(baseUrl.length - 1);
   }
   return path;
 }
