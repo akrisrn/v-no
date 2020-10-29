@@ -36,7 +36,7 @@ export function getFlag(data: string, flag: EFlag) {
   return '';
 }
 
-export function getFlags(data: string, onlyClean = false) {
+export function getFlags(data: string, cleanData = true, onlyClean = false) {
   const result: IFlags = {
     title: '',
     tags: [],
@@ -62,12 +62,14 @@ export function getFlags(data: string, onlyClean = false) {
         result.title = match[2];
       }
     }
-    data = data.replace(match[0], '');
+    if (cleanData) {
+      data = data.replace(match[0], '');
+    }
     match = regexp.exec(dataCopy);
   }
   return { data, result };
 }
 
 export function cleanFlags(data: string) {
-  return getFlags(data, true).data;
+  return getFlags(data, true, true).data;
 }
