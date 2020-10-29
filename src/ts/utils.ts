@@ -1,3 +1,4 @@
+import { cleanFlags } from '@/ts/data';
 import axios from 'axios';
 
 interface Config {
@@ -115,4 +116,8 @@ export function cleanBaseUrl(path: string) {
     return path.substr(baseUrl.length - 1);
   }
   return path;
+}
+
+export function getSnippetData(data: string) {
+  return cleanFlags(data).replace(/^(#{1,5}) /gm, '$1# ');
 }
