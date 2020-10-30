@@ -51,7 +51,7 @@
 <script lang="ts">
   import { getFlags } from '@/ts/data';
   import { getDateString } from '@/ts/date';
-  import { EFlag, IFlags } from '@/ts/enums';
+  import { EFlag } from '@/ts/enums';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';

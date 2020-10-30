@@ -1,5 +1,5 @@
-import { addBaseUrl, axiosGet, cleanBaseUrl, config, getWrapRegExp, splitFlag, TMDFile, TMDFileDict } from '@/ts/utils';
-import { EFlag, IFlags } from '@/ts/enums';
+import { addBaseUrl, axiosGet, cleanBaseUrl, config, getWrapRegExp, splitFlag } from '@/ts/utils';
+import { EFlag } from '@/ts/enums';
 
 export function getFlag(data: string, flag: EFlag) {
   const match = data.match(getWrapRegExp(`^@${flag}:`, '$', 'm'));

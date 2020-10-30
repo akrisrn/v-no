@@ -1,25 +1,6 @@
 import { cleanFlags } from '@/ts/data';
 import axios from 'axios';
 
-interface IConfig {
-  siteName: string;
-  favicon: string;
-  indexFile: string;
-  readmeFile: string;
-  categoryFile: string;
-  archiveFile: string;
-  searchFile: string;
-  commonFile: string;
-  untagged: string;
-}
-
-export type TMDFile = {
-  data: string;
-  flags: IFlags;
-}
-
-export type TMDFileDict = { [index: string]: TMDFile }
-
 export function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];
