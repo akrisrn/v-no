@@ -185,7 +185,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           continue;
         }
         a.classList.add('snippet');
-        const params: { [index: string]: string } = {};
+        const params: Dict<string> = {};
         const match = text.match(/#(.+)$/);
         if (match) {
           match[1].split('|').forEach((seg, i) => {
@@ -282,7 +282,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 export function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
   return (fileDict: TMDFileDict) => {
     const hrefs = Object.keys(fileDict);
-    const tagDict: { [index: string]: string[] } = {};
+    const tagDict: Dict<string[]> = {};
     const untagged = [];
     for (const href of hrefs) {
       const flags = fileDict[href].flags;
@@ -411,7 +411,7 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
   };
 }
 
-export function updateSearchList(params: { [index: string]: string }) {
+export function updateSearchList(params: Dict<string>) {
   const queryContent = getQueryContent(params);
   const resultUl = document.querySelector<HTMLUListElement>('ul#result');
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');

@@ -25,9 +25,11 @@ interface IFlags {
   [index: string]: string[] | string;
 }
 
+type Dict<T> = { [index: string]: T }
+
 type TMDFile = {
   data: string;
   flags: IFlags;
 }
 
-type TMDFileDict = { [index: string]: TMDFile }
+type TMDFileDict = Dict<TMDFile>

@@ -91,8 +91,8 @@
     toggleZen: HTMLElement | null = null;
     toTop: HTMLElement | null = null;
     keyInput = '';
-    inputBinds: { [index: string]: () => void } = {};
-    params: { [index: string]: string } = {};
+    inputBinds: Dict<() => void> = {};
+    params: Dict<string> = {};
     isHashMode = isHashMode();
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
@@ -377,7 +377,7 @@
       this.inputBinds[input] = bind;
     }
 
-    addInputBinds(binds: { [index: string]: () => void }) {
+    addInputBinds(binds: Dict<() => void>) {
       Object.keys(binds).forEach(key => {
         this.inputBinds[key] = binds[key];
       });

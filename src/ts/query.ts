@@ -4,7 +4,7 @@ export function buildQueryContent(content: string, isComplete = false) {
   return (isComplete ? `#${config.searchFile}` : '') + `?content=${encodeURIComponent(content)}`;
 }
 
-export function getQueryContent(params: { [index: string]: string }) {
+export function getQueryContent(params: Dict<string>) {
   return params.content ? decodeURIComponent(params.content) : '';
 }
 

@@ -23,7 +23,7 @@
     @Prop() path!: string;
     @Prop() isCategory!: boolean;
     @Prop() isSearch!: boolean;
-    @Prop() params!: { [index: string]: string };
+    @Prop() params!: Dict<string>;
 
     get markdown() {
       return renderMD(this.path, this.syncData, this.isCategory);

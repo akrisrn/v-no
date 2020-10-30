@@ -20,7 +20,7 @@ export function setToWindow(name: string, value: any) {
 export const config: IConfig = Object.assign({}, getFromWindow('vnoConfig'));
 export const messages = config.messages;
 
-export function exposeToWindow(vars: { [index: string]: any }) {
+export function exposeToWindow(vars: Dict<any>) {
   let vno = getFromWindow('vno');
   if (!vno) {
     vno = {};
@@ -55,7 +55,7 @@ export function isHashMode() {
 }
 
 export function escapeHTML(html: string) {
-  const symbols: { [index: string]: string } = {
+  const symbols: Dict<string> = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
