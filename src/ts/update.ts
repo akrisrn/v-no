@@ -1,13 +1,15 @@
 import { getFile, getFileDict } from '@/ts/file';
 import { renderMD } from '@/ts/markdown';
-import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import { scroll } from '@/ts/scroll';
 import {
+  buildQueryContent,
   config,
   degradeHeading,
   EFlag,
   escapeHTML,
   getDateString,
+  getQueryContent,
+  getQueryTypeAndParam,
   getWrapRegExp,
   isExternalLink,
   removeClass,
