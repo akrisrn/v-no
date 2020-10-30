@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-  import { getFile } from '@/ts/data';
+  import { getFile } from '@/ts/file';
   import { getDateString } from '@/ts/date';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';

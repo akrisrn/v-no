@@ -1,4 +1,4 @@
-import { getFile, getFileDict } from '@/ts/data';
+import { getFile, getFileDict } from '@/ts/file';
 import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';

@@ -1,4 +1,4 @@
-import { getFile } from '@/ts/data';
+import { getFile } from '@/ts/file';
 import axios from 'axios';
 
 export enum EFlag {
