@@ -52,7 +52,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   // put '#' suffix to 'alt' will be better, but no way to get/set it for now.
   const match = src.match(/#(.+)$/);
   if (match) {
-    const width = parseInt(match[1], 0);
+    const width = parseInt(match[1]);
     if (isNaN(width)) {
       if (match[1].startsWith('.')) {
         match[1].substr(1).split('.').forEach(cls => {
@@ -121,7 +121,7 @@ markdownIt.renderer.rules.html_block = (tokens, idx, options, env, self) => {
       if (count) {
         a.removeChild(count);
         a.parentElement!.append(count);
-        const fontSize = Math.log10(parseInt(count.innerText.substr(1), 0)) + 1;
+        const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
         if (fontSize > 1) {
           a.style.fontSize = fontSize + 'em';
         }

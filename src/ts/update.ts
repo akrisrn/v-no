@@ -220,7 +220,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           }).join('\n');
           if (params.clip !== undefined) {
             const slips = data.split('--8<--');
-            let num = parseInt(params.clip, 0);
+            let num = parseInt(params.clip);
             if (isNaN(num)) {
               if (params.clip === 'random') {
                 num = Math.floor(Math.random() * slips.length);
