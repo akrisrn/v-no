@@ -1,5 +1,4 @@
-import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode, messages } from '@/ts/utils';
-import { AxiosError } from 'axios';
+import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -233,8 +232,4 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
   tocHtml += '</div>';
   data = data.replace(/^\[toc]$/im, tocHtml);
   return markdownIt.render(data);
-}
-
-export function error2markdown(error: AxiosError) {
-  return `# ${error.response!.status} ${error.response!.statusText}\n${messages.pageError}`;
 }

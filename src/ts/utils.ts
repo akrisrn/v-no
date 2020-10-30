@@ -1,6 +1,3 @@
-import { getFile } from '@/ts/file';
-import axios from 'axios';
-
 export enum EFlag {
   tags = 'tags',
   updated = 'updated',
@@ -73,10 +70,6 @@ export function removeClass(element: HTMLElement, cls: string) {
   }
 }
 
-export function axiosGet<T>(url: string) {
-  return axios.get<T>(url);
-}
-
 export function toggleClass(element: HTMLElement, className: string) {
   if (element.classList.contains(className)) {
     element.classList.remove(className);
@@ -106,5 +99,5 @@ export function cleanBaseUrl(path: string) {
 }
 
 export function degradeHeading(data: string) {
-  return getFile(data, true, true).data.replace(/^(#{1,5}) /gm, '$1# ');
+  return data.replace(/^(#{1,5}) /gm, '$1# ');
 }

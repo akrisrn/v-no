@@ -4,8 +4,6 @@ import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import { scroll } from '@/ts/scroll';
 import {
-  addBaseUrl,
-  axiosGet,
   config,
   degradeHeading,
   EFlag,
@@ -131,10 +129,9 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         if (href.startsWith('#/')) {
           a.innerText = href.substr(1);
           a.classList.add('snippet');
-          axiosGet<string>(addBaseUrl(href.substr(1))).then(response => {
-            const flags = getFile(response.data, false).flags;
-            if (flags.title) {
-              a.innerText = flags.title;
+          getFile(href.substr(1)).then(file => {
+            if (file.flags.title) {
+              a.innerText = file.flags.title;
             }
             const parent = a.parentElement!;
             if (parent.tagName === 'LI') {
@@ -161,7 +158,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
                     parent.append(date);
                   }
                 }
-                flags.tags.forEach(tag => {
+                file.flags.tags.forEach(tag => {
                   const code = document.createElement('code');
                   const a = document.createElement('a');
                   a.innerText = tag;
@@ -199,8 +196,8 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           });
         }
         updatedLinks.push(href);
-        axiosGet<string>(href).then(response => {
-          let data = degradeHeading(response.data).split('\n').map(line => {
+        getFile(href).then(file => {
+          let data = degradeHeading(file.data).split('\n').map(line => {
             const regexp = getWrapRegExp('{{', '}}', 'g');
             const lineCopy = line;
             let paramMatch = regexp.exec(lineCopy);

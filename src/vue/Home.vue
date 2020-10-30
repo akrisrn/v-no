@@ -49,13 +49,11 @@
 </template>
 
 <script lang="ts">
-  import { getFile } from '@/ts/file';
+  import { getErrorFile, getFile } from '@/ts/file';
   import { getDateString } from '@/ts/date';
-  import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import {
     addBaseUrl,
-    axiosGet,
     config,
     degradeHeading,
     EFlag,
@@ -328,48 +326,47 @@
       }
     }
 
-    setData(data: string) {
-      const { data: newData, flags } = getFile(data);
+    setData(data: string, flags: IFlags) {
       this.setFlags(flags);
-      this.data = newData;
+      this.data = data;
       this.isShow = true;
     }
 
     updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
-        const promises = [axiosGet<string>(this.path)];
+        const promises = [getFile(this.path)];
         if (this.config.commonFile) {
-          const commonFile = addBaseUrl(this.config.commonFile);
-          if (this.path !== commonFile) {
-            promises.push(axiosGet<string>(commonFile));
+          const path = addBaseUrl(this.config.commonFile);
+          if (this.path !== path) {
+            promises.push(getFile(path));
           }
         }
-        Promise.all(promises).then(responses => {
+        Promise.all(promises).then(files => {
           this.isError = false;
-          let data = responses[0].data;
-          if (responses.length > 1) {
-            data += '\n\n' + degradeHeading(responses[1].data);
+          let data = files[0].data;
+          if (files.length > 1) {
+            data += '\n\n' + degradeHeading(files[1].data);
           }
-          this.setData(data);
+          this.setData(data, files[0].flags);
           if (!isFirst) {
             document.querySelectorAll('.custom').forEach(element => {
               element.remove();
             });
           }
-        }).catch(error => {
+        }).catch((error: AxiosError) => {
           this.isError = true;
-          this.cover = '';
-          this.setData(error2markdown(error));
+          const { data, flags } = getErrorFile(error);
+          this.setData(data, flags);
         });
       } else {
         this.isError = true;
-        this.cover = '';
-        this.setData(error2markdown({
+        const { data, flags } = getErrorFile({
           response: {
             status: 404,
             statusText: messages.notFound,
           },
-        } as AxiosError));
+        } as AxiosError);
+        this.setData(data, flags);
       }
     }
 
