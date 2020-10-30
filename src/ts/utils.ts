@@ -105,6 +105,6 @@ export function cleanBaseUrl(path: string) {
   return path;
 }
 
-export function getSnippetData(data: string) {
+export function degradeHeading(data: string) {
   return getFile(data, true, true).data.replace(/^(#{1,5}) /gm, '$1# ');
 }

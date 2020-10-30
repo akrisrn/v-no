@@ -57,9 +57,9 @@
     addBaseUrl,
     axiosGet,
     config,
+    degradeHeading,
     EFlag,
     exposeToWindow,
-    getSnippetData,
     isExternalLink,
     isHashMode,
     messages,
@@ -348,7 +348,7 @@
           this.isError = false;
           let data = responses[0].data;
           if (responses.length > 1) {
-            data += '\n\n' + getSnippetData(responses[1].data);
+            data += '\n\n' + degradeHeading(responses[1].data);
           }
           this.setData(data);
           if (!isFirst) {

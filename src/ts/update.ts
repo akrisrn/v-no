@@ -7,9 +7,9 @@ import {
   addBaseUrl,
   axiosGet,
   config,
+  degradeHeading,
   EFlag,
   escapeHTML,
-  getSnippetData,
   getWrapRegExp,
   isExternalLink,
   messages,
@@ -200,7 +200,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
         }
         updatedLinks.push(href);
         axiosGet<string>(href).then(response => {
-          let data = getSnippetData(response.data).split('\n').map(line => {
+          let data = degradeHeading(response.data).split('\n').map(line => {
             const regexp = getWrapRegExp('{{', '}}', 'g');
             const lineCopy = line;
             let paramMatch = regexp.exec(lineCopy);
