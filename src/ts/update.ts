@@ -1,4 +1,4 @@
-import { cleanFlags, getFlag, getFlags, getIndexFileData, getListFromData } from '@/ts/data';
+import { cleanFlags, getFlag, getFile, getIndexFileData, getListFromData } from '@/ts/data';
 import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
@@ -133,7 +133,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           a.innerText = href.substr(1);
           a.classList.add('snippet');
           axiosGet<string>(addBaseUrl(href.substr(1))).then(response => {
-            const flags = getFlags(response.data, false).flags;
+            const flags = getFile(response.data, false).flags;
             if (flags.title) {
               a.innerText = flags.title;
             }

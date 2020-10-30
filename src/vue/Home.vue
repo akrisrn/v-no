@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-  import { getFlags } from '@/ts/data';
+  import { getFile } from '@/ts/data';
   import { getDateString } from '@/ts/date';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
@@ -329,7 +329,7 @@
     }
 
     setData(data: string) {
-      const { data: newData, flags } = getFlags(data);
+      const { data: newData, flags } = getFile(data);
       this.setFlags(flags);
       this.data = newData;
       this.isShow = true;
