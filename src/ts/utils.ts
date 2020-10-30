@@ -1,7 +1,7 @@
 import { cleanFlags } from '@/ts/data';
 import axios from 'axios';
 
-interface Config {
+interface IConfig {
   siteName: string;
   favicon: string;
   indexFile: string;
@@ -23,7 +23,7 @@ export function setToWindow(name: string, value: any) {
   window[name] = value;
 }
 
-export const config: Config = Object.assign({}, getFromWindow('vnoConfig'));
+export const config: IConfig = Object.assign({}, getFromWindow('vnoConfig'));
 
 export function exposeToWindow(vars: { [index: string]: any }) {
   let vno = getFromWindow('vno');
