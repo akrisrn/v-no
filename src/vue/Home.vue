@@ -148,11 +148,6 @@
       return this.path === addBaseUrl(this.config.paths.category);
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    get isArchive() {
-      return this.path === addBaseUrl(this.config.paths.archive);
-    }
-
     get isSearch() {
       return this.path === addBaseUrl(this.config.paths.search);
     }
