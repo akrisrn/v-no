@@ -138,23 +138,43 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
               a.innerText = flags.title;
             }
             const parent = a.parentElement!;
-            if (parent.tagName === 'LI' && parent.childNodes.length === 1) {
-              parent.classList.add('article');
-              const dateString = getDateString(href);
-              if (dateString) {
-                const date = document.createElement('span');
-                date.classList.add('date');
-                date.innerText = dateString;
-                parent.append(date);
+            if (parent.tagName === 'LI') {
+              let isPass = true;
+              let hasQuote = false;
+              if (parent.childElementCount === 1) {
+                isPass = false;
+              } else if (parent.childElementCount === 2) {
+                if (parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+                  isPass = false;
+                  hasQuote = true;
+                }
               }
-              flags.tags.forEach(tag => {
-                const code = document.createElement('code');
-                const a = document.createElement('a');
-                a.innerText = tag;
-                a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
-                code.append(a);
-                parent.append(code);
-              });
+              if (!isPass) {
+                parent.classList.add('article');
+                const dateString = getDateString(href);
+                if (dateString) {
+                  const date = document.createElement('span');
+                  date.classList.add('date');
+                  date.innerText = dateString;
+                  if (hasQuote) {
+                    parent.insertBefore(date, parent.lastElementChild);
+                  } else {
+                    parent.append(date);
+                  }
+                }
+                flags.tags.forEach(tag => {
+                  const code = document.createElement('code');
+                  const a = document.createElement('a');
+                  a.innerText = tag;
+                  a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+                  code.append(a);
+                  if (hasQuote) {
+                    parent.insertBefore(code, parent.lastElementChild);
+                  } else {
+                    parent.append(code);
+                  }
+                });
+              }
             }
           }).finally(() => {
             a.classList.remove('snippet');
@@ -166,7 +186,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           continue;
         }
         a.classList.add('snippet');
-        const params: { [index: string]: string | undefined } = {};
+        const params: { [index: string]: string } = {};
         const match = text.match(/#(.+)$/);
         if (match) {
           match[1].split('|').forEach((seg, i) => {
