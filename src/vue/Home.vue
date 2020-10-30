@@ -5,10 +5,10 @@
         <img :src="favicon" alt=""/>
         <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
         <span></span>
-        <a :href="`#${config.readmeFile}`">README</a>
-        <a :href="`#${config.categoryFile}`">CATEGORIES</a>
-        <a :href="`#${config.archiveFile}`">ARCHIVES</a>
-        <a v-if="isHashMode" :href="`#${config.searchFile}`">SEARCH</a>
+        <a :href="`#${config.paths.readme}`">README</a>
+        <a :href="`#${config.paths.category}`">CATEGORIES</a>
+        <a :href="`#${config.paths.archive}`">ARCHIVES</a>
+        <a v-if="isHashMode" :href="`#${config.paths.search}`">SEARCH</a>
       </div>
     </div>
     <transition name="slide-fade">
@@ -60,7 +60,6 @@
     exposeToWindow,
     isExternalLink,
     isHashMode,
-    messages,
     toggleClass,
   } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
@@ -94,7 +93,7 @@
     isHashMode = isHashMode();
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    favicon: string = addBaseUrl(config.favicon);
+    favicon: string = addBaseUrl(config.paths.favicon);
     config = config;
 
     get path() {
@@ -124,7 +123,7 @@
             return addBaseUrl(path);
           }
         }
-        return addBaseUrl(this.config.indexFile);
+        return addBaseUrl(this.config.paths.index);
       }
       path = addBaseUrl(path);
       if (path.endsWith('.html')) {
@@ -142,20 +141,20 @@
     }
 
     get isHome() {
-      return this.path === addBaseUrl(this.config.indexFile);
+      return this.path === addBaseUrl(this.config.paths.index);
     }
 
     get isCategory() {
-      return this.path === addBaseUrl(this.config.categoryFile);
+      return this.path === addBaseUrl(this.config.paths.category);
     }
 
     // noinspection JSUnusedGlobalSymbols
     get isArchive() {
-      return this.path === addBaseUrl(this.config.archiveFile);
+      return this.path === addBaseUrl(this.config.paths.archive);
     }
 
     get isSearch() {
-      return this.path === addBaseUrl(this.config.searchFile);
+      return this.path === addBaseUrl(this.config.paths.search);
     }
 
     get date() {
@@ -335,8 +334,8 @@
     updateData(isFirst = true) {
       if (this.path.endsWith('.md')) {
         const promises = [getFile(this.path)];
-        if (this.config.commonFile) {
-          const path = addBaseUrl(this.config.commonFile);
+        if (this.config.paths.common) {
+          const path = addBaseUrl(this.config.paths.common);
           if (this.path !== path) {
             promises.push(getFile(path));
           }
@@ -363,7 +362,7 @@
         const { data, flags } = getErrorFile({
           response: {
             status: 404,
-            statusText: messages.notFound,
+            statusText: config.messages.notFound,
           },
         } as AxiosError);
         this.setData(data, flags);

@@ -15,7 +15,6 @@ export function setToWindow(name: string, value: any) {
 }
 
 export const config: IConfig = Object.assign({}, getFromWindow('vnoConfig'));
-export const messages = config.messages;
 
 export function exposeToWindow(vars: Dict<any>) {
   let vno = getFromWindow('vno');

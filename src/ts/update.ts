@@ -3,16 +3,7 @@ import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import { scroll } from '@/ts/scroll';
-import {
-  config,
-  degradeHeading,
-  EFlag,
-  escapeHTML,
-  getWrapRegExp,
-  isExternalLink,
-  messages,
-  removeClass,
-} from '@/ts/utils';
+import { config, degradeHeading, EFlag, escapeHTML, getWrapRegExp, isExternalLink, removeClass } from '@/ts/utils';
 import Prism from 'prismjs';
 
 export function updateDD() {
@@ -292,8 +283,8 @@ export function updateCategoryListActual(syncData: string, updateData: (data: st
     }
     const sortedKeys = Object.keys(tagDict).sort();
     if (untagged.length > 0) {
-      sortedKeys.unshift(config.untagged);
-      tagDict[config.untagged] = untagged;
+      sortedKeys.unshift(config.messages.untagged);
+      tagDict[config.messages.untagged] = untagged;
     }
     updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
       const count = `<span class="count">( ${tagDict[key].length} )</span>`;
@@ -311,7 +302,7 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
 }
 
 export function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
-  resultUl.innerText = messages.searching;
+  resultUl.innerText = config.messages.searching;
   const timeStart = new Date().getTime();
   return (fileDict: TMDFileDict) => {
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
@@ -399,7 +390,7 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
       searchCount.innerText = `${resultUl.childElementCount}/${paths.length}`;
     }
     if (resultUl.childElementCount === 0) {
-      resultUl.innerText = messages.searchNothing;
+      resultUl.innerText = config.messages.searchNothing;
     }
   };
 }

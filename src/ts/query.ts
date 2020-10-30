@@ -1,7 +1,7 @@
 import { config, EFlag } from '@/ts/utils';
 
 export function buildQueryContent(content: string, isComplete = false) {
-  return (isComplete ? `#${config.searchFile}` : '') + `?content=${encodeURIComponent(content)}`;
+  return (isComplete ? `#${config.paths.search}` : '') + `?content=${encodeURIComponent(content)}`;
 }
 
 export function getQueryContent(params: Dict<string>) {

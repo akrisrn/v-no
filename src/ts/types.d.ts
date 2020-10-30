@@ -1,14 +1,16 @@
 interface IConfig {
   siteName: string;
-  favicon: string;
-  indexFile: string;
-  readmeFile: string;
-  categoryFile: string;
-  archiveFile: string;
-  searchFile: string;
-  commonFile: string;
-  untagged: string;
+  paths: {
+    favicon: string;
+    index: string;
+    readme: string;
+    category: string;
+    archive: string;
+    search: string;
+    common: string;
+  }
   messages: {
+    untagged: string;
     pageError: string;
     notFound: string;
     searching: string;

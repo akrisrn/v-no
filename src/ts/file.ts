@@ -1,4 +1,4 @@
-import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, messages, splitFlag } from '@/ts/utils';
+import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, splitFlag } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
 function splitFlags(data: string) {
@@ -72,12 +72,12 @@ export function getFileDict(func: (fileDict: TMDFileDict) => void) {
     func(cachedFileDict);
   } else {
     Promise.all([
-      config.indexFile,
-      config.readmeFile,
-      config.categoryFile,
-      config.archiveFile,
-      config.searchFile,
-      config.commonFile,
+      config.paths.index,
+      config.paths.readme,
+      config.paths.category,
+      config.paths.archive,
+      config.paths.search,
+      config.paths.common,
     ].map(path => getFile(path))).then(async files => {
       await searchFile(files.map(file => file.data).join('\n'));
       isCacheComplete = true;
@@ -88,7 +88,7 @@ export function getFileDict(func: (fileDict: TMDFileDict) => void) {
 
 export function getErrorFile(error: AxiosError) {
   return {
-    data: messages.pageError,
+    data: config.messages.pageError,
     flags: {
       title: `${error.response!.status} ${error.response!.statusText}`,
       tags: [],
