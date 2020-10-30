@@ -53,6 +53,29 @@
     border-bottom: none;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    &:hover .heading-link {
+      opacity: 1;
+    }
+
+    .heading-link {
+      transition: opacity 0.5s;
+      opacity: 0;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  h3, h4, h5, h6 {
+    .heading-link svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
   p {
     &.left {
       float: left;
@@ -437,29 +460,6 @@
     margin-right: 8px;
     margin-left: 8px;
     content: "-";
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    &:hover .heading-link {
-      opacity: 1;
-    }
-
-    .heading-link {
-      transition: opacity 0.5s;
-      opacity: 0;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
-    }
-  }
-
-  h3, h4, h5, h6 {
-    .heading-link svg {
-      width: 14px;
-      height: 14px;
-    }
   }
 
   div.code-toolbar > .toolbar {
