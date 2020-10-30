@@ -1,4 +1,4 @@
-import { addBaseUrl, axiosGet, config, getWrapRegExp, splitFlag, splitTagsFromCodes } from '@/ts/utils';
+import { addBaseUrl, axiosGet, cleanBaseUrl, config, getWrapRegExp, splitFlag } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
 export function getFlag(data: string, flag: EFlag) {
@@ -47,22 +47,26 @@ export function cleanFlags(data: string) {
   return getFlags(data, true, true).data;
 }
 
-export function getListFromData(data: string, isAll = false) {
-  const results = [];
+export async function searchFile(data: string, fileDict: { [index: string]: { data: string; flags: IFlags } }) {
   const hrefs: string[] = [];
-  const regexp = new RegExp(`${isAll ? '' : '-\\s*'}\\[(.*?)]\\((.*?\\.md#)\\)\\s*(\`.*\`)?`, 'gm');
+  const regexp = new RegExp(`\\[.*?]\\((/.*?\\.md)\\)`, 'gm');
   let match = regexp.exec(data);
   while (match) {
-    const href = match[2];
-    if (!hrefs.includes(href)) {
-      const title = match[1];
-      const tags = match[3] ? splitTagsFromCodes(match[3]) : [];
-      results.push({ title, href, tags });
+    const href = match[1];
+    if (!hrefs.includes(href) && fileDict[href] === undefined) {
       hrefs.push(href);
     }
     match = regexp.exec(data);
   }
-  return results;
+  if (hrefs.length > 0) {
+    let newData = '';
+    const responses = await Promise.all(hrefs.map(href => axiosGet<string>(addBaseUrl(href))));
+    responses.forEach(response => {
+      newData += response.data + '\n';
+      fileDict[cleanBaseUrl(response.config.url!)] = getFlags(response.data);
+    });
+    await searchFile(newData, fileDict);
+  }
 }
 
 export function getIndexFileData(func: (data: string) => void) {

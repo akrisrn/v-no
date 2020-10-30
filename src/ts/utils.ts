@@ -55,14 +55,6 @@ export function splitFlag(flag: string) {
   return trimList(flag.split(/\s*[,，、]\s*/));
 }
 
-export function splitTagsFromCodes(codes: string) {
-  const tags = codes.split(/`\s+`/);
-  tags[0] = tags[0].substr(1);
-  const last = tags.length - 1;
-  tags[last] = tags[last].substring(0, tags[last].length - 1);
-  return trimList(tags);
-}
-
 export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
