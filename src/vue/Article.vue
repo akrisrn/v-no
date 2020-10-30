@@ -23,7 +23,7 @@
     @Prop() path!: string;
     @Prop() isCategory!: boolean;
     @Prop() isSearch!: boolean;
-    @Prop() params!: { [index: string]: string | undefined };
+    @Prop() params!: { [index: string]: string };
 
     get markdown() {
       return renderMD(this.path, this.syncData, this.isCategory);
@@ -56,7 +56,7 @@
         if (this.isCategory) {
           updateCategoryList(this.syncData, this.updateData);
         } else if (this.isSearch) {
-          updateSearchList(this.params, this.isCategory);
+          updateSearchList(this.params);
         }
         Prism.highlightAll();
       }, 0);

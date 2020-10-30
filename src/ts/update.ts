@@ -1,4 +1,4 @@
-import { getFile, getFileDict, getFlag } from '@/ts/data';
+import { getFile, getFileDict } from '@/ts/data';
 import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
@@ -14,7 +14,6 @@ import {
   getWrapRegExp,
   isExternalLink,
   removeClass,
-  splitFlag,
 } from '@/ts/utils';
 import Prism from 'prismjs';
 
@@ -318,102 +317,93 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
   getFileDict(updateCategoryListActual(syncData, updateData));
 }
 
-export function updateSearchListActual(params: { [index: string]: string | undefined }, isCategory: boolean) {
-  return (pageData: string) => {
-    const queryContent = getQueryContent(params).toLowerCase();
+export function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
+  resultUl.innerText = resource.searching;
+  const timeStart = new Date().getTime();
+  return (fileDict: TMDFileDict) => {
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
-    const resultUl = document.querySelector<HTMLUListElement>('ul#result')!;
-    const list = getListFromData(pageData, true);
-    if (list.length > 0) {
-      const header = document.querySelector('header')!;
-      let count = 0;
-      const timeStart = new Date().getTime();
-      list.forEach(item => {
-        axiosGet<string>(item.href).then(response => {
-          const data = response.data.trim();
-          let isFind: boolean;
-          if (queryType === EFlag.tags) {
-            const dataTags = splitFlag(getFlag(data, EFlag.tags).toLowerCase());
-            isFind = dataTags.includes(queryParam!);
-          } else {
-            isFind = data.toLowerCase().indexOf(queryContent) >= 0;
+    resultUl.innerText = '';
+    const hrefs = Object.keys(fileDict);
+    hrefs.forEach(href => {
+      const { data, flags } = fileDict[href];
+      let isFind = false;
+      let hasQuote = false;
+      if (queryType) {
+        if (queryParam && queryType === EFlag.tags) {
+          for (const tag of flags.tags) {
+            if (tag.toLowerCase() === queryParam) {
+              isFind = true;
+              break;
+            }
           }
-          if (isFind) {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = item.href;
-            a.innerText = item.title;
-            li.append(a);
-            item.tags.forEach(tag => {
-              const code = document.createElement('code');
-              code.innerText = tag;
-              li.append(' ');
-              li.append(code);
-            });
-            if (!queryType) {
-              const results = [];
-              let prevEndIndex = 0;
-              const regexp = new RegExp(queryContent, 'ig');
-              let match = regexp.exec(data);
-              while (match !== null) {
-                const offset = 10;
-                let startIndex = match.index - offset;
-                if (prevEndIndex === 0 && startIndex > 0) {
-                  results.push('');
+        }
+      } else if (flags.title.toLowerCase().indexOf(queryContent) >= 0) {
+        isFind = true;
+      } else if (data.toLowerCase().indexOf(queryContent) >= 0) {
+        isFind = true;
+        hasQuote = true;
+      }
+      if (isFind) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${href}`;
+        li.append(a);
+        if (hasQuote) {
+          const results = [];
+          let prevEndIndex = 0;
+          const regexp = new RegExp(queryContent, 'ig');
+          let match = regexp.exec(data);
+          while (match !== null) {
+            const offset = 10;
+            let startIndex = match.index - offset;
+            if (prevEndIndex === 0 && startIndex > 0) {
+              results.push('');
+            }
+            const endIndex = regexp.lastIndex + offset;
+            const lastIndex = results.length - 1 as number;
+            let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
+              escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+            if (startIndex <= prevEndIndex) {
+              startIndex = prevEndIndex;
+              if (startIndex > match.index) {
+                if (lastIndex >= 0) {
+                  const lastResult = results[lastIndex] as string;
+                  results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
                 }
-                const endIndex = regexp.lastIndex + offset;
-                const lastIndex = results.length - 1 as number;
-                let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
-                  escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
-                if (startIndex <= prevEndIndex) {
-                  startIndex = prevEndIndex;
-                  if (startIndex > match.index) {
-                    if (lastIndex >= 0) {
-                      const lastResult = results[lastIndex] as string;
-                      results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
-                    }
-                  } else if (startIndex < match.index) {
-                    result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
-                  }
-                  if (lastIndex >= 0) {
-                    results[lastIndex] += result;
-                  } else {
-                    results.push(result);
-                  }
-                } else {
-                  results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
-                }
-                prevEndIndex = endIndex;
-                match = regexp.exec(data);
+              } else if (startIndex < match.index) {
+                result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
               }
-              if (prevEndIndex < data.length) {
-                results.push('');
+              if (lastIndex >= 0) {
+                results[lastIndex] += result;
+              } else {
+                results.push(result);
               }
-              const blockquote = document.createElement('blockquote');
-              const p = document.createElement('p');
-              p.innerHTML = results.join('<span class="ellipsis">...</span>');
-              blockquote.append(p);
-              li.append(blockquote);
+            } else {
+              results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
             }
-            resultUl.append(li);
-            updateLinkPath(isCategory);
+            prevEndIndex = endIndex;
+            match = regexp.exec(data);
           }
-        }).finally(() => {
-          if (++count === list.length) {
-            header.innerText = resource.searchDone;
-            const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
-            if (searchTime) {
-              searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
-            }
-            const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
-            if (searchCount) {
-              searchCount.innerText = `${resultUl.childElementCount}/${list.length}`;
-            }
-          } else {
-            header.innerText = `${resource.searching}(${count}/${list.length})`;
+          if (prevEndIndex < data.length) {
+            results.push('');
           }
-        });
-      });
+          const blockquote = document.createElement('blockquote');
+          const p = document.createElement('p');
+          p.innerHTML = results.join('<span class="ellipsis">...</span>');
+          blockquote.append(p);
+          li.append(blockquote);
+        }
+        resultUl.append(li);
+      }
+    });
+    updateLinkPath(false);
+    const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
+    if (searchTime) {
+      searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
+    }
+    const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
+    if (searchCount) {
+      searchCount.innerText = `${resultUl.childElementCount}/${hrefs.length}`;
     }
     if (resultUl.childElementCount === 0) {
       resultUl.innerText = resource.searchNothing;
@@ -421,9 +411,9 @@ export function updateSearchListActual(params: { [index: string]: string | undef
   };
 }
 
-export function updateSearchList(params: { [index: string]: string | undefined }, isCategory: boolean) {
+export function updateSearchList(params: { [index: string]: string }) {
   const queryContent = getQueryContent(params);
-  const resultUl = document.querySelector('ul#result');
+  const resultUl = document.querySelector<HTMLUListElement>('ul#result');
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
     searchInput.value = queryContent;
@@ -438,6 +428,6 @@ export function updateSearchList(params: { [index: string]: string | undefined }
     });
   }
   if (queryContent && resultUl) {
-    getIndexFileData(updateSearchListActual(params, isCategory));
+    getFileDict(updateSearchListActual(queryContent.toLowerCase(), resultUl));
   }
 }

@@ -92,7 +92,7 @@
     toTop: HTMLElement | null = null;
     keyInput = '';
     inputBinds: { [index: string]: () => void } = {};
-    params: { [index: string]: string | undefined } = {};
+    params: { [index: string]: string } = {};
     isHashMode = isHashMode();
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;

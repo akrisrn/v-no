@@ -1,13 +1,5 @@
 import { addBaseUrl, axiosGet, cleanBaseUrl, config, EFlag, getWrapRegExp, splitFlag } from '@/ts/utils';
 
-export function getFlag(data: string, flag: EFlag) {
-  const match = data.match(getWrapRegExp(`^@${flag}:`, '$', 'm'));
-  if (match) {
-    return match[1];
-  }
-  return '';
-}
-
 export function getFile(data: string, cleanData = true, onlyClean = false) {
   const flags: IFlags = {
     title: '',
