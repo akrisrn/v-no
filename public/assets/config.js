@@ -8,4 +8,10 @@ vnoConfig = {
   searchFile: '/search.md',
   commonFile: '/common.md',
   untagged: 'untagged',
+  messages: {
+    pageError: 'There is something wrong with this page.',
+    notFound: 'Not Found',
+    searching: 'Searching...',
+    searchNothing: 'Nothing.',
+  },
 };

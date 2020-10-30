@@ -2,7 +2,6 @@ import { getFile, getFileDict } from '@/ts/data';
 import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
-import resource from '@/ts/resource';
 import { scroll } from '@/ts/scroll';
 import {
   addBaseUrl,
@@ -13,6 +12,7 @@ import {
   getSnippetData,
   getWrapRegExp,
   isExternalLink,
+  messages,
   removeClass,
 } from '@/ts/utils';
 import Prism from 'prismjs';
@@ -318,7 +318,7 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
 }
 
 export function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
-  resultUl.innerText = resource.searching;
+  resultUl.innerText = messages.searching;
   const timeStart = new Date().getTime();
   return (fileDict: TMDFileDict) => {
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
@@ -406,7 +406,7 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
       searchCount.innerText = `${resultUl.childElementCount}/${hrefs.length}`;
     }
     if (resultUl.childElementCount === 0) {
-      resultUl.innerText = resource.searchNothing;
+      resultUl.innerText = messages.searchNothing;
     }
   };
 }

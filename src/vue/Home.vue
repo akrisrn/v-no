@@ -53,7 +53,6 @@
   import { getDateString } from '@/ts/date';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
-  import resource from '@/ts/resource';
   import {
     addBaseUrl,
     axiosGet,
@@ -63,6 +62,7 @@
     getSnippetData,
     isExternalLink,
     isHashMode,
+    messages,
     toggleClass,
   } from '@/ts/utils';
   import { scroll } from '@/ts/scroll';
@@ -367,7 +367,7 @@
         this.setData(error2markdown({
           response: {
             status: 404,
-            statusText: resource.notFound,
+            statusText: messages.notFound,
           },
         } as AxiosError));
       }

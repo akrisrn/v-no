@@ -1,5 +1,4 @@
-import resource from '@/ts/resource';
-import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
+import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode, messages } from '@/ts/utils';
 import { AxiosError } from 'axios';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -234,5 +233,5 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
 }
 
 export function error2markdown(error: AxiosError) {
-  return `# ${error.response!.status} ${error.response!.statusText}\n${resource.pageError}`;
+  return `# ${error.response!.status} ${error.response!.statusText}\n${messages.pageError}`;
 }

@@ -8,6 +8,12 @@ interface IConfig {
   searchFile: string;
   commonFile: string;
   untagged: string;
+  messages: {
+    pageError: string;
+    notFound: string;
+    searching: string;
+    searchNothing: string;
+  }
 }
 
 interface IFlags {
