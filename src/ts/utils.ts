@@ -1,4 +1,4 @@
-import { cleanFlags } from '@/ts/data';
+import { getFile } from '@/ts/data';
 import axios from 'axios';
 
 export enum EFlag {
@@ -106,5 +106,5 @@ export function cleanBaseUrl(path: string) {
 }
 
 export function getSnippetData(data: string) {
-  return cleanFlags(data).replace(/^(#{1,5}) /gm, '$1# ');
+  return getFile(data, true, true).data.replace(/^(#{1,5}) /gm, '$1# ');
 }

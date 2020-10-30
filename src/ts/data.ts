@@ -34,10 +34,6 @@ export function getFile(data: string, cleanData = true, onlyClean = false) {
   return { data, flags } as TMDFile;
 }
 
-export function cleanFlags(data: string) {
-  return getFile(data, true, true).data;
-}
-
 export async function searchFile(data: string, fileDict: TMDFileDict) {
   const hrefs: string[] = [];
   const regexp = new RegExp(`\\[.*?]\\((/.*?\\.md)\\)`, 'gm');
