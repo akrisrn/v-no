@@ -1,4 +1,4 @@
-import { addBaseUrl, axiosGet, cleanBaseUrl, config, getWrapRegExp, splitFlag } from '@/ts/utils';
+import { addBaseUrl, axiosGet, cleanBaseUrl, config, getWrapRegExp, splitFlag, TMDFile, TMDFileDict } from '@/ts/utils';
 import { EFlag, IFlags } from '@/ts/enums';
 
 export function getFlag(data: string, flag: EFlag) {
@@ -40,14 +40,14 @@ export function getFlags(data: string, cleanData = true, onlyClean = false) {
     }
     match = regexp.exec(dataCopy);
   }
-  return { data, flags: result };
+  return { data, flags: result } as TMDFile;
 }
 
 export function cleanFlags(data: string) {
   return getFlags(data, true, true).data;
 }
 
-export async function searchFile(data: string, fileDict: { [index: string]: { data: string; flags: IFlags } }) {
+export async function searchFile(data: string, fileDict: TMDFileDict) {
   const hrefs: string[] = [];
   const regexp = new RegExp(`\\[.*?]\\((/.*?\\.md)\\)`, 'gm');
   let match = regexp.exec(data);
@@ -69,7 +69,7 @@ export async function searchFile(data: string, fileDict: { [index: string]: { da
   }
 }
 
-export function getFileDict(func: (fileDict: { [index: string]: { data: string; flags: IFlags } }) => void) {
+export function getFileDict(func: (fileDict: TMDFileDict) => void) {
   Promise.all([
     config.indexFile,
     config.readmeFile,
@@ -79,7 +79,7 @@ export function getFileDict(func: (fileDict: { [index: string]: { data: string; 
     config.commonFile,
   ].map(file => axiosGet<string>(addBaseUrl(file)))).then(async responses => {
     let data = '';
-    const fileDict: { [index: string]: { data: string; flags: IFlags } } = {};
+    const fileDict: TMDFileDict = {};
     responses.forEach(response => {
       data += response.data + '\n';
       fileDict[cleanBaseUrl(response.config.url!)] = getFlags(response.data);

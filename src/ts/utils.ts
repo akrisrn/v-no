@@ -13,6 +13,13 @@ interface IConfig {
   untagged: string;
 }
 
+export type TMDFile = {
+  data: string;
+  flags: IFlags;
+}
+
+export type TMDFileDict = { [index: string]: TMDFile }
+
 export function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];
