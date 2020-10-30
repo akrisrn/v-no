@@ -34,20 +34,20 @@ export function getFile(data: string, cleanData = true, onlyClean = false) {
   return { data, flags } as TMDFile;
 }
 
-export async function searchFile(data: string, fileDict: TMDFileDict) {
-  const hrefs: string[] = [];
+async function searchFile(data: string, fileDict: TMDFileDict) {
+  const paths: string[] = [];
   const regexp = new RegExp(`\\[.*?]\\((/.*?\\.md)\\)`, 'gm');
   let match = regexp.exec(data);
   while (match) {
-    const href = match[1];
-    if (!hrefs.includes(href) && fileDict[href] === undefined) {
-      hrefs.push(href);
+    const path = match[1];
+    if (!paths.includes(path) && fileDict[path] === undefined) {
+      paths.push(path);
     }
     match = regexp.exec(data);
   }
-  if (hrefs.length > 0) {
+  if (paths.length > 0) {
     let newData = '';
-    const responses = await Promise.all(hrefs.map(href => axiosGet<string>(addBaseUrl(href))));
+    const responses = await Promise.all(paths.map(path => axiosGet<string>(addBaseUrl(path))));
     responses.forEach(response => {
       newData += response.data + '\n';
       fileDict[cleanBaseUrl(response.config.url!)] = getFile(response.data);

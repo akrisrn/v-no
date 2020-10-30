@@ -281,20 +281,20 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
 
 export function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
   return (fileDict: TMDFileDict) => {
-    const hrefs = Object.keys(fileDict);
+    const paths = Object.keys(fileDict);
     const tagDict: Dict<string[]> = {};
     const untagged = [];
-    for (const href of hrefs) {
-      const flags = fileDict[href].flags;
+    for (const path of paths) {
+      const flags = fileDict[path].flags;
       if (flags.tags.length === 0) {
-        untagged.push(`- [#](${href})`);
+        untagged.push(`- [#](${path})`);
         continue;
       }
       flags.tags.forEach(tag => {
         if (tagDict[tag] === undefined) {
           tagDict[tag] = [];
         }
-        tagDict[tag].push(`- [#](${href})`);
+        tagDict[tag].push(`- [#](${path})`);
       });
     }
     const sortedKeys = Object.keys(tagDict).sort();
@@ -323,9 +323,9 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
   return (fileDict: TMDFileDict) => {
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
     resultUl.innerText = '';
-    const hrefs = Object.keys(fileDict);
-    hrefs.forEach(href => {
-      const { data, flags } = fileDict[href];
+    const paths = Object.keys(fileDict);
+    paths.forEach(path => {
+      const { data, flags } = fileDict[path];
       let isFind = false;
       let hasQuote = false;
       if (queryType) {
@@ -346,7 +346,7 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
       if (isFind) {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = `#${href}`;
+        a.href = `#${path}`;
         li.append(a);
         if (hasQuote) {
           const results = [];
@@ -403,7 +403,7 @@ export function updateSearchListActual(queryContent: string, resultUl: HTMLUList
     }
     const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
     if (searchCount) {
-      searchCount.innerText = `${resultUl.childElementCount}/${hrefs.length}`;
+      searchCount.innerText = `${resultUl.childElementCount}/${paths.length}`;
     }
     if (resultUl.childElementCount === 0) {
       resultUl.innerText = messages.searchNothing;
