@@ -1,6 +1,5 @@
 import { getFile, getFileDict } from '@/ts/file';
 import { renderMD } from '@/ts/markdown';
-import { scroll } from '@/ts/scroll';
 import {
   buildQueryContent,
   config,
@@ -13,6 +12,7 @@ import {
   getWrapRegExp,
   isExternalLink,
   removeClass,
+  scroll,
 } from '@/ts/utils';
 import Prism from 'prismjs';
 

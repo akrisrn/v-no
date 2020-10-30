@@ -60,9 +60,9 @@
     getQueryLink,
     isExternalLink,
     isHashMode,
+    scroll,
     toggleClass,
   } from '@/ts/utils';
-  import { scroll } from '@/ts/scroll';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
