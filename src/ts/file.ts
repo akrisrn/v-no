@@ -1,5 +1,20 @@
-import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, splitFlag } from '@/ts/utils';
+import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
+
+function trimList(list: string[]) {
+  const result: string[] = [];
+  list.forEach(item => {
+    const trim = item.trim();
+    if (trim) {
+      result.push(trim);
+    }
+  });
+  return Array.from(new Set(result));
+}
+
+function splitFlag(flag: string) {
+  return trimList(flag.split(/\s*[,，、]\s*/));
+}
 
 function splitFlags(data: string) {
   const flags: IFlags = {

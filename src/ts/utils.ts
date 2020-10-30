@@ -31,21 +31,6 @@ export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, fl
   return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }
 
-export function trimList(list: string[]) {
-  const result: string[] = [];
-  list.forEach(item => {
-    const trim = item.trim();
-    if (trim) {
-      result.push(trim);
-    }
-  });
-  return Array.from(new Set(result));
-}
-
-export function splitFlag(flag: string) {
-  return trimList(flag.split(/\s*[,，、]\s*/));
-}
-
 export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
