@@ -1,9 +1,17 @@
 import { getFile, getFileDict } from '@/ts/file';
-import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import { scroll } from '@/ts/scroll';
-import { config, degradeHeading, EFlag, escapeHTML, getWrapRegExp, isExternalLink, removeClass } from '@/ts/utils';
+import {
+  config,
+  degradeHeading,
+  EFlag,
+  escapeHTML,
+  getDateString,
+  getWrapRegExp,
+  isExternalLink,
+  removeClass,
+} from '@/ts/utils';
 import Prism from 'prismjs';
 
 export function updateDD() {

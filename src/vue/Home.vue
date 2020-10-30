@@ -50,7 +50,6 @@
 
 <script lang="ts">
   import { getErrorFile, getFile } from '@/ts/file';
-  import { getDateString } from '@/ts/date';
   import { getQueryLink } from '@/ts/query';
   import {
     addBaseUrl,
@@ -58,6 +57,7 @@
     degradeHeading,
     EFlag,
     exposeToWindow,
+    getDateString,
     isExternalLink,
     isHashMode,
     toggleClass,
