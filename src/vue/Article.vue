@@ -54,7 +54,7 @@
         updateImagePath();
         updateLinkPath(this.isCategory);
         if (this.isCategory) {
-          updateCategoryList(this.syncData, this.updateData, this.isCategory);
+          updateCategoryList(this.syncData, this.updateData);
         } else if (this.isSearch) {
           updateSearchList(this.params, this.isCategory);
         }

@@ -1,4 +1,4 @@
-import { cleanFlags, getFlag, getFile, getIndexFileData, getListFromData } from '@/ts/data';
+import { getFile, getFileDict, getFlag } from '@/ts/data';
 import { getDateString } from '@/ts/date';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
@@ -260,51 +260,42 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   }
 }
 
-export function updateCategoryListActual(syncData: string, updateData: (data: string) => void, isCategory: boolean) {
-  return (pageData: string) => {
-    const list = getListFromData(pageData);
-    if (list.length > 0) {
-      const tagDict: { [index: string]: string[] | undefined } = {};
-      const untagged = [];
-      for (const item of list) {
-        if (item.tags.length === 0) {
-          untagged.push(`- [${item.title}](${item.href})`);
-          continue;
+export function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
+  return (fileDict: TMDFileDict) => {
+    const hrefs = Object.keys(fileDict);
+    const tagDict: { [index: string]: string[] } = {};
+    const untagged = [];
+    for (const href of hrefs) {
+      const flags = fileDict[href].flags;
+      if (flags.tags.length === 0) {
+        untagged.push(`- [#](${href})`);
+        continue;
+      }
+      flags.tags.forEach(tag => {
+        if (tagDict[tag] === undefined) {
+          tagDict[tag] = [];
         }
-        const tags = item.tags.map(tag => {
-          return '`' + tag + '`';
-        }).join(' ');
-        item.tags.forEach(tag => {
-          if (tagDict[tag] === undefined) {
-            tagDict[tag] = [];
-          }
-          tagDict[tag]!.push(`- [${item.title}](${item.href}) ${tags}`);
-        });
-      }
-      const sortedKeys = Object.keys(tagDict).sort();
-      if (untagged.length > 0) {
-        sortedKeys.unshift(config.untagged);
-        tagDict[config.untagged] = untagged;
-      }
-      updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
-        const count = `<span class="count">（${tagDict[key]!.length}）</span>`;
-        return `###### ${key}${count}\n\n${tagDict[key]!.join('\n')}`;
-      }).join('\n\n')));
-      setTimeout(() => {
-        updateToc();
-        updateLinkPath(isCategory);
-      }, 0);
-    } else {
-      updateData(syncData.replace(/^\[list]$/im, ''));
-      setTimeout(() => {
-        updateLinkPath(isCategory);
-      }, 0);
+        tagDict[tag].push(`- [#](${href})`);
+      });
     }
+    const sortedKeys = Object.keys(tagDict).sort();
+    if (untagged.length > 0) {
+      sortedKeys.unshift(config.untagged);
+      tagDict[config.untagged] = untagged;
+    }
+    updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
+      const count = `<span class="count">( ${tagDict[key].length} )</span>`;
+      return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
+    }).join('\n\n')));
+    setTimeout(() => {
+      updateToc();
+      updateLinkPath(true);
+    }, 0);
   };
 }
 
-export function updateCategoryList(syncData: string, updateData: (data: string) => void, isCategory: boolean) {
-  getIndexFileData(updateCategoryListActual(syncData, updateData, isCategory));
+export function updateCategoryList(syncData: string, updateData: (data: string) => void) {
+  getFileDict(updateCategoryListActual(syncData, updateData));
 }
 
 export function updateSearchListActual(params: { [index: string]: string | undefined }, isCategory: boolean) {
