@@ -50,6 +50,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   if (!isExternalLink(src)) {
     src = addBaseUrl(src);
   }
+  // put '#' suffix to 'alt' will be better, but no way to get/set it for now.
   const match = src.match(/#(.+)$/);
   if (match) {
     const width = parseInt(match[1], 0);
@@ -57,7 +58,9 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
       if (match[1].startsWith('.')) {
         match[1].substr(1).split('.').forEach(cls => {
           cls = cls.trim();
-          token.attrJoin('class', cls);
+          if (cls) {
+            token.attrJoin('class', cls);
+          }
         });
       } else {
         token.attrSet('style', match[1]);
