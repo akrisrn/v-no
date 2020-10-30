@@ -69,11 +69,22 @@ export async function searchFile(data: string, fileDict: { [index: string]: { da
   }
 }
 
-export function getIndexFileData(func: (data: string) => void) {
+export function getFileDict(func: (fileDict: { [index: string]: { data: string; flags: IFlags } }) => void) {
   Promise.all([
-    axiosGet<string>(addBaseUrl(config.indexFile)),
-    axiosGet<string>(addBaseUrl(config.archiveFile)),
-  ]).then(responses => {
-    func(responses.map(response => response.data).join('\n'));
+    config.indexFile,
+    config.readmeFile,
+    config.categoryFile,
+    config.archiveFile,
+    config.searchFile,
+    config.commonFile,
+  ].map(file => axiosGet<string>(addBaseUrl(file)))).then(async responses => {
+    let data = '';
+    const fileDict: { [index: string]: { data: string; flags: IFlags } } = {};
+    responses.forEach(response => {
+      data += response.data + '\n';
+      fileDict[cleanBaseUrl(response.config.url!)] = getFlags(response.data);
+    });
+    await searchFile(data, fileDict);
+    func(fileDict);
   });
 }
