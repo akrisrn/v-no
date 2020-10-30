@@ -51,7 +51,6 @@
 <script lang="ts">
   import { getFlags } from '@/ts/data';
   import { getDateString } from '@/ts/date';
-  import { EFlag } from '@/ts/enums';
   import { error2markdown } from '@/ts/markdown';
   import { getQueryLink } from '@/ts/query';
   import resource from '@/ts/resource';
@@ -59,6 +58,7 @@
     addBaseUrl,
     axiosGet,
     config,
+    EFlag,
     exposeToWindow,
     getSnippetData,
     isExternalLink,

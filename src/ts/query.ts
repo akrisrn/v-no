@@ -1,5 +1,4 @@
-import { EFlag } from '@/ts/enums';
-import { config } from '@/ts/utils';
+import { config, EFlag } from '@/ts/utils';
 
 export function buildQueryContent(content: string, isComplete = false) {
   return (isComplete ? `#${config.searchFile}` : '') + `?content=${encodeURIComponent(content)}`;

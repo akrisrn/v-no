@@ -1,6 +1,12 @@
 import { cleanFlags } from '@/ts/data';
 import axios from 'axios';
 
+export enum EFlag {
+  tags = 'tags',
+  updated = 'updated',
+  cover = 'cover',
+}
+
 export function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];

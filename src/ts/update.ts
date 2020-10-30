@@ -1,6 +1,5 @@
 import { cleanFlags, getFlag, getFlags, getIndexFileData, getListFromData } from '@/ts/data';
 import { getDateString } from '@/ts/date';
-import { EFlag } from '@/ts/enums';
 import { renderMD } from '@/ts/markdown';
 import { buildQueryContent, getQueryContent, getQueryTypeAndParam } from '@/ts/query';
 import resource from '@/ts/resource';
@@ -9,6 +8,7 @@ import {
   addBaseUrl,
   axiosGet,
   config,
+  EFlag,
   escapeHTML,
   getSnippetData,
   getWrapRegExp,
