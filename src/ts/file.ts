@@ -2,14 +2,7 @@ import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp } from '@/ts/uti
 import axios, { AxiosError } from 'axios';
 
 function trimList(list: string[]) {
-  const result: string[] = [];
-  list.forEach(item => {
-    const trim = item.trim();
-    if (trim) {
-      result.push(trim);
-    }
-  });
-  return Array.from(new Set(result));
+  return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
 }
 
 function splitFlag(flag: string) {
@@ -67,7 +60,7 @@ export function getFile(path: string, noCache = false) {
 
 async function searchFile(data: string) {
   const paths: string[] = [];
-  const regexp = new RegExp(`\\[.*?]\\((/.*?\\.md)\\)`, 'gm');
+  const regexp = /\[.*?]\((\/.*?\.md)\)/gm;
   let match = regexp.exec(data);
   while (match) {
     const path = match[1];

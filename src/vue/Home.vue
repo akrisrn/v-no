@@ -30,8 +30,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :isCategory="isCategory" :isSearch="isSearch" :params="params"
-                 :path="path" @update:data="data = $event">
+        <Article :data="data" :params="params" :path="path" @update:data="data = $event">
         </Article>
         <footer v-if="!isHome" class="markdown-body">
           <a :href="baseUrl" class="home" @click.prevent="returnHome">Return to home</a>
@@ -80,6 +79,8 @@
     tags: string[] = [];
     updated = '';
     cover = '';
+
+    isHashMode = isHashMode();
     isShow = false;
     isError = false;
     isDark = false;
@@ -87,14 +88,17 @@
     toggleDark: HTMLElement | null = null;
     toggleZen: HTMLElement | null = null;
     toTop: HTMLElement | null = null;
+
     keyInput = '';
     inputBinds: Dict<() => void> = {};
-    params: Dict<string> = {};
-    isHashMode = isHashMode();
+
+    config = config;
+    favicon = addBaseUrl(config.paths.favicon);
+
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
-    favicon: string = addBaseUrl(config.paths.favicon);
-    config = config;
+
+    params: Dict<string> = {};
 
     get path() {
       this.params = {};
@@ -142,14 +146,6 @@
 
     get isHome() {
       return this.path === addBaseUrl(this.config.paths.index);
-    }
-
-    get isCategory() {
-      return this.path === addBaseUrl(this.config.paths.category);
-    }
-
-    get isSearch() {
-      return this.path === addBaseUrl(this.config.paths.search);
     }
 
     get date() {
@@ -364,6 +360,10 @@
       }
     }
 
+    getTagLink(tag: string) {
+      return getQueryLink(EFlag.tags, tag);
+    }
+
     addInputBind(input: string, bind: () => void) {
       this.inputBinds[input] = bind;
     }
@@ -372,10 +372,6 @@
       Object.keys(binds).forEach(key => {
         this.inputBinds[key] = binds[key];
       });
-    }
-
-    getTagLink(tag: string) {
-      return getQueryLink(EFlag.tags, tag);
     }
   }
 </script>

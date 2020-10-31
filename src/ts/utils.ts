@@ -4,12 +4,12 @@ export enum EFlag {
   cover = 'cover',
 }
 
-export function getFromWindow(name: string) {
+function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];
 }
 
-export function setToWindow(name: string, value: any) {
+function setToWindow(name: string, value: any) {
   // @ts-ignore
   window[name] = value;
 }
@@ -27,12 +27,16 @@ export function exposeToWindow(vars: Dict<any>) {
   });
 }
 
-export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
-  return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
-}
-
 export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
+}
+
+export function isExternalLink(href: string) {
+  return href.indexOf(':') >= 0;
+}
+
+export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
+  return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }
 
 export function escapeHTML(html: string) {
@@ -60,10 +64,6 @@ export function toggleClass(element: HTMLElement, className: string) {
   } else {
     element.classList.add(className);
   }
-}
-
-export function isExternalLink(href: string) {
-  return href.indexOf(':') >= 0;
 }
 
 const baseUrl = process.env.BASE_URL;
@@ -124,7 +124,7 @@ export function getQueryLink(type: EFlag, param: string) {
 import SmoothScroll from 'smooth-scroll';
 
 const smoothScroll = new SmoothScroll(undefined, {
-  speed: 100,
+  speed: 300,
 });
 
 export function scroll(height: number, isSmooth = true) {

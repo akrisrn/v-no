@@ -13,7 +13,7 @@
     updateSearchList,
     updateToc,
   } from '@/ts/update';
-  import { exposeToWindow } from '@/ts/utils';
+  import { addBaseUrl, config, exposeToWindow } from '@/ts/utils';
   import Prism from 'prismjs';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
 
@@ -21,12 +21,18 @@
   export default class Article extends Vue {
     @PropSync('data') syncData!: string;
     @Prop() path!: string;
-    @Prop() isCategory!: boolean;
-    @Prop() isSearch!: boolean;
     @Prop() params!: Dict<string>;
 
     get markdown() {
       return renderMD(this.path, this.syncData, this.isCategory);
+    }
+
+    get isCategory() {
+      return this.path === addBaseUrl(config.paths.category);
+    }
+
+    get isSearch() {
+      return this.path === addBaseUrl(config.paths.search);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -54,16 +60,14 @@
         updateImagePath();
         updateLinkPath(this.isCategory);
         if (this.isCategory) {
-          updateCategoryList(this.syncData, this.updateData);
+          updateCategoryList(this.syncData, (data: string) => {
+            this.syncData = data;
+          });
         } else if (this.isSearch) {
           updateSearchList(this.params);
         }
         Prism.highlightAll();
       }, 0);
-    }
-
-    updateData(data: string) {
-      this.syncData = data;
     }
   }
 </script>
