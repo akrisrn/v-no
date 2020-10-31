@@ -50,7 +50,7 @@ export function getFile(path: string, noCache = false) {
   });
 }
 
-async function searchFile(data: string) {
+async function walkFiles(data: string) {
   const paths: string[] = [];
   const regexp = /\[.*?]\((\/.*?\.md)\)/gm;
   let match = regexp.exec(data);
@@ -63,7 +63,7 @@ async function searchFile(data: string) {
   }
   if (paths.length > 0) {
     const files = await Promise.all(paths.map(path => getFile(path)));
-    await searchFile(files.map(file => file.data).join('\n'));
+    await walkFiles(files.map(file => file.data).join('\n'));
   }
 }
 
@@ -79,7 +79,7 @@ export function getFiles(func: (files: TMDFileDict) => void) {
       config.paths.search,
       config.paths.common,
     ].map(path => getFile(path))).then(async files => {
-      await searchFile(files.map(file => file.data).join('\n'));
+      await walkFiles(files.map(file => file.data).join('\n'));
       isCacheComplete = true;
       func(cachedFiles);
     });
