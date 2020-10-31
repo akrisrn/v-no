@@ -3,7 +3,7 @@
     <div id="top">
       <div>
         <img :src="favicon" alt=""/>
-        <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName ? config.siteName : config.messages.home }}</a>
+        <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
         <a :href="`#${config.paths.readme}`">{{ config.messages.readme }}</a>
         <a :href="`#${config.paths.archive}`">{{ config.messages.archive }}</a>
@@ -107,33 +107,33 @@
       if (this.isIndexPath) {
         path = '/';
       }
-      if (path === '/') {
-        if (hash.startsWith('#/')) {
-          path = hash.substr(1);
-          if (path !== '/') {
-            const indexOf = path.indexOf('?');
-            if (indexOf >= 0) {
-              path.substr(indexOf + 1).split('&').forEach(param => {
-                const indexOfEQ = param.indexOf('=');
-                if (indexOfEQ >= 0) {
-                  this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
-                }
-              });
-              path = path.substring(0, indexOf);
-            }
-            if (path.endsWith('/')) {
-              path += 'index.md';
-            }
-            return addBaseUrl(path);
-          }
+      if (path !== '/') {
+        path = addBaseUrl(path);
+        if (path.endsWith('.html')) {
+          return path.replace(/\.html$/, '.md');
         }
-        return addBaseUrl(this.config.paths.index);
+        return path;
       }
-      path = addBaseUrl(path);
-      if (path.endsWith('.html')) {
-        return path.replace(/\.html$/, '.md');
+      if (hash.startsWith('#/')) {
+        path = hash.substr(1);
+        if (path !== '/') {
+          const indexOf = path.indexOf('?');
+          if (indexOf >= 0) {
+            path.substr(indexOf + 1).split('&').forEach(param => {
+              const indexOfEQ = param.indexOf('=');
+              if (indexOfEQ >= 0) {
+                this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
+              }
+            });
+            path = path.substring(0, indexOf);
+          }
+          if (path.endsWith('/')) {
+            path += 'index.md';
+          }
+          return addBaseUrl(path);
+        }
       }
-      return path;
+      return addBaseUrl(this.config.paths.index);
     }
 
     get isIndexPath() {
@@ -141,7 +141,7 @@
       if (path.endsWith('/')) {
         path += 'index.html';
       }
-      return path === '/' + this.indexPath;
+      return path === `/${this.indexPath}`;
     }
 
     get isHome() {
@@ -205,21 +205,18 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
+      this.updateData();
+      this.isDark = !!localStorage.getItem('dark');
+      this.isZen = !!localStorage.getItem('zen');
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       icon.href = this.favicon;
       // noinspection JSUnusedGlobalSymbols
-      exposeToWindow({
-        addInputBind: this.addInputBind,
-        axios,
-        isHashMode: this.isHashMode,
-      });
-      // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
         home: () => {
-          if (document.body.classList.contains('prerender')) {
-            location.href = this.baseUrl;
-          } else {
+          if (this.isHashMode) {
             this.returnHome();
+          } else {
+            location.href = this.baseUrl;
           }
         },
         gg: () => {
@@ -241,9 +238,12 @@
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
       });
-      this.isDark = !!localStorage.getItem('dark');
-      this.isZen = !!localStorage.getItem('zen');
-      this.updateData();
+      // noinspection JSUnusedGlobalSymbols
+      exposeToWindow({
+        axios,
+        isHash: this.isHashMode,
+        addInputBind: this.addInputBind,
+      });
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -278,7 +278,7 @@
       if (this.isIndexPath) {
         let indexPath = this.indexPath;
         if (indexPath.endsWith('index.html')) {
-          indexPath = indexPath.substring(0, indexPath.length - 10);
+          indexPath = indexPath.replace(/index\.html$/, '');
         }
         home += indexPath;
       }
@@ -288,7 +288,7 @@
     }
 
     setFlags(flags: IFlags) {
-      this.title = flags.title ? flags.title : this.path.substr(1);
+      this.title = flags.title || this.path.substr(1);
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title = `${this.title} - ${this.config.siteName}`;
       } else {
@@ -370,7 +370,7 @@
 
     addInputBinds(binds: Dict<() => void>) {
       Object.keys(binds).forEach(key => {
-        this.inputBinds[key] = binds[key];
+        this.addInputBind(key, binds[key]);
       });
     }
   }

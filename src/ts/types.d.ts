@@ -8,7 +8,7 @@ interface IConfig {
     category: string;
     search: string;
     common: string;
-  }
+  };
   messages: {
     home: string;
     readme: string;
@@ -23,7 +23,7 @@ interface IConfig {
     notFound: string;
     searching: string;
     searchNothing: string;
-  }
+  };
 }
 
 interface IFlags {
