@@ -88,19 +88,9 @@ export function degradeHeading(data: string) {
   return data.replace(/^(#{1,5}) /gm, '$1# ');
 }
 
-function getDate(path: string) {
-  if (path) {
-    const match = path.match(/(\d{4}[/-]\d{2}[/-]\d{2})/);
-    if (match) {
-      return new Date(match[1]);
-    }
-  }
-  return null;
-}
-
 export function getDateString(path: string) {
-  const date = getDate(path);
-  return date ? date.toDateString() : '';
+  const match = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
+  return match ? new Date(match[1]).toDateString() : '';
 }
 
 export function buildQueryContent(content: string, isComplete = false) {
