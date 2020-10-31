@@ -1,10 +1,6 @@
 import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
-function splitFlag(flag: string) {
-  return trimList(flag.split(/\s*[,，、]\s*/));
-}
-
 function splitFlags(data: string) {
   const flags: IFlags = {
     title: '',
@@ -21,7 +17,7 @@ function splitFlags(data: string) {
     if (match[1].startsWith('@')) {
       const flag = match[1].substring(1, match[1].length - 1);
       if ([EFlag.tags, EFlag.updated].map(flag => `@${flag}:`).includes(match[1])) {
-        flags[flag] = splitFlag(match[2]);
+        flags[flag] = trimList(match[2].split(/\s*[,，、]\s*/));
       } else {
         flags[flag] = match[2];
       }
