@@ -7,6 +7,8 @@ const deflist = require('markdown-it-deflist');
 const taskLists = require('markdown-it-task-lists');
 const container = require('markdown-it-container');
 
+const detailsRegexp = /^(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
+
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
   html: true,
@@ -14,22 +16,37 @@ const markdownIt = new MarkdownIt({
   linkify: true,
 }).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
   validate: (params: string) => {
-    return params.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/);
+    return params.trim().match(detailsRegexp);
   },
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
     if (token.nesting === 1) {
-      const match = token.info.trim().match(/^(open\s+)?(?:\.(.*?)\s+)?(.*)$/)!;
-      let open = '';
+      let isOpen = false;
+      let classList: string[] = [];
+      let summary = '';
+      const match = token.info.trim().match(detailsRegexp)!;
       if (match[1]) {
-        open = ' open';
+        isOpen = true;
       }
-      let classAttr = '';
       if (match[2]) {
-        classAttr = ` class="${trimList(match[2].split('.')).join(' ')}"`;
+        classList = trimList(match[2].split('.'));
       }
-      const summary = markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
-      return `<details${classAttr}${open}><summary>${summary}</summary>`;
+      if (match[3]) {
+        summary = markdownIt.render(match[3]).trim();
+      } else {
+        isOpen = true;
+        if (!classList.includes('empty')) {
+          classList.push('empty');
+        }
+      }
+      let attrs = '';
+      if (isOpen) {
+        attrs += ' open';
+      }
+      if (classList.length > 0) {
+        attrs += ` class="${classList.join(' ')}"`;
+      }
+      return `<details${attrs}><summary>${summary}</summary>`;
     }
     return '</details>';
   },

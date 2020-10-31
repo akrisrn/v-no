@@ -230,18 +230,28 @@
     }
 
     summary {
+      overflow-y: hidden;
       margin: 0 -16px;
       padding: 6px 16px;
       outline: none;
       background-color: $info-color-xs;
 
-      h1, h2 {
-        padding-bottom: 0;
-        border-bottom: none;
+      * {
+        display: inline;
+        margin-bottom: 0;
       }
 
-      h1, h2, h3, h4, h5, h6 {
-        display: inline;
+      ul, ol {
+        margin-left: -2em;
+
+        li:before {
+          margin-right: 8px;
+          content: "•";
+        }
+      }
+
+      blockquote:before {
+        top: -28px;
       }
 
       + * {
