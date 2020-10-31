@@ -35,6 +35,10 @@ export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
 
+export function trimList(list: string[]) {
+  return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
+}
+
 export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
   return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
 }

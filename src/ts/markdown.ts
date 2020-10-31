@@ -1,4 +1,4 @@
-import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode } from '@/ts/utils';
+import { addBaseUrl, getWrapRegExp, isExternalLink, isHashMode, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -26,7 +26,7 @@ const markdownIt = new MarkdownIt({
       }
       let classAttr = '';
       if (match[2]) {
-        classAttr = ` class="${match[2].split('.').join(' ')}"`;
+        classAttr = ` class="${trimList(match[2].split('.')).join(' ')}"`;
       }
       const summary = markdownIt.render(match[3]).trim().replace(/^<p>(.*)<\/p>$/, '$1');
       return `<details${classAttr}${open}><summary>${summary}</summary>`;
@@ -55,11 +55,8 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
     const width = parseInt(match[1]);
     if (isNaN(width)) {
       if (match[1].startsWith('.')) {
-        match[1].substr(1).split('.').forEach(cls => {
-          cls = cls.trim();
-          if (cls) {
-            token.attrJoin('class', cls);
-          }
+        trimList(match[1].split('.')).forEach(cls => {
+          token.attrJoin('class', cls);
         });
       } else {
         token.attrSet('style', match[1]);

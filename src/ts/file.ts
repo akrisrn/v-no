@@ -1,9 +1,5 @@
-import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp } from '@/ts/utils';
+import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
-
-function trimList(list: string[]) {
-  return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
-}
 
 function splitFlag(flag: string) {
   return trimList(flag.split(/\s*[,，、]\s*/));
