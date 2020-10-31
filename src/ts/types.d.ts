@@ -4,12 +4,20 @@ interface IConfig {
     favicon: string;
     index: string;
     readme: string;
-    category: string;
     archive: string;
+    category: string;
     search: string;
     common: string;
   }
   messages: {
+    home: string;
+    readme: string;
+    archive: string;
+    category: string;
+    search: string;
+    raw: string;
+    returnHome: string;
+    lastUpdated: string;
     untagged: string;
     pageError: string;
     notFound: string;

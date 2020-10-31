@@ -74,8 +74,8 @@ export function getFiles(func: (files: TMDFileDict) => void) {
     Promise.all([
       config.paths.index,
       config.paths.readme,
-      config.paths.category,
       config.paths.archive,
+      config.paths.category,
       config.paths.search,
       config.paths.common,
     ].map(path => getFile(path))).then(async files => {

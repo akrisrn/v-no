@@ -3,12 +3,12 @@
     <div id="top">
       <div>
         <img :src="favicon" alt=""/>
-        <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName ? config.siteName : 'INDEX' }}</a>
+        <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName ? config.siteName : config.messages.home }}</a>
         <span></span>
-        <a :href="`#${config.paths.readme}`">README</a>
-        <a :href="`#${config.paths.category}`">CATEGORIES</a>
-        <a :href="`#${config.paths.archive}`">ARCHIVES</a>
-        <a v-if="isHashMode" :href="`#${config.paths.search}`">SEARCH</a>
+        <a :href="`#${config.paths.readme}`">{{ config.messages.readme }}</a>
+        <a :href="`#${config.paths.archive}`">{{ config.messages.archive }}</a>
+        <a :href="`#${config.paths.category}`">{{ config.messages.category }}</a>
+        <a v-if="isHashMode" :href="`#${config.paths.search}`">{{ config.messages.search }}</a>
       </div>
     </div>
     <transition name="slide-fade">
@@ -26,16 +26,16 @@
             <a :href="getTagLink(tag)">{{ tag }}</a>
           </code>
           <code class="item-raw">
-            <a :href="path" target="_blank">Raw</a>
+            <a :href="path" target="_blank">{{ config.messages.raw }}</a>
           </code>
         </div>
         <header>{{ title }}</header>
         <Article :data="data" :params="params" :path="path" @update:data="data = $event">
         </Article>
         <footer v-if="!isHome" class="markdown-body">
-          <a :href="baseUrl" class="home" @click.prevent="returnHome">Return to home</a>
+          <a :href="baseUrl" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
-            <span v-if="date" class="date">{{ updated ? `${updated} | Last updated` : date }}</span>
+            <span v-if="date" class="date">{{ updated ? `${updated} | ${config.messages.lastUpdated}` : date }}</span>
             <span v-else-if="updated" class="date">{{ updated }}</span>
           </template>
         </footer>
