@@ -51,12 +51,12 @@
   import { getErrorFile, getFile } from '@/ts/file';
   import {
     addBaseUrl,
+    buildQueryContent,
     config,
     degradeHeading,
     EFlag,
     exposeToWindow,
     getDateString,
-    getQueryLink,
     isExternalLink,
     isHashMode,
     scroll,
@@ -361,7 +361,7 @@
     }
 
     getTagLink(tag: string) {
-      return getQueryLink(EFlag.tags, tag);
+      return buildQueryContent(`@${EFlag.tags}:${tag}`, true);
     }
 
     addInputBind(input: string, bind: () => void) {

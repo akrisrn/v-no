@@ -7,8 +7,6 @@ import {
   EFlag,
   escapeHTML,
   getDateString,
-  getQueryContent,
-  getQueryTypeAndParam,
   getWrapRegExp,
   isExternalLink,
   removeClass,
@@ -311,19 +309,25 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
   getFiles(updateCategoryListActual(syncData, updateData));
 }
 
-function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
+function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
   resultUl.innerText = config.messages.searching;
   const timeStart = new Date().getTime();
   return (files: TMDFileDict) => {
-    const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
+    let queryFlag = '';
+    let queryParam = '';
+    const match = content.match(/^@(\S+?):\s*(.*)$/);
+    if (match) {
+      queryFlag = match[1];
+      queryParam = match[2];
+    }
     resultUl.innerText = '';
     const paths = Object.keys(files);
     paths.forEach(path => {
       const { data, flags } = files[path];
       let isFind = false;
       let hasQuote = false;
-      if (queryType) {
-        if (queryParam && queryType === EFlag.tags) {
+      if (queryFlag) {
+        if (queryParam && queryFlag === EFlag.tags) {
           for (const tag of flags.tags) {
             if (tag.toLowerCase() === queryParam) {
               isFind = true;
@@ -331,9 +335,9 @@ function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement
             }
           }
         }
-      } else if (flags.title.toLowerCase().indexOf(queryContent) >= 0) {
+      } else if (flags.title.toLowerCase().indexOf(content) >= 0) {
         isFind = true;
-      } else if (data.toLowerCase().indexOf(queryContent) >= 0) {
+      } else if (data.toLowerCase().indexOf(content) >= 0) {
         isFind = true;
         hasQuote = true;
       }
@@ -345,9 +349,9 @@ function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement
         if (hasQuote) {
           const results = [];
           let prevEndIndex = 0;
-          const regexp = new RegExp(queryContent, 'ig');
+          const regexp = new RegExp(content, 'ig');
           let match = regexp.exec(data);
-          while (match !== null) {
+          while (match) {
             const offset = 10;
             let startIndex = match.index - offset;
             if (prevEndIndex === 0 && startIndex > 0) {
@@ -406,11 +410,11 @@ function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement
 }
 
 export function updateSearchList(params: Dict<string>) {
-  const queryContent = getQueryContent(params);
+  const content = params.content !== undefined ? decodeURIComponent(params.content.trim()) : '';
   const resultUl = document.querySelector<HTMLUListElement>('ul#result');
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
-    searchInput.value = queryContent;
+    searchInput.value = content;
     searchInput.addEventListener('keyup', event => {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -421,7 +425,7 @@ export function updateSearchList(params: Dict<string>) {
       }
     });
   }
-  if (queryContent && resultUl) {
-    getFiles(updateSearchListActual(queryContent.toLowerCase(), resultUl));
+  if (content && resultUl) {
+    getFiles(updateSearchListActual(content.toLowerCase(), resultUl));
   }
 }
