@@ -71,7 +71,7 @@ async function searchFile(data: string) {
   }
 }
 
-export function getFileDict(func: (files: TMDFileDict) => void) {
+export function getFiles(func: (files: TMDFileDict) => void) {
   if (isCacheComplete) {
     func(cachedFiles);
   } else {

@@ -1,4 +1,4 @@
-import { getFile, getFileDict } from '@/ts/file';
+import { getFile, getFiles } from '@/ts/file';
 import { renderMD } from '@/ts/markdown';
 import {
   buildQueryContent,
@@ -308,7 +308,7 @@ function updateCategoryListActual(syncData: string, updateData: (data: string) =
 }
 
 export function updateCategoryList(syncData: string, updateData: (data: string) => void) {
-  getFileDict(updateCategoryListActual(syncData, updateData));
+  getFiles(updateCategoryListActual(syncData, updateData));
 }
 
 function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
@@ -422,6 +422,6 @@ export function updateSearchList(params: Dict<string>) {
     });
   }
   if (queryContent && resultUl) {
-    getFileDict(updateSearchListActual(queryContent.toLowerCase(), resultUl));
+    getFiles(updateSearchListActual(queryContent.toLowerCase(), resultUl));
   }
 }
