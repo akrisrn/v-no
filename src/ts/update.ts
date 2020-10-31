@@ -26,7 +26,7 @@ export function updateDD() {
       p.outerHTML = dl.outerHTML;
     }
   });
-  document.querySelectorAll<HTMLDetailsElement>('article dt').forEach(dt => {
+  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
     if (dt.innerText.startsWith(': ')) {
       const dd = document.createElement('dd');
       dd.innerHTML = dt.innerHTML.substr(2);
@@ -45,19 +45,19 @@ export function updateToc() {
     }
     a.addEventListener('click', e => {
       e.preventDefault();
-      for (const h of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
-        if (h.innerText === innerText) {
-          scroll(h.offsetTop - 10);
+      for (const heading of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
+        if (heading.innerText === innerText) {
+          scroll(heading.offsetTop - 10);
           break;
         }
       }
     });
   });
-  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(item => {
-    return `article h${item}`;
-  }).join(',')).forEach(h => {
-    h.querySelector('.heading-link')!.addEventListener('click', () => {
-      scroll(h.offsetTop - 10);
+  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(n => {
+    return `article h${n}`;
+  }).join(',')).forEach(heading => {
+    heading.querySelector('.heading-link')!.addEventListener('click', () => {
+      scroll(heading.offsetTop - 10);
     });
   });
 }
@@ -101,14 +101,14 @@ export function updateImagePath() {
         }
         parent.parentElement!.insertBefore(loadings, parent);
       }
-      if (img.naturalWidth === 0) {
-        img.onload = () => {
-          removeClass(parent, 'hidden');
-          loadings!.remove();
-        };
-      } else {
+      const onload = () => {
         removeClass(parent, 'hidden');
-        loadings.remove();
+        loadings!.remove();
+      };
+      if (img.naturalWidth === 0) {
+        img.onload = onload;
+      } else {
+        onload();
       }
     }
     if (parent.tagName === 'DT') {
@@ -202,11 +202,11 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           let data = degradeHeading(file.data).split('\n').map(line => {
             const regexp = getWrapRegExp('{{', '}}', 'g');
             const lineCopy = line;
-            let paramMatch = regexp.exec(lineCopy);
-            while (paramMatch) {
+            let match = regexp.exec(lineCopy);
+            while (match) {
               let defaultValue: string;
-              [paramMatch[1], defaultValue] = paramMatch[1].split('|');
-              const param = params[paramMatch[1]];
+              [match[1], defaultValue] = match[1].split('|');
+              const param = params[match[1]];
               let result: string;
               if (param !== undefined) {
                 result = param;
@@ -215,8 +215,8 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
               } else {
                 result = 'undefined';
               }
-              line = line.replace(paramMatch[0], result.replace(/\\n/g, '\n'));
-              paramMatch = regexp.exec(lineCopy);
+              line = line.replace(match[0], result.replace(/\\n/g, '\n'));
+              match = regexp.exec(lineCopy);
             }
             return line;
           }).join('\n');
@@ -273,32 +273,32 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
   }
 }
 
-export function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
-  return (fileDict: TMDFileDict) => {
-    const paths = Object.keys(fileDict);
-    const tagDict: Dict<string[]> = {};
+function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
+  return (files: TMDFileDict) => {
+    const paths = Object.keys(files);
+    const tags: Dict<string[]> = {};
     const untagged = [];
     for (const path of paths) {
-      const flags = fileDict[path].flags;
+      const flags = files[path].flags;
       if (flags.tags.length === 0) {
         untagged.push(`- [#](${path})`);
         continue;
       }
       flags.tags.forEach(tag => {
-        if (tagDict[tag] === undefined) {
-          tagDict[tag] = [];
+        if (tags[tag] === undefined) {
+          tags[tag] = [];
         }
-        tagDict[tag].push(`- [#](${path})`);
+        tags[tag].push(`- [#](${path})`);
       });
     }
-    const sortedKeys = Object.keys(tagDict).sort();
+    const sortedKeys = Object.keys(tags).sort();
     if (untagged.length > 0) {
       sortedKeys.unshift(config.messages.untagged);
-      tagDict[config.messages.untagged] = untagged;
+      tags[config.messages.untagged] = untagged;
     }
     updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
-      const count = `<span class="count">( ${tagDict[key].length} )</span>`;
-      return `###### ${key}${count}\n\n${tagDict[key].join('\n')}`;
+      const count = `<span class="count">( ${tags[key].length} )</span>`;
+      return `###### ${key}${count}\n\n${tags[key].join('\n')}`;
     }).join('\n\n')));
     setTimeout(() => {
       updateToc();
@@ -311,15 +311,15 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
   getFileDict(updateCategoryListActual(syncData, updateData));
 }
 
-export function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
+function updateSearchListActual(queryContent: string, resultUl: HTMLUListElement) {
   resultUl.innerText = config.messages.searching;
   const timeStart = new Date().getTime();
-  return (fileDict: TMDFileDict) => {
+  return (files: TMDFileDict) => {
     const [queryType, queryParam] = getQueryTypeAndParam(queryContent);
     resultUl.innerText = '';
-    const paths = Object.keys(fileDict);
+    const paths = Object.keys(files);
     paths.forEach(path => {
-      const { data, flags } = fileDict[path];
+      const { data, flags } = files[path];
       let isFind = false;
       let hasQuote = false;
       if (queryType) {

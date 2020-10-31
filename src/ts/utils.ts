@@ -39,8 +39,8 @@ export function trimList(list: string[]) {
   return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
 }
 
-export function getWrapRegExp(wrapLeft: string, wrapRight: string = wrapLeft, flags = '') {
-  return new RegExp(`${wrapLeft}\\s*(.+?)\\s*${wrapRight}`, flags);
+export function getWrapRegExp(left: string, right: string = left, flags = '') {
+  return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
 }
 
 export function escapeHTML(html: string) {
@@ -50,9 +50,7 @@ export function escapeHTML(html: string) {
     '>': '&gt;',
   };
   const regexp = new RegExp(`[${Object.keys(symbols).join('')}]`, 'g');
-  return html.replace(regexp, symbol => {
-    return symbols[symbol];
-  });
+  return html.replace(regexp, symbol => symbols[symbol]);
 }
 
 export function removeClass(element: HTMLElement, cls: string) {

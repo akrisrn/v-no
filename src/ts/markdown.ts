@@ -7,7 +7,7 @@ const deflist = require('markdown-it-deflist');
 const taskLists = require('markdown-it-task-lists');
 const container = require('markdown-it-container');
 
-const detailsRegexp = /^(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
+const detailsRegExp = /^(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
 
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
@@ -16,7 +16,7 @@ const markdownIt = new MarkdownIt({
   linkify: true,
 }).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
   validate: (params: string) => {
-    return params.trim().match(detailsRegexp);
+    return params.trim().match(detailsRegExp);
   },
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
@@ -24,7 +24,7 @@ const markdownIt = new MarkdownIt({
       let isOpen = false;
       let classList: string[] = [];
       let summary = '';
-      const match = token.info.trim().match(detailsRegexp)!;
+      const match = token.info.trim().match(detailsRegExp)!;
       if (match[1]) {
         isOpen = true;
       }
@@ -182,25 +182,22 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 const defaultLinkCloseRenderRule = getDefaultRenderRule('link_close');
 markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  let svg = '';
-  if (token.attrGet('external')) {
-    svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 12 16"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg>';
-  }
+  const svg = !token.attrGet('external') ? '' : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 12 16"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg>';
   return svg + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
 export function renderMD(path: string, data: string, isCategory: boolean) {
   let article: HTMLElement;
   const isHash = isHashMode();
-  const tocRegexp = /^\[toc]$/im;
-  const headingRegexp = getWrapRegExp('^(##+)', '$');
-  const evalRegexp = getWrapRegExp('\\$', '\\$', 'g');
-  const needRenderToc = !!data.match(tocRegexp);
+  const tocRegExp = /^\[toc]$/im;
+  const headingRegExp = getWrapRegExp('^(##+)', '$');
+  const evalRegExp = getWrapRegExp('\\$', '\\$', 'g');
+  const needRenderToc = !!data.match(tocRegExp);
   let firstHeading = '';
   const headingList: string[] = [];
   data = data.split('\n').map(line => {
     if (needRenderToc) {
-      const headingMatch = line.match(headingRegexp);
+      const headingMatch = line.match(headingRegExp);
       if (headingMatch) {
         const linkMatch = headingMatch[2].match(/\[(.*?)]\((.*?)\)/);
         if (linkMatch) {
@@ -226,7 +223,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
     const lineCopy = line;
-    let evalMatch = evalRegexp.exec(lineCopy);
+    let evalMatch = evalRegExp.exec(lineCopy);
     while (evalMatch) {
       let result: string;
       try {
@@ -239,7 +236,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
         result = `${e.name}: ${e.message}`;
       }
       line = line.replace(evalMatch[0], result);
-      evalMatch = evalRegexp.exec(lineCopy);
+      evalMatch = evalRegExp.exec(lineCopy);
     }
     return line;
   }).join('\n');
@@ -259,7 +256,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
       tocDiv = tocDiv.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
     }
     tocDiv += '</div>';
-    data = data.replace(tocRegexp, tocDiv);
+    data = data.replace(tocRegExp, tocDiv);
   }
   return markdownIt.render(data);
 }

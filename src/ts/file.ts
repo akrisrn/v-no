@@ -35,18 +35,18 @@ function splitFlags(data: string) {
   return { data, flags } as TMDFile;
 }
 
-const cachedFileDict: TMDFileDict = {};
+const cachedFiles: TMDFileDict = {};
 let isCacheComplete = false;
 
 export function getFile(path: string, noCache = false) {
   path = cleanBaseUrl(path);
   return new Promise<TMDFile>((resolve, reject) => {
-    if (!noCache && cachedFileDict[path] !== undefined) {
-      resolve(cachedFileDict[path]);
+    if (!noCache && cachedFiles[path] !== undefined) {
+      resolve(cachedFiles[path]);
     } else {
       axios.get<string>(addBaseUrl(path)).then(response => {
-        cachedFileDict[path] = splitFlags(response.data);
-        resolve(cachedFileDict[path]);
+        cachedFiles[path] = splitFlags(response.data);
+        resolve(cachedFiles[path]);
       }).catch(error => {
         reject(error);
       });
@@ -60,7 +60,7 @@ async function searchFile(data: string) {
   let match = regexp.exec(data);
   while (match) {
     const path = match[1];
-    if (!paths.includes(path) && cachedFileDict[path] === undefined) {
+    if (!paths.includes(path) && cachedFiles[path] === undefined) {
       paths.push(path);
     }
     match = regexp.exec(data);
@@ -71,9 +71,9 @@ async function searchFile(data: string) {
   }
 }
 
-export function getFileDict(func: (fileDict: TMDFileDict) => void) {
+export function getFileDict(func: (files: TMDFileDict) => void) {
   if (isCacheComplete) {
-    func(cachedFileDict);
+    func(cachedFiles);
   } else {
     Promise.all([
       config.paths.index,
@@ -85,7 +85,7 @@ export function getFileDict(func: (fileDict: TMDFileDict) => void) {
     ].map(path => getFile(path))).then(async files => {
       await searchFile(files.map(file => file.data).join('\n'));
       isCacheComplete = true;
-      func(cachedFileDict);
+      func(cachedFiles);
     });
   }
 }
