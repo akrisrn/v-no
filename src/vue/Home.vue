@@ -23,7 +23,7 @@
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
           <code v-for="tag in tags" :key="tag" class="item-tag">
-            <a :href="getTagLink(tag)">{{ tag }}</a>
+            <a :href="getSearchTagUrl(tag)">{{ tag }}</a>
           </code>
           <code class="item-raw">
             <a :href="path" target="_blank">{{ config.messages.raw }}</a>
@@ -360,7 +360,7 @@
       }
     }
 
-    getTagLink(tag: string) {
+    getSearchTagUrl(tag: string) {
       return buildQueryContent(`@${EFlag.tags}:${tag}`, true);
     }
 
