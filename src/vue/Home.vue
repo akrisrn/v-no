@@ -173,18 +173,13 @@
     @Watch('isDark')
     onIsDarkChanged() {
       document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
-      const elements = [this.toggleDark, this.toggleZen, this.toTop, document.body] as HTMLElement[];
       if (this.isDark) {
         this.toggleDark!.innerText = '☆';
-        elements.forEach(element => {
-          element.classList.add('dark');
-        });
+        document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
         this.toggleDark!.innerText = '★';
-        elements.forEach(element => {
-          element.classList.remove('dark');
-        });
+        document.body.classList.remove('dark');
         localStorage.removeItem('dark');
       }
     }

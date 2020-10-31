@@ -88,6 +88,12 @@ body.dark {
     }
   }
 
+  #toggle-dark, #toggle-zen, #to-top {
+    &:hover {
+      color: $dark-font-color;
+    }
+  }
+
   .custom {
     img {
       filter: brightness(0.7);
