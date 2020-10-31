@@ -191,59 +191,75 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 
 export function renderMD(path: string, data: string, isCategory: boolean) {
   let article: HTMLElement;
-  const toc: string[] = [];
-  let firstHeader = '';
+  const isHash = isHashMode();
+  const tocRegexp = /^\[toc]$/im;
+  const headingRegexp = getWrapRegExp('^(##+)', '$');
+  const evalRegexp = getWrapRegExp('\\$', '\\$', 'g');
+  const needRenderToc = !!data.match(tocRegexp);
+  let firstHeading = '';
+  const headingList: string[] = [];
   data = data.split('\n').map(line => {
-    const tocMatch = line.match(getWrapRegExp('^(##+)', '$'));
-    if (tocMatch) {
-      const linkMatch = tocMatch[2].match(/^\[(.*?)]\(.*?\)$/);
-      if (linkMatch) {
-        tocMatch[2] = linkMatch[1];
+    if (needRenderToc) {
+      const headingMatch = line.match(headingRegexp);
+      if (headingMatch) {
+        const linkMatch = headingMatch[2].match(/\[(.*?)]\((.*?)\)/);
+        if (linkMatch) {
+          if (linkMatch[1].endsWith('#') && linkMatch[2].startsWith('/') && linkMatch[2].endsWith('.md')) {
+            if (linkMatch[1] === '#') {
+              headingMatch[2] = '#' + linkMatch[2];
+            } else {
+              headingMatch[2] = linkMatch[1].substr(0, linkMatch[1].length - 1);
+            }
+          } else {
+            headingMatch[2] = linkMatch[1];
+          }
+        }
+        if (!firstHeading) {
+          firstHeading = headingMatch[1];
+        }
+        let prefix = '-';
+        if (headingMatch[1] !== firstHeading) {
+          prefix = headingMatch[1].replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
+        }
+        headingList.push(`${prefix} [${headingMatch[2]}](h${headingMatch[1].length})`);
       }
-      if (!firstHeader) {
-        firstHeader = tocMatch[1];
-      }
-      let prefix = '-';
-      if (tocMatch[1] !== firstHeader) {
-        prefix = tocMatch[1].replace(new RegExp(`${firstHeader}$`), '-').replace(/#/g, '  ');
-      }
-      toc.push(`${prefix} [${tocMatch[2]}](h${tocMatch[1].length})`);
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
-    const regexp = getWrapRegExp('\\$', '\\$', 'g');
     const lineCopy = line;
-    let jsExpMatch = regexp.exec(lineCopy);
-    while (jsExpMatch) {
+    let evalMatch = evalRegexp.exec(lineCopy);
+    while (evalMatch) {
       let result: string;
       try {
         if (!article) {
           article = document.createElement('article');
           article.innerHTML = markdownIt.render(data);
         }
-        result = eval(`(function(path,article,isHashMode){${jsExpMatch[1]}})`)(path, article, isHashMode());
+        result = eval(`(function(path,article,isHash){${evalMatch[1]}})`)(path, article, isHash);
       } catch (e) {
         result = `${e.name}: ${e.message}`;
       }
-      line = line.replace(jsExpMatch[0], result);
-      jsExpMatch = regexp.exec(lineCopy);
+      line = line.replace(evalMatch[0], result);
+      evalMatch = evalRegexp.exec(lineCopy);
     }
     return line;
   }).join('\n');
-  let tocHtml = '<div id="toc">';
-  if (toc.length > 0) {
-    if (toc.length > 7 && !isCategory) {
-      let mid = Math.ceil(toc.length / 2);
-      while (toc[mid] && !toc[mid].startsWith('-')) {
-        mid += 1;
+  if (needRenderToc) {
+    let tocDiv = '<div id="toc">';
+    if (headingList.length > 0) {
+      if (headingList.length > 7 && !isCategory) {
+        let median = Math.ceil(headingList.length / 2);
+        while (headingList[median] && !headingList[median].startsWith('-')) {
+          median += 1;
+        }
+        tocDiv += markdownIt.render(headingList.slice(0, median).join('\n')) +
+          markdownIt.render(headingList.slice(median, headingList.length).join('\n'));
+      } else {
+        tocDiv += markdownIt.render(headingList.join('\n'));
       }
-      tocHtml += markdownIt.render(toc.slice(0, mid).join('\n')) +
-        markdownIt.render(toc.slice(mid, toc.length).join('\n'));
-    } else {
-      tocHtml += markdownIt.render(toc.join('\n'));
+      tocDiv = tocDiv.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
     }
-    tocHtml = tocHtml.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
+    tocDiv += '</div>';
+    data = data.replace(tocRegexp, tocDiv);
   }
-  tocHtml += '</div>';
-  data = data.replace(/^\[toc]$/im, tocHtml);
   return markdownIt.render(data);
 }
