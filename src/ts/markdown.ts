@@ -115,37 +115,6 @@ markdownIt.renderer.rules.thead_open = (tokens, idx, options, env, self) => {
   return defaultTheadRenderRule(tokens, idx, options, env, self);
 };
 
-const defaultHtmlBlockRenderRule = getDefaultRenderRule('html_block');
-markdownIt.renderer.rules.html_block = (tokens, idx, options, env, self) => {
-  const token = tokens[idx];
-  if (token.content.startsWith('<div id="toc">')) {
-    const div = document.createElement('div');
-    div.innerHTML = token.content;
-    const uls = div.querySelectorAll<HTMLUListElement>('#toc > ul');
-    if (uls.length === 2) {
-      uls[0].classList.add('ul-a');
-      uls[1].classList.add('ul-b');
-    }
-    div.querySelectorAll<HTMLLinkElement>('#toc a').forEach(a => {
-      a.setAttribute('h', a.getAttribute('href')!);
-      a.removeAttribute('href');
-    });
-    div.querySelectorAll<HTMLLinkElement>('#toc > ul.tags > li > a').forEach(a => {
-      const count = a.querySelector<HTMLSpanElement>('span.count');
-      if (count) {
-        a.removeChild(count);
-        a.parentElement!.append(count);
-        const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
-        if (fontSize > 1) {
-          a.style.fontSize = fontSize + 'em';
-        }
-      }
-    });
-    token.content = div.innerHTML;
-  }
-  return defaultHtmlBlockRenderRule(tokens, idx, options, env, self);
-};
-
 const defaultHeadingRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   const link = document.createElement('a');
