@@ -150,15 +150,15 @@ export function updateLinkPath(updatedLinks: string[] = []) {
             }
             if (!isPass) {
               parent.classList.add('article');
-              const dateString = getDateFromPath(href);
-              if (dateString) {
-                const date = document.createElement('span');
-                date.classList.add('date');
-                date.innerText = dateString;
+              const date = getDateFromPath(path);
+              if (date) {
+                const dateSpan = document.createElement('span');
+                dateSpan.classList.add('date');
+                dateSpan.innerText = date;
                 if (hasQuote) {
-                  parent.insertBefore(date, parent.lastElementChild);
+                  parent.insertBefore(dateSpan, parent.lastElementChild);
                 } else {
-                  parent.append(date);
+                  parent.append(dateSpan);
                 }
               }
               flags.tags.forEach(tag => {

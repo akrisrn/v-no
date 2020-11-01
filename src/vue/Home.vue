@@ -299,7 +299,7 @@
       if (flags.updated.length !== 0) {
         const updatedList = flags.updated;
         const timeList = updatedList.map(updated => {
-          return new Date(updated.match(/^[0-9]+$/) ? parseInt(updated) : updated).getTime();
+          return updated.match(/^[0-9]+$/) ? parseInt(updated) : new Date(updated).getTime();
         }).filter(time => !isNaN(time));
         if (timeList.length > 1) {
           this.updated = formatDate(new Date(Math.max(...timeList)));
