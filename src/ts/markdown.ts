@@ -155,7 +155,7 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return svg + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
-export function renderMD(path: string, data: string, isCategory: boolean) {
+export function renderMD(path: string, data: string, isCategory = false) {
   let article: HTMLElement;
   const isHash = isHashMode();
   const tocRegExp = /^\[toc]$/im;

@@ -121,7 +121,7 @@ export function updateImagePath() {
   });
 }
 
-export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = []) {
+export function updateLinkPath(updatedLinks: string[] = []) {
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
@@ -237,14 +237,14 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
           }
           // 规避递归节点重复问题。
           try {
-            a.parentElement!.outerHTML = renderMD(href, data, isCategory);
+            a.parentElement!.outerHTML = renderMD(href, data);
           } catch (e) {
             return;
           }
           updateDD();
           updateToc();
           updateImagePath();
-          updateLinkPath(isCategory, updatedLinks);
+          updateLinkPath(updatedLinks);
           Prism.highlightAll();
         }).catch(error => {
           a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
@@ -304,7 +304,7 @@ function updateCategoryListActual(syncData: string, updateData: (data: string) =
     }).join('\n\n')));
     setTimeout(() => {
       updateToc();
-      updateLinkPath(true);
+      updateLinkPath();
     }, 0);
   };
 }
@@ -398,7 +398,7 @@ function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
         resultUl.append(li);
       }
     });
-    updateLinkPath(false);
+    updateLinkPath();
     const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
     if (searchTime) {
       searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();

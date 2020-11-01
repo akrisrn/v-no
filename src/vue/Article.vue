@@ -39,12 +39,12 @@
     created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        renderMD: (data: string) => renderMD(this.path, data, false),
+        renderMD: (data: string) => renderMD(this.path, data),
         updateMD: () => {
           updateDD();
           updateToc();
           updateImagePath();
-          updateLinkPath(false);
+          updateLinkPath();
           Prism.highlightAll();
         },
       });
@@ -58,7 +58,7 @@
         updateToc();
         updateFootnote();
         updateImagePath();
-        updateLinkPath(this.isCategory);
+        updateLinkPath();
         if (this.isCategory) {
           updateCategoryList(this.syncData, (data: string) => {
             this.syncData = data;
