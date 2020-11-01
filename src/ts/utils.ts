@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import SmoothScroll from 'smooth-scroll';
+
 export enum EFlag {
   tags = 'tags',
   updated = 'updated',
@@ -88,16 +91,18 @@ export function degradeHeading(data: string) {
   return data.replace(/^(#{2,5}) /gm, '$1# ');
 }
 
+export function formatDate(date: Date) {
+  return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
+}
+
 export function getDateString(path: string) {
   const match = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
-  return match ? new Date(match[1]).toDateString() : '';
+  return match ? formatDate(new Date(match[1])) : '';
 }
 
 export function buildQueryContent(content: string, isComplete = false) {
   return (isComplete ? `#${config.paths.search}` : '') + `?content=${encodeURIComponent(content)}`;
 }
-
-import SmoothScroll from 'smooth-scroll';
 
 const smoothScroll = new SmoothScroll(undefined, {
   speed: 300,

@@ -1,5 +1,6 @@
 vnoConfig = {
   siteName: '',
+  dateFormat: '',
   paths: {
     favicon: '/favicon.png',
     index: '/index.md',

@@ -57,6 +57,7 @@
     degradeHeading,
     EFlag,
     exposeToWindow,
+    formatDate,
     getDateString,
     isExternalLink,
     isHashMode,
@@ -301,9 +302,9 @@
           return new Date(updated.match(/^[0-9]+$/) ? parseInt(updated) : updated).getTime();
         }).filter(time => !isNaN(time));
         if (timeList.length > 1) {
-          this.updated = new Date(Math.max(...timeList)).toDateString();
+          this.updated = formatDate(new Date(Math.max(...timeList)));
         } else {
-          this.updated = timeList.length === 1 ? new Date(timeList[0]).toDateString() : '';
+          this.updated = timeList.length === 1 ? formatDate(new Date(timeList[0])) : '';
         }
       } else {
         this.updated = '';
