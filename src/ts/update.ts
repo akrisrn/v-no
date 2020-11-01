@@ -51,7 +51,7 @@ export function updateToc() {
       }
     });
   });
-  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(n => {
+  document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
     heading.querySelector('.heading-link')!.addEventListener('click', () => {
@@ -172,7 +172,7 @@ export function updateLinkPath(isCategory: boolean, updatedLinks: string[] = [])
             }
           }
         }).finally(() => {
-          a.classList.remove('snippet');
+          removeClass(a, 'snippet');
         });
       } else if (text.match(/^\+(?:#.+)?$/)) {
         if (!href.startsWith('/')) {
@@ -296,7 +296,7 @@ function updateCategoryListActual(syncData: string, updateData: (data: string) =
     }
     updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
       const count = `<span class="count">( ${tags[key].length} )</span>`;
-      return `###### ${key}${count}\n\n${tags[key].join('\n')}`;
+      return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
     }).join('\n\n')));
     setTimeout(() => {
       updateToc();

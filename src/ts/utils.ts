@@ -62,7 +62,7 @@ export function removeClass(element: HTMLElement, cls: string) {
 
 export function toggleClass(element: HTMLElement, className: string) {
   if (element.classList.contains(className)) {
-    element.classList.remove(className);
+    removeClass(element, className);
   } else {
     element.classList.add(className);
   }
@@ -85,7 +85,7 @@ export function cleanBaseUrl(path: string) {
 }
 
 export function degradeHeading(data: string) {
-  return data.replace(/^(#{1,5}) /gm, '$1# ');
+  return data.replace(/^(#{2,5}) /gm, '$1# ');
 }
 
 export function getDateString(path: string) {

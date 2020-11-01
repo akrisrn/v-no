@@ -52,6 +52,7 @@
   import {
     addBaseUrl,
     buildQueryContent,
+    cleanBaseUrl,
     config,
     degradeHeading,
     EFlag,
@@ -59,6 +60,7 @@
     getDateString,
     isExternalLink,
     isHashMode,
+    removeClass,
     scroll,
     toggleClass,
   } from '@/ts/utils';
@@ -179,7 +181,7 @@
         localStorage.setItem('dark', String(true));
       } else {
         this.toggleDark!.innerText = '★';
-        document.body.classList.remove('dark');
+        removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
     }
@@ -192,8 +194,8 @@
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
-        this.toggleZen!.classList.remove('spin');
-        document.body.classList.remove('zen');
+        removeClass(this.toggleZen!, 'spin');
+        removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
     }
@@ -286,7 +288,7 @@
     }
 
     setFlags(flags: IFlags) {
-      this.title = flags.title || this.path.substr(1);
+      this.title = flags.title || cleanBaseUrl(this.path);
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title = `${this.title} - ${this.config.siteName}`;
       } else {

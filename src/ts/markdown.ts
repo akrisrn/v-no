@@ -190,7 +190,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
   let article: HTMLElement;
   const isHash = isHashMode();
   const tocRegExp = /^\[toc]$/im;
-  const headingRegExp = getWrapRegExp('^(##+)', '$');
+  const headingRegExp = getWrapRegExp('^(##{1,5})', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g');
   const needRenderToc = !!data.match(tocRegExp);
   let firstHeading = '';
@@ -203,7 +203,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
         if (linkMatch) {
           if (linkMatch[1].endsWith('#') && linkMatch[2].startsWith('/') && linkMatch[2].endsWith('.md')) {
             if (linkMatch[1] === '#') {
-              headingMatch[2] = '#' + linkMatch[2];
+              headingMatch[2] = linkMatch[2];
             } else {
               headingMatch[2] = linkMatch[1].substr(0, linkMatch[1].length - 1);
             }
