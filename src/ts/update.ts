@@ -35,20 +35,24 @@ export function updateDD() {
 
 export function updateToc() {
   document.querySelectorAll<HTMLLinkElement>('#toc a').forEach(a => {
-    const href = a.getAttribute('h');
-    let innerText = a.innerText;
-    const nextSibling = a.nextElementSibling as HTMLElement;
-    if (nextSibling && nextSibling.classList.value === 'count') {
-      innerText += nextSibling.innerText;
+    if (a.innerText.startsWith('/') && a.innerText.endsWith('.md')) {
+      a.classList.add('snippet');
+      getFile(a.innerText).then(file => {
+        const flags = file.flags;
+        if (flags.title) {
+          a.innerText = flags.title;
+        }
+      }).finally(() => {
+        removeClass(a, 'snippet');
+      });
     }
+    const anchor = a.getAttribute('anchor')!;
+    const [headingTag, numStr] = anchor.split('-');
+    const num = parseInt(numStr);
+    const heading = document.querySelectorAll<HTMLHeadingElement>(`article ${headingTag}`)[num];
     a.addEventListener('click', e => {
       e.preventDefault();
-      for (const heading of document.querySelectorAll<HTMLHeadingElement>(`article ${href}`)) {
-        if (heading.innerText === innerText) {
-          scroll(heading.offsetTop - 10);
-          break;
-        }
-      }
+      scroll(heading.offsetTop - 10);
     });
   });
   document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
