@@ -6,7 +6,7 @@ import {
   degradeHeading,
   EFlag,
   escapeHTML,
-  getDateString,
+  getDateFromPath,
   getWrapRegExp,
   isExternalLink,
   removeClass,
@@ -150,7 +150,7 @@ export function updateLinkPath(updatedLinks: string[] = []) {
             }
             if (!isPass) {
               parent.classList.add('article');
-              const dateString = getDateString(href);
+              const dateString = getDateFromPath(href);
               if (dateString) {
                 const date = document.createElement('span');
                 date.classList.add('date');

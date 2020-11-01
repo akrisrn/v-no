@@ -58,7 +58,7 @@
     EFlag,
     exposeToWindow,
     formatDate,
-    getDateString,
+    getDateFromPath,
     isExternalLink,
     isHashMode,
     removeClass,
@@ -152,7 +152,7 @@
     }
 
     get date() {
-      return getDateString(this.path);
+      return getDateFromPath(this.path);
     }
 
     get metaThemeColor() {

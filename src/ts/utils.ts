@@ -95,7 +95,7 @@ export function formatDate(date: Date) {
   return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
 }
 
-export function getDateString(path: string) {
+export function getDateFromPath(path: string) {
   const match = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
   return match ? formatDate(new Date(match[1])) : '';
 }
