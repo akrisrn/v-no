@@ -163,6 +163,7 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g');
   const needRenderToc = !!data.match(tocRegExp);
   let firstHeading = '';
+  const headingCount: Dict<number> = {};
   const headingList: string[] = [];
   data = data.split('\n').map(line => {
     if (needRenderToc) {
@@ -187,7 +188,13 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
         if (headingMatch[1] !== firstHeading) {
           prefix = headingMatch[1].replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
         }
-        headingList.push(`${prefix} [${headingMatch[2]}](h${headingMatch[1].length})`);
+        const headingTag = `h${headingMatch[1].length}`;
+        if (headingCount[headingTag] === undefined) {
+          headingCount[headingTag] = 0;
+        } else {
+          headingCount[headingTag]++;
+        }
+        headingList.push(`${prefix} [${headingMatch[2]}](${headingTag}-${headingCount[headingTag]})`);
       }
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
@@ -210,22 +217,39 @@ export function renderMD(path: string, data: string, isCategory: boolean) {
     return line;
   }).join('\n');
   if (needRenderToc) {
-    let tocDiv = '<div id="toc">';
+    const tocDiv = document.createElement('div');
+    tocDiv.id = 'toc';
     if (headingList.length > 0) {
-      if (headingList.length > 7 && !isCategory) {
+      if (isCategory) {
+        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
+        tocDiv.firstElementChild!.classList.add('tags');
+        tocDiv.querySelectorAll('a').forEach(a => {
+          const count = a.querySelector<HTMLSpanElement>('.count')!;
+          a.removeChild(count);
+          a.parentElement!.append(count);
+          const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
+          if (fontSize > 1) {
+            a.style.fontSize = fontSize + 'em';
+          }
+        });
+      } else if (headingList.length > 7) {
         let median = Math.ceil(headingList.length / 2);
         while (headingList[median] && !headingList[median].startsWith('-')) {
           median += 1;
         }
-        tocDiv += markdownIt.render(headingList.slice(0, median).join('\n')) +
+        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, median).join('\n')) +
           markdownIt.render(headingList.slice(median, headingList.length).join('\n'));
+        tocDiv.firstElementChild!.classList.add('ul-a');
+        tocDiv.lastElementChild!.classList.add('ul-b');
       } else {
-        tocDiv += markdownIt.render(headingList.join('\n'));
+        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
       }
-      tocDiv = tocDiv.replace(/<ul>/g, `<ul class="toc${isCategory ? ' tags' : ''}">`);
+      tocDiv.querySelectorAll('a').forEach(a => {
+        a.setAttribute('anchor', a.getAttribute('href')!);
+        a.removeAttribute('href');
+      });
     }
-    tocDiv += '</div>';
-    data = data.replace(tocRegExp, tocDiv);
+    data = data.replace(tocRegExp, tocDiv.outerHTML);
   }
   return markdownIt.render(data);
 }
