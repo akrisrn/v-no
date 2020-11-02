@@ -43,6 +43,7 @@
         updateMD: () => {
           updateDD();
           updateToc();
+          updateFootnote();
           updateImagePath();
           updateLinkPath();
           Prism.highlightAll();

@@ -243,6 +243,7 @@ export function updateLinkPath(updatedLinks: string[] = []) {
           }
           updateDD();
           updateToc();
+          updateFootnote();
           updateImagePath();
           updateLinkPath(updatedLinks);
           Prism.highlightAll();
@@ -303,8 +304,12 @@ function updateCategoryListActual(syncData: string, updateData: (data: string) =
       return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
     }).join('\n\n')));
     setTimeout(() => {
+      updateDD();
       updateToc();
+      updateFootnote();
+      updateImagePath();
       updateLinkPath();
+      Prism.highlightAll();
     }, 0);
   };
 }

@@ -249,14 +249,16 @@
     // noinspection JSUnusedGlobalSymbols
     mounted() {
       addEventListener('keydown', event => {
-        this.keyInput += event.key;
-        if (this.keyInput.length > 20) {
-          this.keyInput = this.keyInput.substr(10);
-        }
-        for (const key of Object.keys(this.inputBinds)) {
-          if (this.keyInput.endsWith(key)) {
-            this.inputBinds[key]();
-            break;
+        if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          this.keyInput += event.key;
+          if (this.keyInput.length > 20) {
+            this.keyInput = this.keyInput.substr(10);
+          }
+          for (const key of Object.keys(this.inputBinds)) {
+            if (this.keyInput.endsWith(key)) {
+              this.inputBinds[key]();
+              break;
+            }
           }
         }
       });

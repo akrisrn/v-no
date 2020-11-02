@@ -143,6 +143,9 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     textToken.content = text.substr(0, text.length - 1);
     token.attrSet('href', `#${href}`);
   } else {
+    if (href && !href.startsWith('#/') && !href.endsWith('/')) {
+      token.attrSet('target', '_blank');
+    }
     token.attrSet('href', addBaseUrl(href));
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
@@ -242,6 +245,7 @@ export function renderMD(path: string, data: string, isCategory = false) {
       tocDiv.querySelectorAll('a').forEach(a => {
         a.setAttribute('anchor', a.getAttribute('href')!);
         a.removeAttribute('href');
+        a.removeAttribute('target');
       });
     }
     data = data.replace(tocRegExp, tocDiv.outerHTML);

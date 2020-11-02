@@ -62,7 +62,7 @@ async function getHtmlAndFiles(page, urlPath) {
         files.push(filePath);
       }
     });
-    document.querySelectorAll('code.item-tag, li.article > code').forEach(code => {
+    document.querySelectorAll('code.item-tag').forEach(code => {
       code.innerHTML = code.innerText;
     });
     document.querySelectorAll('div.code-toolbar').forEach(toolbar => {
