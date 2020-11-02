@@ -20,7 +20,7 @@
 </noscript>
 <div id="app"></div>
 <!--@formatter:off-->
-<script>const isDark=localStorage.getItem('dark');const isZen=localStorage.getItem('zen');const themeColor=isDark?(isZen?'#2b2b2b':'#3b3b3b'):(isZen?'#efefef':'#ffffff');document.querySelector('meta[name=theme-color]').setAttribute('content',themeColor);const classList=document.body.classList;if(isDark){classList.add('dark')}else{classList.remove('dark')}if(isZen){classList.add('zen')}else{classList.remove('zen')}</script>
+<script>(function(){const isDark=localStorage.getItem('dark');const isZen=localStorage.getItem('zen');const themeColor=isDark?(isZen?'#2b2b2b':'#3b3b3b'):(isZen?'#efefef':'#ffffff');document.querySelector('meta[name=theme-color]').setAttribute('content',themeColor);const classList=document.body.classList;if(isDark){classList.add('dark')}else{classList.remove('dark')}if(isZen){classList.add('zen')}else{classList.remove('zen')}})()</script>
 <!--@formatter:on-->
 <!--suppress HtmlUnknownTarget -->
 <script src="<%= BASE_URL %>assets/config.js"></script>
