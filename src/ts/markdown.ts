@@ -25,19 +25,19 @@ const markdownIt = new MarkdownIt({
       let classList: string[] = [];
       let summary = '';
       const match = token.info.trim().match(detailsRegExp)!;
-      if (match[1]) {
-        isOpen = true;
-      }
       if (match[2]) {
         classList = trimList(match[2].split('.'));
       }
-      if (match[3]) {
-        summary = markdownIt.render(match[3]).trim();
+      if (classList.includes('empty')) {
+        isOpen = true;
+      } else if (match[3]) {
+        summary = markdownIt.render(match[3]);
+        if (match[1]) {
+          isOpen = true;
+        }
       } else {
         isOpen = true;
-        if (!classList.includes('empty')) {
-          classList.push('empty');
-        }
+        classList.push('empty');
       }
       let attrs = '';
       if (isOpen) {
