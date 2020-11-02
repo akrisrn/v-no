@@ -34,7 +34,7 @@ export function updateDD() {
 }
 
 export function updateToc() {
-  document.querySelectorAll<HTMLLinkElement>('#toc a').forEach(a => {
+  document.querySelectorAll<HTMLLinkElement>('.toc a').forEach(a => {
     if (a.innerText.startsWith('/') && a.innerText.endsWith('.md')) {
       a.classList.add('snippet');
       getFile(a.innerText).then(file => {

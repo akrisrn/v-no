@@ -215,9 +215,9 @@ export function renderMD(path: string, data: string, isCategory = false) {
     return line;
   }).join('\n');
   if (needRenderToc) {
-    const tocDiv = document.createElement('div');
-    tocDiv.id = 'toc';
     if (headingList.length > 0) {
+      const tocDiv = document.createElement('div');
+      tocDiv.classList.add('toc');
       if (isCategory) {
         tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
         tocDiv.firstElementChild!.classList.add('tags');
@@ -247,8 +247,10 @@ export function renderMD(path: string, data: string, isCategory = false) {
         a.removeAttribute('href');
         a.removeAttribute('target');
       });
+      data = data.replace(tocRegExp, tocDiv.outerHTML);
+    } else {
+      data = data.replace(tocRegExp, '');
     }
-    data = data.replace(tocRegExp, tocDiv.outerHTML);
   }
   return markdownIt.render(data);
 }
