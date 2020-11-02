@@ -10,8 +10,8 @@ const indexFile = 'index.md';
 
 if (!outDir || !host) return;
 
-const indexUrl = `${host}${publicPath}${publicPath !== '/' ? '/' : ''}${indexPath}`;
-const assetsPath = `${publicPath !== '/' ? publicPath : ''}/assets/`;
+const indexUrl = `${host}${publicPath}${indexPath}`;
+const assetsPath = `${publicPath}assets/`;
 
 function writeHtml(filePath, html) {
   filePath = path.join(outDir, filePath);
@@ -58,7 +58,7 @@ async function getHtmlAndFiles(page, urlPath) {
       const href = a.getAttribute('href');
       if (href.startsWith('#/') && href.endsWith('.md')) {
         const filePath = href.substr(1);
-        a.href = (publicPath !== '/' ? publicPath : '') + filePath.replace(/\.md$/, '.html');
+        a.href = publicPath.substr(0, publicPath.length - 1) + filePath.replace(/\.md$/, '.html');
         files.push(filePath);
       }
     });
