@@ -1,4 +1,4 @@
-import { addBaseUrl, cleanBaseUrl, evalFunction, getWrapRegExp, isExternalLink, isHashMode, trimList } from '@/ts/utils';
+import { addBaseUrl, cleanBaseUrl, evalFunction, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -157,7 +157,6 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 
 export function renderMD(path: string, data: string, isCategory = false) {
   path = cleanBaseUrl(path);
-  const isHash = isHashMode();
   const tocRegExp = /^\[toc]$/im;
   const headingRegExp = getWrapRegExp('^(##{1,5})', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g');
@@ -203,7 +202,7 @@ export function renderMD(path: string, data: string, isCategory = false) {
     while (evalMatch) {
       let result: string;
       try {
-        result = evalFunction(evalMatch[1], { path, data, isHash });
+        result = evalFunction(evalMatch[1], { path, data });
       } catch (e) {
         result = `${e.name}: ${e.message}`;
       }
