@@ -43,8 +43,7 @@
 
       &:first-of-type, &:last-of-type {
         &:after {
-          margin: 0;
-          content: "";
+          content: none;
         }
       }
     }

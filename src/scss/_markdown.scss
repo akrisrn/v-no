@@ -7,27 +7,23 @@
   color: $font-color;
 
   > :first-child {
-    dt:first-of-type {
-      margin-top: 0 !important;
-    }
-
     img {
       margin-top: 0;
     }
-  }
-
-  > :last-child dd:last-of-type {
-    margin-bottom: 0 !important;
   }
 
   a {
     cursor: pointer;
     transition: color 0.5s;
     text-decoration: none;
-    color: $link-font-color !important;
+    color: $link-font-color;
 
     &:hover {
       text-decoration: underline;
+    }
+
+    &:not([href]) {
+      color: $gray-font-color;
     }
 
     svg {
@@ -54,6 +50,8 @@
   }
 
   h2, h3, h4, h5, h6 {
+    margin-bottom: 20px;
+
     &:hover .heading-link {
       opacity: 1;
     }
@@ -103,19 +101,6 @@
     margin-top: 8px;
     transition: filter 0.5s;
     background-color: transparent;
-
-    @for $i from 1 through 6 {
-      &.w#{$i * 100} {
-        width: 100%;
-        max-width: $i * 100px;
-      }
-    }
-
-    @for $i from 1 through 5 {
-      &.h#{$i * 100} {
-        height: $i * 100px;
-      }
-    }
   }
 
   mark {
@@ -128,6 +113,10 @@
     dt {
       font-weight: normal;
       font-style: normal;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
     }
 
     dd {
@@ -136,9 +125,13 @@
       transition: color 0.5s;
       color: $gray-font-color;
 
-      &:before {
+      &:not(.center):before {
         margin-right: 8px;
         content: "»";
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
       }
 
       + dd {
@@ -152,12 +145,17 @@
   }
 
   pre {
-    transition: background-color 0.5s;
-    background-color: $pre-background-color;
+    background-color: $dark-background-color;
+
+    code {
+      color: $dark-font-color;
+    }
   }
 
   code {
-    transition: background-color 0.5s;
+    transition: color 0.5s;
+    color: $font-color;
+    background-color: $code-background-color;
   }
 
   blockquote {
@@ -377,22 +375,8 @@
         }
       }
 
-      code {
-        font-family: $font-family;
-        font-size: $font-size-xs;
-        margin-left: 8px;
-        padding: 0;
-        color: $gray-font-color;
-        background-color: transparent;
-
-        &:before {
-          margin-right: 2px;
-          content: "#";
-        }
-      }
-
-      .date {
-        margin-left: 8px;
+      .bar {
+        float: right;
       }
     }
   }
@@ -448,6 +432,7 @@
 
   .footnotes {
     font-size: $font-size-s;
+    transition: color 0.5s;
     color: $gray-font-color;
 
     &:before {

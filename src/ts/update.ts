@@ -150,29 +150,29 @@ export function updateLinkPath(updatedLinks: string[] = []) {
             }
             if (!isPass) {
               parent.classList.add('article');
-              const date = getDateFromPath(path);
-              if (date) {
-                const dateSpan = document.createElement('span');
-                dateSpan.classList.add('date');
-                dateSpan.innerText = date;
-                if (hasQuote) {
-                  parent.insertBefore(dateSpan, parent.lastElementChild);
-                } else {
-                  parent.append(dateSpan);
-                }
-              }
+              const bar = document.createElement('div');
+              bar.classList.add('bar');
               flags.tags.forEach(tag => {
-                const code = document.createElement('code');
+                const itemTag = document.createElement('code');
+                itemTag.classList.add('item-tag');
                 const a = document.createElement('a');
                 a.innerText = tag;
                 a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
-                code.append(a);
-                if (hasQuote) {
-                  parent.insertBefore(code, parent.lastElementChild);
-                } else {
-                  parent.append(code);
-                }
+                itemTag.append(a);
+                bar.append(itemTag);
               });
+              const date = getDateFromPath(path);
+              if (date) {
+                const itemDate = document.createElement('code');
+                itemDate.classList.add('item-date');
+                itemDate.innerText = date;
+                bar.append(itemDate);
+              }
+              if (hasQuote) {
+                parent.insertBefore(bar, parent.lastElementChild);
+              } else {
+                parent.append(bar);
+              }
             }
           }
         }).finally(() => {

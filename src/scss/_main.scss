@@ -26,30 +26,8 @@ main {
 
   #bar {
     max-height: 27px * 2;
-    transition: color 0.5s, opacity 0.5s, max-height 0.5s;
+    transition: opacity 0.5s, max-height 0.5s;
     opacity: 1;
-
-    code {
-      font-size: $font-size-xs;
-      display: inline-block;
-      margin-right: 8px;
-      padding-top: 0;
-      padding-bottom: 0;
-      transition: color 0.5s, background-color 0.5s;
-
-      &.item-date {
-        background-color: $info-color-xs;
-      }
-
-      &.item-tag {
-        background-color: $success-color-xs;
-
-        &:before {
-          margin-right: 2px;
-          content: "#";
-        }
-      }
-    }
   }
 
   header {
@@ -75,15 +53,42 @@ main {
     transition: opacity 0.5s, height 0.5s, margin-top 0.5s;
     opacity: 1;
 
-    a.home:before {
+    .home:before {
       content: "« ";
+    }
+
+    .date {
+      float: right;
+      transition: color 0.5s;
+      color: $gray-font-color;
     }
   }
 
-  .date {
-    float: right;
-    transition: color 0.5s;
-    color: $gray-font-color;
+  .bar {
+    code {
+      font-size: $font-size-xs;
+      display: inline-block;
+      margin-right: 8px;
+      padding-top: 0;
+      padding-bottom: 0;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      &.item-date {
+        background-color: $info-color-xs;
+      }
+
+      &.item-tag {
+        background-color: $success-color-xs;
+
+        &:before {
+          margin-right: 2px;
+          content: "#";
+        }
+      }
+    }
   }
 
   .hidden {

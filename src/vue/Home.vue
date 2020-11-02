@@ -18,7 +18,7 @@
         <div v-if="cover" id="cover">
           <img :src="cover" alt="cover"/>
         </div>
-        <div v-if="!isError" id="bar" class="markdown-body">
+        <div v-if="!isError" id="bar" class="markdown-body bar">
           <code v-if="!isHome" class="item-home">
             <a :href="baseUrl" @click.prevent="returnHome">«</a>
           </code>

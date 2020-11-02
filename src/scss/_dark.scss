@@ -18,79 +18,64 @@ body.dark {
       }
     }
 
-    #bar {
-      code {
-        color: $dark-font-color;
-        background-color: $dark-code-background-color;
-
-        a {
-          color: $dark-link-font-color !important;
-        }
-      }
-    }
-
     header {
       color: $dark-font-color;
     }
 
-    article {
-      &, .btn, #search-input {
+    footer {
+      .date {
         color: $dark-font-color;
       }
-
-      a {
-        color: $dark-link-font-color !important;
-
-        svg {
-          fill: $dark-font-color;
-        }
-      }
-
-      hr {
-        border-bottom-color: $dark-border-color;
-      }
-
-      blockquote, dl dd, .footnotes {
-        color: $light-gray-font-color;
-      }
-
-      pre code {
-        background-color: $pre-background-color;
-      }
-
-      code {
-        background-color: $dark-code-background-color;
-      }
-
-      table {
-        thead tr {
-          border-bottom-color: $dark-border-color;
-        }
-
-        tr + tr {
-          border-top-color: $dark-border-color;
-        }
-      }
-
-      img, kbd {
-        filter: brightness(0.7);
-      }
-    }
-
-    footer {
-      a {
-        color: $dark-link-font-color !important;
-      }
-    }
-
-    .date {
-      color: $dark-font-color;
     }
   }
 
   #toggle-dark, #toggle-zen, #to-top {
     &:hover {
       color: $dark-font-color;
+    }
+  }
+
+  .markdown-body {
+    &, .btn, #search-input {
+      color: $dark-font-color;
+    }
+
+    a {
+      color: $dark-link-font-color;
+
+      &:not([href]) {
+        color: $light-gray-font-color;
+      }
+
+      svg {
+        fill: $dark-font-color;
+      }
+    }
+
+    hr {
+      border-bottom-color: $dark-border-color;
+    }
+
+    blockquote, dl dd, .footnotes {
+      color: $light-gray-font-color;
+    }
+
+    code {
+      color: $dark-font-color;
+    }
+
+    table {
+      thead tr {
+        border-bottom-color: $dark-border-color;
+      }
+
+      tr + tr {
+        border-top-color: $dark-border-color;
+      }
+    }
+
+    img, kbd {
+      filter: brightness(0.7);
     }
   }
 
