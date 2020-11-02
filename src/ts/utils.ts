@@ -46,8 +46,8 @@ export function trimList(list: string[]) {
   return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
 }
 
-export function getWrapRegExp(left: string, right: string = left, flags = '') {
-  return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
+export function getWrapRegExp(left: string, right: string = left, flags = '', isGreedy = false) {
+  return new RegExp(`${left}\\s*(.+${isGreedy ? '' : '?'})\\s*${right}`, flags);
 }
 
 export function escapeHTML(html: string) {
