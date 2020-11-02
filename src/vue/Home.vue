@@ -7,8 +7,10 @@
         <span></span>
         <a :href="`#${config.paths.readme}`">{{ config.messages.readme }}</a>
         <a :href="`#${config.paths.archive}`">{{ config.messages.archive }}</a>
-        <a :href="`#${config.paths.category}`">{{ config.messages.category }}</a>
-        <a v-if="isHashMode" :href="`#${config.paths.search}`">{{ config.messages.search }}</a>
+        <template v-if="isHashMode">
+          <a :href="`#${config.paths.category}`">{{ config.messages.category }}</a>
+          <a :href="`#${config.paths.search}`">{{ config.messages.search }}</a>
+        </template>
       </div>
     </div>
     <transition name="slide-fade">
