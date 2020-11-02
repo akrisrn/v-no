@@ -30,6 +30,10 @@ export function exposeToWindow(vars: Dict<any>) {
   });
 }
 
+export function evalFunction(evalStr: string, params: Dict<any>) {
+  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
+}
+
 export function isHashMode() {
   return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
 }
