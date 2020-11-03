@@ -1,4 +1,4 @@
-import { addBaseUrl, cleanBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
+import { addBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
 function splitFlags(data: string) {
@@ -35,7 +35,6 @@ const cachedFiles: TMDFileDict = {};
 let isCacheComplete = false;
 
 export function getFile(path: string, noCache = false) {
-  path = cleanBaseUrl(path);
   return new Promise<TMDFile>((resolve, reject) => {
     if (!noCache && cachedFiles[path] !== undefined) {
       resolve(cachedFiles[path]);

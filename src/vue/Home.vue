@@ -28,7 +28,7 @@
             <a :href="getSearchTagUrl(tag)">{{ tag }}</a>
           </code>
           <code class="item-raw">
-            <a :href="path" target="_blank">{{ config.messages.raw }}</a>
+            <a :href="rawPath" target="_blank">{{ config.messages.raw }}</a>
           </code>
         </div>
         <header>{{ title }}</header>
@@ -54,7 +54,6 @@
   import {
     addBaseUrl,
     buildQueryContent,
-    cleanBaseUrl,
     config,
     degradeHeading,
     EFlag,
@@ -113,7 +112,6 @@
         path = '/';
       }
       if (path !== '/') {
-        path = addBaseUrl(path);
         if (path.endsWith('.html')) {
           return path.replace(/\.html$/, '.md');
         }
@@ -135,10 +133,14 @@
           if (path.endsWith('/')) {
             path += 'index.md';
           }
-          return addBaseUrl(path);
+          return path;
         }
       }
-      return addBaseUrl(this.config.paths.index);
+      return this.config.paths.index;
+    }
+
+    get rawPath() {
+      return addBaseUrl(this.path);
     }
 
     get isIndexPath() {
@@ -150,7 +152,7 @@
     }
 
     get isHome() {
-      return this.path === addBaseUrl(this.config.paths.index);
+      return this.path === this.config.paths.index;
     }
 
     get date() {
@@ -294,7 +296,7 @@
     }
 
     setFlags(flags: IFlags) {
-      this.title = flags.title || cleanBaseUrl(this.path);
+      this.title = flags.title || this.path;
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title = `${this.title} - ${this.config.siteName}`;
       } else {
@@ -332,9 +334,8 @@
       if (this.path.endsWith('.md')) {
         const promises = [getFile(this.path)];
         if (this.config.paths.common) {
-          const path = addBaseUrl(this.config.paths.common);
-          if (this.path !== path) {
-            promises.push(getFile(path));
+          if (this.path !== this.config.paths.common) {
+            promises.push(getFile(this.config.paths.common));
           }
         }
         Promise.all(promises).then(files => {

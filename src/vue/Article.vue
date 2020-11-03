@@ -13,7 +13,7 @@
     updateSearchList,
     updateToc,
   } from '@/ts/update';
-  import { addBaseUrl, config, exposeToWindow } from '@/ts/utils';
+  import { config, exposeToWindow } from '@/ts/utils';
   import Prism from 'prismjs';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
 
@@ -28,11 +28,11 @@
     }
 
     get isCategory() {
-      return this.path === addBaseUrl(config.paths.category);
+      return this.path === config.paths.category;
     }
 
     get isSearch() {
-      return this.path === addBaseUrl(config.paths.search);
+      return this.path === config.paths.search;
     }
 
     // noinspection JSUnusedGlobalSymbols

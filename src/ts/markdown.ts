@@ -1,4 +1,4 @@
-import { addBaseUrl, cleanBaseUrl, evalFunction, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import { addBaseUrl, evalFunction, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -159,7 +159,6 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 };
 
 export function renderMD(path: string, data: string, isCategory = false) {
-  path = cleanBaseUrl(path);
   const tocRegExp = /^\[toc]$/im;
   const headingRegExp = getWrapRegExp('^(##{1,5})', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g', true);

@@ -2,6 +2,7 @@ import { getFile, getFiles } from '@/ts/file';
 import { renderMD } from '@/ts/markdown';
 import {
   buildQueryContent,
+  cleanBaseUrl,
   config,
   degradeHeading,
   EFlag,
@@ -202,7 +203,8 @@ export function updateLinkPath(updatedLinks: string[] = []) {
           });
         }
         a.classList.add('snippet');
-        getFile(href).then(file => {
+        const path = cleanBaseUrl(href);
+        getFile(path).then(file => {
           let data = degradeHeading(file.data).split('\n').map(line => {
             const regexp = getWrapRegExp('{{', '}}', 'g');
             const lineCopy = line;
@@ -239,7 +241,7 @@ export function updateLinkPath(updatedLinks: string[] = []) {
           }
           // 规避递归节点重复问题。
           try {
-            a.parentElement!.outerHTML = renderMD(href, data);
+            a.parentElement!.outerHTML = renderMD(path, data);
           } catch (e) {
             return;
           }
