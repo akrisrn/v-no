@@ -1,4 +1,4 @@
-import { addBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
+import { addBaseUrl, baseFiles, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
 let isCacheComplete = false;
@@ -86,14 +86,7 @@ export function getFiles(func: (files: TMDFileDict, backlinks: Dict<string[]>) =
   if (isCacheComplete) {
     func(cachedFiles, cachedBacklinks);
   } else {
-    Promise.all([
-      config.paths.index,
-      config.paths.readme,
-      config.paths.archive,
-      config.paths.category,
-      config.paths.search,
-      config.paths.common,
-    ].map(path => getFile(path))).then(async files => {
+    Promise.all(baseFiles.map(path => getFile(path))).then(async files => {
       await walkFiles(files);
       isCacheComplete = true;
       func(cachedFiles, cachedBacklinks);

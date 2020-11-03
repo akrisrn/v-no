@@ -19,6 +19,15 @@ function setToWindow(name: string, value: any) {
 
 export const config: IConfig = Object.assign({}, getFromWindow('vnoConfig'));
 
+export const baseFiles = [
+  config.paths.index,
+  config.paths.readme,
+  config.paths.archive,
+  config.paths.category,
+  config.paths.search,
+  config.paths.common,
+];
+
 export function exposeToWindow(vars: Dict<any>) {
   let vno = getFromWindow('vno');
   if (!vno) {
