@@ -1,7 +1,7 @@
 import { addBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
-function splitFlags(path: string, data: string): TMDFile {
+function parseData(path: string, data: string): TMDFile {
   const flags: IFlags = {
     title: '',
     tags: [],
@@ -51,7 +51,7 @@ export function getFile(path: string, noCache = false) {
       resolve(cachedFiles[path]);
     } else {
       axios.get<string>(addBaseUrl(path)).then(response => {
-        cachedFiles[path] = splitFlags(path, response.data);
+        cachedFiles[path] = parseData(path, response.data);
         resolve(cachedFiles[path]);
       }).catch(error => {
         reject(error);
