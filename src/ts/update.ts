@@ -8,6 +8,7 @@ import {
   EFlag,
   escapeHTML,
   getDateFromPath,
+  getLastedDate,
   getWrapRegExp,
   isExternalLink,
   removeClass,
@@ -162,7 +163,7 @@ export function updateLinkPath(updatedLinks: string[] = []) {
                 itemTag.append(a);
                 bar.append(itemTag);
               });
-              const date = getDateFromPath(path);
+              const date = getDateFromPath(path) || getLastedDate(flags.updated);
               if (date) {
                 const itemDate = document.createElement('code');
                 itemDate.classList.add('item-date');

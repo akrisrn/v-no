@@ -58,8 +58,8 @@
     degradeHeading,
     EFlag,
     exposeToWindow,
-    formatDate,
     getDateFromPath,
+    getLastedDate,
     isExternalLink,
     isHashMode,
     removeClass,
@@ -303,19 +303,7 @@
         document.title = `${this.title}`;
       }
       this.tags = flags.tags;
-      if (flags.updated.length !== 0) {
-        const updatedList = flags.updated;
-        const timeList = updatedList.map(updated => {
-          return updated.match(/^[0-9]+$/) ? parseInt(updated) : new Date(updated).getTime();
-        }).filter(time => !isNaN(time));
-        if (timeList.length > 1) {
-          this.updated = formatDate(new Date(Math.max(...timeList)));
-        } else {
-          this.updated = timeList.length === 1 ? formatDate(new Date(timeList[0])) : '';
-        }
-      } else {
-        this.updated = '';
-      }
+      this.updated = getLastedDate(flags.updated);
       if (flags.cover) {
         const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
         this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;

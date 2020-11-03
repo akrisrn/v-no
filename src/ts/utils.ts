@@ -104,6 +104,17 @@ export function getDateFromPath(path: string) {
   return match ? formatDate(new Date(match[1])) : '';
 }
 
+export function getLastedDate(dateList: string[]) {
+  const timeList = dateList.map(date => {
+    return date.match(/^[0-9]+$/) ? parseInt(date) : new Date(date).getTime();
+  }).filter(time => !isNaN(time));
+  if (timeList.length > 1) {
+    return formatDate(new Date(Math.max(...timeList)));
+  } else {
+    return timeList.length === 1 ? formatDate(new Date(timeList[0])) : '';
+  }
+}
+
 export function buildQueryContent(content: string, isComplete = false) {
   return (isComplete ? `#${config.paths.search}` : '') + `?content=${encodeURIComponent(content)}`;
 }
