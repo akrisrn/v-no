@@ -89,6 +89,7 @@ export function getFiles(func: (files: TMDFileDict) => void) {
 
 export function getErrorFile(error: AxiosError) {
   return {
+    path: '',
     data: config.messages.pageError,
     flags: {
       title: `${error.response!.status} ${error.response!.statusText}`,
@@ -96,5 +97,6 @@ export function getErrorFile(error: AxiosError) {
       updated: [],
       cover: '',
     },
+    links: [],
   } as TMDFile;
 }

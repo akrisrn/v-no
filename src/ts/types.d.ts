@@ -39,8 +39,10 @@ interface IFlags {
 type Dict<T> = { [index: string]: T }
 
 type TMDFile = {
+  path: string;
   data: string;
   flags: IFlags;
+  links: string[];
 }
 
 type TMDFileDict = Dict<TMDFile>
