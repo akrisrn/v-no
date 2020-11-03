@@ -241,6 +241,7 @@
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
         axios,
+        baseUrl: this.baseUrl,
         isHash: this.isHashMode,
         addInputBind: this.addInputBind,
       });
