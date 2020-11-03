@@ -215,32 +215,63 @@ export function renderMD(path: string, data: string, isCategory = false) {
     return line;
   }).join('\n');
   if (needRenderToc) {
-    if (headingList.length > 0) {
+    const headingLength = headingList.length;
+    if (headingLength > 0) {
       const tocDiv = document.createElement('div');
       tocDiv.classList.add('toc');
-      if (isCategory) {
-        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
-        tocDiv.firstElementChild!.classList.add('tags');
-        tocDiv.querySelectorAll('a').forEach(a => {
-          const count = a.querySelector<HTMLSpanElement>('.count')!;
-          a.removeChild(count);
-          a.parentElement!.append(count);
-          const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
-          if (fontSize > 1) {
-            a.style.fontSize = fontSize + 'em';
+      let left = headingLength;
+      let right = headingLength;
+      if (!isCategory) {
+        if (headingLength > 11) {
+          left = Math.ceil(headingLength / 3);
+          while (headingList[left] && !headingList[left].startsWith('-')) {
+            left += 1;
           }
-        });
-      } else if (headingList.length > 7) {
-        let median = Math.ceil(headingList.length / 2);
-        while (headingList[median] && !headingList[median].startsWith('-')) {
-          median += 1;
+          if (left < headingLength) {
+            let count = 0;
+            for (let i = 0; i < left; i++) {
+              if (headingList[i].startsWith('-')) {
+                count++;
+              }
+            }
+            right = left + count;
+            while (headingList[right] && !headingList[right].startsWith('-')) {
+              right += 1;
+            }
+          }
+        } else if (headingLength > 7) {
+          left = Math.ceil(headingLength / 2);
+          while (headingList[left] && !headingList[left].startsWith('-')) {
+            left += 1;
+          }
         }
-        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, median).join('\n')) +
-          markdownIt.render(headingList.slice(median, headingList.length).join('\n'));
+      }
+      if (left >= headingLength) {
+        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
+        if (isCategory) {
+          tocDiv.firstElementChild!.classList.add('tags');
+          tocDiv.querySelectorAll('a').forEach(a => {
+            const count = a.querySelector<HTMLSpanElement>('.count')!;
+            a.removeChild(count);
+            a.parentElement!.append(count);
+            const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
+            if (fontSize > 1) {
+              a.style.fontSize = fontSize + 'em';
+            }
+          });
+        }
+      } else if (right >= headingLength) {
+        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, left).join('\n')) +
+          markdownIt.render(headingList.slice(left, headingLength).join('\n'));
         tocDiv.firstElementChild!.classList.add('ul-a');
         tocDiv.lastElementChild!.classList.add('ul-b');
       } else {
-        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
+        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, left).join('\n')) +
+          markdownIt.render(headingList.slice(left, right).join('\n')) +
+          markdownIt.render(headingList.slice(right, headingLength).join('\n'));
+        for (let i = 0; i < tocDiv.children.length; i++) {
+          tocDiv.children[i].classList.add(`ul-${i + 1}`);
+        }
       }
       tocDiv.querySelectorAll('a').forEach(a => {
         a.setAttribute('anchor', a.getAttribute('href')!);
