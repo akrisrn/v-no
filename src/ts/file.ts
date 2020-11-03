@@ -1,6 +1,8 @@
 import { addBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
+const cachedBacklinks: Dict<string[]> = {};
+
 function parseData(path: string, data: string): TMDFile {
   const flags: IFlags = {
     title: '',
@@ -33,6 +35,13 @@ function parseData(path: string, data: string): TMDFile {
         const linkPath = match[1];
         if (linkPath !== path && !links.includes(linkPath)) {
           links.push(linkPath);
+          let backlinks = cachedBacklinks[linkPath];
+          if (backlinks === undefined) {
+            backlinks = [path];
+            cachedBacklinks[linkPath] = backlinks;
+          } else if (!backlinks.includes(path)) {
+            backlinks.push(path);
+          }
         }
       }
       lines.push(line);
@@ -74,9 +83,9 @@ async function walkFiles(files: TMDFile[]) {
   }
 }
 
-export function getFiles(func: (files: TMDFileDict) => void) {
+export function getFiles(func: (files: TMDFileDict, backlinks: Dict<string[]>) => void) {
   if (isCacheComplete) {
-    func(cachedFiles);
+    func(cachedFiles, cachedBacklinks);
   } else {
     Promise.all([
       config.paths.index,
@@ -88,7 +97,7 @@ export function getFiles(func: (files: TMDFileDict) => void) {
     ].map(path => getFile(path))).then(async files => {
       await walkFiles(files);
       isCacheComplete = true;
-      func(cachedFiles);
+      func(cachedFiles, cachedBacklinks);
     });
   }
 }
