@@ -168,10 +168,12 @@ export function updateLinkPath(updatedLinks: string[] = []) {
                 itemDate.innerText = date;
                 bar.append(itemDate);
               }
-              if (hasQuote) {
-                parent.insertBefore(bar, parent.lastElementChild);
-              } else {
-                parent.append(bar);
+              if (bar.childElementCount > 0) {
+                if (hasQuote) {
+                  parent.insertBefore(bar, parent.lastElementChild);
+                } else {
+                  parent.append(bar);
+                }
               }
             }
           }
