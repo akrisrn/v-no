@@ -50,6 +50,10 @@ body.dark {
       svg {
         fill: $dark-font-color;
       }
+
+      code {
+        color: $dark-link-font-color;
+      }
     }
 
     hr {

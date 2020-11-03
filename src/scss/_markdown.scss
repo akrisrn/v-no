@@ -33,6 +33,10 @@
       transition: fill 0.5s;
       fill: $font-color;
     }
+
+    code {
+      color: $link-font-color;
+    }
   }
 
   hr {
@@ -426,6 +430,7 @@
 
         li {
           display: inline;
+          white-space: nowrap;
 
           + li:before {
             margin-right: 12px;
