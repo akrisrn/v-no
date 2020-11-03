@@ -251,12 +251,16 @@ export function renderMD(path: string, data: string, isCategory = false) {
         if (isCategory) {
           tocDiv.firstElementChild!.classList.add('tags');
           tocDiv.querySelectorAll('a').forEach(a => {
+            const li = a.parentElement!;
+            const code = document.createElement('code');
+            li.append(code);
+            code.append(a);
             const count = a.querySelector<HTMLSpanElement>('.count')!;
             a.removeChild(count);
-            a.parentElement!.append(count);
+            li.append(count);
             const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
             if (fontSize > 1) {
-              a.style.fontSize = fontSize + 'em';
+              code.style.fontSize = fontSize + 'em';
             }
           });
         }
