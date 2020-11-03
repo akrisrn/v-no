@@ -50,20 +50,22 @@ export function getFile(path: string, noCache = false) {
   });
 }
 
-async function walkFiles(data: string) {
+async function walkFiles(files: TMDFile[]) {
   const paths: string[] = [];
   const regexp = /\[.*?]\((\/.*?\.md)\)/gm;
-  let match = regexp.exec(data);
-  while (match) {
-    const path = match[1];
-    if (!paths.includes(path) && cachedFiles[path] === undefined) {
-      paths.push(path);
+  files.forEach(file => {
+    const data = file.data;
+    let match = regexp.exec(data);
+    while (match) {
+      const path = match[1];
+      if (!paths.includes(path) && cachedFiles[path] === undefined) {
+        paths.push(path);
+      }
+      match = regexp.exec(data);
     }
-    match = regexp.exec(data);
-  }
+  });
   if (paths.length > 0) {
-    const files = await Promise.all(paths.map(path => getFile(path)));
-    await walkFiles(files.map(file => file.data).join('\n'));
+    await walkFiles(await Promise.all(paths.map(path => getFile(path))));
   }
 }
 
@@ -79,7 +81,7 @@ export function getFiles(func: (files: TMDFileDict) => void) {
       config.paths.search,
       config.paths.common,
     ].map(path => getFile(path))).then(async files => {
-      await walkFiles(files.map(file => file.data).join('\n'));
+      await walkFiles(files);
       isCacheComplete = true;
       func(cachedFiles);
     });
