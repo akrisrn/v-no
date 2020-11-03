@@ -1,6 +1,8 @@
 import { addBaseUrl, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
+let isCacheComplete = false;
+const cachedFiles: TMDFileDict = {};
 const cachedBacklinks: Dict<string[]> = {};
 
 function parseData(path: string, data: string): TMDFile {
@@ -51,12 +53,9 @@ function parseData(path: string, data: string): TMDFile {
   return { path, data, flags, links };
 }
 
-const cachedFiles: TMDFileDict = {};
-let isCacheComplete = false;
-
-export function getFile(path: string, noCache = false) {
+export function getFile(path: string) {
   return new Promise<TMDFile>((resolve, reject) => {
-    if (!noCache && cachedFiles[path] !== undefined) {
+    if (cachedFiles[path] !== undefined) {
       resolve(cachedFiles[path]);
     } else {
       axios.get<string>(addBaseUrl(path)).then(response => {
