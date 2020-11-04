@@ -22,14 +22,6 @@ body.dark {
       color: $dark-font-color;
     }
 
-    #backlinks {
-      .icon {
-        svg {
-          fill: $dark-font-color;
-        }
-      }
-    }
-
     footer {
       .date {
         color: $dark-font-color;
@@ -55,13 +47,13 @@ body.dark {
         color: $light-gray-font-color;
       }
 
-      svg {
-        fill: $dark-font-color;
-      }
-
       code {
         color: $dark-link-font-color;
       }
+    }
+
+    svg {
+      fill: $dark-font-color;
     }
 
     hr {

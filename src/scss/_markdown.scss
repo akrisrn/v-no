@@ -27,16 +27,17 @@
     }
 
     svg {
-      width: 10px;
-      height: 14px;
       margin: 0 4px;
-      transition: fill 0.5s;
-      fill: $font-color;
     }
 
     code {
       color: $link-font-color;
     }
+  }
+
+  svg {
+    transition: fill 0.5s;
+    fill: $font-color;
   }
 
   hr {
@@ -61,20 +62,15 @@
     }
 
     .heading-link {
+      margin-left: 4px;
       transition: opacity 0.5s;
       opacity: 0;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
     }
   }
 
-  h3, h4, h5, h6 {
+  h5, h6 {
     .heading-link svg {
-      width: 14px;
-      height: 14px;
+      height: 1em;
     }
   }
 

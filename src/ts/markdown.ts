@@ -1,4 +1,4 @@
-import { addBaseUrl, evalFunction, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import { addBaseUrl, EIcon, evalFunction, getIcon, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -119,7 +119,7 @@ const defaultHeadingRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   const link = document.createElement('a');
   link.classList.add('heading-link');
-  link.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 16 16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>';
+  link.innerHTML = getIcon(EIcon.link, 14);
   return link.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
 };
 
@@ -154,8 +154,8 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 const defaultLinkCloseRenderRule = getDefaultRenderRule('link_close');
 markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  const svg = !token.attrGet('external') ? '' : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 12 16"><path fill-rule="evenodd" d="M11 10h1v3c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h3v1H1v10h10v-3zM6 2l2.25 2.25L5 7.5 6.5 9l3.25-3.25L12 8V2H6z"></path></svg>';
-  return svg + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
+  const icon = token.attrGet('external') ? getIcon(EIcon.external, 14) : '';
+  return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
 export function renderMD(path: string, data: string, isCategory = false) {

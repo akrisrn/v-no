@@ -57,13 +57,8 @@ main {
       height: 24px;
       margin-right: 8px;
 
-      svg {
-        width: 18px;
-        transition: fill 0.5s;
-        fill: $font-color;
-
-        &.loadings {
-          width: 16px;
+      &.loading {
+        svg {
           margin-top: 4px;
           animation: spin 1s linear infinite;
 
@@ -76,6 +71,10 @@ main {
             }
           }
         }
+      }
+
+      svg {
+        margin-top: 2px;
       }
     }
 
