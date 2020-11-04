@@ -43,9 +43,13 @@ main {
     }
   }
 
+  article {
+    transition: color 0.5s;
+  }
+
   #backlinks {
     font-size: $font-size-s;
-    margin-bottom: 24px;
+    margin-top: 24px;
     padding: 8px 16px;
     transition: color 0.5s;
     border-radius: 3px;
@@ -93,10 +97,6 @@ main {
         }
       }
     }
-  }
-
-  article {
-    transition: color 0.5s;
   }
 
   footer {

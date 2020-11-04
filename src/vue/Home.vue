@@ -32,6 +32,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
+        <Article :data="data" :params="params" :path="path" @update:data="data = $event"></Article>
         <div v-if="!isError" id="backlinks" class="markdown-body">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -46,8 +47,6 @@
             <span v-else>{{ config.messages.noBacklinks }}</span>
           </template>
         </div>
-        <Article :data="data" :params="params" :path="path" @update:data="data = $event">
-        </Article>
         <footer v-if="!isHome" class="markdown-body">
           <a :href="baseUrl" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
