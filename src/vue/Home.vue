@@ -39,9 +39,15 @@
           <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
           <a v-else-if="!hasLoadedBacklinks" @click.prevent="getBacklinks">{{ config.messages.showBacklinks }}</a>
           <template v-else>
-            <ul v-if="backlinks.length > 0">
-              <li v-for="backlink in backlinks" :key="backlink[0]">
-                <a :href="`#${backlink[0]}`">{{ backlink[1] }}</a>
+            <ul v-if="backlinkFiles.length > 0">
+              <li v-for="file in backlinkFiles" :key="file.path" class="article">
+                <a :href="`#${file.path}`">{{ file.title }}</a>
+                <div class="bar">
+                  <code v-for="tag in file.tags" :key="tag" class="item-tag">
+                    <a :href="getSearchTagUrl(tag)">{{ tag }}</a>
+                  </code>
+                  <code v-if="file.date" class="item-date">{{ file.date }}</code>
+                </div>
               </li>
             </ul>
             <span v-else>{{ config.messages.noBacklinks }}</span>
@@ -100,7 +106,7 @@
     updated = '';
     cover = '';
 
-    backlinks: string[][] = [];
+    backlinkFiles: TBacklinkFile[] = [];
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 
@@ -190,7 +196,7 @@
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
-      this.backlinks = [];
+      this.backlinkFiles = [];
       this.updateData(false);
     }
 
@@ -389,16 +395,19 @@
     getBacklinks() {
       this.isLoadingBacklinks = true;
       getFiles((files, backlinks) => {
-        this.backlinks = (backlinks[this.path] || []).map(path => {
-          const file = files[path];
-          return file ? [path, file.flags.title || path] : [];
-        }).filter(backlink => backlink.length > 0).sort((a, b) => {
-          const [pathA, titleA] = a;
-          const [pathB, titleB] = b;
-          if (baseFiles.includes(pathA)) {
-            return baseFiles.includes(pathB) ? titleA.localeCompare(titleB) : 1;
+        this.backlinkFiles = (backlinks[this.path] || []).map(path => {
+          const flags = files[path].flags;
+          return {
+            path,
+            title: flags.title || path,
+            tags: flags.tags,
+            date: getDateFromPath(path) || getLastedDate(flags.updated),
+          } as TBacklinkFile;
+        }).sort((a, b) => {
+          if (baseFiles.includes(a.path)) {
+            return baseFiles.includes(b.path) ? a.title.localeCompare(b.title) : 1;
           }
-          return baseFiles.includes(pathB) ? -1 : titleA.localeCompare(titleB);
+          return baseFiles.includes(b.path) ? -1 : a.title.localeCompare(b.title);
         });
         this.isLoadingBacklinks = false;
         this.hasLoadedBacklinks = true;
