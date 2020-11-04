@@ -61,15 +61,24 @@ function parseData(path: string, data: string): TMDFile {
   return { path, data, flags, links };
 }
 
-export function getFile(path: string) {
+const isRequesting: Dict<boolean> = {};
+
+export async function getFile(path: string) {
+  while (isRequesting[path]) {
+    await new Promise(_ => setTimeout(_, 200));
+  }
+  isRequesting[path] = true;
   return new Promise<TMDFile>((resolve, reject) => {
     if (cachedFiles[path] !== undefined) {
+      isRequesting[path] = false;
       resolve(cachedFiles[path]);
     } else {
       axios.get<string>(addBaseUrl(path)).then(response => {
+        isRequesting[path] = false;
         cachedFiles[path] = parseData(path, response.data);
         resolve(cachedFiles[path]);
       }).catch(error => {
+        isRequesting[path] = false;
         reject(error);
       });
     }
