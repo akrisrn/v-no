@@ -32,7 +32,7 @@ function parseData(path: string, data: string): TFile {
       if (match[1].startsWith('@')) {
         const flag = match[1].substring(1, match[1].length - 1);
         if ([EFlag.tags, EFlag.updated].map(flag => `@${flag}:`).includes(match[1])) {
-          flags[flag] = trimList(match[2].split(/\s*[,，、]\s*/));
+          flags[flag] = trimList(match[2].split(/\s*[,，、]\s*/)).sort();
         } else {
           flags[flag] = match[2];
         }
