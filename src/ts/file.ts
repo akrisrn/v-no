@@ -1,9 +1,17 @@
 import { addBaseUrl, baseFiles, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import axios, { AxiosError } from 'axios';
 
-let isCacheComplete = false;
+let isCompleted = false;
 const cachedFiles: TMDFileDict = {};
 const cachedBacklinks: Dict<string[]> = {};
+
+export function isCacheCompleted() {
+  return isCompleted;
+}
+
+function completeCache() {
+  isCompleted = true;
+}
 
 function parseData(path: string, data: string): TMDFile {
   const flags: IFlags = {
@@ -83,12 +91,12 @@ async function walkFiles(files: TMDFile[]) {
 }
 
 export function getFiles(func: (files: TMDFileDict, backlinks: Dict<string[]>) => void) {
-  if (isCacheComplete) {
+  if (isCacheCompleted()) {
     func(cachedFiles, cachedBacklinks);
   } else {
     Promise.all(baseFiles.map(path => getFile(path))).then(async files => {
       await walkFiles(files);
-      isCacheComplete = true;
+      completeCache();
       func(cachedFiles, cachedBacklinks);
     });
   }
