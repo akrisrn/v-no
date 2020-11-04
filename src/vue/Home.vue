@@ -397,14 +397,17 @@
     getBacklinks() {
       this.isLoadingBacklinks = true;
       getFiles((files, backlinks) => {
-        for (const backlink of backlinks[this.path] || []) {
-          if (!baseFiles.includes(backlink)) {
-            const file = files[backlink];
-            if (file) {
-              this.backlinks.push([backlink, file.flags.title]);
-            }
+        this.backlinks = (backlinks[this.path] || []).map(path => {
+          const file = files[path];
+          return file ? [path, file.flags.title || path] : [];
+        }).filter(backlink => backlink.length > 0).sort((a, b) => {
+          const [pathA, titleA] = a;
+          const [pathB, titleB] = b;
+          if (baseFiles.includes(pathA)) {
+            return baseFiles.includes(pathB) ? titleA.localeCompare(titleB) : 1;
           }
-        }
+          return baseFiles.includes(pathB) ? -1 : titleA.localeCompare(titleB);
+        });
         this.isLoadingBacklinks = false;
       });
     }
