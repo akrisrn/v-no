@@ -43,6 +43,59 @@ main {
     }
   }
 
+  #backlinks {
+    font-size: $font-size-s;
+    margin-bottom: 24px;
+    padding: 8px 16px;
+    transition: color 0.5s;
+    border-radius: 3px;
+    background-color: $code-background-color;
+
+    .icon {
+      float: left;
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+
+      svg {
+        width: 18px;
+        transition: fill 0.5s;
+        fill: $font-color;
+
+        &.loadings {
+          width: 16px;
+          margin-top: 4px;
+          animation: spin 1s linear infinite;
+
+          @keyframes spin {
+            from {
+              transform: rotate(0);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        }
+      }
+    }
+
+    ul {
+      li {
+        display: inline;
+        white-space: nowrap;
+
+        &:not(:last-of-type) {
+          margin-right: 8px;
+        }
+
+        &:before {
+          margin-right: 8px;
+          content: "»";
+        }
+      }
+    }
+  }
+
   article {
     transition: color 0.5s;
   }
