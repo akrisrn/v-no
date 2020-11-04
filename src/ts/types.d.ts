@@ -24,6 +24,9 @@ interface IConfig {
     notFound: string;
     searching: string;
     searchNothing: string;
+    showBacklinks: string;
+    noBacklinks: string;
+    loading: string;
   };
 }
 

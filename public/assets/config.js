@@ -24,5 +24,8 @@ vnoConfig = {
     notFound: 'Not Found',
     searching: 'Searching...',
     searchNothing: 'Nothing.',
+    showBacklinks: 'Show backlinks.',
+    noBacklinks: 'No backlinks.',
+    loading: 'Loading...'
   },
 };
