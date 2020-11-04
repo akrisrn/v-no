@@ -2,7 +2,7 @@ import { addBaseUrl, baseFiles, config, EFlag, getWrapRegExp, trimList } from '@
 import axios, { AxiosError } from 'axios';
 
 let isCompleted = false;
-const cachedFiles: Dict<TMDFile> = {};
+const cachedFiles: Dict<TFile> = {};
 const cachedBacklinks: Dict<string[]> = {};
 
 function isCacheCompleted() {
@@ -13,7 +13,7 @@ function completeCache() {
   isCompleted = true;
 }
 
-function parseData(path: string, data: string): TMDFile {
+function parseData(path: string, data: string): TFile {
   const flags: IFlags = {
     title: '',
     tags: [],
@@ -68,7 +68,7 @@ export async function getFile(path: string) {
     await new Promise(_ => setTimeout(_, 200));
   }
   isRequesting[path] = true;
-  return new Promise<TMDFile>((resolve, reject) => {
+  return new Promise<TFile>((resolve, reject) => {
     if (cachedFiles[path] !== undefined) {
       isRequesting[path] = false;
       resolve(cachedFiles[path]);
@@ -85,7 +85,7 @@ export async function getFile(path: string) {
   });
 }
 
-async function walkFiles(files: TMDFile[]) {
+async function walkFiles(files: TFile[]) {
   const paths: string[] = [];
   files.forEach(file => {
     file.links.forEach(path => {
@@ -99,7 +99,7 @@ async function walkFiles(files: TMDFile[]) {
   }
 }
 
-export function getFiles(func: (files: Dict<TMDFile>, backlinks: Dict<string[]>) => void) {
+export function getFiles(func: (files: Dict<TFile>, backlinks: Dict<string[]>) => void) {
   if (isCacheCompleted()) {
     func(cachedFiles, cachedBacklinks);
   } else {
@@ -122,5 +122,5 @@ export function getErrorFile(error: AxiosError) {
       cover: '',
     },
     links: [],
-  } as TMDFile;
+  } as TFile;
 }

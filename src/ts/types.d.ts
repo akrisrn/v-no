@@ -41,7 +41,7 @@ interface IFlags {
 
 type Dict<T> = { [index: string]: T }
 
-type TMDFile = {
+type TFile = {
   path: string;
   data: string;
   flags: IFlags;
