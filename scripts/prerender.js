@@ -53,6 +53,7 @@ async function getHtmlAndFiles(page, urlPath) {
       return [null, null];
     }
     document.body.classList.add('prerender');
+    document.querySelector('#backlinks').remove();
     const files = [];
     document.querySelectorAll('a[href]').forEach(a => {
       const href = a.getAttribute('href');
@@ -82,8 +83,7 @@ async function getHtmlAndFiles(page, urlPath) {
       hashPath = hashPath.replace(/#\/index\.md$/, '');
     }
     code.innerHTML = `<a href="${hashPath}">#</a>`;
-    const bar = document.querySelector('#bar');
-    bar.append(code);
+    document.querySelector('#bar').append(code);
     return [document.documentElement.outerHTML, files];
   }, publicPath);
 }
