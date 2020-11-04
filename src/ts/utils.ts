@@ -83,11 +83,12 @@ export function removeClass(element: HTMLElement, cls: string) {
   }
 }
 
-export function toggleClass(element: HTMLElement, className: string) {
-  if (element.classList.contains(className)) {
-    removeClass(element, className);
-  } else {
-    element.classList.add(className);
+export function addTempClass(element: HTMLElement, cls: string, timeout = 500) {
+  if (!element.classList.contains(cls)) {
+    element.classList.add(cls);
+    setTimeout(() => {
+      removeClass(element, cls);
+    }, timeout);
   }
 }
 

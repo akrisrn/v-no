@@ -60,9 +60,9 @@ main {
       &.loading {
         svg {
           margin-top: 4px;
-          animation: spin 1s linear infinite;
+          animation: svg-spin 1s linear infinite;
 
-          @keyframes spin {
+          @keyframes svg-spin {
             from {
               transform: rotate(0);
             }

@@ -31,10 +31,18 @@
 #to-top {
   right: 14px;
   bottom: 8px;
-  transition: color 0.5s, transform 0.5s;
-  transform: rotate(0deg);
+  transition: color 0.5s;
 
   &.spin {
-    transform: rotate(360deg);
+    animation: to-top-spin 0.5s;
+
+    @keyframes to-top-spin {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
   }
 }

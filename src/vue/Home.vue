@@ -67,6 +67,7 @@
   import { getErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
+    addTempClass,
     baseFiles,
     buildQueryContent,
     config,
@@ -81,7 +82,6 @@
     isHashMode,
     removeClass,
     scroll,
-    toggleClass,
   } from '@/ts/utils';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
@@ -247,12 +247,12 @@
           }
         },
         gg: () => {
-          toggleClass(this.toTop!, 'spin');
+          addTempClass(this.toTop!, 'spin');
           scroll(document.body.offsetHeight);
           this.keyInput += '_';
         },
         G: () => {
-          toggleClass(this.toTop!, 'spin');
+          addTempClass(this.toTop!, 'spin');
           scroll(0);
         },
         dark: () => {
@@ -301,7 +301,7 @@
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
-        toggleClass(this.toTop!, 'spin');
+        addTempClass(this.toTop!, 'spin');
         scroll(0);
       });
     }
