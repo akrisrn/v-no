@@ -282,7 +282,7 @@ export function updateLinkPath(updatedLinks: string[] = []) {
 }
 
 function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
-  return (files: TMDFileDict) => {
+  return (files: Dict<TMDFile>) => {
     const paths = Object.keys(files);
     const tags: Dict<string[]> = {};
     const untagged = [];
@@ -326,7 +326,7 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
 function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
   resultUl.innerText = config.messages.searching;
   const timeStart = new Date().getTime();
-  return (files: TMDFileDict) => {
+  return (files: Dict<TMDFile>) => {
     let queryFlag = '';
     let queryParam = '';
     const match = content.match(/^@(\S+?):\s*(.*)$/);

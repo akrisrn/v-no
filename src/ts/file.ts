@@ -2,7 +2,7 @@ import { addBaseUrl, baseFiles, config, EFlag, getWrapRegExp, trimList } from '@
 import axios, { AxiosError } from 'axios';
 
 let isCompleted = false;
-const cachedFiles: TMDFileDict = {};
+const cachedFiles: Dict<TMDFile> = {};
 const cachedBacklinks: Dict<string[]> = {};
 
 function isCacheCompleted() {
@@ -99,7 +99,7 @@ async function walkFiles(files: TMDFile[]) {
   }
 }
 
-export function getFiles(func: (files: TMDFileDict, backlinks: Dict<string[]>) => void) {
+export function getFiles(func: (files: Dict<TMDFile>, backlinks: Dict<string[]>) => void) {
   if (isCacheCompleted()) {
     func(cachedFiles, cachedBacklinks);
   } else {

@@ -47,5 +47,3 @@ type TMDFile = {
   flags: IFlags;
   links: string[];
 }
-
-type TMDFileDict = Dict<TMDFile>
