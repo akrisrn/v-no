@@ -32,7 +32,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <div v-if="!isError && !isBaseFile" id="backlinks" class="markdown-body">
+        <div v-if="!isError" id="backlinks" class="markdown-body">
           <div class="icon">
             <svg v-if="isLoadingBacklinks" class="loadings" viewBox="0 0 16 16"
                  xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@
             </svg>
           </div>
           <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
-          <a v-else-if="!isCacheCompleted()" @click.prevent="getBacklinks">{{ config.messages.showBacklinks }}</a>
+          <a v-else-if="!hasLoadedBacklinks" @click.prevent="getBacklinks">{{ config.messages.showBacklinks }}</a>
           <template v-else>
             <ul v-if="backlinks.length > 0">
               <li v-for="backlink in backlinks" :key="backlink[0]">
@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts">
-  import { getErrorFile, getFile, getFiles, isCacheCompleted } from '@/ts/file';
+  import { getErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
     baseFiles,
@@ -110,6 +110,7 @@
 
     backlinks: string[][] = [];
     isLoadingBacklinks = false;
+    hasLoadedBacklinks = false;
 
     isHashMode = isHashMode();
     isShow = false;
@@ -180,10 +181,6 @@
 
     get isHome() {
       return this.path === this.config.paths.index;
-    }
-
-    get isBaseFile() {
-      return baseFiles.includes(this.path);
     }
 
     get date() {
@@ -365,10 +362,10 @@
             data += '\n\n' + degradeHeading(files[1].data);
           }
           this.setData(data, files[0].flags);
-          if (!this.isBaseFile && this.isCacheCompleted()) {
-            this.getBacklinks();
-          }
           if (!isFirst) {
+            if (this.hasLoadedBacklinks) {
+              this.getBacklinks();
+            }
             document.querySelectorAll('.custom').forEach(element => {
               element.remove();
             });
@@ -409,11 +406,8 @@
           return baseFiles.includes(pathB) ? -1 : titleA.localeCompare(titleB);
         });
         this.isLoadingBacklinks = false;
+        this.hasLoadedBacklinks = true;
       });
-    }
-
-    isCacheCompleted() {
-      return isCacheCompleted();
     }
 
     addInputBind(input: string, bind: () => void) {

@@ -5,7 +5,7 @@ let isCompleted = false;
 const cachedFiles: TMDFileDict = {};
 const cachedBacklinks: Dict<string[]> = {};
 
-export function isCacheCompleted() {
+function isCacheCompleted() {
   return isCompleted;
 }
 
