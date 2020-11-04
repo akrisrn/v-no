@@ -47,3 +47,10 @@ type TFile = {
   flags: IFlags;
   links: string[];
 }
+
+type TBacklinkFile = {
+  path: string;
+  title: string;
+  tags: string[];
+  date: string;
+}
