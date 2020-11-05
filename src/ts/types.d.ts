@@ -27,6 +27,10 @@ interface IConfig {
     noBacklinks: string;
     loading: string;
   };
+  defaultConf?: string;
+  multiConf?: Dict<IConfig>;
+
+  [index: string]: any;
 }
 
 interface IFlags {

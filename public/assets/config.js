@@ -27,4 +27,6 @@ vnoConfig = {
     noBacklinks: 'No backlinks.',
     loading: 'Loading...',
   },
+  defaultConf: '',
+  multiConf: {},
 };
