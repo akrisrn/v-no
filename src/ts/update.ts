@@ -3,7 +3,6 @@ import { renderMD } from '@/ts/markdown';
 import {
   buildQueryContent,
   cleanBaseUrl,
-  config,
   degradeHeading,
   EFlag,
   escapeHTML,
@@ -14,6 +13,7 @@ import {
   removeClass,
   scroll,
 } from '@/ts/utils';
+import { config } from '@/ts/config';
 import Prism from 'prismjs';
 
 export function updateDD() {

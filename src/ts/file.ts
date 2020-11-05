@@ -1,4 +1,5 @@
-import { addBaseUrl, baseFiles, config, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
+import { addBaseUrl, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
+import { baseFiles, config } from '@/ts/config';
 import axios, { AxiosError } from 'axios';
 
 let isCompleted = false;

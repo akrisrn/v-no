@@ -73,9 +73,7 @@
   import {
     addBaseUrl,
     addTempClass,
-    baseFiles,
     buildQueryContent,
-    config,
     degradeHeading,
     EFlag,
     EIcon,
@@ -88,6 +86,7 @@
     removeClass,
     scroll,
   } from '@/ts/utils';
+  import { baseFiles, config } from '@/ts/config';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
