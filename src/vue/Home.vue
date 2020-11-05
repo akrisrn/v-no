@@ -121,16 +121,18 @@
     keyInput = '';
     inputBinds: Dict<() => void> = {};
 
-    config = config;
-    favicon = addBaseUrl(config.paths.favicon);
+    favicon = addBaseUrl(this.config.paths.favicon);
+    iconSync = getIcon(EIcon.sync);
+    iconBacklink = getIcon(EIcon.backlink, 18);
 
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
 
     params: Dict<string> = {};
 
-    iconSync = getIcon(EIcon.sync);
-    iconBacklink = getIcon(EIcon.backlink, 18);
+    get config() {
+      return config;
+    }
 
     get path() {
       this.params = {};

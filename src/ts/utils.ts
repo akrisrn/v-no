@@ -48,8 +48,9 @@ export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
 
-export function trimList(list: string[]) {
-  return Array.from(new Set(list.map(item => item.trim()).filter(item => item)));
+export function trimList(list: string[], distinct = true) {
+  list = list.map(item => item.trim()).filter(item => item);
+  return distinct ? Array.from(new Set(list)) : list;
 }
 
 export function getWrapRegExp(left: string, right: string = left, flags = '', isGreedy = false) {
