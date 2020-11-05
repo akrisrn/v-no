@@ -244,6 +244,14 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
+      const match = this.path.match(/\.(.*?)\.md$/);
+      if (match) {
+        if (this.confList.includes(match[1]) && this.selectConf !== match[1]) {
+          localStorage.setItem('conf', match[1]);
+          this.$router.go(0);
+          return;
+        }
+      }
       this.updateData();
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
