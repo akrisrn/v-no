@@ -10,6 +10,9 @@
         <template v-if="isHashMode">
           <a :href="`#${config.paths.category}`">{{ config.messages.category }}</a>
           <a :href="`#${config.paths.search}`">{{ config.messages.search }}</a>
+          <select v-if="selectConf && confList.length > 1" v-model="selectConf" @change="confChanged">
+            <option v-for="conf in confList" :key="conf" :value="conf">{{ conf }}</option>
+          </select>
         </template>
       </div>
     </div>
@@ -86,7 +89,7 @@
     removeClass,
     scroll,
   } from '@/ts/utils';
-  import { baseFiles, config } from '@/ts/config';
+  import { baseFiles, config, getSelectConf } from '@/ts/config';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
@@ -99,6 +102,9 @@
 
   @Component({ components: { Article } })
   export default class Home extends Vue {
+    selectConf = getSelectConf();
+    confList = this.config.multiConf ? Object.keys(this.config.multiConf).sort() : [];
+
     data = '';
     title = '';
     tags: string[] = [];
@@ -413,6 +419,11 @@
         this.isLoadingBacklinks = false;
         this.hasLoadedBacklinks = true;
       });
+    }
+
+    confChanged() {
+      localStorage.setItem('conf', this.selectConf);
+      location.href = this.baseUrl;
     }
 
     addInputBind(input: string, bind: () => void) {

@@ -41,11 +41,19 @@
         content: "|";
       }
 
-      &:first-of-type, &:last-of-type {
+      &:first-of-type, &:last-child {
         &:after {
           content: none;
         }
       }
+    }
+
+    select {
+      transition: background-color 0.5s;
+      color: $dark-font-color;
+      border: none;
+      outline: none;
+      background-color: $dark-main-background-color;
     }
   }
 }

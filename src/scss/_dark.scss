@@ -7,6 +7,10 @@ body.dark {
     img {
       filter: brightness(0.7);
     }
+
+    select {
+      background-color: $dark-background-color;
+    }
   }
 
   main {
