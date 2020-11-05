@@ -381,7 +381,7 @@
         const { data, flags } = getErrorFile({
           response: {
             status: 404,
-            statusText: config.messages.notFound,
+            statusText: 'Not Found',
           },
         } as AxiosError);
         this.setData(data, flags);

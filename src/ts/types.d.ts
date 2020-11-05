@@ -21,7 +21,6 @@ interface IConfig {
     lastUpdated: string;
     untagged: string;
     pageError: string;
-    notFound: string;
     searching: string;
     searchNothing: string;
     showBacklinks: string;

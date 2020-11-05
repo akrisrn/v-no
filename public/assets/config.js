@@ -21,11 +21,10 @@ vnoConfig = {
     lastUpdated: 'Last updated',
     untagged: 'untagged',
     pageError: 'There is something wrong with this page.',
-    notFound: 'Not Found',
     searching: 'Searching...',
     searchNothing: 'Nothing.',
     showBacklinks: 'Show backlinks.',
     noBacklinks: 'No backlinks.',
-    loading: 'Loading...'
+    loading: 'Loading...',
   },
 };
