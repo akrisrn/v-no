@@ -1,8 +1,10 @@
 @import "var";
 
 #toggle-dark, #toggle-zen, #to-top {
-  font-size: 24px;
+  font-family: $font-family;
+  font-size: 20px;
   position: fixed;
+  right: 16px;
   cursor: pointer;
   color: transparent;
 
@@ -12,24 +14,21 @@
 }
 
 #toggle-dark {
-  right: 16px;
+  font-size: 22px;
   bottom: 72px;
   transition: color 0.5s;
 }
 
 #toggle-zen {
-  right: 16px;
   bottom: 40px;
   transition: color 0.5s, transform 0.5s;
-  transform: rotate(-45deg);
 
   &.spin {
-    transform: rotate(0deg);
+    transform: rotate(45deg);
   }
 }
 
 #to-top {
-  right: 14px;
   bottom: 8px;
   transition: color 0.5s;
 

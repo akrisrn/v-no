@@ -49,12 +49,17 @@
     background-color: transparent;
   }
 
+  strong {
+    font-weight: bolder;
+  }
+
   h2 {
     padding-bottom: 0;
     border-bottom: none;
   }
 
   h2, h3, h4, h5, h6 {
+    font-weight: bolder;
     margin-bottom: 20px;
 
     &:hover .heading-link {
@@ -205,6 +210,7 @@
     }
 
     th {
+      font-weight: bolder;
       text-align: left;
     }
   }
@@ -329,13 +335,13 @@
 
       span {
         &.hl {
-          font-weight: 600;
+          font-weight: bolder;
           color: $danger-color-s;
         }
 
         &.ellipsis {
           font-size: 30px;
-          font-weight: 600;
+          font-weight: bolder;
           line-height: 0;
           margin: 0 3px;
           color: $info-color-s;
@@ -448,7 +454,7 @@
     color: $gray-font-color;
 
     &:before {
-      font-weight: 600;
+      font-weight: bolder;
       content: "Footnotes:";
     }
 
@@ -497,7 +503,7 @@
   button.btn {
     font-family: $font-family;
     font-size: $font-size-s;
-    font-weight: 600;
+    font-weight: bolder;
     margin: 0 6px 6px 0;
     padding: 6px 16px;
     cursor: pointer;

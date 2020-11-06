@@ -66,7 +66,7 @@
       </main>
     </transition>
     <span id="toggle-dark">★</span>
-    <span id="toggle-zen">◈</span>
+    <span id="toggle-zen">▣</span>
     <span id="to-top">と</span>
   </div>
 </template>
