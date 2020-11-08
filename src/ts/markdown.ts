@@ -1,4 +1,5 @@
 import { addBaseUrl, EIcon, evalFunction, getIcon, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import { config } from '@/ts/config';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -52,6 +53,10 @@ const markdownIt = new MarkdownIt({
   },
 });
 markdownIt.linkify.tlds([], false);
+
+markdownIt.renderer.rules.footnote_block_open = () => {
+  return `<section class="footnotes"><span>${config.messages.footnotes}</span><ol class="footnotes-list">`;
+};
 
 const getDefaultRenderRule = (name: string) => {
   return markdownIt.renderer.rules[name] || function(tokens, idx, options, env, self) {

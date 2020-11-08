@@ -450,12 +450,12 @@
 
   .footnotes {
     font-size: $font-size-s;
+    margin-top: 24px;
     transition: color 0.5s;
     color: $gray-font-color;
 
-    &:before {
+    > span {
       font-weight: bolder;
-      content: "Footnotes:";
     }
 
     ol {

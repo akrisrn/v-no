@@ -17,6 +17,7 @@ vnoConfig = {
     category: 'CATEGORIES',
     search: 'SEARCH',
     raw: 'Raw',
+    footnotes: 'Footnotes:',
     returnHome: 'Return to home',
     lastUpdated: 'Last updated',
     untagged: 'untagged',

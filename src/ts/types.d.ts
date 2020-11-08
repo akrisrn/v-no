@@ -17,6 +17,7 @@ interface IConfig {
     category: string;
     search: string;
     raw: string;
+    footnotes: string;
     returnHome: string;
     lastUpdated: string;
     untagged: string;
