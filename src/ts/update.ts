@@ -9,7 +9,6 @@ import {
   getDateFromPath,
   getLastedDate,
   getWrapRegExp,
-  isExternalLink,
   removeClass,
   scroll,
 } from '@/ts/utils';
@@ -123,152 +122,164 @@ export function updateImagePath() {
   });
 }
 
-export function updateLinkPath(updatedLinks: string[] = []) {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href]')) {
+export function updateLinkPath() {
+  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
-    if (!isExternalLink(href) && href.endsWith('.md')) {
-      if (text === '') {
-        if (!href.startsWith('#/')) {
-          continue;
+    if (href.endsWith('.md') && text === '') {
+      const path = href.substr(1);
+      a.innerText = path;
+      a.classList.add('snippet');
+      getFile(path).then(file => {
+        const flags = file.flags;
+        if (flags.title) {
+          a.innerText = flags.title;
         }
-        const path = href.substr(1);
-        a.innerText = path;
-        a.classList.add('snippet');
-        getFile(path).then(file => {
-          const flags = file.flags;
-          if (flags.title) {
-            a.innerText = flags.title;
+        const parent = a.parentElement!;
+        if (parent.tagName === 'LI') {
+          let isPass = true;
+          let hasQuote = false;
+          if (parent.childElementCount === 1) {
+            isPass = false;
+          } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+            isPass = false;
+            hasQuote = true;
           }
-          const parent = a.parentElement!;
-          if (parent.tagName === 'LI') {
-            let isPass = true;
-            let hasQuote = false;
-            if (parent.childElementCount === 1) {
-              isPass = false;
-            } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-              isPass = false;
-              hasQuote = true;
+          if (!isPass) {
+            parent.classList.add('article');
+            const bar = document.createElement('div');
+            bar.classList.add('bar');
+            flags.tags.forEach(tag => {
+              const itemTag = document.createElement('code');
+              itemTag.classList.add('item-tag');
+              const a = document.createElement('a');
+              a.innerText = tag;
+              a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+              itemTag.append(a);
+              bar.append(itemTag);
+            });
+            const date = getDateFromPath(path) || getLastedDate(flags.updated);
+            if (date) {
+              const itemDate = document.createElement('code');
+              itemDate.classList.add('item-date');
+              itemDate.innerText = date;
+              bar.append(itemDate);
             }
-            if (!isPass) {
-              parent.classList.add('article');
-              const bar = document.createElement('div');
-              bar.classList.add('bar');
-              flags.tags.forEach(tag => {
-                const itemTag = document.createElement('code');
-                itemTag.classList.add('item-tag');
-                const a = document.createElement('a');
-                a.innerText = tag;
-                a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
-                itemTag.append(a);
-                bar.append(itemTag);
-              });
-              const date = getDateFromPath(path) || getLastedDate(flags.updated);
-              if (date) {
-                const itemDate = document.createElement('code');
-                itemDate.classList.add('item-date');
-                itemDate.innerText = date;
-                bar.append(itemDate);
-              }
-              if (bar.childElementCount > 0) {
-                if (hasQuote) {
-                  parent.insertBefore(bar, parent.lastElementChild);
-                } else {
-                  parent.append(bar);
-                }
-              }
-            }
-          }
-        }).finally(() => {
-          removeClass(a, 'snippet');
-        });
-      } else if (text.match(/^\+(?:#.+)?$/)) {
-        if (!href.startsWith('/')) {
-          continue;
-        }
-        if (updatedLinks.includes(href)) {
-          continue;
-        }
-        updatedLinks.push(href);
-        const params: Dict<string> = {};
-        const match = text.match(/#(.+)$/);
-        if (match) {
-          match[1].split('|').forEach((seg, i) => {
-            let param = seg;
-            const paramMatch = seg.match(/(.+?)=(.+)/);
-            if (paramMatch) {
-              param = paramMatch[2];
-              params[paramMatch[1]] = param;
-            }
-            params[i + 1] = param;
-          });
-        }
-        a.classList.add('snippet');
-        const path = cleanBaseUrl(href);
-        getFile(path).then(file => {
-          let data = degradeHeading(file.data).split('\n').map(line => {
-            const regexp = getWrapRegExp('{{', '}}', 'g');
-            const lineCopy = line;
-            let match = regexp.exec(lineCopy);
-            while (match) {
-              let defaultValue: string;
-              [match[1], defaultValue] = match[1].split('|');
-              const param = params[match[1]];
-              let result: string;
-              if (param !== undefined) {
-                result = param;
-              } else if (defaultValue !== undefined) {
-                result = defaultValue;
+            if (bar.childElementCount > 0) {
+              if (hasQuote) {
+                parent.insertBefore(bar, parent.lastElementChild);
               } else {
-                result = 'undefined';
+                parent.append(bar);
               }
-              line = line.replace(match[0], result.replace(/\\n/g, '\n'));
-              match = regexp.exec(lineCopy);
             }
-            return line;
-          }).join('\n');
-          const clip = params['clip'];
-          if (clip !== undefined) {
-            const slips = data.split('--8<--');
-            let num = parseInt(clip);
-            if (isNaN(num)) {
-              num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
-            } else if (num < 0) {
-              num = 0;
-            } else if (num >= slips.length) {
-              num = slips.length - 1;
-            }
-            data = slips[num];
           }
-          // 规避递归节点重复问题。
-          try {
-            a.parentElement!.outerHTML = renderMD(path, data);
-          } catch (e) {
-            return;
+        }
+      }).finally(() => {
+        removeClass(a, 'snippet');
+      });
+    }
+  }
+}
+
+export function updateSnippet(updatedLinks: string[] = []) {
+  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".md"]')) {
+    const text = a.innerText;
+    const href = a.getAttribute('href')!;
+    if (href.startsWith('/') && text.match(/^\+(?:#.+)?$/)) {
+      if (updatedLinks.includes(href)) {
+        continue;
+      }
+      updatedLinks.push(href);
+      const params: Dict<string> = {};
+      const match = text.match(/#(.+)$/);
+      if (match) {
+        match[1].split('|').forEach((seg, i) => {
+          let param = seg;
+          const paramMatch = seg.match(/(.+?)=(.+)/);
+          if (paramMatch) {
+            param = paramMatch[2];
+            params[paramMatch[1]] = param;
           }
-          updateDD();
-          updateToc();
-          updateFootnote();
-          updateImagePath();
-          updateLinkPath(updatedLinks);
-          Prism.highlightAll();
-        }).catch(error => {
-          a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
+          params[i + 1] = param;
         });
       }
-    }
-    if (text === '*') {
-      if (href.endsWith('js')) {
-        if (!document.querySelector(`script[src$='${href}']`)) {
-          const script = document.createElement('script');
-          script.src = href;
-          script.classList.add('custom');
-          document.body.appendChild(script);
+      a.classList.add('snippet');
+      const path = cleanBaseUrl(href);
+      getFile(path).then(file => {
+        let data = degradeHeading(file.data).split('\n').map(line => {
+          const regexp = getWrapRegExp('{{', '}}', 'g');
+          const lineCopy = line;
+          let match = regexp.exec(lineCopy);
+          while (match) {
+            let defaultValue: string;
+            [match[1], defaultValue] = match[1].split('|');
+            const param = params[match[1]];
+            let result: string;
+            if (param !== undefined) {
+              result = param;
+            } else if (defaultValue !== undefined) {
+              result = defaultValue;
+            } else {
+              result = 'undefined';
+            }
+            line = line.replace(match[0], result.replace(/\\n/g, '\n'));
+            match = regexp.exec(lineCopy);
+          }
+          return line;
+        }).join('\n');
+        const clip = params['clip'];
+        if (clip !== undefined) {
+          const slips = data.split('--8<--');
+          let num = parseInt(clip);
+          if (isNaN(num)) {
+            num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
+          } else if (num < 0) {
+            num = 0;
+          } else if (num >= slips.length) {
+            num = slips.length - 1;
+          }
+          data = slips[num];
         }
-        a.parentElement!.remove();
+        // 规避递归节点重复问题。
+        try {
+          a.parentElement!.outerHTML = renderMD(path, data);
+        } catch (e) {
+          return;
+        }
+        updateDD();
+        updateToc();
+        updateFootnote();
+        updateImagePath();
+        updateLinkPath();
+        updateSnippet(updatedLinks);
+        Prism.highlightAll();
+      }).catch(error => {
+        a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
+      });
+    }
+  }
+}
+
+export function updateCustomScript() {
+  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]')) {
+    if (a.innerText === '*') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`script[src='${href}']`)) {
+        const script = document.createElement('script');
+        script.src = href;
+        script.classList.add('custom');
+        document.body.appendChild(script);
       }
-    } else if (text === '$' && href.endsWith('css')) {
-      if (!document.querySelector(`link[href$='${href}']`)) {
+      a.parentElement!.remove();
+    }
+  }
+}
+
+export function updateCustomStyle() {
+  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]')) {
+    if (a.innerText === '$') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`link[href='${href}']`)) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
