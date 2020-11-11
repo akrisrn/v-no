@@ -17,18 +17,18 @@ import Prism from 'prismjs';
 
 function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
-    if (p.innerText.startsWith(': ')) {
+    if (p.innerHTML.startsWith(': ')) {
       const dl = document.createElement('dl');
       const dd = document.createElement('dd');
       dl.append(dd);
-      dd.innerHTML = p.innerHTML.substr(2);
+      dd.innerHTML = p.innerHTML.substr(2).trimStart();
       p.outerHTML = dl.outerHTML;
     }
   });
   document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
-    if (dt.innerText.startsWith(': ')) {
+    if (dt.innerHTML.startsWith(': ')) {
       const dd = document.createElement('dd');
-      dd.innerHTML = dt.innerHTML.substr(2);
+      dd.innerHTML = dt.innerHTML.substr(2).trimStart();
       dt.outerHTML = dd.outerHTML;
     }
   });
@@ -67,22 +67,20 @@ function updateToc() {
 
 function updateFootnote() {
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach((backref, i) => {
-    const fnref = document.getElementById(`fnref${i + 1}`);
-    if (fnref) {
-      fnref.addEventListener('click', e => {
-        e.preventDefault();
-        scroll(backref.offsetTop - 10);
-      });
-      backref.addEventListener('click', e => {
-        e.preventDefault();
-        scroll(fnref.offsetTop - 10);
-      });
-    }
+    const fnref = document.getElementById(`fnref${i + 1}`)!;
+    fnref.addEventListener('click', e => {
+      e.preventDefault();
+      scroll(backref.offsetTop - 10);
+    });
+    backref.addEventListener('click', e => {
+      e.preventDefault();
+      scroll(fnref.offsetTop - 10);
+    });
   });
 }
 
 function updateImagePath() {
-  document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach(img => {
+  document.querySelectorAll<HTMLImageElement>('#cover img, article img').forEach(img => {
     let parent = img.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
@@ -123,7 +121,7 @@ function updateImagePath() {
 }
 
 function updateLinkPath() {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]')) {
+  document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]').forEach(a => {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
     if (href.endsWith('.md') && text === '') {
@@ -178,7 +176,7 @@ function updateLinkPath() {
         removeClass(a, 'snippet');
       });
     }
-  }
+  });
 }
 
 function updateSnippet(updatedLinks: string[] = []) {
@@ -256,7 +254,7 @@ function updateSnippet(updatedLinks: string[] = []) {
 }
 
 function updateCustomScript() {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]')) {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
     if (a.innerText === '*') {
       const href = a.getAttribute('href')!;
       if (!document.querySelector(`script[src='${href}']`)) {
@@ -267,11 +265,11 @@ function updateCustomScript() {
       }
       a.parentElement!.remove();
     }
-  }
+  });
 }
 
 function updateCustomStyle() {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]')) {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
     if (a.innerText === '$') {
       const href = a.getAttribute('href')!;
       if (!document.querySelector(`link[href='${href}']`)) {
@@ -284,7 +282,7 @@ function updateCustomStyle() {
       }
       a.parentElement!.remove();
     }
-  }
+  });
 }
 
 export function updateDom() {

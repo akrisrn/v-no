@@ -77,7 +77,6 @@
     addBaseUrl,
     addTempClass,
     buildQueryContent,
-    degradeHeading,
     EFlag,
     EIcon,
     exposeToWindow,
@@ -375,7 +374,7 @@
           this.isError = false;
           let data = files[0].data;
           if (files.length > 1) {
-            data += '\n\n' + degradeHeading(files[1].data);
+            data += '\n\n' + files[1].data;
           }
           this.setData(data, files[0].flags);
           if (!isFirst) {

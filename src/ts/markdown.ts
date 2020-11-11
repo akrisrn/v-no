@@ -165,9 +165,9 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 
 export function renderMD(path: string, data: string, isCategory = false) {
   const tocRegExp = /^\[toc]$/im;
-  const headingRegExp = getWrapRegExp('^(##{1,5})', '$');
+  const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g', true);
-  const needRenderToc = !!data.match(tocRegExp);
+  const needRenderToc = tocRegExp.test(data);
   let firstHeading = '';
   const headingCount: Dict<number> = {};
   const headingList: string[] = [];
