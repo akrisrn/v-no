@@ -15,7 +15,7 @@ import {
 import { config } from '@/ts/config';
 import Prism from 'prismjs';
 
-export function updateDD() {
+function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
     if (p.innerText.startsWith(': ')) {
       const dl = document.createElement('dl');
@@ -34,7 +34,7 @@ export function updateDD() {
   });
 }
 
-export function updateToc() {
+function updateToc() {
   document.querySelectorAll<HTMLLinkElement>('.toc a').forEach(a => {
     if (a.innerText.startsWith('/') && a.innerText.endsWith('.md')) {
       a.classList.add('snippet');
@@ -65,7 +65,7 @@ export function updateToc() {
   });
 }
 
-export function updateFootnote() {
+function updateFootnote() {
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach((backref, i) => {
     const fnref = document.getElementById(`fnref${i + 1}`);
     if (fnref) {
@@ -81,7 +81,7 @@ export function updateFootnote() {
   });
 }
 
-export function updateImagePath() {
+function updateImagePath() {
   document.querySelectorAll<HTMLImageElement>('article img, #cover img').forEach(img => {
     let parent = img.parentElement!;
     if (parent.tagName === 'A') {
@@ -122,7 +122,7 @@ export function updateImagePath() {
   });
 }
 
-export function updateLinkPath() {
+function updateLinkPath() {
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
@@ -181,7 +181,7 @@ export function updateLinkPath() {
   }
 }
 
-export function updateSnippet(updatedLinks: string[] = []) {
+function updateSnippet(updatedLinks: string[] = []) {
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".md"]')) {
     const text = a.innerText;
     const href = a.getAttribute('href')!;
@@ -246,13 +246,8 @@ export function updateSnippet(updatedLinks: string[] = []) {
         } catch (e) {
           return;
         }
-        updateDD();
-        updateToc();
-        updateFootnote();
-        updateImagePath();
-        updateLinkPath();
         updateSnippet(updatedLinks);
-        Prism.highlightAll();
+        updateDom();
       }).catch(error => {
         a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
       });
@@ -260,7 +255,7 @@ export function updateSnippet(updatedLinks: string[] = []) {
   }
 }
 
-export function updateCustomScript() {
+function updateCustomScript() {
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]')) {
     if (a.innerText === '*') {
       const href = a.getAttribute('href')!;
@@ -275,7 +270,7 @@ export function updateCustomScript() {
   }
 }
 
-export function updateCustomStyle() {
+function updateCustomStyle() {
   for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]')) {
     if (a.innerText === '$') {
       const href = a.getAttribute('href')!;
@@ -290,6 +285,18 @@ export function updateCustomStyle() {
       a.parentElement!.remove();
     }
   }
+}
+
+export function updateDom() {
+  updateDD();
+  updateToc();
+  updateFootnote();
+  updateImagePath();
+  updateLinkPath();
+  updateSnippet();
+  updateCustomScript();
+  updateCustomStyle();
+  Prism.highlightAll();
 }
 
 function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
@@ -319,14 +326,7 @@ function updateCategoryListActual(syncData: string, updateData: (data: string) =
       const count = `<span class="count">( ${tags[key].length} )</span>`;
       return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
     }).join('\n\n')));
-    setTimeout(() => {
-      updateDD();
-      updateToc();
-      updateFootnote();
-      updateImagePath();
-      updateLinkPath();
-      Prism.highlightAll();
-    }, 0);
+    setTimeout(() => updateDom(), 0);
   };
 }
 

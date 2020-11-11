@@ -4,18 +4,9 @@
 
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
-  import {
-    updateCategoryList,
-    updateDD,
-    updateFootnote,
-    updateImagePath,
-    updateLinkPath,
-    updateSearchList,
-    updateToc,
-  } from '@/ts/update';
+  import { updateCategoryList, updateDom, updateSearchList } from '@/ts/update';
   import { exposeToWindow } from '@/ts/utils';
   import { config } from '@/ts/config';
-  import Prism from 'prismjs';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
 
   @Component
@@ -42,12 +33,7 @@
       exposeToWindow({
         renderMD: (data: string) => renderMD(this.path, data),
         updateMD: () => {
-          updateDD();
-          updateToc();
-          updateFootnote();
-          updateImagePath();
-          updateLinkPath();
-          Prism.highlightAll();
+          updateDom();
         },
       });
     }
@@ -56,11 +42,6 @@
     mounted() {
       // 规避 mount 后仍然可以查询到旧节点的问题。
       setTimeout(() => {
-        updateDD();
-        updateToc();
-        updateFootnote();
-        updateImagePath();
-        updateLinkPath();
         if (this.isCategory) {
           updateCategoryList(this.syncData, (data: string) => {
             this.syncData = data;
@@ -68,7 +49,7 @@
         } else if (this.isSearch) {
           updateSearchList(this.params);
         }
-        Prism.highlightAll();
+        updateDom();
       }, 0);
     }
   }
