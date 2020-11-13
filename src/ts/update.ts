@@ -177,6 +177,49 @@ function updateLinkPath() {
   });
 }
 
+function updateCustomScript() {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
+    if (a.innerText === '*') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`script[src='${href}']`)) {
+        const script = document.createElement('script');
+        script.src = href;
+        script.classList.add('custom');
+        document.body.appendChild(script);
+      }
+      a.parentElement!.remove();
+    }
+  });
+}
+
+function updateCustomStyle() {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
+    if (a.innerText === '$') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`link[href='${href}']`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = href;
+        link.classList.add('custom');
+        document.head.appendChild(link);
+      }
+      a.parentElement!.remove();
+    }
+  });
+}
+
+export function updateDom() {
+  updateDD();
+  updateToc();
+  updateFootnote();
+  updateImagePath();
+  updateLinkPath();
+  updateCustomScript();
+  updateCustomStyle();
+  Prism.highlightAll();
+}
+
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
   const regexp = /^(#{2,5}\s+)?\[\+(#.+)?]\((\/.*?\.md)\)$/gm;
@@ -262,49 +305,6 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     }
   }
   return data;
-}
-
-function updateCustomScript() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
-    if (a.innerText === '*') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`script[src='${href}']`)) {
-        const script = document.createElement('script');
-        script.src = href;
-        script.classList.add('custom');
-        document.body.appendChild(script);
-      }
-      a.parentElement!.remove();
-    }
-  });
-}
-
-function updateCustomStyle() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
-    if (a.innerText === '$') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`link[href='${href}']`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = href;
-        link.classList.add('custom');
-        document.head.appendChild(link);
-      }
-      a.parentElement!.remove();
-    }
-  });
-}
-
-export function updateDom() {
-  updateDD();
-  updateToc();
-  updateFootnote();
-  updateImagePath();
-  updateLinkPath();
-  updateCustomScript();
-  updateCustomStyle();
-  Prism.highlightAll();
 }
 
 export async function updateCategoryList(data: string) {
