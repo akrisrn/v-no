@@ -163,7 +163,7 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
-export function renderMD(path: string, data: string, isCategory = false) {
+export function renderMD(path: string, data: string) {
   const tocRegExp = /^\[toc]$/im;
   const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g', true);
@@ -211,7 +211,7 @@ export function renderMD(path: string, data: string, isCategory = false) {
       try {
         result = evalFunction(evalMatch[1], { path, data });
       } catch (e) {
-        result = `${e.name}: ${e.message}`;
+        result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalMatch[1]}\n\`\`\`\n:::`;
       }
       line = line.replace(evalMatch[0], result);
       evalMatch = evalRegExp.exec(lineCopy);
@@ -225,49 +225,31 @@ export function renderMD(path: string, data: string, isCategory = false) {
       tocDiv.classList.add('toc');
       let left = headingLength;
       let right = headingLength;
-      if (!isCategory) {
-        if (headingLength > 11) {
-          left = Math.ceil(headingLength / 3);
-          while (headingList[left] && !headingList[left].startsWith('-')) {
-            left += 1;
-          }
-          if (left < headingLength) {
-            let count = 0;
-            for (let i = 0; i < left; i++) {
-              if (headingList[i].startsWith('-')) {
-                count++;
-              }
-            }
-            right = left + count;
-            while (headingList[right] && !headingList[right].startsWith('-')) {
-              right += 1;
+      if (headingLength > 11) {
+        left = Math.ceil(headingLength / 3);
+        while (headingList[left] && !headingList[left].startsWith('-')) {
+          left += 1;
+        }
+        if (left < headingLength) {
+          let count = 0;
+          for (let i = 0; i < left; i++) {
+            if (headingList[i].startsWith('-')) {
+              count++;
             }
           }
-        } else if (headingLength > 7) {
-          left = Math.ceil(headingLength / 2);
-          while (headingList[left] && !headingList[left].startsWith('-')) {
-            left += 1;
+          right = left + count;
+          while (headingList[right] && !headingList[right].startsWith('-')) {
+            right += 1;
           }
+        }
+      } else if (headingLength > 7) {
+        left = Math.ceil(headingLength / 2);
+        while (headingList[left] && !headingList[left].startsWith('-')) {
+          left += 1;
         }
       }
       if (left >= headingLength) {
         tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
-        if (isCategory) {
-          tocDiv.firstElementChild!.classList.add('tags');
-          tocDiv.querySelectorAll('a').forEach(a => {
-            const li = a.parentElement!;
-            const code = document.createElement('code');
-            li.append(code);
-            code.append(a);
-            const count = a.querySelector<HTMLSpanElement>('.count')!;
-            a.removeChild(count);
-            li.append(count);
-            const fontSize = Math.log10(parseInt(count.innerText.substr(1))) + 1;
-            if (fontSize > 1) {
-              code.style.fontSize = fontSize + 'em';
-            }
-          });
-        }
       } else if (right >= headingLength) {
         tocDiv.innerHTML = markdownIt.render(headingList.slice(0, left).join('\n')) +
           markdownIt.render(headingList.slice(left, headingLength).join('\n'));
@@ -282,6 +264,12 @@ export function renderMD(path: string, data: string, isCategory = false) {
         }
       }
       tocDiv.querySelectorAll('a').forEach(a => {
+        const count = a.querySelector<HTMLSpanElement>('.count');
+        if (count) {
+          const li = a.parentElement!;
+          a.removeChild(count);
+          li.append(count);
+        }
         a.setAttribute('anchor', a.getAttribute('href')!);
         a.removeAttribute('href');
         a.removeAttribute('target');

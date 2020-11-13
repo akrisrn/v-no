@@ -16,7 +16,7 @@
     @Prop() params!: Dict<string>;
 
     get markdown() {
-      return renderMD(this.path, this.syncData, this.isCategory);
+      return renderMD(this.path, this.syncData);
     }
 
     get isCategory() {
