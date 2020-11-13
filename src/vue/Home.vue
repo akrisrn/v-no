@@ -408,7 +408,7 @@
 
     getBacklinks() {
       this.isLoadingBacklinks = true;
-      getFiles((files, backlinks) => {
+      getFiles().then(({ files, backlinks }) => {
         this.backlinkFiles = (backlinks[this.path] || []).map(path => {
           const flags = files[path].flags;
           return {

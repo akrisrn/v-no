@@ -2,17 +2,7 @@ import { addBaseUrl, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
 import { baseFiles, config } from '@/ts/config';
 import axios, { AxiosError } from 'axios';
 
-let isCompleted = false;
-const cachedFiles: Dict<TFile> = {};
 const cachedBacklinks: Dict<string[]> = {};
-
-function isCacheCompleted() {
-  return isCompleted;
-}
-
-function completeCache() {
-  isCompleted = true;
-}
 
 function parseData(path: string, data: string): TFile {
   const flags: IFlags = {
@@ -63,6 +53,7 @@ function parseData(path: string, data: string): TFile {
 }
 
 const isRequesting: Dict<boolean> = {};
+const cachedFiles: Dict<TFile> = {};
 
 export async function getFile(path: string) {
   while (isRequesting[path]) {
@@ -100,16 +91,15 @@ async function walkFiles(files: TFile[]) {
   }
 }
 
-export function getFiles(func: (files: Dict<TFile>, backlinks: Dict<string[]>) => void) {
-  if (isCacheCompleted()) {
-    func(cachedFiles, cachedBacklinks);
-  } else {
-    Promise.all(baseFiles.map(path => getFile(path))).then(async files => {
-      await walkFiles(files);
-      completeCache();
-      func(cachedFiles, cachedBacklinks);
-    });
+let isCacheCompleted = false;
+
+export async function getFiles() {
+  if (!isCacheCompleted) {
+    const files = await Promise.all(baseFiles.map(path => getFile(path)));
+    await walkFiles(files);
+    isCacheCompleted = true;
   }
+  return { files: cachedFiles, backlinks: cachedBacklinks };
 }
 
 export function getErrorFile(error: AxiosError) {
