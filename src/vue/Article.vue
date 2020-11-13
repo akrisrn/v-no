@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
-  import { updateCategoryList, updateDom, updateSearchList } from '@/ts/update';
+  import { updateCategoryList, updateDom, updateSearchList, updateSnippet } from '@/ts/update';
   import { exposeToWindow } from '@/ts/utils';
   import { config } from '@/ts/config';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
@@ -33,6 +33,12 @@
       exposeToWindow({
         renderMD: (data: string) => renderMD(this.path, data),
         updateMD: () => {
+          updateSnippet(this.syncData).then(data => {
+            this.syncData = data;
+            setTimeout(() => {
+              updateDom();
+            }, 0);
+          });
           updateDom();
         },
       });
@@ -40,15 +46,25 @@
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
-      // 规避 mount 后仍然可以查询到旧节点的问题。
-      setTimeout(() => {
+      updateSnippet(this.syncData).then(data => {
         if (this.isCategory) {
-          updateCategoryList(this.syncData, (data: string) => {
+          updateCategoryList(data).then(data => {
             this.syncData = data;
+            setTimeout(() => {
+              updateDom();
+            }, 0);
           });
-        } else if (this.isSearch) {
-          updateSearchList(this.params);
+        } else {
+          this.syncData = data;
+          setTimeout(() => {
+            if (this.isSearch) {
+              updateSearchList(this.params);
+            }
+            updateDom();
+          }, 0);
         }
+      });
+      setTimeout(() => {
         updateDom();
       }, 0);
     }
