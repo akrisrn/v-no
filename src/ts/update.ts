@@ -1,8 +1,6 @@
 import { getFile, getFiles } from '@/ts/file';
-import { renderMD } from '@/ts/markdown';
 import {
   buildQueryContent,
-  cleanBaseUrl,
   degradeHeading,
   EFlag,
   escapeHTML,
@@ -179,55 +177,76 @@ function updateLinkPath() {
   });
 }
 
-function updateSnippet(updatedLinks: string[] = []) {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href$=".md"]')) {
-    const text = a.innerText;
-    const href = a.getAttribute('href')!;
-    if (href.startsWith('/') && text.match(/^\+(?:#.+)?$/)) {
-      if (updatedLinks.includes(href)) {
-        continue;
+export async function updateSnippet(data: string, updatedPaths: string[] = []) {
+  const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
+  const regexp = /^(#{2,5}\s+)?\[\+(#.+)?]\((\/.*?\.md)\)$/gm;
+  let match = regexp.exec(data);
+  while (match) {
+    const path = match[3];
+    if (!updatedPaths.includes(path)) {
+      let snippetDict = dict[path];
+      if (snippetDict === undefined) {
+        snippetDict = {};
+        dict[path] = snippetDict;
       }
-      updatedLinks.push(href);
-      const params: Dict<string> = {};
-      const match = text.match(/#(.+)$/);
-      if (match) {
-        match[1].split('|').forEach((seg, i) => {
-          let param = seg;
-          const paramMatch = seg.match(/(.+?)=(.+)/);
-          if (paramMatch) {
-            param = paramMatch[2];
-            params[paramMatch[1]] = param;
-          }
-          params[i + 1] = param;
-        });
-      }
-      a.classList.add('snippet');
-      const path = cleanBaseUrl(href);
-      getFile(path).then(file => {
-        let data = degradeHeading(file.data).split('\n').map(line => {
-          const regexp = getWrapRegExp('{{', '}}', 'g');
-          const lineCopy = line;
-          let match = regexp.exec(lineCopy);
-          while (match) {
-            let defaultValue: string;
-            [match[1], defaultValue] = match[1].split('|');
-            const param = params[match[1]];
-            let result: string;
-            if (param !== undefined) {
-              result = param;
-            } else if (defaultValue !== undefined) {
-              result = defaultValue;
-            } else {
-              result = 'undefined';
+      if (snippetDict[match[0]] === undefined) {
+        const heading = match[1] ? match[1].trimEnd().length : 0;
+        const params: Dict<string> = {};
+        if (match[2]) {
+          match[2].substr(1).split('|').forEach((seg, i) => {
+            let param = seg;
+            const paramMatch = seg.match(/(.+?)=(.+)/);
+            if (paramMatch) {
+              param = paramMatch[2];
+              params[paramMatch[1]] = param;
             }
-            line = line.replace(match[0], result.replace(/\\n/g, '\n'));
-            match = regexp.exec(lineCopy);
+            params[i + 1] = param;
+          });
+        }
+        snippetDict[match[0]] = { heading, params };
+      }
+    }
+    match = regexp.exec(data);
+  }
+  const paths = Object.keys(dict);
+  if (paths.length === 0) {
+    return data;
+  }
+  const files = await Promise.all(paths.map(path => {
+    updatedPaths.push(path);
+    return getFile(path);
+  }));
+  for (const file of files) {
+    const title = file.flags.title || file.path;
+    const snippetDict = dict[file.path];
+    for (const match of Object.keys(snippetDict)) {
+      const { heading, params } = snippetDict[match];
+      let snippetData = heading > 1 ? degradeHeading(`# [${title}](#${file.path})\n\n${file.data}`, heading - 1) : file.data;
+      snippetData = snippetData.split('\n').map(line => {
+        const regexp = getWrapRegExp('{{', '}}', 'g');
+        const lineCopy = line;
+        let match = regexp.exec(lineCopy);
+        while (match) {
+          let defaultValue: string;
+          [match[1], defaultValue] = match[1].split('|');
+          const param = params[match[1]];
+          let result: string;
+          if (param !== undefined) {
+            result = param;
+          } else if (defaultValue !== undefined) {
+            result = defaultValue;
+          } else {
+            result = 'undefined';
           }
-          return line;
-        }).join('\n');
-        const clip = params['clip'];
-        if (clip !== undefined) {
-          const slips = data.split('--8<--');
+          line = line.replace(match[0], result.replace(/\\n/g, '\n'));
+          match = regexp.exec(lineCopy);
+        }
+        return line;
+      }).join('\n');
+      const clip = params['clip'];
+      if (clip !== undefined) {
+        const slips = snippetData.split('--8<--');
+        if (slips.length > 1) {
           let num = parseInt(clip);
           if (isNaN(num)) {
             num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
@@ -236,21 +255,13 @@ function updateSnippet(updatedLinks: string[] = []) {
           } else if (num >= slips.length) {
             num = slips.length - 1;
           }
-          data = slips[num];
+          snippetData = slips[num];
         }
-        // 规避递归节点重复问题。
-        try {
-          a.parentElement!.outerHTML = renderMD(path, data);
-        } catch (e) {
-          return;
-        }
-        updateSnippet(updatedLinks);
-        updateDom();
-      }).catch(error => {
-        a.parentElement!.innerHTML = `${error.response.status} ${error.response.statusText}`;
-      });
+      }
+      data = data.replaceAll(match, await updateSnippet(snippetData, [...updatedPaths]));
     }
   }
+  return data;
 }
 
 function updateCustomScript() {
@@ -291,7 +302,6 @@ export function updateDom() {
   updateFootnote();
   updateImagePath();
   updateLinkPath();
-  updateSnippet();
   updateCustomScript();
   updateCustomStyle();
   Prism.highlightAll();

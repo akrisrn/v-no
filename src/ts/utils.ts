@@ -92,6 +92,7 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
+// noinspection JSUnusedGlobalSymbols
 export function cleanBaseUrl(path: string) {
   if (path.startsWith('/') && baseUrl !== '/' && path.startsWith(baseUrl)) {
     return path.substr(baseUrl.length - 1);
@@ -99,8 +100,8 @@ export function cleanBaseUrl(path: string) {
   return path;
 }
 
-export function degradeHeading(data: string) {
-  return data.replace(/^(#{2,5}) /gm, '$1# ');
+export function degradeHeading(data: string, level: number) {
+  return data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `).replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
 }
 
 export function formatDate(date: Date) {
