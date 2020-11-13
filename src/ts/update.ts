@@ -297,39 +297,37 @@ export function updateDom() {
   Prism.highlightAll();
 }
 
-function updateCategoryListActual(syncData: string, updateData: (data: string) => void) {
-  return (files: Dict<TFile>) => {
-    const paths = Object.keys(files);
-    const tags: Dict<string[]> = {};
-    const untagged = [];
-    for (const path of paths) {
-      const flags = files[path].flags;
-      if (flags.tags.length === 0) {
-        untagged.push(`- [#](${path})`);
-        continue;
+export async function updateCategoryList(data: string) {
+  const listRegExp = /^\[list]$/im;
+  if (!listRegExp.test(data)) {
+    return data;
+  }
+  const { files } = await getFiles();
+  const paths = Object.keys(files);
+  const tags: Dict<string[]> = {};
+  const untagged = [];
+  for (const path of paths) {
+    const flags = files[path].flags;
+    if (flags.tags.length === 0) {
+      untagged.push(`- [#](${path})`);
+      continue;
+    }
+    flags.tags.forEach(tag => {
+      if (tags[tag] === undefined) {
+        tags[tag] = [];
       }
-      flags.tags.forEach(tag => {
-        if (tags[tag] === undefined) {
-          tags[tag] = [];
-        }
-        tags[tag].push(`- [#](${path})`);
-      });
-    }
-    const sortedKeys = Object.keys(tags).sort();
-    if (untagged.length > 0) {
-      sortedKeys.unshift(config.messages.untagged);
-      tags[config.messages.untagged] = untagged;
-    }
-    updateData(syncData.replace(/^\[list]$/im, sortedKeys.map(key => {
-      const count = `<span class="count">( ${tags[key].length} )</span>`;
-      return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
-    }).join('\n\n')));
-    setTimeout(() => updateDom(), 0);
-  };
-}
-
-export function updateCategoryList(syncData: string, updateData: (data: string) => void) {
-  getFiles(updateCategoryListActual(syncData, updateData));
+      tags[tag].push(`- [#](${path})`);
+    });
+  }
+  const sortedKeys = Object.keys(tags).sort();
+  if (untagged.length > 0) {
+    sortedKeys.unshift(config.messages.untagged);
+    tags[config.messages.untagged] = untagged;
+  }
+  return data.replace(listRegExp, sortedKeys.map(key => {
+    const count = `<span class="count">( ${tags[key].length} )</span>`;
+    return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
+  }).join('\n\n'));
 }
 
 export async function updateSearchList(params: Dict<string>) {
