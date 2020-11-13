@@ -332,10 +332,24 @@ export function updateCategoryList(syncData: string, updateData: (data: string) 
   getFiles(updateCategoryListActual(syncData, updateData));
 }
 
-function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
-  resultUl.innerText = config.messages.searching;
-  const timeStart = new Date().getTime();
-  return (files: Dict<TFile>) => {
+export async function updateSearchList(params: Dict<string>) {
+  let content = params.content !== undefined ? decodeURIComponent(params.content.trim()) : '';
+  const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
+  if (searchInput) {
+    searchInput.value = content;
+    searchInput.addEventListener('keyup', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        searchInput.value = searchInput.value.trim();
+        const param = searchInput.value ? buildQueryContent(searchInput.value) : '';
+        const indexOf = location.href.indexOf('?');
+        location.href = (indexOf >= 0 ? location.href.substring(0, indexOf) : location.href) + param;
+      }
+    });
+  }
+  const resultUl = document.querySelector<HTMLUListElement>('ul#result');
+  if (content && resultUl) {
+    content = content.toLowerCase();
     let queryFlag = '';
     let queryParam = '';
     const match = content.match(/^@(\S+?):\s*(.*)$/);
@@ -343,6 +357,9 @@ function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
       queryFlag = match[1];
       queryParam = match[2];
     }
+    resultUl.innerText = config.messages.searching;
+    const timeStart = new Date().getTime();
+    const { files } = await getFiles();
     resultUl.innerText = '';
     const paths = Object.keys(files);
     paths.forEach(path => {
@@ -429,26 +446,5 @@ function updateSearchListActual(content: string, resultUl: HTMLUListElement) {
     if (resultUl.childElementCount === 0) {
       resultUl.innerText = config.messages.searchNothing;
     }
-  };
-}
-
-export function updateSearchList(params: Dict<string>) {
-  const content = params.content !== undefined ? decodeURIComponent(params.content.trim()) : '';
-  const resultUl = document.querySelector<HTMLUListElement>('ul#result');
-  const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
-  if (searchInput) {
-    searchInput.value = content;
-    searchInput.addEventListener('keyup', event => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        searchInput.value = searchInput.value.trim();
-        const param = searchInput.value ? buildQueryContent(searchInput.value) : '';
-        const indexOf = location.href.indexOf('?');
-        location.href = (indexOf >= 0 ? location.href.substring(0, indexOf) : location.href) + param;
-      }
-    });
-  }
-  if (content && resultUl) {
-    getFiles(updateSearchListActual(content.toLowerCase(), resultUl));
   }
 }
