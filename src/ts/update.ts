@@ -71,8 +71,8 @@ function updateToc() {
 }
 
 function updateFootnote() {
-  document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach((backref, i) => {
-    const fnref = document.getElementById(`fnref${i + 1}`)!;
+  document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
+    const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
     fnref.addEventListener('click', e => {
       e.preventDefault();
       scroll(backref.offsetTop - 10);
