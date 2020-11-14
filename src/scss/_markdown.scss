@@ -23,7 +23,7 @@
     }
 
     &:not([href]) {
-      color: $gray-font-color;
+      color: $link-font-color;
     }
 
     svg {
