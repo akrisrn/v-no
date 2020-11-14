@@ -139,19 +139,31 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const textToken = tokens[idx + 1];
   const closeToken = textToken.type === 'text' ? tokens[idx + 2] : textToken;
   const text = textToken.content;
-  const href = token.attrGet('href')!;
+  let href = token.attrGet('href')!;
   if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     closeToken.attrSet('external', 'true');
-  } else if (text.endsWith('#') && href.startsWith('/') && href.endsWith('.md')) {
-    textToken.content = text.substr(0, text.length - 1);
-    token.attrSet('href', `#${href}`);
   } else {
-    if (href && !href.startsWith('#/') && !href.endsWith('/')) {
+    if (href.startsWith('/')) {
+      if (href.endsWith('.md')) {
+        if (text.endsWith('#')) {
+          textToken.content = text.substr(0, text.length - 1);
+          href = `#${href}`;
+        } else if (/^\+(#.+)?$/.test(text)) {
+          token.attrJoin('class', 'snippet');
+          href = addBaseUrl(href);
+        } else {
+          href = addBaseUrl(href);
+        }
+      } else {
+        href = addBaseUrl(href);
+      }
+      token.attrSet('href', href);
+    }
+    if (!href.startsWith('#') && href !== addBaseUrl('/')) {
       token.attrSet('target', '_blank');
     }
-    token.attrSet('href', addBaseUrl(href));
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
 };
