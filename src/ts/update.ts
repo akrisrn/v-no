@@ -33,10 +33,11 @@ function updateDD() {
 }
 
 function updateToc() {
-  document.querySelectorAll<HTMLLinkElement>('.toc a').forEach(a => {
-    if (a.innerText.startsWith('/') && a.innerText.endsWith('.md')) {
+  document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
+    const text = a.innerText;
+    if (text.startsWith('/') && text.endsWith('.md')) {
       a.classList.add('snippet');
-      getFile(a.innerText).then(file => {
+      getFile(text).then(file => {
         const flags = file.flags;
         if (flags.title) {
           a.innerText = flags.title;
@@ -45,19 +46,25 @@ function updateToc() {
         removeClass(a, 'snippet');
       });
     }
-    const anchor = a.getAttribute('anchor')!;
-    const [headingTag, numStr] = anchor.split('-');
-    const num = parseInt(numStr);
-    const heading = document.querySelectorAll<HTMLHeadingElement>(`article ${headingTag}`)[num];
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      scroll(heading.offsetTop - 10);
-    });
+    const anchor = a.getAttribute('href')!.substr(1);
+    if (/^h[2-6]-\d+$/.test(anchor)) {
+      const [tagName, numStr] = anchor.split('-');
+      const num = parseInt(numStr);
+      const headings = document.querySelectorAll<HTMLHeadingElement>(`article ${tagName}`);
+      if (num < headings.length) {
+        const heading = headings[num];
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          scroll(heading.offsetTop - 10);
+        });
+      }
+    }
   });
   document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
-    heading.querySelector('.heading-link')!.addEventListener('click', () => {
+    heading.querySelector('.heading-link')!.addEventListener('click', e => {
+      e.preventDefault();
       scroll(heading.offsetTop - 10);
     });
   });

@@ -200,7 +200,7 @@ export function renderMD(path: string, data: string) {
         } else {
           headingCount[headingTag]++;
         }
-        headingList.push(`${prefix} [${headingMatch[2]}](${headingTag}-${headingCount[headingTag]})`);
+        headingList.push(`${prefix} [${headingMatch[2]}](#${headingTag}-${headingCount[headingTag]})`);
       }
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
@@ -270,9 +270,6 @@ export function renderMD(path: string, data: string) {
           a.removeChild(count);
           li.append(count);
         }
-        a.setAttribute('anchor', a.getAttribute('href')!);
-        a.removeAttribute('href');
-        a.removeAttribute('target');
       });
       data = data.replace(tocRegExp, tocDiv.outerHTML);
     } else {
