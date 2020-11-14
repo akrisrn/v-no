@@ -22,6 +22,7 @@ function parseData(path: string, data: string): TFile {
     updated: [],
     cover: '',
   };
+  const multiValueFlagMarks = [EFlag.tags, EFlag.updated].map(flag => `@${flag}:`);
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
@@ -31,15 +32,17 @@ function parseData(path: string, data: string): TFile {
   data.split('\n').forEach(line => {
     let match = line.match(flagRegExp);
     if (match) {
-      if (match[1].startsWith('@')) {
-        const flag = match[1].substring(1, match[1].length - 1);
-        if ([EFlag.tags, EFlag.updated].map(flag => `@${flag}:`).includes(match[1])) {
-          flags[flag] = trimList(match[2].split(/\s*[,，、]\s*/)).sort();
+      const flagMark = match[1];
+      const flagText = match[2];
+      if (flagMark.startsWith('@')) {
+        const flag = flagMark.substring(1, flagMark.length - 1);
+        if (multiValueFlagMarks.includes(flagMark)) {
+          flags[flag] = trimList(flagText.split(/\s*[,，、]\s*/)).sort();
         } else {
-          flags[flag] = match[2];
+          flags[flag] = flagText;
         }
       } else {
-        flags.title = match[2];
+        flags.title = flagText;
       }
     } else {
       match = linkRegExp.exec(line);
@@ -107,8 +110,7 @@ let isCacheCompleted = false;
 
 export async function getFiles() {
   if (!isCacheCompleted) {
-    const files = await Promise.all(baseFiles.map(path => getFile(path)));
-    await walkFiles(files);
+    await walkFiles(await Promise.all(baseFiles.map(path => getFile(path))));
     isCacheCompleted = true;
   }
   return { files: cachedFiles, backlinks: cachedBacklinks };

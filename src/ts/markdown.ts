@@ -176,10 +176,12 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 };
 
 export function renderMD(path: string, data: string) {
-  const tocRegExp = /^\[toc]$/im;
+  const tocRegExpStr = '^\\[toc]$';
+  const tocRegExp = new RegExp(tocRegExpStr, 'im');
+  const tocRegExpG = new RegExp(tocRegExpStr, 'img');
+  const needRenderToc = tocRegExp.test(data);
   const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$');
   const evalRegExp = getWrapRegExp('\\$', '\\$', 'g', true);
-  const needRenderToc = tocRegExp.test(data);
   let firstHeading = '';
   const headingCount: Dict<number> = {};
   const headingList: string[] = [];
@@ -223,11 +225,12 @@ export function renderMD(path: string, data: string) {
     const lineCopy = line;
     let evalMatch = evalRegExp.exec(lineCopy);
     while (evalMatch) {
+      const evalStr = evalMatch[1];
       let result: string;
       try {
-        result = evalFunction(evalMatch[1], { path, data });
+        result = evalFunction(evalStr, { path, data });
       } catch (e) {
-        result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalMatch[1]}\n\`\`\`\n:::`;
+        result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::`;
       }
       line = line.replace(evalMatch[0], result);
       evalMatch = evalRegExp.exec(lineCopy);
@@ -282,15 +285,12 @@ export function renderMD(path: string, data: string) {
       tocDiv.querySelectorAll('a').forEach(a => {
         const count = a.querySelector<HTMLSpanElement>('.count');
         if (count) {
-          const li = a.parentElement!;
-          a.removeChild(count);
-          li.append(count);
+          a.parentElement!.append(count);
         }
       });
       data = data.replace(tocRegExp, tocDiv.outerHTML);
-    } else {
-      data = data.replace(tocRegExp, '');
     }
+    data = data.replace(tocRegExpG, '');
   }
   return markdownIt.render(data);
 }

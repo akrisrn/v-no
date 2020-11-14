@@ -429,6 +429,12 @@
     }
   }
 
+  .count:before {
+    margin-right: 8px;
+    margin-left: 8px;
+    content: "-";
+  }
+
   .footnotes {
     font-size: $font-size-s;
     margin-top: 24px;
@@ -450,12 +456,6 @@
     .footnote-backref {
       font-family: $font-family-no-emoji;
     }
-  }
-
-  .count:before {
-    margin-right: 8px;
-    margin-left: 8px;
-    content: "-";
   }
 
   div.code-toolbar > .toolbar {

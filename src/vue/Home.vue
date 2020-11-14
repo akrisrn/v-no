@@ -295,9 +295,9 @@
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
-      addEventListener('keydown', event => {
+      addEventListener('keydown', e => {
         if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-          this.keyInput += event.key;
+          this.keyInput += e.key;
           if (this.keyInput.length > 20) {
             this.keyInput = this.keyInput.substr(10);
           }

@@ -57,14 +57,15 @@ export function getWrapRegExp(left: string, right: string = left, flags = '', is
   return new RegExp(`${left}\\s*(.+${isGreedy ? '' : '?'})\\s*${right}`, flags);
 }
 
+const htmlSymbolDict: Dict<string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+};
+const htmlSymbolRegExp = new RegExp(`[${Object.keys(htmlSymbolDict).join('')}]`, 'g');
+
 export function escapeHTML(html: string) {
-  const symbols: Dict<string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-  };
-  const regexp = new RegExp(`[${Object.keys(symbols).join('')}]`, 'g');
-  return html.replace(regexp, symbol => symbols[symbol]);
+  return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
 }
 
 export function removeClass(element: HTMLElement, cls: string) {
@@ -101,7 +102,13 @@ export function cleanBaseUrl(path: string) {
 }
 
 export function degradeHeading(data: string, level: number) {
-  return data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `).replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
+  if (level > 0) {
+    data = data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
+    if (level > 1) {
+      data = data.replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
+    }
+  }
+  return data;
 }
 
 export function formatDate(date: Date) {
@@ -117,11 +124,7 @@ export function getLastedDate(dateList: string[]) {
   const timeList = dateList.map(date => {
     return date.match(/^[0-9]+$/) ? parseInt(date) : new Date(date).getTime();
   }).filter(time => !isNaN(time));
-  if (timeList.length > 1) {
-    return formatDate(new Date(Math.max(...timeList)));
-  } else {
-    return timeList.length === 1 ? formatDate(new Date(timeList[0])) : '';
-  }
+  return timeList.length > 0 ? formatDate(new Date(Math.max(...timeList))) : '';
 }
 
 export function buildQueryContent(content: string, isComplete = false) {

@@ -10,20 +10,20 @@ function merge(target: IConfig, source: IConfig) {
   return target;
 }
 
-let conf = '';
-
-export function getSelectConf() {
-  return conf;
-}
+let selectConf = '';
 
 function getConfig() {
   const config: IConfig = JSON.parse(JSON.stringify(getFromWindow('vnoConfig')));
-  conf = localStorage.getItem('conf') || (config.defaultConf || '');
-  const selectConfig = (config.multiConf && conf) ? config.multiConf[conf] : undefined;
+  selectConf = localStorage.getItem('conf') || (config.defaultConf || '');
+  const selectConfig = (config.multiConf && selectConf) ? config.multiConf[selectConf] : undefined;
   if (selectConfig) {
     merge(config, JSON.parse(JSON.stringify(selectConfig)));
   }
   return config;
+}
+
+export function getSelectConf() {
+  return selectConf;
 }
 
 export const config = getConfig();

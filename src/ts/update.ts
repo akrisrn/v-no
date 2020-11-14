@@ -40,10 +40,7 @@ function updateToc() {
       if (path) {
         a.classList.add('snippet');
         getFile(path).then(file => {
-          const flags = file.flags;
-          if (flags.title) {
-            a.innerText = flags.title;
-          }
+          a.innerText = file.flags.title || path;
         }).finally(() => {
           removeClass(a, 'snippet');
         });
@@ -233,7 +230,7 @@ export function updateDom() {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const regexp = /^(#{2,5}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
+  const regexp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
   let match = regexp.exec(data);
   while (match) {
     const path = checkLinkPath(match[3]);
@@ -319,36 +316,40 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
 }
 
 export async function updateCategoryList(data: string) {
-  const listRegExp = /^\[list]$/im;
+  const listRegExpStr = '^\\[list]$';
+  const listRegExp = new RegExp(listRegExpStr, 'im');
+  const listRegExpG = new RegExp(listRegExpStr, 'img');
   if (!listRegExp.test(data)) {
     return data;
   }
   const { files } = await getFiles();
-  const paths = Object.keys(files);
-  const tags: Dict<string[]> = {};
-  const untagged = [];
-  for (const path of paths) {
+  const taggedDict: Dict<string[]> = {};
+  const untaggedList: string[] = [];
+  Object.keys(files).forEach(path => {
     const flags = files[path].flags;
     if (flags.tags.length === 0) {
-      untagged.push(`- [#](${path})`);
-      continue;
+      untaggedList.push(`- [#](${path})`);
+    } else {
+      flags.tags.forEach(tag => {
+        let taggedList = taggedDict[tag];
+        if (taggedList === undefined) {
+          taggedList = [];
+          taggedDict[tag] = taggedList;
+        }
+        taggedList.push(`- [#](${path})`);
+      });
     }
-    flags.tags.forEach(tag => {
-      if (tags[tag] === undefined) {
-        tags[tag] = [];
-      }
-      tags[tag].push(`- [#](${path})`);
-    });
+  });
+  const sortedTags = Object.keys(taggedDict).sort();
+  if (untaggedList.length > 0) {
+    const untagged = config.messages.untagged;
+    sortedTags.push(untagged);
+    taggedDict[untagged] = untaggedList;
   }
-  const sortedKeys = Object.keys(tags).sort();
-  if (untagged.length > 0) {
-    sortedKeys.unshift(config.messages.untagged);
-    tags[config.messages.untagged] = untagged;
-  }
-  return data.replace(listRegExp, sortedKeys.map(key => {
-    const count = `<span class="count">( ${tags[key].length} )</span>`;
-    return `${'#'.repeat(6)} ${key}${count}\n\n${tags[key].join('\n')}`;
-  }).join('\n\n'));
+  return data.replace(listRegExp, sortedTags.map(tag => {
+    const count = `<span class="count">( ${taggedDict[tag].length} )</span>`;
+    return `${'#'.repeat(6)} ${tag}${count}\n\n${taggedDict[tag].join('\n')}`;
+  }).join('\n\n')).replace(listRegExpG, '');
 }
 
 export async function updateSearchList(params: Dict<string>) {
@@ -356,11 +357,12 @@ export async function updateSearchList(params: Dict<string>) {
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
     searchInput.value = content;
-    searchInput.addEventListener('keyup', event => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        searchInput.value = searchInput.value.trim();
-        const param = searchInput.value ? buildQueryContent(searchInput.value) : '';
+    searchInput.addEventListener('keyup', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const searchValue = searchInput.value.trim();
+        searchInput.value = searchValue;
+        const param = searchValue ? buildQueryContent(searchValue) : '';
         const indexOf = location.href.indexOf('?');
         location.href = (indexOf >= 0 ? location.href.substring(0, indexOf) : location.href) + param;
       }
@@ -381,7 +383,7 @@ export async function updateSearchList(params: Dict<string>) {
     const { files } = await getFiles();
     resultUl.innerText = '';
     const paths = Object.keys(files);
-    paths.forEach(path => {
+    for (const path of paths) {
       const { data, flags } = files[path];
       let isFind = false;
       let hasQuote = false;
@@ -400,59 +402,60 @@ export async function updateSearchList(params: Dict<string>) {
         isFind = true;
         hasQuote = true;
       }
-      if (isFind) {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `#${path}`;
-        li.append(a);
-        if (hasQuote) {
-          const results = [];
-          let prevEndIndex = 0;
-          const regexp = new RegExp(content, 'ig');
-          let match = regexp.exec(data);
-          while (match) {
-            const offset = 10;
-            let startIndex = match.index - offset;
-            if (prevEndIndex === 0 && startIndex > 0) {
-              results.push('');
-            }
-            const endIndex = regexp.lastIndex + offset;
-            const lastIndex = results.length - 1 as number;
-            let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
-              escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
-            if (startIndex <= prevEndIndex) {
-              startIndex = prevEndIndex;
-              if (startIndex > match.index) {
-                if (lastIndex >= 0) {
-                  const lastResult = results[lastIndex] as string;
-                  results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
-                }
-              } else if (startIndex < match.index) {
-                result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
-              }
-              if (lastIndex >= 0) {
-                results[lastIndex] += result;
-              } else {
-                results.push(result);
-              }
-            } else {
-              results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
-            }
-            prevEndIndex = endIndex;
-            match = regexp.exec(data);
-          }
-          if (prevEndIndex < data.length) {
+      if (!isFind) {
+        continue;
+      }
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${path}`;
+      li.append(a);
+      if (hasQuote) {
+        const results = [];
+        let prevEndIndex = 0;
+        const regexp = new RegExp(content, 'ig');
+        let match = regexp.exec(data);
+        while (match) {
+          const offset = 10;
+          let startIndex = match.index - offset;
+          if (prevEndIndex === 0 && startIndex > 0) {
             results.push('');
           }
-          const blockquote = document.createElement('blockquote');
-          const p = document.createElement('p');
-          p.innerHTML = results.join('<span class="ellipsis">...</span>');
-          blockquote.append(p);
-          li.append(blockquote);
+          const endIndex = regexp.lastIndex + offset;
+          const lastIndex = results.length - 1 as number;
+          let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
+            escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+          if (startIndex <= prevEndIndex) {
+            startIndex = prevEndIndex;
+            if (startIndex > match.index) {
+              if (lastIndex >= 0) {
+                const lastResult = results[lastIndex] as string;
+                results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
+              }
+            } else if (startIndex < match.index) {
+              result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
+            }
+            if (lastIndex >= 0) {
+              results[lastIndex] += result;
+            } else {
+              results.push(result);
+            }
+          } else {
+            results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
+          }
+          prevEndIndex = endIndex;
+          match = regexp.exec(data);
         }
-        resultUl.append(li);
+        if (prevEndIndex < data.length) {
+          results.push('');
+        }
+        const blockquote = document.createElement('blockquote');
+        const p = document.createElement('p');
+        p.innerHTML = results.join('<span class="ellipsis">...</span>');
+        blockquote.append(p);
+        li.append(blockquote);
       }
-    });
+      resultUl.append(li);
+    }
     updateLinkPath();
     const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
     if (searchTime) {
