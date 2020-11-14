@@ -202,8 +202,10 @@
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
-      this.backlinkFiles = [];
-      this.updateData(false);
+      document.querySelectorAll('.custom').forEach(element => {
+        element.remove();
+      });
+      this.updateData();
     }
 
     @Watch('isShow')
@@ -362,13 +364,12 @@
       this.isShow = true;
     }
 
-    updateData(isFirst = true) {
+    updateData() {
       if (this.path.endsWith('.md')) {
         const promises = [getFile(this.path)];
-        if (this.config.paths.common) {
-          if (this.path !== this.config.paths.common) {
-            promises.push(getFile(this.config.paths.common));
-          }
+        const commonPath = this.config.paths.common;
+        if (commonPath && this.path !== commonPath) {
+          promises.push(getFile(commonPath));
         }
         Promise.all(promises).then(files => {
           this.isError = false;
@@ -377,13 +378,8 @@
             data += '\n\n' + files[1].data;
           }
           this.setData(data, files[0].flags);
-          if (!isFirst) {
-            if (this.hasLoadedBacklinks) {
-              this.getBacklinks();
-            }
-            document.querySelectorAll('.custom').forEach(element => {
-              element.remove();
-            });
+          if (this.hasLoadedBacklinks) {
+            this.getBacklinks();
           }
         }).catch((error: AxiosError) => {
           this.isError = true;
@@ -409,7 +405,8 @@
     getBacklinks() {
       this.isLoadingBacklinks = true;
       getFiles().then(({ files, backlinks }) => {
-        this.backlinkFiles = (backlinks[this.path] || []).map(path => {
+        const paths = backlinks[this.path];
+        this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
           const flags = files[path].flags;
           return {
             path,
@@ -422,9 +419,11 @@
             return baseFiles.includes(b.path) ? a.title.localeCompare(b.title) : 1;
           }
           return baseFiles.includes(b.path) ? -1 : a.title.localeCompare(b.title);
-        });
+        }) : [];
         this.isLoadingBacklinks = false;
-        this.hasLoadedBacklinks = true;
+        if (!this.hasLoadedBacklinks) {
+          this.hasLoadedBacklinks = true;
+        }
       });
     }
 
