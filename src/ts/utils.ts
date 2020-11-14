@@ -103,6 +103,10 @@ export function degradeHeading(data: string, level: number) {
   return data;
 }
 
+function parseDate(dateStr: string) {
+  return config.dateFormat ? dayjs(dateStr, config.dateFormat).toDate() : new Date(dateStr);
+}
+
 export function formatDate(date: Date) {
   return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
 }
