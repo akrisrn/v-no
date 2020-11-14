@@ -146,7 +146,7 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     closeToken.attrSet('external', 'true');
   } else {
     if (href.startsWith('/')) {
-      if (href.endsWith('.md')) {
+      if (href.endsWith('.md') || href.endsWith('/')) {
         if (text.endsWith('#')) {
           textToken.content = text.substr(0, text.length - 1);
           href = `#${href}`;
@@ -193,7 +193,7 @@ export function renderMD(path: string, data: string) {
         if (linkMatch) {
           const text = linkMatch[1];
           const href = linkMatch[2];
-          if (text.endsWith('#') && href.startsWith('/') && href.endsWith('.md')) {
+          if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
             if (text === '#') {
               headingText = href;
             } else {

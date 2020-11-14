@@ -57,10 +57,19 @@ async function getHtmlAndFiles(page, urlPath) {
     const files = [];
     document.querySelectorAll('a[href]').forEach(a => {
       const href = a.getAttribute('href');
-      if (href.startsWith('#/') && href.endsWith('.md')) {
-        const filePath = href.substr(1);
-        a.href = publicPath.substr(0, publicPath.length - 1) + filePath.replace(/\.md$/, '.html');
-        files.push(filePath);
+      if (href.startsWith('#/')) {
+        let filePath = href.substr(1);
+        if (!filePath.endsWith('.md')) {
+          if (filePath.endsWith('/')) {
+            filePath += 'index.md';
+          } else {
+            filePath = '';
+          }
+        }
+        if (filePath) {
+          a.href = publicPath.substr(0, publicPath.length - 1) + filePath.replace(/\.md$/, '.html');
+          files.push(filePath);
+        }
       }
     });
     document.querySelectorAll('code.item-tag').forEach(code => {

@@ -4,6 +4,17 @@ import axios, { AxiosError } from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
 
+export function checkLinkPath(path: string) {
+  if (!path.endsWith('.md')) {
+    if (path.endsWith('/')) {
+      path += 'index.md';
+    } else {
+      path = '';
+    }
+  }
+  return path;
+}
+
 function parseData(path: string, data: string): TFile {
   const flags: IFlags = {
     title: '',
@@ -14,7 +25,7 @@ function parseData(path: string, data: string): TFile {
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
-  const linkRegExp = /\[.*?]\((\/.*?\.md)\)/g;
+  const linkRegExp = /\[.*?]\((\/.*?)\)/g;
   const links: string[] = [];
   const lines: string[] = [];
   data.split('\n').forEach(line => {
@@ -33,8 +44,8 @@ function parseData(path: string, data: string): TFile {
     } else {
       match = linkRegExp.exec(line);
       while (match) {
-        const linkPath = match[1];
-        if (linkPath !== path && !links.includes(linkPath)) {
+        const linkPath = checkLinkPath(match[1]);
+        if (linkPath && linkPath !== path && !links.includes(linkPath)) {
           links.push(linkPath);
           let backlinks = cachedBacklinks[linkPath];
           if (backlinks === undefined) {

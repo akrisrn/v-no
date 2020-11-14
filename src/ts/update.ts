@@ -1,4 +1,4 @@
-import { getFile, getFiles } from '@/ts/file';
+import { checkLinkPath, getFile, getFiles } from '@/ts/file';
 import {
   buildQueryContent,
   degradeHeading,
@@ -35,16 +35,19 @@ function updateDD() {
 function updateToc() {
   document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
     const text = a.innerText;
-    if (text.startsWith('/') && text.endsWith('.md')) {
-      a.classList.add('snippet');
-      getFile(text).then(file => {
-        const flags = file.flags;
-        if (flags.title) {
-          a.innerText = flags.title;
-        }
-      }).finally(() => {
-        removeClass(a, 'snippet');
-      });
+    if (text.startsWith('/')) {
+      const path = checkLinkPath(text);
+      if (path) {
+        a.classList.add('snippet');
+        getFile(path).then(file => {
+          const flags = file.flags;
+          if (flags.title) {
+            a.innerText = flags.title;
+          }
+        }).finally(() => {
+          removeClass(a, 'snippet');
+        });
+      }
     }
     const anchor = a.getAttribute('href')!.substr(1);
     if (/^h[2-6]-\d+$/.test(anchor)) {
@@ -126,11 +129,12 @@ function updateImagePath() {
 }
 
 function updateLinkPath() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]').forEach(a => {
-    const text = a.innerText;
-    const href = a.getAttribute('href')!;
-    if (href.endsWith('.md') && text === '') {
-      const path = href.substr(1);
+  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]')) {
+    if (a.innerText === '') {
+      const path = checkLinkPath(a.getAttribute('href')!.substr(1));
+      if (!path) {
+        continue;
+      }
       a.innerText = path;
       a.classList.add('snippet');
       getFile(path).then(file => {
@@ -181,7 +185,7 @@ function updateLinkPath() {
         removeClass(a, 'snippet');
       });
     }
-  });
+  }
 }
 
 function updateCustomScript() {
@@ -229,11 +233,11 @@ export function updateDom() {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const regexp = /^(#{2,5}\s+)?\[\+(#.+)?]\((\/.*?\.md)\)$/gm;
+  const regexp = /^(#{2,5}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
   let match = regexp.exec(data);
   while (match) {
-    const path = match[3];
-    if (!updatedPaths.includes(path)) {
+    const path = checkLinkPath(match[3]);
+    if (path && !updatedPaths.includes(path)) {
       let snippetDict = dict[path];
       if (snippetDict === undefined) {
         snippetDict = {};
