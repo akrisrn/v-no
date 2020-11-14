@@ -14,7 +14,7 @@ function parseData(path: string, data: string): TFile {
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
-  const linkRegExp = /\[.*?]\((\/.*?\.md)\)/;
+  const linkRegExp = /\[.*?]\((\/.*?\.md)\)/g;
   const links: string[] = [];
   const lines: string[] = [];
   data.split('\n').forEach(line => {
@@ -31,8 +31,8 @@ function parseData(path: string, data: string): TFile {
         flags.title = match[2];
       }
     } else {
-      match = line.match(linkRegExp);
-      if (match) {
+      match = linkRegExp.exec(line);
+      while (match) {
         const linkPath = match[1];
         if (linkPath !== path && !links.includes(linkPath)) {
           links.push(linkPath);
@@ -44,6 +44,7 @@ function parseData(path: string, data: string): TFile {
             backlinks.push(path);
           }
         }
+        match = linkRegExp.exec(line);
       }
       lines.push(line);
     }

@@ -187,32 +187,36 @@ export function renderMD(path: string, data: string) {
     if (needRenderToc) {
       const headingMatch = line.match(headingRegExp);
       if (headingMatch) {
-        const linkMatch = headingMatch[2].match(/\[(.*?)]\((.*?)\)/);
+        const headingLevel = headingMatch[1];
+        let headingText = headingMatch[2];
+        const linkMatch = headingText.match(/\[(.*?)]\((.*?)\)/);
         if (linkMatch) {
-          if (linkMatch[1].endsWith('#') && linkMatch[2].startsWith('/') && linkMatch[2].endsWith('.md')) {
-            if (linkMatch[1] === '#') {
-              headingMatch[2] = linkMatch[2];
+          const text = linkMatch[1];
+          const href = linkMatch[2];
+          if (text.endsWith('#') && href.startsWith('/') && href.endsWith('.md')) {
+            if (text === '#') {
+              headingText = href;
             } else {
-              headingMatch[2] = linkMatch[1].substr(0, linkMatch[1].length - 1);
+              headingText = text.substr(0, text.length - 1);
             }
           } else {
-            headingMatch[2] = linkMatch[1];
+            headingText = text;
           }
         }
         if (!firstHeading) {
-          firstHeading = headingMatch[1];
+          firstHeading = headingLevel;
         }
         let prefix = '-';
-        if (headingMatch[1] !== firstHeading) {
-          prefix = headingMatch[1].replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
+        if (headingLevel !== firstHeading) {
+          prefix = headingLevel.replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
         }
-        const headingTag = `h${headingMatch[1].length}`;
+        const headingTag = `h${headingLevel.length}`;
         if (headingCount[headingTag] === undefined) {
           headingCount[headingTag] = 0;
         } else {
           headingCount[headingTag]++;
         }
-        headingList.push(`${prefix} [${headingMatch[2]}](#${headingTag}-${headingCount[headingTag]})`);
+        headingList.push(`${prefix} [${headingText}](#${headingTag}-${headingCount[headingTag]})`);
       }
     }
     // 将被 $ 包围的部分作为 JavaScript 表达式执行
