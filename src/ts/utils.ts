@@ -93,14 +93,6 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
-// noinspection JSUnusedGlobalSymbols
-export function cleanBaseUrl(path: string) {
-  if (path.startsWith('/') && baseUrl !== '/' && path.startsWith(baseUrl)) {
-    return path.substr(baseUrl.length - 1);
-  }
-  return path;
-}
-
 export function degradeHeading(data: string, level: number) {
   if (level > 0) {
     data = data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
