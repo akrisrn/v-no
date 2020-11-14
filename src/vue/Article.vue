@@ -33,12 +33,7 @@
       exposeToWindow({
         renderMD: (data: string) => renderMD(this.path, data),
         updateMD: () => {
-          updateSnippet(this.syncData).then(data => {
-            this.syncData = data;
-            setTimeout(() => {
-              updateDom();
-            }, 0);
-          });
+          updateSnippet(this.syncData).then(data => this.updateData(data));
           updateDom();
         },
       });
@@ -48,25 +43,22 @@
     mounted() {
       updateSnippet(this.syncData).then(data => {
         if (this.isCategory) {
-          updateCategoryList(data).then(data => {
-            this.syncData = data;
-            setTimeout(() => {
-              updateDom();
-            }, 0);
-          });
+          updateCategoryList(data).then(data => this.updateData(data));
         } else {
-          this.syncData = data;
-          setTimeout(() => {
-            if (this.isSearch) {
-              updateSearchList(this.params);
-            }
-            updateDom();
-          }, 0);
+          this.updateData(data);
+          if (this.isSearch) {
+            setTimeout(() => updateSearchList(this.params), 0);
+          }
         }
       });
-      setTimeout(() => {
-        updateDom();
-      }, 0);
+      setTimeout(() => updateDom(), 0);
+    }
+
+    updateData(data: string) {
+      if (data !== this.syncData) {
+        this.syncData = data;
+        setTimeout(() => updateDom(), 0);
+      }
     }
   }
 </script>
