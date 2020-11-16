@@ -71,7 +71,12 @@ function updateAnchor() {
     if (/^h[2-6]-\d+$/.test(anchor)) {
       const [tagName, numStr] = anchor.split('-');
       const num = parseInt(numStr);
-      const headings = document.querySelectorAll<HTMLHeadingElement>(`article ${tagName}`);
+      const headings: HTMLHeadingElement[] = [];
+      document.querySelectorAll<HTMLHeadingElement>(`article ${tagName}`).forEach(heading => {
+        if (heading.parentElement!.tagName !== 'SUMMARY') {
+          headings.push(heading);
+        }
+      });
       if (num < headings.length) {
         const heading = headings[num];
         addEventListener(a, 'click', e => {
@@ -86,7 +91,8 @@ function updateAnchor() {
   document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
-    addEventListener(heading.querySelector('.heading-link')!, 'click', () => {
+    addEventListener(heading.querySelector('.heading-link')!, 'click', e => {
+      e.preventDefault();
       scroll(heading.offsetTop - 10);
     });
   });
@@ -147,62 +153,63 @@ function updateImagePath() {
 }
 
 function updateLinkPath() {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('article a[href^="#/"]')) {
-    if (a.innerText === '') {
-      const path = checkLinkPath(a.getAttribute('href')!.substr(1));
-      if (!path) {
-        continue;
-      }
-      a.innerText = path;
-      a.classList.add('snippet');
-      getFile(path).then(file => {
-        const flags = file.flags;
-        if (flags.title) {
-          a.innerText = flags.title;
-        }
-        const parent = a.parentElement!;
-        if (parent.tagName === 'LI') {
-          let isPass = true;
-          let hasQuote = false;
+  for (const a of document.querySelectorAll<HTMLLinkElement>('a[href^="#/"]')) {
+    if (a.innerText !== '') {
+      continue;
+    }
+    a.innerText = '#';
+    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
+    if (!path) {
+      continue;
+    }
+    a.classList.add('snippet');
+    getFile(path).then(file => {
+      const flags = file.flags;
+      a.innerText = flags.title || path;
+      const parent = a.parentElement!;
+      if (parent.tagName === 'LI') {
+        let isPass = true;
+        let hasQuote = false;
+        if (parent.childNodes[0].nodeType === 1) {
           if (parent.childElementCount === 1) {
             isPass = false;
           } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
             isPass = false;
             hasQuote = true;
           }
-          if (!isPass) {
-            parent.classList.add('article');
-            const bar = document.createElement('div');
-            bar.classList.add('bar');
-            flags.tags.forEach(tag => {
-              const itemTag = document.createElement('code');
-              itemTag.classList.add('item-tag');
-              const a = document.createElement('a');
-              a.innerText = tag;
-              a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
-              itemTag.append(a);
-              bar.append(itemTag);
-            });
-            const date = getDateFromPath(path) || getLastedDate(flags.updated);
-            if (date) {
-              const itemDate = document.createElement('code');
-              itemDate.classList.add('item-date');
-              itemDate.innerText = date;
-              bar.append(itemDate);
-            }
-            if (bar.childElementCount > 0) {
-              if (hasQuote) {
-                parent.insertBefore(bar, parent.lastElementChild);
-              } else {
-                parent.append(bar);
-              }
+        }
+        if (!isPass) {
+          parent.classList.add('article');
+          const bar = document.createElement('div');
+          bar.classList.add('bar');
+          flags.tags.forEach(tag => {
+            const itemTag = document.createElement('code');
+            itemTag.classList.add('item-tag');
+            const a = document.createElement('a');
+            a.innerText = tag;
+            a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+            itemTag.append(a);
+            bar.append(itemTag);
+          });
+          const date = getDateFromPath(path) || getLastedDate(flags.updated);
+          if (date) {
+            const itemDate = document.createElement('code');
+            itemDate.classList.add('item-date');
+            itemDate.innerText = date;
+            bar.append(itemDate);
+          }
+          if (bar.childElementCount > 0) {
+            if (hasQuote) {
+              parent.insertBefore(bar, parent.lastElementChild);
+            } else {
+              parent.append(bar);
             }
           }
         }
-      }).finally(() => {
-        removeClass(a, 'snippet');
-      });
-    }
+      }
+    }).finally(() => {
+      removeClass(a, 'snippet');
+    });
   }
 }
 

@@ -45,7 +45,7 @@
     height: 0;
     margin: 24px auto;
     transition: border-bottom-color 0.5s;
-    border-bottom: 4px solid $border-color;
+    border-bottom: 3px solid $border-color;
     background-color: transparent;
   }
 
@@ -188,6 +188,9 @@
   }
 
   code {
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
     transition: color 0.5s;
     color: $font-color;
     background-color: $code-background-color;

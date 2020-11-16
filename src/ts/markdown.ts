@@ -68,9 +68,6 @@ const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let src = token.attrGet('src')!;
-  if (!isExternalLink(src)) {
-    src = addBaseUrl(src);
-  }
   // put '#' suffix to 'alt' will be better, but no way to get/set it for now.
   const match = src.match(/#(.+)$/);
   if (match) {
@@ -87,6 +84,9 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
       token.attrSet('width', width.toString());
     }
     src = src.replace(/#.+$/, '');
+  }
+  if (!isExternalLink(src)) {
+    src = addBaseUrl(src);
   }
   token.attrSet('src', src);
   return defaultImageRenderRule(tokens, idx, options, env, self);
