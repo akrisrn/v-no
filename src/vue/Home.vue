@@ -87,9 +87,10 @@
     isHashMode,
     removeClass,
     scroll,
+    sortFiles,
     transForSort,
   } from '@/ts/utils';
-  import { baseFiles, config, getSelectConf } from '@/ts/config';
+  import { config, getSelectConf } from '@/ts/config';
   import axios, { AxiosError } from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
@@ -409,12 +410,7 @@
         const paths = backlinks[this.path];
         this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
           return transForSort(files[path]);
-        }).sort((a, b) => {
-          if (baseFiles.includes(a.path)) {
-            return baseFiles.includes(b.path) ? a.title.localeCompare(b.title) : 1;
-          }
-          return baseFiles.includes(b.path) ? -1 : a.title.localeCompare(b.title);
-        }) : [];
+        }).sort(sortFiles) : [];
         this.isLoadingBacklinks = false;
         if (!this.hasLoadedBacklinks) {
           this.hasLoadedBacklinks = true;
