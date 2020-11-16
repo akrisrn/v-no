@@ -87,6 +87,7 @@
     isHashMode,
     removeClass,
     scroll,
+    transForSort,
   } from '@/ts/utils';
   import { baseFiles, config, getSelectConf } from '@/ts/config';
   import axios, { AxiosError } from 'axios';
@@ -407,13 +408,7 @@
       getFiles().then(({ files, backlinks }) => {
         const paths = backlinks[this.path];
         this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
-          const flags = files[path].flags;
-          return {
-            path,
-            title: flags.title || path,
-            tags: flags.tags,
-            date: getDateFromPath(path) || getLastedDate(flags.updated),
-          } as TBacklinkFile;
+          return transForSort(files[path]);
         }).sort((a, b) => {
           if (baseFiles.includes(a.path)) {
             return baseFiles.includes(b.path) ? a.title.localeCompare(b.title) : 1;

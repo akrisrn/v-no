@@ -144,6 +144,17 @@ export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
 }
 
+export function transForSort(file: TFile) {
+  const path = file.path;
+  const flags = file.flags;
+  return {
+    path,
+    title: flags.title || path,
+    tags: [...flags.tags],
+    date: getDateFromPath(path) || getLastedDate(flags.updated),
+  } as TBacklinkFile;
+}
+
 function comparePath(pathA: string, pathB: string) {
   if (baseFiles.includes(pathA)) {
     return baseFiles.includes(pathB) ? 0 : 1;
