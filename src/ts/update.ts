@@ -58,7 +58,9 @@ function updateAnchor() {
         const heading = headings[num];
         addEventListener(a, 'click', e => {
           e.preventDefault();
-          scroll(heading.offsetTop - 10);
+          if (heading.offsetTop > 0) {
+            scroll(heading.offsetTop - 10);
+          }
         });
       }
     }
@@ -78,7 +80,9 @@ function updateAnchor() {
     });
     addEventListener(backref, 'click', e => {
       e.preventDefault();
-      scroll(fnref.offsetTop - 10);
+      if (fnref.offsetTop > 0) {
+        scroll(fnref.offsetTop - 10);
+      }
     });
   });
 }
