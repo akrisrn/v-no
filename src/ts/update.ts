@@ -1,11 +1,9 @@
 import { checkLinkPath, getFile, getFiles } from '@/ts/file';
 import {
-  addEventListener,
   buildQueryContent,
-  degradeHeading,
   EFlag,
-  escapeHTML,
   getDateFromPath,
+  getEventListenerDict,
   getLastedDate,
   getWrapRegExp,
   removeClass,
@@ -33,6 +31,26 @@ function updateDD() {
       dt.outerHTML = dd.outerHTML;
     }
   });
+}
+
+const eventListenerDict = getEventListenerDict();
+
+function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
+  let eventListeners = eventListenerDict[type];
+  if (eventListeners === undefined) {
+    eventListeners = { elements: [element], listeners: [listener] };
+    eventListenerDict[type] = eventListeners;
+  } else {
+    const indexOf = eventListeners.elements.indexOf(element);
+    if (indexOf >= 0) {
+      element.removeEventListener(type, eventListeners.listeners[indexOf]);
+      eventListeners.listeners.splice(indexOf, 1, listener);
+    } else {
+      eventListeners.elements.push(element);
+      eventListeners.listeners.push(listener);
+    }
+  }
+  element.addEventListener(type, listener);
 }
 
 function updateAnchor() {
@@ -328,6 +346,16 @@ export function updateDom() {
   Prism.highlightAll();
 }
 
+function degradeHeading(data: string, level: number) {
+  if (level > 0) {
+    data = data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
+    if (level > 1) {
+      data = data.replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
+    }
+  }
+  return data;
+}
+
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
   const regexp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
@@ -453,6 +481,17 @@ export async function updateCategoryPage(data: string) {
     const list = taggedFiles.map(transForSort).sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
     return `${'#'.repeat(6)} ${tag}${count}\n\n${list}`;
   }).join('\n\n')).replace(listRegExpG, '');
+}
+
+const htmlSymbolDict: Dict<string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+};
+const htmlSymbolRegExp = new RegExp(`[${Object.keys(htmlSymbolDict).join('')}]`, 'g');
+
+function escapeHTML(html: string) {
+  return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
 }
 
 export async function updateSearchPage(params: Dict<string>) {

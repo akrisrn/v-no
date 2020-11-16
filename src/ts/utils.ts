@@ -36,14 +36,6 @@ export function exposeToWindow(vars: Dict<any>) {
   });
 }
 
-export function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
-}
-
-export function isHashMode() {
-  return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
-}
-
 export function isExternalLink(href: string) {
   return href.indexOf(':') >= 0;
 }
@@ -57,17 +49,6 @@ export function getWrapRegExp(left: string, right: string = left, flags = '', is
   return new RegExp(`${left}\\s*(.+${isGreedy ? '' : '?'})\\s*${right}`, flags);
 }
 
-const htmlSymbolDict: Dict<string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-};
-const htmlSymbolRegExp = new RegExp(`[${Object.keys(htmlSymbolDict).join('')}]`, 'g');
-
-export function escapeHTML(html: string) {
-  return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
-}
-
 export function removeClass(element: Element, cls: string) {
   element.classList.remove(cls);
   if (element.classList.length === 0) {
@@ -75,37 +56,14 @@ export function removeClass(element: Element, cls: string) {
   }
 }
 
-export function addTempClass(element: Element, cls: string, timeout = 500) {
-  if (!element.classList.contains(cls)) {
-    element.classList.add(cls);
-    setTimeout(() => {
-      removeClass(element, cls);
-    }, timeout);
-  }
-}
-
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
+
+export function getEventListenerDict() {
+  return eventListenerDict;
+}
 
 export function cleanEventListenerDict() {
   eventListenerDict = {};
-}
-
-export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
-  let eventListeners = eventListenerDict[type];
-  if (eventListeners === undefined) {
-    eventListeners = { elements: [element], listeners: [listener] };
-    eventListenerDict[type] = eventListeners;
-  } else {
-    const indexOf = eventListeners.elements.indexOf(element);
-    if (indexOf >= 0) {
-      element.removeEventListener(type, eventListeners.listeners[indexOf]);
-      eventListeners.listeners.splice(indexOf, 1, listener);
-    } else {
-      eventListeners.elements.push(element);
-      eventListeners.listeners.push(listener);
-    }
-  }
-  element.addEventListener(type, listener);
 }
 
 const baseUrl = process.env.BASE_URL;
@@ -117,21 +75,11 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
-export function degradeHeading(data: string, level: number) {
-  if (level > 0) {
-    data = data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
-    if (level > 1) {
-      data = data.replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
-    }
-  }
-  return data;
-}
-
 function parseDate(dateStr: string) {
   return config.dateFormat ? dayjs(dateStr, config.dateFormat).toDate() : new Date(dateStr);
 }
 
-export function formatDate(date: Date) {
+function formatDate(date: Date) {
   return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
 }
 

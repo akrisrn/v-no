@@ -1,4 +1,4 @@
-import { addBaseUrl, EIcon, evalFunction, getIcon, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import { addBaseUrl, EIcon, getIcon, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import { config } from '@/ts/config';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -169,6 +169,10 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   const icon = token.attrGet('external') ? getIcon(EIcon.external, 14) : '';
   return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
+
+function evalFunction(evalStr: string, params: Dict<any>) {
+  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
+}
 
 export function renderMD(path: string, data: string) {
   const tocRegExpStr = '^\\[toc]$';

@@ -75,7 +75,6 @@
   import { getErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
-    addTempClass,
     buildQueryContent,
     cleanEventListenerDict,
     EFlag,
@@ -85,7 +84,6 @@
     getIcon,
     getLastedDate,
     isExternalLink,
-    isHashMode,
     removeClass,
     scroll,
     sortFiles,
@@ -117,7 +115,6 @@
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 
-    isHashMode = isHashMode();
     isShow = false;
     isError = false;
     isDark = false;
@@ -201,6 +198,10 @@
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
+    get isHashMode() {
+      return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
+    }
+
     // noinspection JSUnusedGlobalSymbols
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
@@ -272,12 +273,12 @@
           }
         },
         gg: () => {
-          addTempClass(this.toTop!, 'spin');
+          this.addTempClass(this.toTop!, 'spin');
           scroll(document.body.offsetHeight);
           this.keyInput += '_';
         },
         G: () => {
-          addTempClass(this.toTop!, 'spin');
+          this.addTempClass(this.toTop!, 'spin');
           scroll(0);
         },
         dark: () => {
@@ -326,7 +327,7 @@
       });
       this.toTop = document.querySelector<HTMLElement>('#to-top')!;
       this.toTop.addEventListener('click', () => {
-        addTempClass(this.toTop!, 'spin');
+        this.addTempClass(this.toTop!, 'spin');
         scroll(0);
       });
     }
@@ -423,6 +424,15 @@
     confChanged() {
       localStorage.setItem('conf', this.selectConf);
       location.href = this.baseUrl;
+    }
+
+    addTempClass(element: Element, cls: string, timeout = 500) {
+      if (!element.classList.contains(cls)) {
+        element.classList.add(cls);
+        setTimeout(() => {
+          removeClass(element, cls);
+        }, timeout);
+      }
     }
 
     addInputBind(input: string, bind: () => void) {
