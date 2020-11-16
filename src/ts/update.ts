@@ -66,8 +66,7 @@ function updateToc() {
   document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
-    addEventListener(heading.querySelector('.heading-link')!, 'click', e => {
-      e.preventDefault();
+    addEventListener(heading.querySelector('.heading-link')!, 'click', () => {
       scroll(heading.offsetTop - 10);
     });
   });
@@ -365,7 +364,6 @@ export async function updateSearchPage(params: Dict<string>) {
     searchInput.value = content;
     searchInput.addEventListener('keyup', e => {
       if (e.key === 'Enter') {
-        e.preventDefault();
         const searchValue = searchInput.value.trim();
         searchInput.value = searchValue;
         const param = searchValue ? buildQueryContent(searchValue) : '';

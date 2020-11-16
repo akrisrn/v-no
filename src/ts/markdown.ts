@@ -122,10 +122,10 @@ markdownIt.renderer.rules.thead_open = (tokens, idx, options, env, self) => {
 
 const defaultHeadingRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
-  const link = document.createElement('a');
-  link.classList.add('heading-link');
-  link.innerHTML = getIcon(EIcon.link, 14);
-  return link.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
+  const span = document.createElement('span');
+  span.classList.add('heading-link');
+  span.innerHTML = getIcon(EIcon.link, 14);
+  return span.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultLinkRenderRule = getDefaultRenderRule('link_open');

@@ -68,14 +68,14 @@ export function escapeHTML(html: string) {
   return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
 }
 
-export function removeClass(element: HTMLElement, cls: string) {
+export function removeClass(element: Element, cls: string) {
   element.classList.remove(cls);
   if (element.classList.length === 0) {
     element.removeAttribute('class');
   }
 }
 
-export function addTempClass(element: HTMLElement, cls: string, timeout = 500) {
+export function addTempClass(element: Element, cls: string, timeout = 500) {
   if (!element.classList.contains(cls)) {
     element.classList.add(cls);
     setTimeout(() => {

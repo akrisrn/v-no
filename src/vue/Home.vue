@@ -40,7 +40,7 @@
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
           <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
-          <a v-else-if="!hasLoadedBacklinks" @click.prevent="getBacklinks">{{ config.messages.showBacklinks }}</a>
+          <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
           <template v-else>
             <ul v-if="backlinkFiles.length > 0">
               <li v-for="file in backlinkFiles" :key="file.path" class="article">
@@ -352,7 +352,7 @@
       } else {
         document.title = `${this.title}`;
       }
-      this.tags = flags.tags;
+      this.tags = [...flags.tags];
       this.updated = getLastedDate(flags.updated);
       if (flags.cover) {
         const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
