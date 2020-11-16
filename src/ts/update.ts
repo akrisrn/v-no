@@ -35,7 +35,7 @@ function updateDD() {
   });
 }
 
-function updateToc() {
+function updateAnchor() {
   document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
     const text = a.innerText;
     if (text.startsWith('/')) {
@@ -221,7 +221,7 @@ function updateCustomStyle() {
 
 export function updateDom() {
   updateDD();
-  updateToc();
+  updateAnchor();
   updateFootnote();
   updateImagePath();
   updateLinkPath();
