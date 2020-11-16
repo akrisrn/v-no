@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
-  import { updateCategoryList, updateDom, updateSearchList, updateSnippet } from '@/ts/update';
+  import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
   import { exposeToWindow } from '@/ts/utils';
   import { config } from '@/ts/config';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
@@ -43,11 +43,11 @@
     mounted() {
       updateSnippet(this.syncData).then(data => {
         if (this.isCategory) {
-          updateCategoryList(data).then(data => this.updateData(data));
+          updateCategoryPage(data).then(data => this.updateData(data));
         } else {
           this.updateData(data);
           if (this.isSearch) {
-            setTimeout(() => updateSearchList(this.params), 0);
+            setTimeout(() => updateSearchPage(this.params), 0);
           }
         }
       });

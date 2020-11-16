@@ -317,7 +317,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   return data;
 }
 
-export async function updateCategoryList(data: string) {
+export async function updateCategoryPage(data: string) {
   const listRegExpStr = '^\\[list]$';
   const listRegExp = new RegExp(listRegExpStr, 'im');
   const listRegExpG = new RegExp(listRegExpStr, 'img');
@@ -357,7 +357,7 @@ export async function updateCategoryList(data: string) {
   }).join('\n\n')).replace(listRegExpG, '');
 }
 
-export async function updateSearchList(params: Dict<string>) {
+export async function updateSearchPage(params: Dict<string>) {
   let content = params.content !== undefined ? decodeURIComponent(params.content.trim()) : '';
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
