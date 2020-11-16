@@ -9,6 +9,8 @@ import {
   getWrapRegExp,
   removeClass,
   scroll,
+  sortFiles,
+  transForSort,
 } from '@/ts/utils';
 import { config } from '@/ts/config';
 import Prism from 'prismjs';
@@ -323,32 +325,35 @@ export async function updateCategoryList(data: string) {
     return data;
   }
   const { files } = await getFiles();
-  const taggedDict: Dict<string[]> = {};
-  const untaggedList: string[] = [];
-  Object.keys(files).forEach(path => {
-    const flags = files[path].flags;
+  const taggedDict: Dict<TFile[]> = {};
+  const untaggedFiles: TFile[] = [];
+  Object.values(files).forEach(file => {
+    const flags = file.flags;
     if (flags.tags.length === 0) {
-      untaggedList.push(`- [#](${path})`);
+      untaggedFiles.push(file);
     } else {
       flags.tags.forEach(tag => {
-        let taggedList = taggedDict[tag];
-        if (taggedList === undefined) {
-          taggedList = [];
-          taggedDict[tag] = taggedList;
+        let taggedFiles = taggedDict[tag];
+        if (taggedFiles === undefined) {
+          taggedFiles = [file];
+          taggedDict[tag] = taggedFiles;
+        } else {
+          taggedFiles.push(file);
         }
-        taggedList.push(`- [#](${path})`);
       });
     }
   });
   const sortedTags = Object.keys(taggedDict).sort();
-  if (untaggedList.length > 0) {
+  if (untaggedFiles.length > 0) {
     const untagged = config.messages.untagged;
     sortedTags.push(untagged);
-    taggedDict[untagged] = untaggedList;
+    taggedDict[untagged] = untaggedFiles;
   }
   return data.replace(listRegExp, sortedTags.map(tag => {
-    const count = `<span class="count">( ${taggedDict[tag].length} )</span>`;
-    return `${'#'.repeat(6)} ${tag}${count}\n\n${taggedDict[tag].join('\n')}`;
+    const taggedFiles = taggedDict[tag];
+    const count = `<span class="count">( ${taggedFiles.length} )</span>`;
+    const list = taggedFiles.map(transForSort).sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
+    return `${'#'.repeat(6)} ${tag}${count}\n\n${list}`;
   }).join('\n\n')).replace(listRegExpG, '');
 }
 
