@@ -70,9 +70,6 @@ function updateAnchor() {
       scroll(heading.offsetTop - 10);
     });
   });
-}
-
-function updateFootnote() {
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
     const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
     addEventListener(fnref, 'click', e => {
@@ -222,7 +219,6 @@ function updateCustomStyle() {
 export function updateDom() {
   updateDD();
   updateAnchor();
-  updateFootnote();
   updateImagePath();
   updateLinkPath();
   updateCustomScript();
