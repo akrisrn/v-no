@@ -52,7 +52,7 @@ type TFile = {
   links: string[];
 }
 
-type TBacklinkFile = {
+type TFileForSort = {
   path: string;
   title: string;
   tags: string[];

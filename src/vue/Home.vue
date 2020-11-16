@@ -111,7 +111,7 @@
     updated = '';
     cover = '';
 
-    backlinkFiles: TBacklinkFile[] = [];
+    backlinkFiles: TFileForSort[] = [];
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 

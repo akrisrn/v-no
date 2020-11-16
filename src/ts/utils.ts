@@ -152,7 +152,7 @@ export function transForSort(file: TFile) {
     title: flags.title || path,
     tags: [...flags.tags],
     date: getDateFromPath(path) || getLastedDate(flags.updated),
-  } as TBacklinkFile;
+  } as TFileForSort;
 }
 
 function comparePath(pathA: string, pathB: string) {
@@ -196,7 +196,7 @@ function comparePath2(pathA: string, pathB: string) {
   return pathA.localeCompare(pathB);
 }
 
-export function sortFiles(fileA: TBacklinkFile, fileB: TBacklinkFile) {
+export function sortFiles(fileA: TFileForSort, fileB: TFileForSort) {
   let x = comparePath(fileA.path, fileB.path);
   if (x === 0) {
     x = compareDate(fileA.date, fileB.date);
