@@ -386,10 +386,10 @@ export async function updateSearchList(params: Dict<string>) {
     resultUl.innerText = config.messages.searching;
     const timeStart = new Date().getTime();
     const { files } = await getFiles();
-    resultUl.innerText = '';
-    const paths = Object.keys(files);
-    for (const path of paths) {
-      const { data, flags } = files[path];
+    const resultFiles: TFile[] = [];
+    const quoteDict: Dict<HTMLQuoteElement> = {};
+    for (const file of Object.values(files)) {
+      const { data, flags } = file;
       let isFind = false;
       let hasQuote = false;
       if (queryFlag) {
@@ -410,10 +410,7 @@ export async function updateSearchList(params: Dict<string>) {
       if (!isFind) {
         continue;
       }
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = `#${path}`;
-      li.append(a);
+      resultFiles.push(file);
       if (hasQuote) {
         const results = [];
         let prevEndIndex = 0;
@@ -457,21 +454,33 @@ export async function updateSearchList(params: Dict<string>) {
         const p = document.createElement('p');
         p.innerHTML = results.join('<span class="ellipsis">...</span>');
         blockquote.append(p);
-        li.append(blockquote);
+        quoteDict[file.path] = blockquote;
       }
-      resultUl.append(li);
     }
-    updateLinkPath();
+    if (resultFiles.length > 0) {
+      resultUl.innerText = '';
+      resultFiles.map(transForSort).sort(sortFiles).forEach(file => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${file.path}`;
+        li.append(a);
+        const blockquote = quoteDict[file.path];
+        if (blockquote) {
+          li.append(blockquote);
+        }
+        resultUl.append(li);
+      });
+      updateLinkPath();
+    } else {
+      resultUl.innerText = config.messages.searchNothing;
+    }
     const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
     if (searchTime) {
       searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
     }
     const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
     if (searchCount) {
-      searchCount.innerText = `${resultUl.childElementCount}/${paths.length}`;
-    }
-    if (resultUl.childElementCount === 0) {
-      resultUl.innerText = config.messages.searchNothing;
+      searchCount.innerText = `${resultFiles.length}/${Object.keys(files).length}`;
     }
   }
 }
