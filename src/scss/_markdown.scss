@@ -259,8 +259,19 @@
       font-size: 0;
     }
 
-    > :last-child {
-      margin-bottom: 0;
+    &[open]:not(.empty):after {
+      $border-width: 3px;
+      $length: 16px - $border-width;
+
+      float: right;
+      width: $length;
+      height: $length;
+      margin-top: -16px;
+      margin-right: -16px;
+      content: "";
+      border: $border-width solid $info-color-s;
+      border-top: none;
+      border-left: none;
     }
 
     summary {
@@ -313,6 +324,10 @@
     }
 
     &.empty {
+      > :last-child {
+        margin-bottom: 0;
+      }
+
       summary {
         display: none;
 
@@ -323,7 +338,11 @@
     }
 
     &.success {
-      border-left-color: $success-color-s;
+      border-color: $success-color-s;
+
+      &[open]:not(.empty):after {
+        border-color: $success-color-s;
+      }
 
       summary {
         background-color: $success-color-xs;
@@ -335,7 +354,11 @@
     }
 
     &.warning {
-      border-left-color: $warning-color-s;
+      border-color: $warning-color-s;
+
+      &[open]:not(.empty):after {
+        border-color: $warning-color-s;
+      }
 
       summary {
         background-color: $warning-color-xs;
@@ -347,7 +370,11 @@
     }
 
     &.danger {
-      border-left-color: $danger-color-s;
+      border-color: $danger-color-s;
+
+      &[open]:not(.empty):after {
+        border-color: $danger-color-s;
+      }
 
       summary {
         background-color: $danger-color-xs;
