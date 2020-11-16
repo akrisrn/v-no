@@ -7,6 +7,7 @@
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
   import { exposeToWindow } from '@/ts/utils';
   import { config } from '@/ts/config';
+  import { noRequest, resetRequestCount } from '@/ts/file';
   import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
 
   @Component
@@ -41,6 +42,7 @@
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
+      resetRequestCount();
       updateSnippet(this.syncData).then(data => {
         if (this.isCategory) {
           updateCategoryPage(data).then(data => this.updateData(data));
@@ -57,7 +59,9 @@
     updateData(data: string) {
       if (data !== this.syncData) {
         this.syncData = data;
-        setTimeout(() => updateDom(), 0);
+        if (!noRequest()) {
+          setTimeout(() => updateDom(), 0);
+        }
       }
     }
   }

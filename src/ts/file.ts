@@ -67,6 +67,16 @@ function parseData(path: string, data: string): TFile {
   return { path, data, flags, links };
 }
 
+let requestCount = 0;
+
+export function resetRequestCount() {
+  requestCount = 0;
+}
+
+export function noRequest() {
+  return requestCount === 0;
+}
+
 const isRequesting: Dict<boolean> = {};
 const cachedFiles: Dict<TFile> = {};
 
@@ -80,6 +90,7 @@ export async function getFile(path: string) {
       isRequesting[path] = false;
       resolve(cachedFiles[path]);
     } else {
+      requestCount++;
       axios.get<string>(addBaseUrl(path)).then(response => {
         isRequesting[path] = false;
         cachedFiles[path] = parseData(path, response.data);
