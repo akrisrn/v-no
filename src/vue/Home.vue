@@ -77,6 +77,7 @@
     addBaseUrl,
     addTempClass,
     buildQueryContent,
+    cleanEventListenerDict,
     EFlag,
     EIcon,
     exposeToWindow,
@@ -204,6 +205,7 @@
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
+      cleanEventListenerDict();
       document.querySelectorAll('.custom').forEach(element => {
         element.remove();
       });

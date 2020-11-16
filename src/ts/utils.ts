@@ -84,6 +84,30 @@ export function addTempClass(element: HTMLElement, cls: string, timeout = 500) {
   }
 }
 
+let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
+
+export function cleanEventListenerDict() {
+  eventListenerDict = {};
+}
+
+export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
+  let eventListeners = eventListenerDict[type];
+  if (eventListeners === undefined) {
+    eventListeners = { elements: [element], listeners: [listener] };
+    eventListenerDict[type] = eventListeners;
+  } else {
+    const indexOf = eventListeners.elements.indexOf(element);
+    if (indexOf >= 0) {
+      element.removeEventListener(type, eventListeners.listeners[indexOf]);
+      eventListeners.listeners.splice(indexOf, 1, listener);
+    } else {
+      eventListeners.elements.push(element);
+      eventListeners.listeners.push(listener);
+    }
+  }
+  element.addEventListener(type, listener);
+}
+
 const baseUrl = process.env.BASE_URL;
 
 export function addBaseUrl(path: string) {

@@ -1,5 +1,6 @@
 import { checkLinkPath, getFile, getFiles } from '@/ts/file';
 import {
+  addEventListener,
   buildQueryContent,
   degradeHeading,
   EFlag,
@@ -55,7 +56,7 @@ function updateToc() {
       const headings = document.querySelectorAll<HTMLHeadingElement>(`article ${tagName}`);
       if (num < headings.length) {
         const heading = headings[num];
-        a.addEventListener('click', e => {
+        addEventListener(a, 'click', e => {
           e.preventDefault();
           scroll(heading.offsetTop - 10);
         });
@@ -65,7 +66,7 @@ function updateToc() {
   document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
-    heading.querySelector('.heading-link')!.addEventListener('click', e => {
+    addEventListener(heading.querySelector('.heading-link')!, 'click', e => {
       e.preventDefault();
       scroll(heading.offsetTop - 10);
     });
@@ -75,11 +76,11 @@ function updateToc() {
 function updateFootnote() {
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
     const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
-    fnref.addEventListener('click', e => {
+    addEventListener(fnref, 'click', e => {
       e.preventDefault();
       scroll(backref.offsetTop - 10);
     });
-    backref.addEventListener('click', e => {
+    addEventListener(backref, 'click', e => {
       e.preventDefault();
       scroll(fnref.offsetTop - 10);
     });
