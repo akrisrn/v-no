@@ -45,6 +45,10 @@ main {
 
   article {
     transition: color 0.5s;
+
+    .hidden {
+      display: none !important;
+    }
   }
 
   #backlinks {
@@ -132,10 +136,6 @@ main {
         }
       }
     }
-  }
-
-  .hidden {
-    display: none;
   }
 
   .center {

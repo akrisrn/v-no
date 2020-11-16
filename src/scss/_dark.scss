@@ -47,10 +47,6 @@ body.dark {
     a {
       color: $dark-link-font-color;
 
-      &:not([href]) {
-        color: $dark-link-font-color;
-      }
-
       code {
         color: $dark-link-font-color;
       }
