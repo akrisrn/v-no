@@ -62,15 +62,44 @@
     font-weight: bolder;
     margin-bottom: 20px;
 
-    &:hover .heading-link {
-      opacity: 1;
+    &:hover {
+      .heading-tag, .heading-link {
+        opacity: 1;
+      }
+    }
+
+    .heading-tag, .heading-link {
+      cursor: pointer;
+      transition: opacity 0.5s;
+      opacity: 0;
+    }
+
+    .heading-tag {
+      $width: 32px;
+      $margin-right: 8px;
+
+      font-size: 0.7em;
+      display: inline-block;
+      width: $width;
+      margin-right: $margin-right;
+      margin-left: -$width - $margin-right;
+      text-align: right;
+
+      &:before {
+        content: "-";
+      }
+
+      &.folding {
+        opacity: 1;
+
+        &:before {
+          content: "+";
+        }
+      }
     }
 
     .heading-link {
       margin-left: 8px;
-      cursor: pointer;
-      transition: opacity 0.5s;
-      opacity: 0;
     }
   }
 

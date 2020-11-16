@@ -46,7 +46,7 @@ main {
   article {
     transition: color 0.5s;
 
-    .hidden {
+    .hidden, .folded {
       display: none !important;
     }
   }

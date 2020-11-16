@@ -58,3 +58,11 @@ type TFileForSort = {
   tags: string[];
   date: string;
 }
+
+type THeading = {
+  element: Element;
+  level: number;
+  isFolded: boolean;
+  children: (Element | THeading)[];
+  parent: THeading | null;
+}

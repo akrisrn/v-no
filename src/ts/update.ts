@@ -216,6 +216,103 @@ function updateCustomStyle() {
   });
 }
 
+function foldElement(element: Element, isFolded: boolean) {
+  if (isFolded) {
+    element.classList.add('folded');
+  } else {
+    removeClass(element, 'folded');
+  }
+}
+
+function foldChild(child: Element | THeading, isFolded: boolean) {
+  if (child instanceof Element) {
+    foldElement(child, isFolded);
+  } else {
+    foldElement(child.element, isFolded);
+    if (!child.isFolded) {
+      child.children.forEach(child => foldChild(child, isFolded));
+    }
+  }
+}
+
+function updateFoldableHeading() {
+  const header: THeading = {
+    element: document.querySelector('header')!,
+    level: 1,
+    isFolded: false,
+    children: [],
+    parent: null,
+  };
+  let cursor = header;
+  for (const child of document.querySelector('article')!.children) {
+    if (child.classList.contains('footnotes')) {
+      break;
+    }
+    const match = child.tagName.match(/^H([2-6])$/);
+    if (match) {
+      const level = parseInt(match[1]);
+      const heading: THeading = {
+        element: child,
+        level,
+        isFolded: false,
+        children: [],
+        parent: null,
+      };
+      header.children.push(heading);
+      if (cursor === header) {
+        heading.parent = header;
+      } else if (level > cursor.level) {
+        cursor.children.push(heading);
+        heading.parent = cursor;
+      } else {
+        let parent = cursor.parent;
+        while (parent && parent !== header) {
+          if (level > parent.level) {
+            parent.children.push(heading);
+            heading.parent = parent;
+            break;
+          }
+          parent = parent.parent;
+        }
+      }
+      cursor = heading;
+    } else {
+      cursor.children.push(child);
+    }
+  }
+  let i = 0;
+  for (; i < header.children.length; i++) {
+    if (!(header.children[i] instanceof Element)) {
+      break;
+    }
+  }
+  for (; i < header.children.length; i++) {
+    const heading = header.children[i] as THeading;
+    const headingElement = heading.element;
+    let headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
+    if (!headingTag) {
+      headingTag = document.createElement('span');
+      headingTag.classList.add('heading-tag');
+      headingTag.innerText = 'H';
+      const small = document.createElement('small');
+      small.innerText = headingElement.tagName.substr(1);
+      headingTag.append(small);
+      headingElement.insertBefore(headingTag, headingElement.childNodes[0]);
+    }
+    addEventListener(headingTag, 'click', () => {
+      heading.isFolded = !heading.isFolded;
+      if (heading.isFolded) {
+        headingTag.classList.add('folding');
+      } else {
+        removeClass(headingTag, 'folding');
+      }
+      heading.children.forEach(child => {
+        foldChild(child, heading.isFolded);
+      });
+    });
+  }
+}
+
 export function updateDom() {
   updateDD();
   updateAnchor();
@@ -223,6 +320,7 @@ export function updateDom() {
   updateLinkPath();
   updateCustomScript();
   updateCustomStyle();
+  updateFoldableHeading();
   Prism.highlightAll();
 }
 
