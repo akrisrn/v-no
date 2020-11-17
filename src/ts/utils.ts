@@ -1,5 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import SmoothScroll from 'smooth-scroll';
 
 export enum EFlag {
@@ -74,6 +76,9 @@ export function addBaseUrl(path: string) {
   }
   return path;
 }
+
+dayjs.extend(advancedFormat);
+dayjs.extend(localizedFormat);
 
 function parseDate(dateStr: string) {
   return config.dateFormat ? dayjs(dateStr, config.dateFormat).toDate() : new Date(dateStr);
