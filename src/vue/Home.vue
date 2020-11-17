@@ -5,11 +5,11 @@
         <img :src="favicon" alt=""/>
         <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
-        <a :href="`#${config.paths.readme}`">{{ config.messages.readme }}</a>
-        <a :href="`#${config.paths.archive}`">{{ config.messages.archive }}</a>
+        <a :href="`#${config.paths.readme}`"></a>
+        <a :href="`#${config.paths.archive}`"></a>
         <template v-if="isHashMode">
-          <a :href="`#${config.paths.category}`">{{ config.messages.category }}</a>
-          <a :href="`#${config.paths.search}`">{{ config.messages.search }}</a>
+          <a :href="`#${config.paths.category}`"></a>
+          <a :href="`#${config.paths.search}`"></a>
           <select v-if="selectConf && confList.length > 1" v-model="selectConf" @change="confChanged">
             <option v-for="conf in confList" :key="conf" :value="conf">{{ conf }}</option>
           </select>

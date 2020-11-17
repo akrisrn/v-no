@@ -12,10 +12,6 @@ interface IConfig {
   };
   messages: {
     home: string;
-    readme: string;
-    archive: string;
-    category: string;
-    search: string;
     raw: string;
     footnotes: string;
     returnHome: string;

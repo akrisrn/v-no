@@ -12,10 +12,6 @@ vnoConfig = {
   },
   messages: {
     home: 'HOME',
-    readme: 'README',
-    archive: 'ARCHIVES',
-    category: 'CATEGORIES',
-    search: 'SEARCH',
     raw: 'Raw',
     footnotes: 'Footnotes:',
     returnHome: 'Return to home',
