@@ -14,10 +14,25 @@ let selectConf = '';
 
 function getConfig() {
   const config: IConfig = JSON.parse(JSON.stringify(getFromWindow('vnoConfig')));
-  selectConf = localStorage.getItem('conf') || (config.defaultConf || '');
-  const selectConfig = (config.multiConf && selectConf) ? config.multiConf[selectConf] : undefined;
-  if (selectConfig) {
-    merge(config, JSON.parse(JSON.stringify(selectConfig)));
+  if (config.defaultConf && config.multiConf) {
+    const defaultConfig = config.multiConf[config.defaultConf];
+    const storeConf = localStorage.getItem('conf');
+    if (storeConf) {
+      const storeConfig = config.multiConf[storeConf];
+      if (storeConfig) {
+        selectConf = storeConf;
+        merge(config, JSON.parse(JSON.stringify(storeConfig)));
+      } else {
+        localStorage.removeItem('conf');
+        if (defaultConfig) {
+          selectConf = config.defaultConf;
+          merge(config, JSON.parse(JSON.stringify(defaultConfig)));
+        }
+      }
+    } else if (defaultConfig) {
+      selectConf = config.defaultConf;
+      merge(config, JSON.parse(JSON.stringify(defaultConfig)));
+    }
   }
   return config;
 }
