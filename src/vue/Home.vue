@@ -28,7 +28,9 @@
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
           <code v-for="tag in tags" :key="tag" class="item-tag">
-            <a :href="getSearchTagUrl(tag)">{{ tag }}</a>
+            <template v-for="link in getSearchTagLinks(tag)">
+              <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
+            </template>
           </code>
           <code class="item-raw">
             <a :href="rawPath" target="_blank">{{ config.messages.raw }}</a>
@@ -47,7 +49,9 @@
                 <a :href="`#${file.path}`">{{ file.title }}</a>
                 <div class="bar">
                   <code v-for="tag in file.tags" :key="tag" class="item-tag">
-                    <a :href="getSearchTagUrl(tag)">{{ tag }}</a>
+                    <template v-for="link in getSearchTagLinks(tag)">
+                      <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
+                    </template>
                   </code>
                   <code v-if="file.date" class="item-date">{{ file.date }}</code>
                 </div>
@@ -75,14 +79,13 @@
   import { getErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
-    buildQueryContent,
     cleanEventListenerDict,
-    EFlag,
     EIcon,
     exposeToWindow,
     getDateFromPath,
     getIcon,
     getLastedDate,
+    getSearchTagLinks,
     isExternalLink,
     removeClass,
     scroll,
@@ -403,8 +406,8 @@
       }
     }
 
-    getSearchTagUrl(tag: string) {
-      return buildQueryContent(`@${EFlag.tags}:${tag}`, true);
+    getSearchTagLinks(tag: string) {
+      return getSearchTagLinks(tag);
     }
 
     getBacklinks() {

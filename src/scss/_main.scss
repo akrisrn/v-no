@@ -130,6 +130,13 @@ main {
       &.item-tag {
         background-color: $success-color-xs;
 
+
+        a:not(:last-of-type) {
+          &:after {
+            content: "/";
+          }
+        }
+
         &:before {
           margin-right: 2px;
           content: "#";

@@ -104,6 +104,24 @@ export function buildQueryContent(content: string, isComplete = false) {
   return (isComplete ? `#${config.paths.search}` : '') + `?content=${encodeURIComponent(content)}`;
 }
 
+function buildSearchFlagUrl(flag: EFlag, text: string) {
+  return buildQueryContent(`@${flag}: ${text}`, true);
+}
+
+export function getSearchTagLinks(tag: string) {
+  const list: string[][] = [];
+  let start = 0;
+  let indexOf = tag.indexOf('/');
+  while (indexOf >= 0) {
+    indexOf += start;
+    list.push([buildSearchFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
+    start = indexOf + 1;
+    indexOf = tag.substring(start).indexOf('/');
+  }
+  list.push([buildSearchFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
+  return list;
+}
+
 const smoothScroll = new SmoothScroll(undefined, {
   speed: 300,
 });

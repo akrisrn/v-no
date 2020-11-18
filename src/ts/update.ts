@@ -5,6 +5,7 @@ import {
   getDateFromPath,
   getEventListenerDict,
   getLastedDate,
+  getSearchTagLinks,
   getWrapRegExp,
   removeClass,
   scroll,
@@ -186,10 +187,12 @@ function updateLinkPath() {
           flags.tags.forEach(tag => {
             const itemTag = document.createElement('code');
             itemTag.classList.add('item-tag');
-            const a = document.createElement('a');
-            a.innerText = tag;
-            a.href = buildQueryContent(`@${EFlag.tags}:${tag}`, true);
-            itemTag.append(a);
+            getSearchTagLinks(tag).forEach(link => {
+              const a = document.createElement('a');
+              a.href = link[0];
+              a.innerText = link[1];
+              itemTag.append(a);
+            });
             bar.append(itemTag);
           });
           const date = getDateFromPath(path) || getLastedDate(flags.updated);
