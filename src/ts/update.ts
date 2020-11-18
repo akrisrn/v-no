@@ -10,6 +10,7 @@ import {
   scroll,
   sortFiles,
   transForSort,
+  trimList,
 } from '@/ts/utils';
 import { config } from '@/ts/config';
 import Prism from 'prismjs';
@@ -570,7 +571,9 @@ export async function updateSearchPage(params: Dict<string>) {
       if (queryFlag) {
         if (queryParam && queryFlag === EFlag.tags) {
           for (const tag of flags.tags) {
-            if (tag.toLowerCase() === queryParam) {
+            const a = tag.toLowerCase();
+            const b = trimList(queryParam.split('/'), false).join('/');
+            if (a === b || a.startsWith(`${b}/`)) {
               isFind = true;
               break;
             }
