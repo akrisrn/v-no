@@ -59,7 +59,7 @@ function parseData(path: string, data: string): TFile {
         }
         match = linkRegExp.exec(line);
       }
-      lines.push(line);
+      lines.push(line.trimEnd());
     }
   });
   data = lines.join('\n').trim();
@@ -92,8 +92,8 @@ export async function getFile(path: string) {
     } else {
       requestCount++;
       axios.get<string>(addBaseUrl(path)).then(response => {
-        isRequesting[path] = false;
         cachedFiles[path] = parseData(path, response.data);
+        isRequesting[path] = false;
         resolve(cachedFiles[path]);
       }).catch(error => {
         isRequesting[path] = false;
@@ -103,12 +103,15 @@ export async function getFile(path: string) {
   });
 }
 
+const walkedPaths = [...baseFiles];
+
 async function walkFiles(files: TFile[]) {
   const paths: string[] = [];
   files.forEach(file => {
     file.links.forEach(path => {
-      if (cachedFiles[path] === undefined && !paths.includes(path)) {
+      if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
         paths.push(path);
+        walkedPaths.push(path);
       }
     });
   });

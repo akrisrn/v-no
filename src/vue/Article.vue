@@ -34,25 +34,30 @@
       exposeToWindow({
         renderMD: (data: string) => renderMD(this.path, data),
         updateMD: () => {
-          updateSnippet(this.syncData).then(data => this.updateData(data));
-          updateDom();
+          if (this.syncData) {
+            resetRequestCount();
+            updateSnippet(this.syncData).then(data => this.updateData(data));
+          }
+          setTimeout(() => updateDom(), 0);
         },
       });
     }
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
-      resetRequestCount();
-      updateSnippet(this.syncData).then(data => {
-        if (this.isCategory) {
-          updateCategoryPage(data).then(data => this.updateData(data));
-        } else {
-          this.updateData(data);
-          if (this.isSearch) {
-            setTimeout(() => updateSearchPage(this.params), 0);
+      if (this.syncData) {
+        resetRequestCount();
+        updateSnippet(this.syncData).then(data => {
+          if (this.isCategory) {
+            updateCategoryPage(data).then(data => this.updateData(data));
+          } else {
+            this.updateData(data);
+            if (this.isSearch) {
+              setTimeout(() => updateSearchPage(this.params), 0);
+            }
           }
-        }
-      });
+        });
+      }
       setTimeout(() => updateDom(), 0);
     }
 

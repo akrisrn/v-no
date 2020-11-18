@@ -90,7 +90,7 @@ function updateAnchor() {
       }
     }
   });
-  document.querySelectorAll<HTMLHeadingElement>([2, 3, 4, 5, 6].map(n => {
+  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(n => {
     return `article h${n}`;
   }).join(',')).forEach(heading => {
     addEventListener(heading.querySelector('.heading-link')!, 'click', e => {
@@ -454,7 +454,8 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   return data;
 }
 
-function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree, taggedDict: Dict<TFile[]>) {
+function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree,
+                       taggedDict: Dict<TFile[]>) {
   const category: string[] = [];
   let count = 0;
   sortedTags.forEach(tag => {

@@ -146,7 +146,9 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
           textToken.content = text.substr(0, text.length - 1);
           href = `#${href}`;
         } else if (/^\+(#.+)?$/.test(text)) {
-          token.attrJoin('class', 'snippet');
+          if (tokens[idx - 1] === undefined) {
+            token.attrJoin('class', 'snippet');
+          }
           href = addBaseUrl(href);
         } else {
           href = addBaseUrl(href);

@@ -2,7 +2,7 @@
 
 <input id="search-input" placeholder="Something..."/>
 
-::: open .success.empty \
+::: .success.empty .
 <ul id="result">Input something, and press Enter.</ul>
 :::
 
