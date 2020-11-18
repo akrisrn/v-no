@@ -284,7 +284,7 @@ export function renderMD(path: string, data: string) {
       tocDiv.querySelectorAll('a').forEach(a => {
         const count = a.querySelector<HTMLSpanElement>('.count');
         if (count) {
-          a.parentElement!.append(count);
+          a.parentElement!.insertBefore(count, a.nextElementSibling);
         }
       });
       data = data.replace(tocRegExp, tocDiv.outerHTML);

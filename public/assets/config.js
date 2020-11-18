@@ -20,7 +20,7 @@ vnoConfig = {
     pageError: 'There is something wrong with this page.',
     searching: 'Searching...',
     searchNothing: 'Nothing.',
-    showBacklinks: 'Show backlinks.',
+    showBacklinks: 'Show backlinks',
     noBacklinks: 'No backlinks.',
     loading: 'Loading...',
   },

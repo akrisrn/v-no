@@ -22,7 +22,6 @@ function parseData(path: string, data: string): TFile {
     updated: [],
     cover: '',
   };
-  const multiValueFlagMarks = [EFlag.tags, EFlag.updated].map(flag => `@${flag}:`);
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
@@ -36,8 +35,8 @@ function parseData(path: string, data: string): TFile {
       const flagText = match[2];
       if (flagMark.startsWith('@')) {
         const flag = flagMark.substring(1, flagMark.length - 1);
-        if (multiValueFlagMarks.includes(flagMark)) {
-          flags[flag] = trimList(flagText.split(/\s*[,，、]\s*/)).sort();
+        if ([EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
+          flags[flag] = trimList(flagText.split(/[,，、]/)).sort();
         } else {
           flags[flag] = flagText;
         }
