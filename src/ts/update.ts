@@ -450,6 +450,31 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   return data;
 }
 
+function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree, taggedDict: Dict<TFile[]>) {
+  const category: string[] = [];
+  let count = 0;
+  sortedTags.forEach(tag => {
+    const nestedTag = parentTag ? `${parentTag}/${tag}` : tag;
+    let list = '';
+    let fileCount = 0;
+    const taggedFiles = taggedDict[nestedTag];
+    if (taggedFiles) {
+      list = taggedFiles.map(transForSort).sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
+      fileCount = taggedFiles.length;
+      count += fileCount;
+    }
+    const subTree = tagTree[tag];
+    const categories = getCategories(level + 1, nestedTag, Object.keys(subTree).sort(), subTree, taggedDict);
+    const countSpan = `<span class="count">( ${fileCount + categories.count} )</span>`;
+    category.push(`${'#'.repeat(level)} ${tag}${countSpan}${list ? `\n\n${list}` : ''}`);
+    if (categories.data) {
+      category.push(categories.data);
+    }
+    count += categories.count;
+  });
+  return { data: category.join('\n\n'), count: count };
+}
+
 export async function updateCategoryPage(data: string) {
   const listRegExpStr = '^\\[list]$';
   const listRegExp = new RegExp(listRegExpStr, 'im');
@@ -458,6 +483,7 @@ export async function updateCategoryPage(data: string) {
     return data;
   }
   const { files } = await getFiles();
+  const tagTree: TTagTree = {};
   const taggedDict: Dict<TFile[]> = {};
   const untaggedFiles: TFile[] = [];
   Object.values(files).forEach(file => {
@@ -466,6 +492,15 @@ export async function updateCategoryPage(data: string) {
       untaggedFiles.push(file);
     } else {
       flags.tags.forEach(tag => {
+        let cursor = tagTree;
+        tag.split('/').forEach(seg => {
+          let subTree = cursor[seg];
+          if (subTree === undefined) {
+            subTree = {};
+            cursor[seg] = subTree;
+          }
+          cursor = subTree;
+        });
         let taggedFiles = taggedDict[tag];
         if (taggedFiles === undefined) {
           taggedFiles = [file];
@@ -476,18 +511,15 @@ export async function updateCategoryPage(data: string) {
       });
     }
   });
-  const sortedTags = Object.keys(taggedDict).sort();
+  const sortedTags = Object.keys(tagTree).sort();
   if (untaggedFiles.length > 0) {
     const untagged = config.messages.untagged;
+    tagTree[untagged] = {};
     sortedTags.push(untagged);
     taggedDict[untagged] = untaggedFiles;
   }
-  return data.replace(listRegExp, sortedTags.map(tag => {
-    const taggedFiles = taggedDict[tag];
-    const count = `<span class="count">( ${taggedFiles.length} )</span>`;
-    const list = taggedFiles.map(transForSort).sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
-    return `${'#'.repeat(6)} ${tag}${count}\n\n${list}`;
-  }).join('\n\n')).replace(listRegExpG, '');
+  const categories = getCategories(2, '', sortedTags, tagTree, taggedDict);
+  return data.replace(listRegExp, categories.data).replace(listRegExpG, '');
 }
 
 const htmlSymbolDict: Dict<string> = {

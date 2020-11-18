@@ -63,6 +63,7 @@ function parseData(path: string, data: string): TFile {
     }
   });
   data = lines.join('\n').trim();
+  flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
   return { path, data, flags, links };
 }
 

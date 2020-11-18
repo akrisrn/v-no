@@ -62,3 +62,7 @@ type THeading = {
   children: (Element | THeading)[];
   parent: THeading | null;
 }
+
+type TTagTree = {
+  [index: string]: TTagTree;
+}
