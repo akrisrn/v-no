@@ -369,8 +369,8 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const regexp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
-  let match = regexp.exec(data);
+  const linkRegExp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
+  let match = linkRegExp.exec(data);
   while (match) {
     const path = checkLinkPath(match[3]);
     if (path && !updatedPaths.includes(path)) {
@@ -396,59 +396,77 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         snippetDict[match[0]] = { heading, params };
       }
     }
-    match = regexp.exec(data);
+    match = linkRegExp.exec(data);
   }
   const paths = Object.keys(dict);
   if (paths.length === 0) {
     return data;
   }
+  const paramRegExp = getWrapRegExp('{{', '}}', 'g');
   const files = await Promise.all(paths.map(path => {
     updatedPaths.push(path);
     return getFile(path);
   }));
   for (const file of files) {
-    const title = file.flags.title || file.path;
-    const snippetDict = dict[file.path];
+    const path = file.path;
+    const title = file.flags.title || path;
+    const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
       const { heading, params } = snippetDict[match];
-      let snippetData = heading > 1 ? degradeHeading(`# [${title}](#${file.path})\n\n${file.data}`, heading - 1) : file.data;
-      snippetData = snippetData.split('\n').map(line => {
-        const regexp = getWrapRegExp('{{', '}}', 'g');
-        const lineCopy = line;
-        let match = regexp.exec(lineCopy);
-        while (match) {
-          let defaultValue: string;
-          [match[1], defaultValue] = match[1].split('|');
-          const param = params[match[1]];
-          let result: string;
-          if (param !== undefined) {
-            result = param;
-          } else if (defaultValue !== undefined) {
-            result = defaultValue;
-          } else {
-            result = 'undefined';
+      let snippetData = file.data;
+      if (snippetData) {
+        snippetData = snippetData.split('\n').map(line => {
+          const lineCopy = line;
+          let match = paramRegExp.exec(lineCopy);
+          while (match) {
+            let defaultValue: string;
+            [match[1], defaultValue] = match[1].split('|');
+            const param = params[match[1]];
+            let result: string;
+            if (param !== undefined) {
+              result = param;
+            } else if (defaultValue !== undefined) {
+              result = defaultValue;
+            } else {
+              result = 'undefined';
+            }
+            line = line.replace(match[0], result.replace(/\\n/g, '\n'));
+            match = paramRegExp.exec(lineCopy);
           }
-          line = line.replace(match[0], result.replace(/\\n/g, '\n'));
-          match = regexp.exec(lineCopy);
+          return line;
+        }).join('\n');
+        const clip = params['clip'];
+        if (clip !== undefined) {
+          const slips = snippetData.split('--8<--');
+          if (slips.length > 1) {
+            let num = parseInt(clip);
+            if (isNaN(num)) {
+              num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
+            } else if (num < 0) {
+              num = 0;
+            } else if (num >= slips.length) {
+              num = slips.length - 1;
+            }
+            snippetData = slips[num];
+          }
         }
-        return line;
-      }).join('\n');
-      const clip = params['clip'];
-      if (clip !== undefined) {
-        const slips = snippetData.split('--8<--');
-        if (slips.length > 1) {
-          let num = parseInt(clip);
-          if (isNaN(num)) {
-            num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
-          } else if (num < 0) {
-            num = 0;
-          } else if (num >= slips.length) {
-            num = slips.length - 1;
+        snippetData = snippetData.trim();
+        let dataWithHeading = snippetData;
+        if (heading > 1) {
+          const headingText = `# [${title}](#${path})`;
+          if (snippetData) {
+            dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
+          } else {
+            dataWithHeading = degradeHeading(headingText, heading - 1);
           }
-          snippetData = slips[num];
+        }
+        if (snippetData) {
+          snippetData = await updateSnippet(dataWithHeading, [...updatedPaths]);
+        } else if (dataWithHeading) {
+          snippetData = dataWithHeading;
         }
       }
-      data = data.replaceAll(match, await updateSnippet(snippetData, [...updatedPaths]));
+      data = data.split('\n').map(line => line === match ? snippetData : line).join('\n');
     }
   }
   return data;
