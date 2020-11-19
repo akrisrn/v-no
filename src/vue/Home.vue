@@ -383,7 +383,20 @@
           this.isError = false;
           let data = files[0].data;
           if (files.length > 1) {
-            data += '\n\n' + files[1].data;
+            const commonData = files[1].data;
+            let headerData = '';
+            let footerData = commonData;
+            const indexOf = commonData.indexOf('--8<--');
+            if (indexOf >= 0) {
+              headerData = commonData.substring(0, indexOf).trimEnd();
+              footerData = commonData.substring(indexOf + 6).trimStart();
+            }
+            if (headerData) {
+              data = headerData + '\n\n' + data;
+            }
+            if (footerData) {
+              data += '\n\n' + footerData;
+            }
           }
           this.setData(data, files[0].flags);
           if (this.hasLoadedBacklinks) {
