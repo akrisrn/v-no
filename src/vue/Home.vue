@@ -63,7 +63,9 @@
         <footer v-if="!isHome" class="markdown-body">
           <a :href="baseUrl" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
-            <span v-if="date" class="date">{{ updated ? `${updated} | ${config.messages.lastUpdated}` : date }}</span>
+            <span v-if="date" class="date">
+              {{ updated && updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date }}
+            </span>
             <span v-else-if="updated" class="date">{{ updated }}</span>
           </template>
         </footer>
@@ -82,9 +84,8 @@
     cleanEventListenerDict,
     EIcon,
     exposeToWindow,
-    getDateFromPath,
+    getDateRange,
     getIcon,
-    getLastedDate,
     getSearchTagLinks,
     isExternalLink,
     removeClass,
@@ -111,6 +112,7 @@
     data = '';
     title = '';
     tags: string[] = [];
+    date = '';
     updated = '';
     cover = '';
 
@@ -191,10 +193,6 @@
 
     get isHome() {
       return this.path === this.config.paths.index;
-    }
-
-    get date() {
-      return getDateFromPath(this.path);
     }
 
     get metaThemeColor() {
@@ -361,7 +359,7 @@
         document.title = `${this.title}`;
       }
       this.tags = [...flags.tags];
-      this.updated = getLastedDate(flags.updated);
+      [this.date, this.updated] = getDateRange(this.path, flags.updated);
       if (flags.cover) {
         const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
         this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;

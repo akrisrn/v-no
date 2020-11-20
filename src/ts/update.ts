@@ -2,9 +2,8 @@ import { checkLinkPath, getFile, getFiles } from '@/ts/file';
 import {
   buildQueryContent,
   EFlag,
-  getDateFromPath,
+  getDateRange,
   getEventListenerDict,
-  getLastedDate,
   getSearchTagLinks,
   getWrapRegExp,
   removeClass,
@@ -195,7 +194,8 @@ function updateLinkPath() {
             });
             bar.append(itemTag);
           });
-          const date = getDateFromPath(path) || getLastedDate(flags.updated);
+          const dateRange = getDateRange(path, flags.updated);
+          const date = dateRange[0] || dateRange[1];
           if (date) {
             const itemDate = document.createElement('code');
             itemDate.classList.add('item-date');

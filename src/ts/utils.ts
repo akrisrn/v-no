@@ -88,16 +88,29 @@ function formatDate(date: Date) {
   return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
 }
 
-export function getDateFromPath(path: string) {
+function getDateFromPath(path: string) {
   const match = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
   return match ? formatDate(new Date(match[1])) : '';
 }
 
-export function getLastedDate(dateList: string[]) {
+export function getDateRange(path: string, updated: string[]) {
+  const dateList = [...updated];
+  const dateFromPath = getDateFromPath(path);
+  if (dateFromPath) {
+    dateList.push(dateFromPath);
+  }
   const timeList = dateList.map(date => {
     return date.match(/^[0-9]+$/) ? parseInt(date) : new Date(date).getTime();
-  }).filter(time => !isNaN(time));
-  return timeList.length > 0 ? formatDate(new Date(Math.max(...timeList))) : '';
+  }).filter(time => !isNaN(time)).sort();
+  const length = timeList.length;
+  switch (length) {
+    case 0:
+      return ['', ''];
+    case 1:
+      return ['', formatDate(new Date(timeList[0]))];
+    default:
+      return [timeList[0], timeList[length - 1]].map(time => formatDate(new Date(time)));
+  }
 }
 
 export function buildQueryContent(content: string, isComplete = false) {
@@ -142,11 +155,12 @@ export function getIcon(type: EIcon, width = 16, height = width) {
 export function transForSort(file: TFile) {
   const path = file.path;
   const flags = file.flags;
+  const dateRange = getDateRange(path, flags.updated);
   return {
     path,
     title: flags.title || path,
     tags: [...flags.tags],
-    date: getDateFromPath(path) || getLastedDate(flags.updated),
+    date: dateRange[0] || dateRange[1],
   } as TFileForSort;
 }
 
