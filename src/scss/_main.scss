@@ -34,7 +34,7 @@ main {
     font-family: $font-family;
     font-size: 32px;
     font-weight: bolder;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     transition: color 0.5s, margin-top 0.5s;
     color: $font-color;
 
@@ -129,7 +129,6 @@ main {
 
       &.item-tag {
         background-color: $success-color-xs;
-
 
         a:not(:last-of-type) {
           &:after {

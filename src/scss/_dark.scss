@@ -76,6 +76,12 @@ body.dark {
       tr + tr {
         border-top-color: $dark-border-color;
       }
+
+      td, th {
+        &:not(:last-of-type) {
+          border-right-color: $dark-border-color;
+        }
+      }
     }
 
     img, kbd {

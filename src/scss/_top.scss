@@ -41,6 +41,10 @@
         content: "|";
       }
 
+      &:first-of-type {
+        margin-right: 8px;
+      }
+
       &:first-of-type, &:last-child {
         &:after {
           content: none;
