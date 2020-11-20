@@ -241,8 +241,6 @@ export function renderMD(path: string, data: string) {
   if (needRenderToc) {
     const headingLength = headingList.length;
     if (headingLength > 0) {
-      const tocDiv = document.createElement('div');
-      tocDiv.classList.add('toc');
       let left = headingLength;
       let right = headingLength;
       if (headingLength > 11) {
@@ -268,6 +266,8 @@ export function renderMD(path: string, data: string) {
           left += 1;
         }
       }
+      const tocDiv = document.createElement('div');
+      tocDiv.classList.add('toc');
       if (left >= headingLength) {
         tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
       } else if (right >= headingLength) {
@@ -289,7 +289,12 @@ export function renderMD(path: string, data: string) {
           a.parentElement!.insertBefore(count, a.nextElementSibling);
         }
       });
-      data = data.replace(tocRegExp, tocDiv.outerHTML);
+      const details = document.createElement('details');
+      details.open = true;
+      details.classList.add('empty');
+      details.append(document.createElement('summary'));
+      details.append(tocDiv);
+      data = data.replace(tocRegExp, details.outerHTML);
     }
     data = data.replace(tocRegExpG, '');
   }
