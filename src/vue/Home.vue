@@ -2,7 +2,7 @@
   <div>
     <div id="top">
       <div>
-        <img :src="favicon" alt=""/>
+        <img v-if="favicon" :src="favicon" alt=""/>
         <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
         <a :href="`#${config.paths.readme}`"></a>
@@ -129,7 +129,7 @@
     keyInput = '';
     inputBinds: Dict<() => void> = {};
 
-    favicon = addBaseUrl(this.config.paths.favicon);
+    favicon = this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     iconSync = getIcon(EIcon.sync);
     iconBacklink = getIcon(EIcon.backlink, 18);
 
@@ -265,7 +265,11 @@
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
-      icon.href = this.favicon;
+      if (this.favicon) {
+        icon.href = this.favicon;
+      } else if (icon) {
+        icon.remove();
+      }
       // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
         home: () => {

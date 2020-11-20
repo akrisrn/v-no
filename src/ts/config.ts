@@ -49,5 +49,8 @@ export const baseFiles = [
   config.paths.archive,
   config.paths.category,
   config.paths.search,
-  config.paths.common,
 ];
+
+if (config.paths.common) {
+  baseFiles.push(config.paths.common);
+}

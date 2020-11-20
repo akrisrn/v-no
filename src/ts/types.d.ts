@@ -2,13 +2,13 @@ interface IConfig {
   siteName?: string;
   dateFormat?: string;
   paths: {
-    favicon: string;
+    favicon?: string;
     index: string;
     readme: string;
     archive: string;
     category: string;
     search: string;
-    common: string;
+    common?: string;
   };
   messages: {
     home: string;
