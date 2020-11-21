@@ -96,7 +96,18 @@ const defaultFenceRenderRule = getDefaultRenderRule('fence');
 markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   if (token.tag === 'code') {
-    token.attrJoin('class', 'line-numbers');
+    const indexOf = token.info.indexOf('|');
+    let dataLine = '';
+    if (indexOf >= 0) {
+      dataLine = token.info.substring(indexOf + 1);
+      token.info = token.info.substring(0, indexOf);
+    }
+    if (token.info) {
+      token.attrJoin('class', 'line-numbers');
+      if (dataLine) {
+        token.attrSet('data-line', dataLine);
+      }
+    }
   }
   return defaultFenceRenderRule(tokens, idx, options, env, self);
 };

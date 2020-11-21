@@ -8,7 +8,7 @@ module.exports = {
       'prismjs',
       {
         languages: process.env.PRISM_LANGUAGES.split(',').map(language => language.trim()),
-        plugins: ['line-numbers', 'show-language', 'copy-to-clipboard'],
+        plugins: ['line-numbers', 'line-highlight', 'show-language', 'copy-to-clipboard'],
         theme: 'tomorrow',
         css: true,
       },
