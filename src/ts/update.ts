@@ -346,6 +346,20 @@ function updateFoldableHeading() {
   }
 }
 
+function updateHighlight() {
+  document.querySelectorAll('article pre > code').forEach(code => {
+    const dataLine = code.getAttribute('data-line');
+    if (dataLine) {
+      code.parentElement!.setAttribute('data-line', dataLine);
+      code.removeAttribute('data-line');
+    }
+  });
+  Prism.highlightAll();
+  document.querySelectorAll<HTMLDivElement>('.line-highlight').forEach(div => {
+    div.style.top = `${parseInt(div.style.top) + 4}px`;
+  });
+}
+
 export function updateDom() {
   updateDD();
   updateAnchor();
@@ -354,7 +368,7 @@ export function updateDom() {
   updateCustomScript();
   updateCustomStyle();
   updateFoldableHeading();
-  Prism.highlightAll();
+  updateHighlight();
 }
 
 function degradeHeading(data: string, level: number) {
