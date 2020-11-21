@@ -82,3 +82,29 @@ jobs:
           BRANCH: master
           FOLDER: v-no-hash-template
           COMMIT_MESSAGE: release v${{ env.RELEASE_VERSION }}
+
+      - name: Checkout v-no-doc
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          repository: akrisrn/v-no-doc
+          path: v-no-doc
+
+      - name: Build (doc)
+        run: |
+          echo "VUE_APP_PUBLIC_PATH=/v-no-doc/" > .env.local
+          echo "PRISM_LANGUAGES=javascript,bash" >> .env.local
+          echo "" >> src/ts/update.ts
+          yarn run build && yarn run clean-dist-template
+          rm -r v-no-doc/assets/css/ v-no-doc/assets/js/
+          cp -r dist/* v-no-doc/
+
+      - name: Deploy v-no-doc
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.UPDATE_TEMPLATE_TOKEN }}
+          GIT_CONFIG_NAME: AkrISrn
+          REPOSITORY_NAME: akrisrn/v-no-doc
+          BRANCH: master
+          FOLDER: v-no-doc
+          COMMIT_MESSAGE: release v${{ env.RELEASE_VERSION }}
