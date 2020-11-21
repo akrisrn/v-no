@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set RELEASE_VERSION
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          yarn && yarn run build
+          cd dist && zip -r ../v-no-$RELEASE_VERSION-template.zip ./* && cd ..
+          yarn run clean-dist-template
+          cd dist && zip -r ../v-no-$RELEASE_VERSION.zip ./* && cd ..
+
+      - name: Build (hash)
+        run: |
+          echo "VUE_APP_INDEX_PATH=hash/index.html" > .env.local
+          yarn run build
+          cd dist && zip -r ../v-no-$RELEASE_VERSION-hash-template.zip ./* && cd ..
+          yarn run clean-dist-template
+          cd dist && zip -r ../v-no-$RELEASE_VERSION-hash.zip ./* && cd ..
+
+      - name: Create release
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const { repo: { owner, repo } } = context;
+            const version = process.env.RELEASE_VERSION;
+            const release = await github.repos.createRelease({
+              owner, repo,
+              tag_name: process.env.GITHUB_REF,
+              name: `Draft release of ${version}`,
+              draft: true,
+            });
+            await Promise.all([
+              '',
+              '-hash',
+              '-template',
+              '-hash-template',
+            ].map(ext => `v-no-${version}${ext}.zip`).map(file => github.repos.uploadReleaseAsset({
+              owner, repo,
+              release_id: release.data.id,
+              name: file,
+              data: fs.readFileSync(`./${file}`),
+            })));
