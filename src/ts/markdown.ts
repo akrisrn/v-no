@@ -8,7 +8,7 @@ const deflist = require('markdown-it-deflist');
 const taskLists = require('markdown-it-task-lists');
 const container = require('markdown-it-container');
 
-const detailsRegExp = /^(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
+const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
 
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
@@ -17,7 +17,7 @@ const markdownIt = new MarkdownIt({
   linkify: true,
 }).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
   validate: (params: string) => {
-    return params.trim().match(detailsRegExp);
+    return params.match(detailsRegExp) || params === '';
   },
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
@@ -25,16 +25,23 @@ const markdownIt = new MarkdownIt({
       let isOpen = false;
       let classList: string[] = [];
       let summary = '';
-      const match = token.info.trim().match(detailsRegExp)!;
-      if (match[2]) {
-        classList = trimList(match[2].split('.'));
-      }
-      if (classList.includes('empty')) {
-        isOpen = true;
-      } else if (match[3]) {
-        summary = markdownIt.render(match[3]);
-        if (match[1]) {
+      const match = token.info.match(detailsRegExp);
+      if (match) {
+        if (match[2]) {
+          classList = trimList(match[2].split('.'));
+        }
+        if (classList.includes('empty')) {
           isOpen = true;
+        } else if (match[3]) {
+          if (match[3] !== '\\') {
+            summary = markdownIt.render(match[3]);
+          }
+          if (match[1]) {
+            isOpen = true;
+          }
+        } else {
+          isOpen = true;
+          classList.push('empty');
         }
       } else {
         isOpen = true;
