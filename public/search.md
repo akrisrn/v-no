@@ -1,5 +1,7 @@
 # SEARCH
 
+@tags: root
+
 <input id="search-input" placeholder="Something..."/>
 
 ::: .success.empty .

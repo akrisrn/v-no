@@ -1,5 +1,7 @@
 # CATEGORIES
 
+@tags: root
+
 [toc]
 
 ---
