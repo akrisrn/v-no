@@ -298,6 +298,7 @@
       });
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
+        version: process.env.VUE_APP_VERSION,
         axios,
         baseUrl: this.baseUrl,
         isHash: this.isHashMode,
