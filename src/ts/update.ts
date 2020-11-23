@@ -221,7 +221,7 @@ function updateLinkPath() {
 
 function updateCustomScript() {
   document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
-    if (a.innerText === '*') {
+    if (a.innerText === '$') {
       const href = a.getAttribute('href')!;
       if (!document.querySelector(`script[src='${href}']`)) {
         const script = document.createElement('script');
@@ -236,7 +236,7 @@ function updateCustomScript() {
 
 function updateCustomStyle() {
   document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
-    if (a.innerText === '$') {
+    if (a.innerText === '*') {
       const href = a.getAttribute('href')!;
       if (!document.querySelector(`link[href='${href}']`)) {
         const link = document.createElement('link');
