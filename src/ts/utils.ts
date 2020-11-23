@@ -221,3 +221,28 @@ export function sortFiles(fileA: TFileForSort, fileB: TFileForSort) {
   }
   return x;
 }
+
+export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
+  const list: { index: number; length: number; match: string }[] = [];
+  let match = regexp.exec(data);
+  while (match) {
+    list.push({
+      index: match.index,
+      length: match[0].length,
+      match: match[1],
+    });
+    match = regexp.exec(data);
+  }
+  if (list.length === 0) {
+    return data;
+  }
+  let newData = '';
+  let start = 0;
+  list.forEach(item => {
+    const { index, length, match } = item;
+    newData += data.substring(start, index) + callback(match);
+    start = index + length;
+  });
+  newData += data.substring(start);
+  return newData.trim();
+}
