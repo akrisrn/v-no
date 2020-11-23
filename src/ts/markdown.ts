@@ -190,73 +190,50 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
-function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
-}
-
 export function renderMD(data: string) {
   const tocRegExpStr = '^\\[toc]$';
   const tocRegExp = new RegExp(tocRegExpStr, 'im');
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
   const needRenderToc = tocRegExp.test(data);
-  const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$');
-  const evalRegExp = getWrapRegExp('\\$', '\\$', 'g', true);
-  let firstHeading = '';
-  const headingCount: Dict<number> = {};
-  const headingList: string[] = [];
-  data = data.split('\n').map(line => {
-    if (needRenderToc) {
-      const headingMatch = line.match(headingRegExp);
-      if (headingMatch) {
-        const headingLevel = headingMatch[1];
-        let headingText = headingMatch[2];
-        const linkMatch = headingText.match(/\[(.*?)]\((.*?)\)/);
-        if (linkMatch) {
-          const text = linkMatch[1];
-          const href = linkMatch[2];
-          if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
-            if (text === '#') {
-              headingText = href;
-            } else {
-              headingText = text.substr(0, text.length - 1);
-            }
-          } else {
-            headingText = text;
-          }
-        }
-        if (!firstHeading) {
-          firstHeading = headingLevel;
-        }
-        let prefix = '-';
-        if (headingLevel !== firstHeading) {
-          prefix = headingLevel.replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
-        }
-        const headingTag = `h${headingLevel.length}`;
-        if (headingCount[headingTag] === undefined) {
-          headingCount[headingTag] = 0;
-        } else {
-          headingCount[headingTag]++;
-        }
-        headingList.push(`${prefix} [${headingText}](#${headingTag}-${headingCount[headingTag]})`);
-      }
-    }
-    // 将被 $ 包围的部分作为 JavaScript 表达式执行
-    const lineCopy = line;
-    let evalMatch = evalRegExp.exec(lineCopy);
-    while (evalMatch) {
-      const evalStr = evalMatch[1];
-      let result: string;
-      try {
-        result = evalFunction(evalStr, { data });
-      } catch (e) {
-        result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::`;
-      }
-      line = line.replace(evalMatch[0], result);
-      evalMatch = evalRegExp.exec(lineCopy);
-    }
-    return line;
-  }).join('\n');
   if (needRenderToc) {
+    const headingList: string[] = [];
+    let firstHeading = '';
+    const headingCount: Dict<number> = {};
+    const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$', 'gm');
+    let headingMatch = headingRegExp.exec(data);
+    while (headingMatch) {
+      const headingLevel = headingMatch[1];
+      let headingText = headingMatch[2];
+      const linkMatch = headingText.match(/\[(.*?)]\((.*?)\)/);
+      if (linkMatch) {
+        const text = linkMatch[1];
+        const href = linkMatch[2];
+        if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
+          if (text === '#') {
+            headingText = href;
+          } else {
+            headingText = text.substr(0, text.length - 1);
+          }
+        } else {
+          headingText = text;
+        }
+      }
+      if (!firstHeading) {
+        firstHeading = headingLevel;
+      }
+      let prefix = '-';
+      if (headingLevel !== firstHeading) {
+        prefix = headingLevel.replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
+      }
+      const headingTag = `h${headingLevel.length}`;
+      if (headingCount[headingTag] === undefined) {
+        headingCount[headingTag] = 0;
+      } else {
+        headingCount[headingTag]++;
+      }
+      headingList.push(`${prefix} [${headingText}](#${headingTag}-${headingCount[headingTag]})`);
+      headingMatch = headingRegExp.exec(data);
+    }
     const headingLength = headingList.length;
     if (headingLength > 0) {
       let left = headingLength;
