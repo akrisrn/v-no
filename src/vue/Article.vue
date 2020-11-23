@@ -17,7 +17,7 @@
     @Prop() params!: Dict<string>;
 
     get markdown() {
-      return renderMD(this.path, this.syncData);
+      return renderMD(this.syncData);
     }
 
     get isCategory() {
@@ -32,7 +32,7 @@
     created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        renderMD: (data: string) => renderMD(this.path, data),
+        renderMD: (data: string) => renderMD(data),
         updateMD: () => {
           if (this.syncData) {
             resetRequestCount();

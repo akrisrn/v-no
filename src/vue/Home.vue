@@ -207,6 +207,7 @@
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
+      exposeToWindow({ path: this.path });
       cleanEventListenerDict();
       document.querySelectorAll('.custom').forEach(element => {
         element.remove();
@@ -301,6 +302,7 @@
         version: process.env.VUE_APP_VERSION,
         axios,
         baseUrl: this.baseUrl,
+        path: this.path,
         isHash: this.isHashMode,
         addInputBind: this.addInputBind,
       });

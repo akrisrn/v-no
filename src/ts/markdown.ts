@@ -194,7 +194,7 @@ function evalFunction(evalStr: string, params: Dict<any>) {
   return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
 }
 
-export function renderMD(path: string, data: string) {
+export function renderMD(data: string) {
   const tocRegExpStr = '^\\[toc]$';
   const tocRegExp = new RegExp(tocRegExpStr, 'im');
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
@@ -247,7 +247,7 @@ export function renderMD(path: string, data: string) {
       const evalStr = evalMatch[1];
       let result: string;
       try {
-        result = evalFunction(evalStr, { path, data });
+        result = evalFunction(evalStr, { data });
       } catch (e) {
         result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::`;
       }
