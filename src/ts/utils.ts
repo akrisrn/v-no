@@ -246,3 +246,19 @@ export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: 
   newData += data.substring(start);
   return newData.trim();
 }
+
+function evalFunction(evalStr: string, params: Dict<any>) {
+  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
+}
+
+export function replaceInlineScript(data: string) {
+  return replaceByRegExp(getWrapRegExp('\\$', '\\$', 'g'), data, evalStr => {
+    let result: string;
+    try {
+      result = evalFunction(evalStr, { data });
+    } catch (e) {
+      result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::`;
+    }
+    return result;
+  });
+}
