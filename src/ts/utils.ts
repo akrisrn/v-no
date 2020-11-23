@@ -252,12 +252,12 @@ function evalFunction(evalStr: string, params: Dict<any>) {
 }
 
 export function replaceInlineScript(data: string) {
-  return replaceByRegExp(getWrapRegExp('\\$', '\\$', 'g'), data, evalStr => {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
     let result: string;
     try {
       result = evalFunction(evalStr, { data });
     } catch (e) {
-      result = `::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::`;
+      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
     return result;
   });
