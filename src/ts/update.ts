@@ -7,6 +7,8 @@ import {
   getSearchTagLinks,
   getWrapRegExp,
   removeClass,
+  replaceByRegExp,
+  replaceInlineScript,
   scroll,
   sortFiles,
   transForSort,
@@ -424,31 +426,26 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   for (const file of files) {
     const path = file.path;
     const title = file.flags.title || path;
+    const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
-      const { heading, params } = snippetDict[match];
-      let snippetData = file.data;
+      let snippetData = fileData;
       if (snippetData) {
-        snippetData = snippetData.split('\n').map(line => {
-          const lineCopy = line;
-          let match = paramRegExp.exec(lineCopy);
-          while (match) {
-            let defaultValue: string;
-            [match[1], defaultValue] = match[1].split('|');
-            const param = params[match[1]];
-            let result: string;
-            if (param !== undefined) {
-              result = param;
-            } else if (defaultValue !== undefined) {
-              result = defaultValue;
-            } else {
-              result = 'undefined';
-            }
-            line = line.replace(match[0], result.replace(/\\n/g, '\n'));
-            match = paramRegExp.exec(lineCopy);
+        const { heading, params } = snippetDict[match];
+        snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
+          let defaultValue: string;
+          [match, defaultValue] = match.split('|');
+          const param = params[match];
+          let result: string;
+          if (param !== undefined) {
+            result = param;
+          } else if (defaultValue !== undefined) {
+            result = defaultValue;
+          } else {
+            result = 'undefined';
           }
-          return line;
-        }).join('\n');
+          return result.replace(/\\n/g, '\n');
+        });
         const clip = params['clip'];
         if (clip !== undefined) {
           const slips = snippetData.split('--8<--');
@@ -461,10 +458,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
             } else if (num >= slips.length) {
               num = slips.length - 1;
             }
-            snippetData = slips[num];
+            snippetData = slips[num].trim();
           }
         }
-        snippetData = snippetData.trim();
         let dataWithHeading = snippetData;
         if (heading > 1) {
           const headingText = `# [${title}](#${path})`;
@@ -483,7 +479,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       data = data.split('\n').map(line => line === match ? snippetData : line).join('\n');
     }
   }
-  return data;
+  return data.trim();
 }
 
 function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree,
