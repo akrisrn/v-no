@@ -37,7 +37,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :params="params" :path="path"></Article>
+        <Article :data="data" :path="path" :query="query"></Article>
         <div v-if="!isError" id="backlinks" class="markdown-body">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -138,14 +138,14 @@
     baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
 
-    params: Dict<string> = {};
+    query: Dict<string> = {};
 
     get config() {
       return config;
     }
 
     get path() {
-      this.params = {};
+      this.query = {};
       let path = this.$route.path;
       const hash = this.$route.hash;
       if (this.isIndexPath) {
@@ -165,7 +165,7 @@
             path.substr(indexOf + 1).split('&').forEach(param => {
               const indexOfEQ = param.indexOf('=');
               if (indexOfEQ >= 0) {
-                this.params[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
+                this.query[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
               }
             });
             path = path.substring(0, indexOf);

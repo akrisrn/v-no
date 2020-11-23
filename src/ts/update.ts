@@ -566,8 +566,8 @@ function escapeHTML(html: string) {
   return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
 }
 
-export async function updateSearchPage(params: Dict<string>) {
-  let content = params.content !== undefined ? decodeURIComponent(params.content.trim()) : '';
+export async function updateSearchPage(query: Dict<string>) {
+  let content = query.content !== undefined ? decodeURIComponent(query.content.trim()) : '';
   const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
   if (searchInput) {
     searchInput.value = content;

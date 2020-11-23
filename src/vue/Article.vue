@@ -14,7 +14,7 @@
   export default class Article extends Vue {
     @Prop() data!: string;
     @Prop() path!: string;
-    @Prop() params!: Dict<string>;
+    @Prop() query!: Dict<string>;
 
     mdData = this.data ? replaceInlineScript(this.data) : '';
     markdown = this.mdData ? renderMD(this.mdData) : '';
@@ -62,7 +62,7 @@
           } else {
             this.updateData(data);
             if (this.isSearch) {
-              setTimeout(() => updateSearchPage(this.params), 0);
+              setTimeout(() => updateSearchPage(this.query), 0);
             }
           }
         });
