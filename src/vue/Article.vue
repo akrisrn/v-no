@@ -5,20 +5,19 @@
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
-  import { exposeToWindow } from '@/ts/utils';
+  import { exposeToWindow, replaceInlineScript } from '@/ts/utils';
   import { config } from '@/ts/config';
   import { noRequest, resetRequestCount } from '@/ts/file';
-  import { Component, Prop, PropSync, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
   export default class Article extends Vue {
-    @PropSync('data') syncData!: string;
+    @Prop() data!: string;
     @Prop() path!: string;
     @Prop() params!: Dict<string>;
 
-    get markdown() {
-      return renderMD(this.syncData);
-    }
+    mdData = this.data ? replaceInlineScript(this.data) : '';
+    markdown = this.mdData ? renderMD(this.mdData) : '';
 
     get isCategory() {
       return this.path === config.paths.category;
@@ -32,11 +31,17 @@
     created() {
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        renderMD: (data: string) => renderMD(data),
+        renderMD: (data: string) => {
+          data = data.trim();
+          if (data) {
+            data = replaceInlineScript(data);
+          }
+          return data ? renderMD(data) : '';
+        },
         updateMD: () => {
-          if (this.syncData) {
+          if (this.mdData) {
             resetRequestCount();
-            updateSnippet(this.syncData).then(data => this.updateData(data));
+            updateSnippet(this.mdData).then(data => this.updateData(data));
           }
           setTimeout(() => updateDom(), 0);
         },
@@ -45,11 +50,15 @@
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
-      if (this.syncData) {
+      if (this.mdData) {
         resetRequestCount();
-        updateSnippet(this.syncData).then(data => {
+        updateSnippet(this.mdData).then(data => {
           if (this.isCategory) {
-            updateCategoryPage(data).then(data => this.updateData(data));
+            if (data) {
+              updateCategoryPage(data).then(data => this.updateData(data));
+            } else {
+              this.updateData(data);
+            }
           } else {
             this.updateData(data);
             if (this.isSearch) {
@@ -62,10 +71,14 @@
     }
 
     updateData(data: string) {
-      if (data !== this.syncData) {
-        this.syncData = data;
-        if (!noRequest()) {
-          setTimeout(() => updateDom(), 0);
+      if (data !== this.mdData) {
+        if (data) {
+          this.markdown = renderMD(data);
+          if (!noRequest()) {
+            setTimeout(() => updateDom(), 0);
+          }
+        } else {
+          this.markdown = '';
         }
       }
     }

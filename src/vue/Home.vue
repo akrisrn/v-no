@@ -37,7 +37,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :params="params" :path="path" @update:data="data = $event"></Article>
+        <Article :data="data" :params="params" :path="path"></Article>
         <div v-if="!isError" id="backlinks" class="markdown-body">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
