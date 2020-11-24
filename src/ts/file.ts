@@ -136,7 +136,7 @@ export async function getFile(path: string) {
     await new Promise(_ => setTimeout(_, 100));
   }
   isRequesting[path] = true;
-  return new Promise<TFile>((resolve, reject) => {
+  return new Promise<TFile>(resolve => {
     if (cachedFiles[path] !== undefined) {
       isRequesting[path] = false;
       resolve(cachedFiles[path]);
@@ -146,9 +146,10 @@ export async function getFile(path: string) {
         cachedFiles[path] = parseData(path, response.data);
         isRequesting[path] = false;
         resolve(cachedFiles[path]);
-      }).catch(error => {
+      }).catch(() => {
+        cachedFiles[path] = createErrorFile(path);
         isRequesting[path] = false;
-        reject(error);
+        resolve(cachedFiles[path]);
       });
     }
   });
@@ -159,12 +160,14 @@ const walkedPaths = [...baseFiles];
 async function walkFiles(files: TFile[]) {
   const paths: string[] = [];
   files.forEach(file => {
-    file.links.forEach(path => {
-      if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
-        paths.push(path);
-        walkedPaths.push(path);
-      }
-    });
+    if (!file.isError) {
+      file.links.forEach(path => {
+        if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
+          paths.push(path);
+          walkedPaths.push(path);
+        }
+      });
+    }
   });
   if (paths.length > 0) {
     await walkFiles(await Promise.all(paths.map(path => getFile(path))));

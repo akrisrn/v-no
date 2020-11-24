@@ -31,6 +31,16 @@ body.dark {
         color: $dark-font-color;
       }
     }
+
+    &.error {
+      header {
+        color: $danger-color-s;
+      }
+    }
+  }
+
+  a.error {
+    color: $danger-color-s !important;
   }
 
   #toggle-dark, #toggle-zen, #to-top {

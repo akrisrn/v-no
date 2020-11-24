@@ -339,9 +339,15 @@
           promises.push(getFile(commonPath));
         }
         Promise.all(promises).then(files => {
+          const file = files[0];
+          if (file.isError) {
+            this.isError = true;
+            this.setData(file.data, file.flags);
+            return;
+          }
           this.isError = false;
-          let data = files[0].data;
-          if (files.length > 1) {
+          let data = file.data;
+          if (files.length > 1 && !files[1].isError) {
             const commonData = files[1].data;
             let headerData = '';
             let footerData = commonData;
@@ -357,14 +363,10 @@
               data += '\n\n' + footerData;
             }
           }
-          this.setData(data, files[0].flags);
+          this.setData(data, file.flags);
           if (this.hasLoadedBacklinks) {
             this.getBacklinks();
           }
-        }).catch(() => {
-          this.isError = true;
-          const { data, flags } = createErrorFile(this.filePath);
-          this.setData(data, flags);
         });
       } else {
         setTimeout(() => {

@@ -62,6 +62,9 @@ function updateAnchor() {
       if (path) {
         a.classList.add('snippet');
         getFile(path).then(file => {
+          if (file.isError) {
+            a.classList.add('error');
+          }
           a.innerText = file.flags.title;
         }).finally(() => {
           removeClass(a, 'snippet');
@@ -165,6 +168,9 @@ function updateLinkPath() {
     }
     a.classList.add('snippet');
     getFile(path).then(file => {
+      if (file.isError) {
+        a.classList.add('error');
+      }
       const flags = file.flags;
       a.innerText = flags.title;
       const parent = a.parentElement!;
@@ -181,6 +187,9 @@ function updateLinkPath() {
         }
         if (!isPass) {
           parent.classList.add('article');
+          if (file.isError) {
+            return;
+          }
           const bar = document.createElement('div');
           bar.classList.add('bar');
           flags.tags.forEach(tag => {
@@ -421,7 +430,6 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   }));
   for (const file of files) {
     const path = file.path;
-    const title = file.flags.title;
     const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
@@ -459,7 +467,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         }
         let dataWithHeading = snippetData;
         if (heading > 1) {
-          const headingText = `# [${title}](#${path})`;
+          const headingText = `# [#](${path})`;
           if (snippetData) {
             dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
           } else {
@@ -472,7 +480,12 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           snippetData = dataWithHeading;
         }
       }
-      data = data.split('\n').map(line => line === match ? snippetData : line).join('\n');
+      data = data.split('\n').map(line => {
+        if (line === match) {
+          return file.isError ? `::: .danger.empty .\n${snippetData}\n:::` : snippetData;
+        }
+        return line;
+      }).join('\n');
     }
   }
   return data.trim();
@@ -515,7 +528,10 @@ export async function updateCategoryPage(data: string) {
   const tagTree: TTagTree = {};
   const taggedDict: Dict<TFile[]> = {};
   const untaggedFiles: TFile[] = [];
-  Object.values(files).forEach(file => {
+  for (const file of Object.values(files)) {
+    if (file.isError) {
+      continue;
+    }
     const flags = file.flags;
     if (flags.tags.length === 0) {
       untaggedFiles.push(file);
@@ -539,7 +555,7 @@ export async function updateCategoryPage(data: string) {
         }
       });
     }
-  });
+  }
   const sortedTags = Object.keys(tagTree).sort();
   if (untaggedFiles.length > 0) {
     const untagged = config.messages.untagged;
@@ -593,6 +609,9 @@ export async function updateSearchPage(query: Dict<string>) {
     const resultFiles: TFile[] = [];
     const quoteDict: Dict<HTMLQuoteElement> = {};
     for (const file of Object.values(files)) {
+      if (file.isError) {
+        continue;
+      }
       const { data, flags } = file;
       let isFind = false;
       let hasQuote = false;

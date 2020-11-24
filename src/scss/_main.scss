@@ -147,4 +147,14 @@ main {
   .center {
     text-align: center;
   }
+
+  &.error {
+    header {
+      color: $danger-color;
+    }
+  }
+}
+
+a.error {
+  color: $danger-color !important;
 }
