@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-  import { getErrorFile, getFile, getFiles } from '@/ts/file';
+  import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
     cleanEventListenerDict,
@@ -87,7 +87,7 @@
     sortFiles,
   } from '@/ts/utils';
   import { config, getSelectConf } from '@/ts/config';
-  import axios, { AxiosError } from 'axios';
+  import axios from 'axios';
   import { Component, Vue, Watch } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
 
@@ -361,20 +361,15 @@
           if (this.hasLoadedBacklinks) {
             this.getBacklinks();
           }
-        }).catch((error: AxiosError) => {
+        }).catch(() => {
           this.isError = true;
-          const { data, flags } = getErrorFile(error);
+          const { data, flags } = createErrorFile(this.filePath);
           this.setData(data, flags);
         });
       } else {
         setTimeout(() => {
           this.isError = true;
-          const { data, flags } = getErrorFile({
-            response: {
-              status: 404,
-              statusText: 'Not Found',
-            },
-          } as AxiosError);
+          const { data, flags } = createErrorFile(this.filePath);
           this.setData(data, flags);
         }, 0);
       }

@@ -1,10 +1,10 @@
 import { addBaseUrl, EFlag, formatDate, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import { baseFiles, config } from '@/ts/config';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
 
-export function createFlags(title = ''): IFlags {
+function createFlags(title = ''): IFlags {
   return {
     title,
     tags: [],
@@ -12,6 +12,16 @@ export function createFlags(title = ''): IFlags {
     cover: '',
     startDate: '',
     endDate: '',
+  };
+}
+
+export function createErrorFile(path: string): TFile {
+  return {
+    path,
+    data: config.messages.pageError,
+    flags: createFlags(path),
+    links: [],
+    isError: true,
   };
 }
 
@@ -169,13 +179,4 @@ export async function getFiles() {
     isCacheCompleted = true;
   }
   return { files: cachedFiles, backlinks: cachedBacklinks };
-}
-
-export function getErrorFile(error: AxiosError) {
-  return {
-    path: '',
-    data: config.messages.pageError,
-    flags: createFlags(`${error.response!.status} ${error.response!.statusText}`),
-    links: [],
-  } as TFile;
 }
