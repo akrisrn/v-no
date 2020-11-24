@@ -19,11 +19,11 @@
     mdData = this.data ? replaceInlineScript(this.data) : '';
     markdown = this.mdData ? renderMD(this.mdData) : '';
 
-    get isCategory() {
+    get isCategoryFile() {
       return this.filePath === config.paths.category;
     }
 
-    get isSearch() {
+    get isSearchFile() {
       return this.filePath === config.paths.search;
     }
 
@@ -53,7 +53,7 @@
       if (this.mdData) {
         resetRequestCount();
         updateSnippet(this.mdData).then(data => {
-          if (this.isCategory) {
+          if (this.isCategoryFile) {
             if (data) {
               updateCategoryPage(data).then(data => this.updateData(data));
             } else {
@@ -61,7 +61,7 @@
             }
           } else {
             this.updateData(data);
-            if (this.isSearch) {
+            if (this.isSearchFile) {
               setTimeout(() => updateSearchPage(this.query), 0);
             }
           }
