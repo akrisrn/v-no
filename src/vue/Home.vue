@@ -3,7 +3,7 @@
     <div id="top">
       <div>
         <img v-if="favicon" :src="favicon" alt=""/>
-        <a :href="baseUrl" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
+        <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
         <a :href="`#${config.paths.readme}`"></a>
         <a :href="`#${config.paths.archive}`"></a>
@@ -21,7 +21,7 @@
         </div>
         <div v-if="!isError" id="bar" class="markdown-body bar">
           <code v-if="!isIndexFile" class="item-home">
-            <a :href="baseUrl" @click.prevent="returnHome">«</a>
+            <a :href="homePath" @click.prevent="returnHome">«</a>
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
           <code v-else-if="updated" class="item-date">{{ updated }}</code>
@@ -59,7 +59,7 @@
           </template>
         </div>
         <footer v-if="!isIndexFile" class="markdown-body">
-          <a :href="baseUrl" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
+          <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
             <span v-if="date" class="date">
               {{ updated && updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date }}
@@ -137,13 +137,27 @@
     iconSync = getIcon(EIcon.sync);
     iconBacklink = getIcon(EIcon.backlink, 18);
 
-    baseUrl: string = process.env.BASE_URL;
     indexPath: string = process.env.VUE_APP_INDEX_PATH;
 
     query: Dict<string> = {};
 
     get config() {
       return config;
+    }
+
+    get shortIndexPath() {
+      if (this.indexPath.endsWith('index.html')) {
+        return this.indexPath.replace(/index\.html$/, '');
+      }
+      return this.indexPath;
+    }
+
+    get homePath() {
+      return process.env.BASE_URL + this.shortIndexPath;
+    }
+
+    get homePathForRoute() {
+      return `/${this.shortIndexPath}`;
     }
 
     get filePath() {
@@ -294,7 +308,7 @@
       exposeToWindow({
         version: process.env.VUE_APP_VERSION,
         axios,
-        baseUrl: this.baseUrl,
+        homePath: this.homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
       });
@@ -319,16 +333,8 @@
     }
 
     returnHome() {
-      let home = '/';
-      if (this.isIndexPath) {
-        let indexPath = this.indexPath;
-        if (indexPath.endsWith('index.html')) {
-          indexPath = indexPath.replace(/index\.html$/, '');
-        }
-        home += indexPath;
-      }
-      if (this.$route.fullPath !== home) {
-        this.$router.push(home);
+      if (this.$route.fullPath !== this.homePathForRoute) {
+        this.$router.push(this.homePathForRoute);
       }
     }
 
@@ -422,7 +428,7 @@
 
     confChanged() {
       localStorage.setItem('conf', this.selectConf);
-      location.href = this.baseUrl;
+      location.href = this.homePath;
     }
 
     toggleDark() {
