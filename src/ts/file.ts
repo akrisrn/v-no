@@ -4,6 +4,17 @@ import axios, { AxiosError } from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
 
+export function createFlags(title = ''): IFlags {
+  return {
+    title,
+    tags: [],
+    updated: [],
+    cover: '',
+    startDate: '',
+    endDate: '',
+  };
+}
+
 export function checkLinkPath(path: string) {
   if (!path.endsWith('.md')) {
     if (path.endsWith('/')) {
@@ -16,12 +27,7 @@ export function checkLinkPath(path: string) {
 }
 
 function parseData(path: string, data: string): TFile {
-  const flags: IFlags = {
-    title: '',
-    tags: [],
-    updated: [],
-    cover: '',
-  };
+  const flags = createFlags();
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
@@ -134,12 +140,7 @@ export function getErrorFile(error: AxiosError) {
   return {
     path: '',
     data: config.messages.pageError,
-    flags: {
-      title: `${error.response!.status} ${error.response!.statusText}`,
-      tags: [],
-      updated: [],
-      cover: '',
-    },
+    flags: createFlags(`${error.response!.status} ${error.response!.statusText}`),
     links: [],
   } as TFile;
 }
