@@ -13,7 +13,7 @@ if (!outDir || !host) return;
 const indexUrl = `${host}${publicPath}${indexPath}`;
 const assetsPath = `${publicPath}assets/`;
 
-function writeHtml(filePath, html) {
+function writeFile(filePath, html) {
   filePath = path.join(outDir, filePath);
   const dirname = path.dirname(filePath);
   if (!fs.existsSync(dirname)) {
@@ -23,8 +23,40 @@ function writeHtml(filePath, html) {
   fs.writeFileSync(filePath, '<!DOCTYPE html>' + html);
 }
 
-async function getHtmlAndFiles(page, urlPath) {
-  console.log('load:', urlPath);
+async function loadPage(page, url) {
+  console.log('load:', url);
+  await page.goto(url);
+  await page.waitForSelector('.slide-fade-enter-active,.rendering', {
+    hidden: true,
+  });
+  return page.evaluate(publicPath => {
+    if (document.querySelector('main.error')) {
+      return ['', []];
+    }
+    const filePaths = [];
+    document.querySelectorAll('a[href^="#/"]').forEach(a => {
+      let href = a.getAttribute('href');
+      const indexOf = href.indexOf('?');
+      let query = '';
+      if (indexOf >= 0) {
+        query = href.substr(indexOf);
+        href = href.substr(0, indexOf);
+      }
+      let filePath = href.substr(1);
+      if (filePath.endsWith('/')) {
+        filePath += 'index.md';
+      }
+      a.href = publicPath + filePath.substr(1).replace(/\.md$/, '.html') + query;
+      filePaths.push(filePath);
+    });
+    document.body.id = 'prerender';
+    return [document.documentElement.outerHTML, filePaths];
+  }, publicPath);
+}
+
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
   await page.setRequestInterception(true);
   page.on('request', request => {
     const pathname = new URL(request.url()).pathname;
@@ -33,104 +65,36 @@ async function getHtmlAndFiles(page, urlPath) {
         request.abort();
         break;
       case 'script':
-        if (!pathname.startsWith(assetsPath)) {
-          request.abort();
-        } else {
+        if (pathname.startsWith(assetsPath)) {
           request.continue();
+        } else {
+          request.abort();
         }
         break;
       default:
         request.continue();
     }
   });
-  await page.goto(urlPath + '?prerender');
-  await page.waitForSelector('main:not(.slide-fade-enter-active)');
-  await page.waitForSelector('a.snippet', {
-    hidden: true,
-  });
-  return page.evaluate(publicPath => {
-    if (document.querySelector('main.error')) {
-      return [null, null];
-    }
-    document.body.classList.add('prerender');
-    document.querySelector('#backlinks').remove();
-    const files = [];
-    document.querySelectorAll('a[href]').forEach(a => {
-      const href = a.getAttribute('href');
-      if (href.startsWith('#/')) {
-        let filePath = href.substr(1);
-        if (!filePath.endsWith('.md')) {
-          if (filePath.endsWith('/')) {
-            filePath += 'index.md';
-          } else {
-            filePath = '';
-          }
-        }
-        if (filePath) {
-          a.href = publicPath.substr(0, publicPath.length - 1) + filePath.replace(/\.md$/, '.html');
-          files.push(filePath);
-        }
-      }
-    });
-    document.querySelectorAll('code.item-tag').forEach(code => {
-      code.innerHTML = code.innerText;
-    });
-    document.querySelectorAll('div.code-toolbar').forEach(toolbar => {
-      toolbar.outerHTML = toolbar.querySelector('pre').outerHTML;
-    });
-    const code = document.createElement('code');
-    code.classList.add('item-hash');
-    let hashPath = document.location.pathname;
-    if (hashPath.endsWith('index.html')) {
-      hashPath = hashPath.replace(/index\.html$/, '');
-    }
-    hashPath += document.location.hash;
-    if (hashPath.endsWith('?prerender')) {
-      hashPath = hashPath.replace(/\?prerender$/, '');
-    }
-    if (hashPath.endsWith('#/index.md')) {
-      hashPath = hashPath.replace(/#\/index\.md$/, '');
-    }
-    code.innerHTML = `<a href="${hashPath}">#</a>`;
-    document.querySelector('#bar').append(code);
-    return [document.documentElement.outerHTML, files];
-  }, publicPath);
-}
 
-const hasLoaded = [];
-
-async function loadPages(browser, files) {
-  const pages = [];
-  for (const filePath of files) {
-    if (hasLoaded.includes(filePath)) {
-      continue;
-    }
+  const hasLoaded = [];
+  const fileQueue = [];
+  let filePath = indexFile;
+  do {
     hasLoaded.push(filePath);
-    const urlPath = `${indexUrl}#${filePath}`;
-    pages.push(browser.newPage().then(async page => {
-      const [html, newFiles] = await getHtmlAndFiles(page, urlPath);
-      await page.close();
-      if (html !== null) {
-        writeHtml(filePath.replace(/\.md$/, '.html'), html);
-        await loadPages(browser, newFiles);
-      } else {
-        console.error('error:', urlPath);
-      }
-    }));
-  }
-  await Promise.all(pages);
-}
+    const [html, filePaths] = await loadPage(page, `${indexUrl}#${filePath}`);
+    if (html) {
+      writeFile(filePath.replace(/\.md$/, '.html'), html);
+      filePaths.forEach(filePath => {
+        if (!hasLoaded.includes(filePath) && !fileQueue.includes(filePath)) {
+          fileQueue.push(filePath);
+        }
+      });
+    } else {
+      console.error('error:', filePath);
+    }
+    filePath = fileQueue.shift();
+  } while (filePath);
 
-(async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  const [html, files] = await getHtmlAndFiles(page, `${indexUrl}#/${indexFile}`);
   await page.close();
-  if (html !== null) {
-    writeHtml('index.html', html);
-    await loadPages(browser, files);
-  } else {
-    console.error('error:', indexUrl);
-  }
   await browser.close();
 })();
