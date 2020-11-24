@@ -1,5 +1,5 @@
 <template>
-  <article class="markdown-body" v-html="markdown"/>
+  <article :class="['markdown-body', { rendering: isRendering }]" v-html="markdown"/>
 </template>
 
 <script lang="ts">
@@ -18,6 +18,7 @@
 
     mdData = this.data ? replaceInlineScript(this.data) : '';
     markdown = this.mdData ? renderMD(this.mdData) : '';
+    isRendering = false;
 
     get isCategoryFile() {
       return this.filePath === config.paths.category;
@@ -40,6 +41,7 @@
         },
         updateMD: () => {
           if (this.mdData) {
+            this.isRendering = true;
             resetRequestCount();
             updateSnippet(this.mdData).then(data => this.updateData(data));
           }
@@ -51,6 +53,7 @@
     // noinspection JSUnusedGlobalSymbols
     mounted() {
       if (this.mdData) {
+        this.isRendering = true;
         resetRequestCount();
         updateSnippet(this.mdData).then(data => {
           if (this.isCategoryFile) {
@@ -81,6 +84,7 @@
           this.markdown = '';
         }
       }
+      this.isRendering = false;
     }
   }
 </script>

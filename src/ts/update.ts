@@ -60,14 +60,14 @@ function updateAnchor() {
     if (text.startsWith('/')) {
       const path = checkLinkPath(text);
       if (path) {
-        a.classList.add('snippet');
+        a.classList.add('rendering');
         getFile(path).then(file => {
           if (file.isError) {
             a.classList.add('error');
           }
           a.innerText = file.flags.title;
         }).finally(() => {
-          removeClass(a, 'snippet');
+          removeClass(a, 'rendering');
         });
       }
     }
@@ -166,7 +166,7 @@ function updateLinkPath() {
     if (!path) {
       continue;
     }
-    a.classList.add('snippet');
+    a.classList.add('rendering');
     getFile(path).then(file => {
       if (file.isError) {
         a.classList.add('error');
@@ -219,7 +219,7 @@ function updateLinkPath() {
         }
       }
     }).finally(() => {
-      removeClass(a, 'snippet');
+      removeClass(a, 'rendering');
     });
   }
 }
