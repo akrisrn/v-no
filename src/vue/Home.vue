@@ -256,6 +256,15 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
+      if (document.body.id === 'prerender') {
+        let filePath = this.filePath;
+        if (filePath.endsWith('index.md')) {
+          filePath = filePath.replace(/index\.md$/, '');
+        }
+        const hashPath = filePath === '/' ? this.homePath : `${this.homePath}#${filePath}`;
+        location.href = hashPath + location.search;
+        return;
+      }
       const match = this.filePath.match(/\.(.*?)\.md$/);
       if (match) {
         if (this.confList.includes(match[1]) && this.selectConf !== match[1]) {
