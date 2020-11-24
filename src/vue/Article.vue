@@ -12,19 +12,19 @@
 
   @Component
   export default class Article extends Vue {
+    @Prop() filePath!: string;
     @Prop() data!: string;
-    @Prop() path!: string;
     @Prop() query!: Dict<string>;
 
     mdData = this.data ? replaceInlineScript(this.data) : '';
     markdown = this.mdData ? renderMD(this.mdData) : '';
 
     get isCategory() {
-      return this.path === config.paths.category;
+      return this.filePath === config.paths.category;
     }
 
     get isSearch() {
-      return this.path === config.paths.search;
+      return this.filePath === config.paths.search;
     }
 
     // noinspection JSUnusedGlobalSymbols

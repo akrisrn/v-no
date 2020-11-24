@@ -22,7 +22,7 @@
           <img :src="cover" alt="cover"/>
         </div>
         <div v-if="!isError" id="bar" class="markdown-body bar">
-          <code v-if="!isHome" class="item-home">
+          <code v-if="!isIndexFile" class="item-home">
             <a :href="baseUrl" @click.prevent="returnHome">«</a>
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
@@ -33,11 +33,11 @@
             </template>
           </code>
           <code class="item-raw">
-            <a :href="rawPath" target="_blank">{{ config.messages.raw }}</a>
+            <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :path="path" :query="query"></Article>
+        <Article :data="data" :filePath="filePath" :query="query"></Article>
         <div v-if="!isError" id="backlinks" class="markdown-body">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -60,7 +60,7 @@
             <span v-else>{{ config.messages.noBacklinks }}</span>
           </template>
         </div>
-        <footer v-if="!isHome" class="markdown-body">
+        <footer v-if="!isIndexFile" class="markdown-body">
           <a :href="baseUrl" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
             <span v-if="date" class="date">
@@ -148,7 +148,7 @@
       return config;
     }
 
-    get path() {
+    get filePath() {
       this.query = {};
       let path = this.$route.path;
       const hash = this.$route.hash;
@@ -183,8 +183,8 @@
       return this.config.paths.index;
     }
 
-    get rawPath() {
-      return addBaseUrl(this.path);
+    get rawFilePath() {
+      return addBaseUrl(this.filePath);
     }
 
     get isIndexPath() {
@@ -195,8 +195,8 @@
       return path === `/${this.indexPath}`;
     }
 
-    get isHome() {
-      return this.path === this.config.paths.index;
+    get isIndexFile() {
+      return this.filePath === this.config.paths.index;
     }
 
     get metaThemeColor() {
@@ -211,7 +211,7 @@
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
       next();
-      exposeToWindow({ path: this.path });
+      exposeToWindow({ filePath: this.filePath });
       cleanEventListenerDict();
       document.querySelectorAll('.custom').forEach(element => {
         element.remove();
@@ -256,7 +256,7 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
-      const match = this.path.match(/\.(.*?)\.md$/);
+      const match = this.filePath.match(/\.(.*?)\.md$/);
       if (match) {
         if (this.confList.includes(match[1]) && this.selectConf !== match[1]) {
           localStorage.setItem('conf', match[1]);
@@ -305,7 +305,7 @@
         version: process.env.VUE_APP_VERSION,
         axios,
         baseUrl: this.baseUrl,
-        path: this.path,
+        filePath: this.filePath,
         isHash: this.isHashMode,
         addInputBind: this.addInputBind,
       });
@@ -344,14 +344,14 @@
     }
 
     setFlags(flags: IFlags) {
-      this.title = flags.title || this.path;
+      this.title = flags.title || this.filePath;
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title = `${this.title} - ${this.config.siteName}`;
       } else {
         document.title = `${this.title}`;
       }
       this.tags = [...flags.tags];
-      [this.date, this.updated] = getDateRange(this.path, flags.updated);
+      [this.date, this.updated] = getDateRange(this.filePath, flags.updated);
       if (flags.cover) {
         const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
         this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;
@@ -367,10 +367,10 @@
     }
 
     updateData() {
-      if (this.path.endsWith('.md')) {
-        const promises = [getFile(this.path)];
+      if (this.filePath.endsWith('.md')) {
+        const promises = [getFile(this.filePath)];
         const commonPath = this.config.paths.common;
-        if (commonPath && this.path !== commonPath) {
+        if (commonPath && this.filePath !== commonPath) {
           promises.push(getFile(commonPath));
         }
         Promise.all(promises).then(files => {
@@ -420,7 +420,7 @@
     getBacklinks() {
       this.isLoadingBacklinks = true;
       getFiles().then(({ files, backlinks }) => {
-        const paths = backlinks[this.path];
+        const paths = backlinks[this.filePath];
         this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
           return transForSort(files[path]);
         }).sort(sortFiles) : [];
