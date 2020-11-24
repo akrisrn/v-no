@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <div id="top">
       <div>
         <img v-if="favicon" :src="favicon" alt=""/>
@@ -16,7 +16,7 @@
     </div>
     <transition name="slide-fade">
       <main v-if="isShow" :class="{error: isError}">
-        <div v-if="cover" id="cover">
+        <div v-if="cover" id="cover" class="center">
           <img :src="cover" alt="cover"/>
         </div>
         <div v-if="!isError" id="bar" class="markdown-body bar">
@@ -69,9 +69,9 @@
         </footer>
       </main>
     </transition>
-    <span id="toggle-dark" ref="toggleDark" @click="toggleDark">★</span>
-    <span id="toggle-zen" ref="toggleZen" @click="toggleZen">▣</span>
-    <span id="to-top" ref="toTop" @click="toTop()">と</span>
+    <span id="toggle-dark" ref="toggleDark" @click="toggleDark">{{ darkMarks[0] }}</span>
+    <span id="toggle-zen" ref="toggleZen" @click="toggleZen">{{ zenMark }}</span>
+    <span id="to-top" ref="toTop" @click="toTop()">{{ toTopMark }}</span>
   </div>
 </template>
 
@@ -119,6 +119,7 @@
     date = '';
     updated = '';
     cover = '';
+    query: Dict<string> = {};
 
     backlinkFiles: TFileForSort[] = [];
     isLoadingBacklinks = false;
@@ -126,20 +127,22 @@
 
     isShow = false;
     isError = false;
+
+    metaTheme!: HTMLMetaElement;
     isDark = false;
     isZen = false;
-    metaTheme: HTMLMetaElement | null = null;
-
-    keyInput = '';
-    inputBinds: Dict<() => void> = {};
+    darkMarks = ['★', '☆'];
+    zenMark = '▣';
+    toTopMark = 'と';
 
     favicon = this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     iconSync = getIcon(EIcon.sync);
     iconBacklink = getIcon(EIcon.backlink, 18);
 
-    indexPath: string = process.env.VUE_APP_INDEX_PATH;
+    keyInput = '';
+    inputBinds: Dict<() => void> = {};
 
-    query: Dict<string> = {};
+    indexPath: string = process.env.VUE_APP_INDEX_PATH;
 
     get config() {
       return config;
@@ -207,18 +210,6 @@
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
-      this.isShow = false;
-      next();
-      exposeToWindow({ filePath: this.filePath });
-      cleanEventListenerDict();
-      document.querySelectorAll('.custom').forEach(element => {
-        element.remove();
-      });
-      this.updateData();
-    }
-
     @Watch('isShow')
     onIsShowChanged() {
       if (this.isShow) {
@@ -228,13 +219,13 @@
 
     @Watch('isDark')
     onIsDarkChanged() {
-      this.metaTheme!.setAttribute('content', this.metaThemeColor);
+      this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isDark) {
-        this.$refs.toggleDark.innerText = '☆';
+        this.$refs.toggleDark.innerText = this.darkMarks[1];
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
-        this.$refs.toggleDark.innerText = '★';
+        this.$refs.toggleDark.innerText = this.darkMarks[0];
         removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
@@ -242,7 +233,7 @@
 
     @Watch('isZen')
     onIsZenChanged() {
-      this.metaTheme!.setAttribute('content', this.metaThemeColor);
+      this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
         this.$refs.toggleZen.classList.add('spin');
         document.body.classList.add('zen');
@@ -276,7 +267,7 @@
       this.updateData();
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
-      this.metaTheme = document.querySelector('meta[name="theme-color"]');
+      this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
@@ -333,33 +324,16 @@
       });
     }
 
-    returnHome() {
-      if (this.$route.fullPath !== this.homePathForRoute) {
-        this.$router.push(this.homePathForRoute);
-      }
-    }
-
-    setFlags(flags: IFlags) {
-      this.title = flags.title || this.filePath;
-      if (this.config.siteName && this.config.siteName !== this.title) {
-        document.title = `${this.title} - ${this.config.siteName}`;
-      } else {
-        document.title = `${this.title}`;
-      }
-      this.tags = [...flags.tags];
-      [this.date, this.updated] = getDateRange(this.filePath, flags.updated);
-      if (flags.cover) {
-        const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
-        this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;
-      } else {
-        this.cover = '';
-      }
-    }
-
-    setData(data: string, flags: IFlags) {
-      this.setFlags(flags);
-      this.data = data;
-      this.isShow = true;
+    // noinspection JSUnusedGlobalSymbols
+    beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
+      this.isShow = false;
+      next();
+      exposeToWindow({ filePath: this.filePath });
+      cleanEventListenerDict();
+      document.querySelectorAll('.custom').forEach(element => {
+        element.remove();
+      });
+      this.updateData();
     }
 
     updateData() {
@@ -398,14 +372,44 @@
           this.setData(data, flags);
         });
       } else {
-        this.isError = true;
-        const { data, flags } = getErrorFile({
-          response: {
-            status: 404,
-            statusText: 'Not Found',
-          },
-        } as AxiosError);
-        this.setData(data, flags);
+        setTimeout(() => {
+          this.isError = true;
+          const { data, flags } = getErrorFile({
+            response: {
+              status: 404,
+              statusText: 'Not Found',
+            },
+          } as AxiosError);
+          this.setData(data, flags);
+        }, 0);
+      }
+    }
+
+    setData(data: string, flags: IFlags) {
+      this.setFlags(flags);
+      this.data = data;
+      this.isShow = true;
+    }
+
+    setFlags(flags: IFlags) {
+      this.title = flags.title || this.filePath;
+      document.title = `${this.title}`;
+      if (this.config.siteName && this.config.siteName !== this.title) {
+        document.title += ` - ${this.config.siteName}`;
+      }
+      this.tags = [...flags.tags];
+      [this.date, this.updated] = getDateRange(this.filePath, flags.updated);
+      if (flags.cover) {
+        const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
+        this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;
+      } else {
+        this.cover = '';
+      }
+    }
+
+    returnHome() {
+      if (this.$route.fullPath !== this.homePathForRoute) {
+        this.$router.push(this.homePathForRoute);
       }
     }
 

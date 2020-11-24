@@ -552,7 +552,7 @@ export async function updateCategoryPage(data: string) {
     taggedDict[untagged] = untaggedFiles;
   }
   const categories = getCategories(2, '', sortedTags, tagTree, taggedDict);
-  return data.replace(listRegExp, categories.data).replace(listRegExpG, '');
+  return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
 const htmlSymbolDict: Dict<string> = {
