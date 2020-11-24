@@ -43,14 +43,14 @@
           <template v-else>
             <ul v-if="backlinkFiles.length > 0">
               <li v-for="file in backlinkFiles" :key="file.path" class="article">
-                <a :href="`#${file.path}`">{{ file.title }}</a>
+                <a :href="`#${file.path}`">{{ file.flags.title }}</a>
                 <div class="bar">
-                  <code v-for="tag in file.tags" :key="tag" class="item-tag">
+                  <code v-for="tag in file.flags.tags" :key="tag" class="item-tag">
                     <template v-for="link in getSearchTagLinks(tag)">
                       <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
                     </template>
                   </code>
-                  <code v-if="file.date" class="item-date">{{ file.date }}</code>
+                  <code v-if="file.flags.startDate" class="item-date">{{ file.flags.startDate }}</code>
                 </div>
               </li>
             </ul>
@@ -116,7 +116,7 @@
     cover = '';
     query: Dict<string> = {};
 
-    backlinkFiles: TFileForSort[] = [];
+    backlinkFiles: TFile[] = [];
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 
@@ -412,9 +412,7 @@
       this.isLoadingBacklinks = true;
       getFiles().then(({ files, backlinks }) => {
         const paths = backlinks[this.filePath];
-        this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
-          return transForSort(files[path]);
-        }).sort(sortFiles) : [];
+        this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => files[path]).sort(sortFiles) : [];
         this.isLoadingBacklinks = false;
         if (!this.hasLoadedBacklinks) {
           this.hasLoadedBacklinks = true;

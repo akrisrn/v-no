@@ -50,13 +50,6 @@ type TFile = {
   links: string[];
 }
 
-type TFileForSort = {
-  path: string;
-  title: string;
-  tags: string[];
-  date: string;
-}
-
 type THeading = {
   element: Element;
   level: number;

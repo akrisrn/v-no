@@ -488,7 +488,7 @@ function getCategories(level: number, parentTag: string, sortedTags: string[], t
     let fileCount = 0;
     const taggedFiles = taggedDict[nestedTag];
     if (taggedFiles) {
-      list = taggedFiles.map(transForSort).sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
+      list = taggedFiles.sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
       fileCount = taggedFiles.length;
       count += fileCount;
     }
@@ -665,7 +665,7 @@ export async function updateSearchPage(query: Dict<string>) {
     }
     if (resultFiles.length > 0) {
       resultUl.innerText = '';
-      resultFiles.map(transForSort).sort(sortFiles).forEach(file => {
+      resultFiles.sort(sortFiles).forEach(file => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = `#${file.path}`;

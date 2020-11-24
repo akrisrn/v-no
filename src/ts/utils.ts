@@ -127,17 +127,6 @@ export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
 }
 
-export function transForSort(file: TFile) {
-  const path = file.path;
-  const flags = file.flags;
-  return {
-    path,
-    title: flags.title,
-    tags: [...flags.tags],
-    date: flags.startDate,
-  } as TFileForSort;
-}
-
 function comparePath(pathA: string, pathB: string) {
   if (baseFiles.includes(pathA)) {
     return baseFiles.includes(pathB) ? 0 : 1;
@@ -179,14 +168,16 @@ function comparePath2(pathA: string, pathB: string) {
   return pathA.localeCompare(pathB);
 }
 
-export function sortFiles(fileA: TFileForSort, fileB: TFileForSort) {
+export function sortFiles(fileA: TFile, fileB: TFile) {
+  const flagsA = fileA.flags;
+  const flagsB = fileB.flags;
   let x = comparePath(fileA.path, fileB.path);
   if (x === 0) {
-    x = compareDate(fileA.date, fileB.date);
+    x = compareDate(flagsA.startDate, flagsB.startDate);
     if (x === 0) {
-      x = compareTags(fileA.tags, fileB.tags);
+      x = compareTags(flagsA.tags, flagsB.tags);
       if (x === 0) {
-        x = compareTitle(fileA.title, fileB.title);
+        x = compareTitle(flagsA.title, flagsB.title);
         if (x === 0) {
           x = comparePath2(fileA.path, fileB.path);
         }
