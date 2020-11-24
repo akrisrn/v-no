@@ -390,35 +390,40 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const linkRegExp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/gm;
-  let match = linkRegExp.exec(data);
-  while (match) {
-    const path = checkLinkPath(match[3]);
-    if (path && !updatedPaths.includes(path)) {
-      let snippetDict = dict[path];
-      if (snippetDict === undefined) {
-        snippetDict = {};
-        dict[path] = snippetDict;
-      }
-      if (snippetDict[match[0]] === undefined) {
-        const heading = match[1] ? match[1].trimEnd().length : 0;
-        const params: Dict<string> = {};
-        if (match[2]) {
-          match[2].substr(1).split('|').forEach((seg, i) => {
-            let param = seg;
-            const paramMatch = seg.match(/(.+?)=(.+)/);
-            if (paramMatch) {
-              param = paramMatch[2];
-              params[paramMatch[1]] = param;
-            }
-            params[i + 1] = param;
-          });
+  const linkRegExp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/;
+  data = data.split('\n').map(line => {
+    const match = line.match(linkRegExp);
+    if (match) {
+      const path = checkLinkPath(match[3]);
+      if (path) {
+        if (updatedPaths.includes(path)) {
+          return '';
         }
-        snippetDict[match[0]] = { heading, params };
+        let snippetDict = dict[path];
+        if (snippetDict === undefined) {
+          snippetDict = {};
+          dict[path] = snippetDict;
+        }
+        if (snippetDict[match[0]] === undefined) {
+          const heading = match[1] ? match[1].trimEnd().length : 0;
+          const params: Dict<string> = {};
+          if (match[2]) {
+            match[2].substr(1).split('|').forEach((seg, i) => {
+              let param = seg;
+              const paramMatch = seg.match(/(.+?)=(.+)/);
+              if (paramMatch) {
+                param = paramMatch[2];
+                params[paramMatch[1]] = param;
+              }
+              params[i + 1] = param;
+            });
+          }
+          snippetDict[match[0]] = { heading, params };
+        }
       }
     }
-    match = linkRegExp.exec(data);
-  }
+    return line;
+  }).join('\n');
   const paths = Object.keys(dict);
   if (paths.length === 0) {
     return data;
