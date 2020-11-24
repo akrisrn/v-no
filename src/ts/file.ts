@@ -43,7 +43,7 @@ function parseData(path: string, data: string): TFile {
     return { path, data, flags, links };
   }
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
-  flagMarks.push('# ');
+  flagMarks.push('\\s{0,3}# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
   const linkRegExp = /\[.*?]\((\/.*?)\)/g;
   data = data.split('\n').map(line => {

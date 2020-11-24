@@ -199,7 +199,7 @@ export function renderMD(data: string) {
     const headingList: string[] = [];
     let firstHeading = '';
     const headingCount: Dict<number> = {};
-    const headingRegExp = getWrapRegExp('^(##{1,5})\\s', '$', 'gm');
+    const headingRegExp = getWrapRegExp('^\\s{0,3}(##{1,5})\\s', '$', 'gm');
     let headingMatch = headingRegExp.exec(data);
     while (headingMatch) {
       const headingLevel = headingMatch[1];

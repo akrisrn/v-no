@@ -380,9 +380,9 @@ export function updateDom() {
 
 function degradeHeading(data: string, level: number) {
   if (level > 0) {
-    data = data.replace(/^(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
+    data = data.replace(/^\s{0,3}(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
     if (level > 1) {
-      data = data.replace(/^#{7,}\s/gm, `${'#'.repeat(6)} `);
+      data = data.replace(/^\s{0,3}#{7,}\s/gm, `${'#'.repeat(6)} `);
     }
   }
   return data;
@@ -390,7 +390,7 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const linkRegExp = /^(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/;
+  const linkRegExp = /^\s{0,3}(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/;
   data = data.split('\n').map(line => {
     const match = line.match(linkRegExp);
     if (match) {
