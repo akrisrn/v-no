@@ -24,7 +24,6 @@
             <a :href="homePath" @click.prevent="returnHome">«</a>
           </code>
           <code v-if="date" class="item-date">{{ date }}</code>
-          <code v-else-if="updated" class="item-date">{{ updated }}</code>
           <code v-for="tag in tags" :key="tag" class="item-tag">
             <template v-for="link in getSearchTagLinks(tag)">
               <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
@@ -62,9 +61,8 @@
           <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
             <span v-if="date" class="date">
-              {{ updated && updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date }}
+              {{ updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date }}
             </span>
-            <span v-else-if="updated" class="date">{{ updated }}</span>
           </template>
         </footer>
       </main>
@@ -82,14 +80,11 @@
     cleanEventListenerDict,
     EIcon,
     exposeToWindow,
-    getDateRange,
     getIcon,
     getSearchTagLinks,
-    isExternalLink,
     removeClass,
     scroll,
     sortFiles,
-    transForSort,
   } from '@/ts/utils';
   import { config, getSelectConf } from '@/ts/config';
   import axios, { AxiosError } from 'axios';
@@ -392,19 +387,15 @@
     }
 
     setFlags(flags: IFlags) {
-      this.title = flags.title || this.filePath;
+      this.title = flags.title;
       document.title = `${this.title}`;
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title += ` - ${this.config.siteName}`;
       }
       this.tags = [...flags.tags];
-      [this.date, this.updated] = getDateRange(this.filePath, flags.updated);
-      if (flags.cover) {
-        const cover = flags.cover.startsWith('![](') ? flags.cover.substring(4, flags.cover.length - 1) : flags.cover;
-        this.cover = !isExternalLink(cover) ? addBaseUrl(cover) : cover;
-      } else {
-        this.cover = '';
-      }
+      this.date = flags.startDate;
+      this.updated = flags.endDate;
+      this.cover = flags.cover;
     }
 
     returnHome() {

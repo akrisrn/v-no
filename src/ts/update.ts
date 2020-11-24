@@ -2,7 +2,6 @@ import { checkLinkPath, getFile, getFiles } from '@/ts/file';
 import {
   buildQueryContent,
   EFlag,
-  getDateRange,
   getEventListenerDict,
   getSearchTagLinks,
   getWrapRegExp,
@@ -11,7 +10,6 @@ import {
   replaceInlineScript,
   scroll,
   sortFiles,
-  transForSort,
   trimList,
 } from '@/ts/utils';
 import { config } from '@/ts/config';
@@ -64,7 +62,7 @@ function updateAnchor() {
       if (path) {
         a.classList.add('snippet');
         getFile(path).then(file => {
-          a.innerText = file.flags.title || path;
+          a.innerText = file.flags.title;
         }).finally(() => {
           removeClass(a, 'snippet');
         });
@@ -168,7 +166,7 @@ function updateLinkPath() {
     a.classList.add('snippet');
     getFile(path).then(file => {
       const flags = file.flags;
-      a.innerText = flags.title || path;
+      a.innerText = flags.title;
       const parent = a.parentElement!;
       if (parent.tagName === 'LI') {
         let isPass = true;
@@ -196,12 +194,10 @@ function updateLinkPath() {
             });
             bar.append(itemTag);
           });
-          const dateRange = getDateRange(path, flags.updated);
-          const date = dateRange[0] || dateRange[1];
-          if (date) {
+          if (flags.startDate) {
             const itemDate = document.createElement('code');
             itemDate.classList.add('item-date');
-            itemDate.innerText = date;
+            itemDate.innerText = flags.startDate;
             bar.append(itemDate);
           }
           if (bar.childElementCount > 0) {
@@ -425,7 +421,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   }));
   for (const file of files) {
     const path = file.path;
-    const title = file.flags.title || path;
+    const title = file.flags.title;
     const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {

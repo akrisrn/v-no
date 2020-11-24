@@ -1,4 +1,4 @@
-import { addBaseUrl, EFlag, getWrapRegExp, trimList } from '@/ts/utils';
+import { addBaseUrl, EFlag, formatDate, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
 import { baseFiles, config } from '@/ts/config';
 import axios, { AxiosError } from 'axios';
 
@@ -35,10 +35,10 @@ function parseData(path: string, data: string): TFile {
   const links: string[] = [];
   const lines: string[] = [];
   data.split('\n').forEach(line => {
-    let match = line.match(flagRegExp);
-    if (match) {
-      const flagMark = match[1];
-      const flagText = match[2];
+    let flagMatch = line.match(flagRegExp);
+    if (flagMatch) {
+      const flagMark = flagMatch[1];
+      const flagText = flagMatch[2];
       if (flagMark.startsWith('@')) {
         const flag = flagMark.substring(1, flagMark.length - 1);
         if ([EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
@@ -50,9 +50,9 @@ function parseData(path: string, data: string): TFile {
         flags.title = flagText;
       }
     } else {
-      match = linkRegExp.exec(line);
-      while (match) {
-        const linkPath = checkLinkPath(match[1]);
+      flagMatch = linkRegExp.exec(line);
+      while (flagMatch) {
+        const linkPath = checkLinkPath(flagMatch[1]);
         if (linkPath && linkPath !== path && !links.includes(linkPath)) {
           links.push(linkPath);
           let backlinks = cachedBacklinks[linkPath];
@@ -63,13 +63,48 @@ function parseData(path: string, data: string): TFile {
             backlinks.push(path);
           }
         }
-        match = linkRegExp.exec(line);
+        flagMatch = linkRegExp.exec(line);
       }
       lines.push(line.trimEnd());
     }
   });
   data = lines.join('\n').trim();
-  flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
+  if (!flags.title) {
+    flags.title = path;
+  }
+  if (flags.tags.length > 0) {
+    flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
+  }
+  let cover = flags.cover;
+  if (cover) {
+    const linkMatch = cover.match(/^!\[.*?]\((.*?)\)$/);
+    if (linkMatch) {
+      cover = linkMatch[1];
+    }
+    if (!isExternalLink(cover)) {
+      cover = addBaseUrl(cover);
+    }
+    flags.cover = cover;
+  }
+  const dateList = [...flags.updated];
+  const dateMatch = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
+  if (dateMatch) {
+    dateList.push(formatDate(new Date(dateMatch[1])));
+  }
+  if (dateList.length > 0) {
+    const timeList = Array.from(new Set(dateList.map(date => {
+      return date.match(/^[0-9]+$/) ? parseInt(date) : new Date(date).getTime();
+    }).filter(time => !isNaN(time)))).sort();
+    const length = timeList.length;
+    if (length > 0) {
+      if (length === 1) {
+        flags.startDate = flags.endDate = formatDate(new Date(timeList[0]));
+      } else {
+        flags.startDate = formatDate(new Date(timeList[0]));
+        flags.endDate = formatDate(new Date(timeList[length - 1]));
+      }
+    }
+  }
   return { path, data, flags, links };
 }
 
