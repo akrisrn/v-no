@@ -163,48 +163,40 @@
     get filePath() {
       this.query = {};
       let path = this.$route.path;
-      const hash = this.$route.hash;
-      if (this.isIndexPath) {
-        path = '/';
+      if (path.endsWith('/')) {
+        path += 'index.html';
       }
-      if (path !== '/') {
-        if (path.endsWith('.html')) {
-          return path.replace(/\.html$/, '.md');
+      if (path === `/${this.indexPath}`) {
+        const hash = this.$route.hash;
+        if (hash.startsWith('#/')) {
+          path = hash.substr(1);
+          if (path !== '/') {
+            const indexOf = path.indexOf('?');
+            if (indexOf >= 0) {
+              path.substr(indexOf + 1).split('&').forEach(param => {
+                const indexOfEQ = param.indexOf('=');
+                if (indexOfEQ >= 0) {
+                  this.query[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
+                }
+              });
+              path = path.substring(0, indexOf);
+            }
+            if (path.endsWith('/')) {
+              path += 'index.md';
+            }
+            return path;
+          }
         }
+        return this.config.paths.index;
+      } else if (path.endsWith('.html')) {
+        return path.replace(/\.html$/, '.md');
+      } else {
         return path;
       }
-      if (hash.startsWith('#/')) {
-        path = hash.substr(1);
-        if (path !== '/') {
-          const indexOf = path.indexOf('?');
-          if (indexOf >= 0) {
-            path.substr(indexOf + 1).split('&').forEach(param => {
-              const indexOfEQ = param.indexOf('=');
-              if (indexOfEQ >= 0) {
-                this.query[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
-              }
-            });
-            path = path.substring(0, indexOf);
-          }
-          if (path.endsWith('/')) {
-            path += 'index.md';
-          }
-          return path;
-        }
-      }
-      return this.config.paths.index;
     }
 
     get rawFilePath() {
       return addBaseUrl(this.filePath);
-    }
-
-    get isIndexPath() {
-      let path = this.$route.path;
-      if (path.endsWith('/')) {
-        path += 'index.html';
-      }
-      return path === `/${this.indexPath}`;
     }
 
     get isIndexFile() {
