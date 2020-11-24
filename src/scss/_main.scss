@@ -62,7 +62,7 @@ main {
     .icon {
       float: left;
       width: 30px;
-      height: 28px;
+      height: 26px;
 
       &.loading {
         svg {
@@ -89,7 +89,7 @@ main {
       margin-left: 4px !important;
 
       &:last-of-type {
-        margin-bottom: 4px;
+        margin-bottom: 2px;
       }
     }
   }
