@@ -7,13 +7,11 @@
         <span></span>
         <a :href="`#${config.paths.readme}`"></a>
         <a :href="`#${config.paths.archive}`"></a>
-        <template v-if="isHashMode">
-          <a :href="`#${config.paths.category}`"></a>
-          <a :href="`#${config.paths.search}`"></a>
-          <select v-if="selectConf && confList.length > 1" v-model="selectConf" @change="confChanged">
-            <option v-for="conf in confList" :key="conf" :value="conf">{{ conf }}</option>
-          </select>
-        </template>
+        <a :href="`#${config.paths.category}`"></a>
+        <a :href="`#${config.paths.search}`"></a>
+        <select v-if="selectConf && confList.length > 1" v-model="selectConf" @change="confChanged">
+          <option v-for="conf in confList" :key="conf" :value="conf">{{ conf }}</option>
+        </select>
       </div>
     </div>
     <transition name="slide-fade">
@@ -203,10 +201,6 @@
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
-    get isHashMode() {
-      return !location.href.endsWith('?prerender') && !document.body.classList.contains('prerender');
-    }
-
     // noinspection JSUnusedGlobalSymbols
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       this.isShow = false;
@@ -277,11 +271,7 @@
       // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
         home: () => {
-          if (this.isHashMode) {
-            this.returnHome();
-          } else {
-            location.href = this.baseUrl;
-          }
+          this.returnHome();
         },
         gg: () => {
           this.toTop(document.body.offsetHeight);
@@ -306,7 +296,6 @@
         axios,
         baseUrl: this.baseUrl,
         filePath: this.filePath,
-        isHash: this.isHashMode,
         addInputBind: this.addInputBind,
       });
     }
