@@ -48,6 +48,7 @@ type TFile = {
   data: string;
   flags: IFlags;
   links: string[];
+  isError?: boolean;
 }
 
 type THeading = {
