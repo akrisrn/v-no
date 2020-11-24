@@ -71,9 +71,9 @@
         </footer>
       </main>
     </transition>
-    <span id="toggle-dark">★</span>
-    <span id="toggle-zen">▣</span>
-    <span id="to-top">と</span>
+    <span id="toggle-dark" ref="toggleDark" @click="toggleDark">★</span>
+    <span id="toggle-zen" ref="toggleZen" @click="toggleZen">▣</span>
+    <span id="to-top" ref="toTop" @click="toTop()">と</span>
   </div>
 </template>
 
@@ -106,6 +106,12 @@
 
   @Component({ components: { Article } })
   export default class Home extends Vue {
+    $refs!: {
+      toggleDark: HTMLSpanElement;
+      toggleZen: HTMLSpanElement;
+      toTop: HTMLSpanElement;
+    };
+
     selectConf = getSelectConf();
     confList = this.config.multiConf ? Object.keys(this.config.multiConf).sort() : [];
 
@@ -124,9 +130,7 @@
     isError = false;
     isDark = false;
     isZen = false;
-    toggleDark: HTMLElement | null = null;
-    toggleZen: HTMLElement | null = null;
-    toTop: HTMLElement | null = null;
+    metaTheme: HTMLMetaElement | null = null;
 
     keyInput = '';
     inputBinds: Dict<() => void> = {};
@@ -224,13 +228,13 @@
 
     @Watch('isDark')
     onIsDarkChanged() {
-      document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
+      this.metaTheme!.setAttribute('content', this.metaThemeColor);
       if (this.isDark) {
-        this.toggleDark!.innerText = '☆';
+        this.$refs.toggleDark.innerText = '☆';
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
-        this.toggleDark!.innerText = '★';
+        this.$refs.toggleDark.innerText = '★';
         removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
@@ -238,13 +242,13 @@
 
     @Watch('isZen')
     onIsZenChanged() {
-      document.querySelector('meta[name=theme-color]')!.setAttribute('content', this.metaThemeColor);
+      this.metaTheme!.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
-        this.toggleZen!.classList.add('spin');
+        this.$refs.toggleZen.classList.add('spin');
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
-        removeClass(this.toggleZen!, 'spin');
+        removeClass(this.$refs.toggleZen, 'spin');
         removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
@@ -263,6 +267,7 @@
       this.updateData();
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
+      this.metaTheme = document.querySelector('meta[name="theme-color"]');
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
@@ -279,19 +284,17 @@
           }
         },
         gg: () => {
-          this.addTempClass(this.toTop!, 'spin');
-          scroll(document.body.offsetHeight);
+          this.toTop(document.body.offsetHeight);
           this.keyInput += '_';
         },
         G: () => {
-          this.addTempClass(this.toTop!, 'spin');
-          scroll(0);
+          this.toTop();
         },
         dark: () => {
-          this.isDark = !this.isDark;
+          this.toggleDark();
         },
         zen: () => {
-          this.isZen = !this.isZen;
+          this.toggleZen();
         },
         Backspace: () => {
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
@@ -323,20 +326,6 @@
             }
           }
         }
-      });
-      // vue bind doesn't work on prerender page
-      this.toggleDark = document.querySelector<HTMLElement>('#toggle-dark')!;
-      this.toggleDark.addEventListener('click', () => {
-        this.isDark = !this.isDark;
-      });
-      this.toggleZen = document.querySelector<HTMLElement>('#toggle-zen')!;
-      this.toggleZen.addEventListener('click', () => {
-        this.isZen = !this.isZen;
-      });
-      this.toTop = document.querySelector<HTMLElement>('#to-top')!;
-      this.toTop.addEventListener('click', () => {
-        this.addTempClass(this.toTop!, 'spin');
-        scroll(0);
       });
     }
 
@@ -445,6 +434,19 @@
     confChanged() {
       localStorage.setItem('conf', this.selectConf);
       location.href = this.baseUrl;
+    }
+
+    toggleDark() {
+      this.isDark = !this.isDark;
+    }
+
+    toggleZen() {
+      this.isZen = !this.isZen;
+    }
+
+    toTop(height = 0) {
+      this.addTempClass(this.$refs.toTop, 'spin');
+      scroll(height);
     }
 
     addTempClass(element: Element, cls: string, timeout = 500) {
