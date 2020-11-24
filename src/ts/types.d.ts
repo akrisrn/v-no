@@ -35,6 +35,8 @@ interface IFlags {
   tags: string[];
   updated: string[];
   cover: string;
+  startDate: string;
+  endDate: string;
 
   [index: string]: string[] | string;
 }
