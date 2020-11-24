@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
 
-function createFlags(title = ''): IFlags {
+function createFlags(title: string): IFlags {
   return {
     title,
     tags: [],
@@ -37,15 +37,17 @@ export function checkLinkPath(path: string) {
 }
 
 function parseData(path: string, data: string): TFile {
-  const flags = createFlags();
+  const flags = createFlags(path);
+  const links: string[] = [];
+  if (!data) {
+    return { path, data, flags, links };
+  }
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
   flagMarks.push('# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
   const linkRegExp = /\[.*?]\((\/.*?)\)/g;
-  const links: string[] = [];
-  const lines: string[] = [];
-  data.split('\n').forEach(line => {
-    let flagMatch = line.match(flagRegExp);
+  data = data.split('\n').map(line => {
+    const flagMatch = line.match(flagRegExp);
     if (flagMatch) {
       const flagMark = flagMatch[1];
       const flagText = flagMatch[2];
@@ -59,29 +61,25 @@ function parseData(path: string, data: string): TFile {
       } else {
         flags.title = flagText;
       }
-    } else {
-      flagMatch = linkRegExp.exec(line);
-      while (flagMatch) {
-        const linkPath = checkLinkPath(flagMatch[1]);
-        if (linkPath && linkPath !== path && !links.includes(linkPath)) {
-          links.push(linkPath);
-          let backlinks = cachedBacklinks[linkPath];
-          if (backlinks === undefined) {
-            backlinks = [path];
-            cachedBacklinks[linkPath] = backlinks;
-          } else if (!backlinks.includes(path)) {
-            backlinks.push(path);
-          }
-        }
-        flagMatch = linkRegExp.exec(line);
-      }
-      lines.push(line.trimEnd());
+      return '';
     }
-  });
-  data = lines.join('\n').trim();
-  if (!flags.title) {
-    flags.title = path;
-  }
+    let linkMatch = linkRegExp.exec(line);
+    while (linkMatch) {
+      const linkPath = checkLinkPath(linkMatch[1]);
+      if (linkPath && linkPath !== path && !links.includes(linkPath)) {
+        links.push(linkPath);
+        let backlinks = cachedBacklinks[linkPath];
+        if (backlinks === undefined) {
+          backlinks = [path];
+          cachedBacklinks[linkPath] = backlinks;
+        } else if (!backlinks.includes(path)) {
+          backlinks.push(path);
+        }
+      }
+      linkMatch = linkRegExp.exec(line);
+    }
+    return line.trimEnd();
+  }).join('\n').trim();
   if (flags.tags.length > 0) {
     flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
   }
@@ -143,7 +141,7 @@ export async function getFile(path: string) {
     } else {
       requestCount++;
       axios.get<string>(addBaseUrl(path)).then(response => {
-        cachedFiles[path] = parseData(path, response.data);
+        cachedFiles[path] = parseData(path, response.data.trim());
         isRequesting[path] = false;
         resolve(cachedFiles[path]);
       }).catch(() => {
