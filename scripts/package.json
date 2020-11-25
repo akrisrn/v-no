@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "scripts": {
-    "prerender": "node prerender.js"
-  },
-  "dependencies": {
-    "puppeteer": "^5.3.1"
-  }
-}
