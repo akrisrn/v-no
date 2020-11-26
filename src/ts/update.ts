@@ -404,7 +404,7 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const linkRegExp = /^\s{0,3}(#{2,6}\s+)?\[\+(#.+)?]\((\/.*?)\)$/;
+  const linkRegExp = /^(?: {0,3}(#{2,6}) )?\s*\[\+(#.+)?]\((\/.*?)\)$/;
   data = data.split('\n').map(line => {
     const match = line.match(linkRegExp);
     if (match) {
@@ -419,7 +419,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           dict[path] = snippetDict;
         }
         if (snippetDict[match[0]] === undefined) {
-          const heading = match[1] ? match[1].trimEnd().length : 0;
+          const heading = match[1] ? match[1].length : 0;
           const params: Dict<string> = {};
           if (match[2]) {
             match[2].substr(1).split('|').forEach((seg, i) => {
@@ -627,10 +627,12 @@ export async function updateSearchPage(query: Dict<string>) {
     const { files } = await getFiles();
     const resultFiles: TFile[] = [];
     const quoteDict: Dict<HTMLQuoteElement> = {};
+    let count = 0;
     for (const file of Object.values(files)) {
       if (file.isError) {
         continue;
       }
+      count++;
       const { data, flags } = file;
       let isFind = false;
       let hasQuote = false;
@@ -724,7 +726,7 @@ export async function updateSearchPage(query: Dict<string>) {
     }
     const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
     if (searchCount) {
-      searchCount.innerText = `${resultFiles.length}/${Object.keys(files).length}`;
+      searchCount.innerText = `${resultFiles.length}/${count}`;
     }
   }
 }

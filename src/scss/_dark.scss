@@ -50,7 +50,7 @@ body.dark {
   }
 
   .markdown-body {
-    &, .btn, #search-input {
+    &, .btn, #search-input, mark, code {
       color: $dark-font-color;
     }
 
@@ -74,10 +74,6 @@ body.dark {
       color: $light-gray-font-color;
     }
 
-    code {
-      color: $dark-font-color;
-    }
-
     table {
       thead tr {
         border-bottom-color: $dark-border-color;
@@ -96,6 +92,10 @@ body.dark {
 
     img, kbd {
       filter: brightness(0.7);
+    }
+
+    s {
+      background-image: linear-gradient(transparent 45%, $dark-font-color 45% 55%, transparent 55%);
     }
   }
 

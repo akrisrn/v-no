@@ -203,17 +203,7 @@ export function renderMD(data: string) {
       if (headingText) {
         const linkMatch = headingText.match(linkRegExp);
         if (linkMatch) {
-          const text = linkMatch[1];
-          const href = linkMatch[2];
-          if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
-            if (text === '#') {
-              headingText = href;
-            } else {
-              headingText = text.substr(0, text.length - 1);
-            }
-          } else {
-            headingText = text;
-          }
+          headingText = markdownIt.render(headingText).trim().replace(/^<p>(.*)<\/p>$/, '$1');
         }
       } else {
         headingText = `[${null}]`;

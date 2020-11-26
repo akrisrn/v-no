@@ -153,9 +153,11 @@
   }
 
   mark {
+    padding: 0.25em;
+    transition: color 0.5s;
+    color: $font-color;
     border-radius: 3px;
     background-color: $mark-color-s;
-    box-shadow: 0.25em 0 0 $mark-color-s, -0.25em 0 0 $mark-color-s;
   }
 
   dl {
@@ -264,6 +266,11 @@
     th {
       font-weight: bolder;
     }
+  }
+
+  s {
+    text-decoration: none;
+    background-image: linear-gradient(transparent 45%, $font-color 45% 55%, transparent 55%);
   }
 
   details {

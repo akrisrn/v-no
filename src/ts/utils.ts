@@ -39,7 +39,11 @@ export function exposeToWindow(vars: Dict<any>) {
 }
 
 export function isExternalLink(href: string) {
-  return href.indexOf(':') >= 0;
+  try {
+    return !!new URL(href).host;
+  } catch (e) {
+    return false;
+  }
 }
 
 export function trimList(list: string[], distinct = true) {
@@ -47,8 +51,8 @@ export function trimList(list: string[], distinct = true) {
   return distinct ? Array.from(new Set(list)) : list;
 }
 
-export function getWrapRegExp(left: string, right: string = left, flags = '', isGreedy = false) {
-  return new RegExp(`${left}\\s*(.+${isGreedy ? '' : '?'})\\s*${right}`, flags);
+export function getWrapRegExp(left: string, right = left, flags?: string) {
+  return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
 }
 
 export function getHeadingRegExp(min = 1, max = 6, flags?: string) {

@@ -2,7 +2,7 @@
   <div id="app">
     <div id="top">
       <div>
-        <img v-if="favicon" :src="favicon" alt=""/>
+        <img v-if="favicon" :src="favicon" alt="favicon"/>
         <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
         <a :href="`#${config.paths.readme}`"></a>
