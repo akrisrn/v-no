@@ -1,4 +1,13 @@
-import { addBaseUrl, EIcon, getHeadingRegExp, getIcon, getLinkRegExp, isExternalLink, trimList } from '@/ts/utils';
+import {
+  addBaseUrl,
+  EIcon,
+  getHeadingRegExp,
+  getIcon,
+  getLinkRegExp,
+  homePath,
+  isExternalLink,
+  trimList,
+} from '@/ts/utils';
 import { config } from '@/ts/config';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -171,7 +180,7 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
       }
       token.attrSet('href', href);
     }
-    if (!href.startsWith('#') && href !== addBaseUrl('/')) {
+    if (!href.startsWith('#') && href !== homePath) {
       token.attrSet('target', '_blank');
     }
   }

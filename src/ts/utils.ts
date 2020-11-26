@@ -98,8 +98,13 @@ export const homePath = baseUrl + shortIndexPath;
 export const homePathForRoute = '/' + shortIndexPath;
 
 export function addBaseUrl(path: string) {
-  if (path.startsWith('/') && baseUrl !== '/' && !path.startsWith(baseUrl)) {
-    return baseUrl + path.substr(1);
+  if (path.startsWith('/')) {
+    if (path === '/') {
+      return homePath;
+    }
+    if (baseUrl !== '/') {
+      return baseUrl + path.substr(1);
+    }
   }
   return path;
 }
