@@ -102,6 +102,9 @@ export function addBaseUrl(path: string) {
     if (path === '/') {
       return homePath;
     }
+    if (config.cdn) {
+      return config.cdn + path.substr(1);
+    }
     if (baseUrl !== '/') {
       return baseUrl + path.substr(1);
     }

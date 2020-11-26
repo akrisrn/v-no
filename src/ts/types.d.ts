@@ -1,6 +1,7 @@
 interface IConfig {
   siteName?: string;
   dateFormat?: string;
+  cdn?: string;
   paths: {
     favicon?: string;
     index: string;
