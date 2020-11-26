@@ -1,4 +1,4 @@
-import { addBaseUrl, EIcon, getIcon, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import { addBaseUrl, EIcon, getHeadingRegExp, getIcon, getLinkRegExp, isExternalLink, trimList } from '@/ts/utils';
 import { config } from '@/ts/config';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -194,24 +194,29 @@ export function renderMD(data: string) {
     const headingList: string[] = [];
     let firstHeading = '';
     const headingCount: Dict<number> = {};
-    const headingRegExp = getWrapRegExp('^\\s{0,3}(##{1,5})\\s', '$', 'gm');
+    const headingRegExp = getHeadingRegExp(2, 6, 'gm');
+    const linkRegExp = getLinkRegExp();
     let headingMatch = headingRegExp.exec(data);
     while (headingMatch) {
       const headingLevel = headingMatch[1];
       let headingText = headingMatch[2];
-      const linkMatch = headingText.match(/\[(.*?)]\((.*?)\)/);
-      if (linkMatch) {
-        const text = linkMatch[1];
-        const href = linkMatch[2];
-        if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
-          if (text === '#') {
-            headingText = href;
+      if (headingText) {
+        const linkMatch = headingText.match(linkRegExp);
+        if (linkMatch) {
+          const text = linkMatch[1];
+          const href = linkMatch[2];
+          if (text.endsWith('#') && href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
+            if (text === '#') {
+              headingText = href;
+            } else {
+              headingText = text.substr(0, text.length - 1);
+            }
           } else {
-            headingText = text.substr(0, text.length - 1);
+            headingText = text;
           }
-        } else {
-          headingText = text;
         }
+      } else {
+        headingText = `[${null}]`;
       }
       if (!firstHeading) {
         firstHeading = headingLevel;

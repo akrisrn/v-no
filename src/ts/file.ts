@@ -1,4 +1,13 @@
-import { addBaseUrl, EFlag, formatDate, getWrapRegExp, isExternalLink, trimList } from '@/ts/utils';
+import {
+  addBaseUrl,
+  EFlag,
+  formatDate,
+  getHeadingRegExp,
+  getLinkRegExp,
+  getWrapRegExp,
+  isExternalLink,
+  trimList,
+} from '@/ts/utils';
 import { baseFiles, config } from '@/ts/config';
 import axios from 'axios';
 
@@ -43,29 +52,33 @@ function parseData(path: string, data: string): TFile {
     return { path, data, flags, links };
   }
   const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
-  flagMarks.push('\\s{0,3}# ');
   const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
-  const linkRegExp = /\[.*?]\((\/.*?)\)/g;
+  const titleRegExp = getHeadingRegExp(1, 1);
+  const linkRegExp = getLinkRegExp(true, false, false, 'g');
   data = data.split('\n').map(line => {
+    line = line.trimEnd();
     const flagMatch = line.match(flagRegExp);
     if (flagMatch) {
       const flagMark = flagMatch[1];
       const flagText = flagMatch[2];
-      if (flagMark.startsWith('@')) {
-        const flag = flagMark.substring(1, flagMark.length - 1);
-        if ([EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
-          flags[flag] = trimList(flagText.split(/[,，、]/)).sort();
-        } else {
-          flags[flag] = flagText;
-        }
+      const flag = flagMark.substring(1, flagMark.length - 1);
+      if ([EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
+        flags[flag] = trimList(flagText.split(/[,，、]/)).sort();
       } else {
-        flags.title = flagText;
+        flags[flag] = flagText;
+      }
+      return '';
+    }
+    const titleMatch = line.match(titleRegExp);
+    if (titleMatch) {
+      if (titleMatch[2]) {
+        flags.title = titleMatch[2];
       }
       return '';
     }
     let linkMatch = linkRegExp.exec(line);
     while (linkMatch) {
-      const linkPath = checkLinkPath(linkMatch[1]);
+      const linkPath = checkLinkPath(linkMatch[2]);
       if (linkPath && linkPath !== path && !links.includes(linkPath)) {
         links.push(linkPath);
         let backlinks = cachedBacklinks[linkPath];
@@ -78,16 +91,16 @@ function parseData(path: string, data: string): TFile {
       }
       linkMatch = linkRegExp.exec(line);
     }
-    return line.trimEnd();
+    return line;
   }).join('\n').trim();
   if (flags.tags.length > 0) {
     flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
   }
   let cover = flags.cover;
   if (cover) {
-    const linkMatch = cover.match(/^!\[.*?]\((.*?)\)$/);
-    if (linkMatch) {
-      cover = linkMatch[1];
+    const imageMatch = cover.match(getLinkRegExp(false, true, true));
+    if (imageMatch) {
+      cover = imageMatch[2];
     }
     if (!isExternalLink(cover)) {
       cover = addBaseUrl(cover);

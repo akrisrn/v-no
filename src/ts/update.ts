@@ -3,6 +3,7 @@ import {
   buildQueryContent,
   EFlag,
   getEventListenerDict,
+  getHeadingRegExp,
   getSearchTagLinks,
   getWrapRegExp,
   removeClass,
@@ -380,10 +381,23 @@ export function updateDom() {
 
 function degradeHeading(data: string, level: number) {
   if (level > 0) {
-    data = data.replace(/^\s{0,3}(#{1,5})\s/gm, `$1${'#'.repeat(level)} `);
-    if (level > 1) {
-      data = data.replace(/^\s{0,3}#{7,}\s/gm, `${'#'.repeat(6)} `);
-    }
+    const headingRegExp = getHeadingRegExp(1, 5);
+    data = data.split('\n').map(line => {
+      const headingMatch = line.match(headingRegExp);
+      if (headingMatch) {
+        const headingLevel = headingMatch[1];
+        const headingText = headingMatch[2];
+        let newLine = headingLevel + '#'.repeat(level);
+        if (newLine.length >= 7) {
+          newLine = newLine.substr(0, 6);
+        }
+        if (headingText) {
+          newLine += ` ${headingText}`;
+        }
+        return newLine;
+      }
+      return line;
+    }).join('\n');
   }
   return data;
 }
