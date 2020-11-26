@@ -154,7 +154,7 @@
 
   mark {
     padding: 0.25em;
-    transition: color 0.5s;
+    transition: color 0.5s, background-color 0.5s;
     color: $font-color;
     border-radius: 3px;
     background-color: $mark-color-s;
@@ -207,7 +207,7 @@
     display: inline-block;
     padding-top: 0;
     padding-bottom: 0;
-    transition: color 0.5s;
+    transition: color 0.5s, background-color 0.5s;
     color: $font-color;
     background-color: $code-background-color;
   }
@@ -271,6 +271,24 @@
   s {
     text-decoration: none;
     background-image: linear-gradient(transparent 45%, $font-color 45% 55%, transparent 55%);
+  }
+
+  black {
+    padding: 0.25em;
+    transition: background-color 0.5s;
+    background-color: $font-color;
+
+    mark, code {
+      background-color: $font-color;
+    }
+
+    a {
+      color: $font-color;
+
+      code {
+        color: $font-color;
+      }
+    }
   }
 
   details {

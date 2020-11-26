@@ -97,6 +97,22 @@ body.dark {
     s {
       background-image: linear-gradient(transparent 45%, $dark-font-color 45% 55%, transparent 55%);
     }
+
+    black {
+      background-color: $dark-font-color;
+
+      mark, code {
+        background-color: $dark-font-color;
+      }
+
+      a {
+        color: $dark-font-color;
+
+        code {
+          color: $dark-font-color;
+        }
+      }
+    }
   }
 
   .custom {
