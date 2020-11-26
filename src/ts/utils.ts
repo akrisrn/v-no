@@ -87,7 +87,15 @@ export function cleanEventListenerDict() {
   eventListenerDict = {};
 }
 
-const baseUrl = process.env.BASE_URL;
+const baseUrl: string = process.env.BASE_URL;
+export const indexPath: string = process.env.VUE_APP_INDEX_PATH;
+
+let shortIndexPath = indexPath;
+if (indexPath.endsWith('index.html')) {
+  shortIndexPath = indexPath.replace(/index\.html$/, '');
+}
+export const homePath = baseUrl + shortIndexPath;
+export const homePathForRoute = '/' + shortIndexPath;
 
 export function addBaseUrl(path: string) {
   if (path.startsWith('/') && baseUrl !== '/' && !path.startsWith(baseUrl)) {

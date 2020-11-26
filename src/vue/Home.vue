@@ -82,6 +82,9 @@
     exposeToWindow,
     getIcon,
     getSearchTagLinks,
+    homePath,
+    homePathForRoute,
+    indexPath,
     removeClass,
     scroll,
     sortFiles,
@@ -137,25 +140,12 @@
     keyInput = '';
     inputBinds: Dict<() => void> = {};
 
-    indexPath: string = process.env.VUE_APP_INDEX_PATH;
+    indexPath = indexPath;
+    homePath = homePath;
+    homePathForRoute = homePathForRoute;
 
     get config() {
       return config;
-    }
-
-    get shortIndexPath() {
-      if (this.indexPath.endsWith('index.html')) {
-        return this.indexPath.replace(/index\.html$/, '');
-      }
-      return this.indexPath;
-    }
-
-    get homePath() {
-      return process.env.BASE_URL + this.shortIndexPath;
-    }
-
-    get homePathForRoute() {
-      return `/${this.shortIndexPath}`;
     }
 
     get filePath() {
