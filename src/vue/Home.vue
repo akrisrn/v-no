@@ -19,7 +19,7 @@
         <div v-if="cover" id="cover" class="center">
           <img :src="cover" alt="cover"/>
         </div>
-        <div v-if="!isError" id="bar" class="markdown-body bar">
+        <div v-if="!isError" id="bar" class="bar">
           <code v-if="!isIndexFile" class="item-home">
             <a :href="homePath" @click.prevent="returnHome">«</a>
           </code>
@@ -35,7 +35,7 @@
         </div>
         <header>{{ title }}</header>
         <Article :data="data" :filePath="filePath" :query="query"></Article>
-        <div v-if="!isError" id="backlinks" class="markdown-body">
+        <div v-if="!isError" id="backlinks">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
           <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
@@ -57,7 +57,7 @@
             <span v-else>{{ config.messages.noBacklinks }}</span>
           </template>
         </div>
-        <footer v-if="!isIndexFile" class="markdown-body">
+        <footer v-if="!isIndexFile">
           <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
             <span v-if="date" class="date">

@@ -4,13 +4,25 @@ main {
   max-width: $max-width;
   margin: 40px auto;
   padding: 40px 56px;
-  transition: padding 0.5s, margin 0.5s, background-color 0.5s, box-shadow 0.5s;
+  transition: margin 0.5s, background-color 0.5s, box-shadow 0.5s;
   background-color: $main-background-color;
   box-shadow: $box-shadow;
 
   @media screen and (max-width: $media-max-width) {
     margin: 0 auto;
     padding: 24px;
+  }
+
+  &.slide-fade-enter-active {
+    transition: opacity 0.5s;
+  }
+
+  &.slide-fade-leave-active {
+    transition: opacity 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+
+  &.slide-fade-enter, &.slide-fade-leave-to {
+    opacity: 0;
   }
 
   #cover {
@@ -20,84 +32,64 @@ main {
     img {
       max-width: 100%;
       max-height: 600px;
-      transition: filter 0.5s;
     }
   }
 
   #bar {
-    max-height: 27px * 2;
-    transition: opacity 0.5s, max-height 0.5s;
+    max-height: 25px * 2;
+    transition: max-height 0.5s, opacity 0.5s;
     opacity: 1;
   }
 
   header {
-    font-family: $font-family;
-    font-size: 32px;
-    font-weight: bolder;
-    margin-bottom: 20px;
-    transition: color 0.5s, margin-top 0.5s;
-    color: $font-color;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1.2;
+    margin-bottom: 24px;
 
     &:not(:first-child) {
       margin-top: 16px;
-    }
-  }
-
-  article {
-    transition: color 0.5s;
-
-    .hidden, .folded {
-      display: none !important;
+      transition: margin-top 0.5s;
     }
   }
 
   #backlinks {
     font-size: $font-size-s;
+    min-height: 22px;
     margin-top: 24px;
     padding: 8px 16px;
-    transition: color 0.5s;
     border-radius: 3px;
     background-color: $code-background-color;
 
-    .icon {
-      float: left;
-      width: 30px;
-      height: 26px;
-
-      &.loading {
-        svg {
-          margin-top: 4px;
-          animation: svg-spin 1s linear infinite;
-
-          @keyframes svg-spin {
-            from {
-              transform: rotate(0);
-            }
-            to {
-              transform: rotate(360deg);
-            }
-          }
-        }
-      }
-
-      svg {
-        margin-top: 3px;
-      }
+    ul {
+      margin: 0;
+      padding-left: 32px;
     }
 
-    ul li.article {
-      margin-left: 4px !important;
+    .icon {
+      float: left;
+      width: 32px;
 
-      &:last-of-type {
-        margin-bottom: 2px;
+      &.loading svg {
+        margin-top: 2px;
+        animation: svg-spin 1s linear infinite;
+
+        @keyframes svg-spin {
+          from {
+            transform: rotate(0);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
       }
     }
   }
 
   footer {
-    height: 27px;
+    height: 25px;
     margin-top: 24px;
-    transition: opacity 0.5s, height 0.5s, margin-top 0.5s;
+    transition: height 0.5s, margin-top 0.5s, opacity 0.5s;
     opacity: 1;
 
     .home:before {
@@ -106,40 +98,60 @@ main {
 
     .date {
       float: right;
-      transition: color 0.5s;
       color: $gray-font-color;
     }
   }
 
-  .bar {
-    code {
-      font-size: $font-size-xs;
-      display: inline-block;
+  code, code[class*="language-"], kbd {
+    font-family: $mono-font-family;
+    font-size: $font-size-s;
+    display: inline-block;
+    padding: 0 0.5em;
+    border-radius: 3px;
+    background-color: $code-background-color;
+  }
+
+  li {
+    + li {
+      margin-top: 0.5em;
+    }
+
+    &.article {
+      overflow: hidden;
+      list-style: none;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &:before {
+        margin-right: 8px;
+        content: "»";
+      }
+
+      .bar {
+        float: right;
+      }
+    }
+  }
+
+  .bar code {
+    &:not(:last-of-type) {
       margin-right: 8px;
-      padding-top: 0;
-      padding-bottom: 0;
+    }
 
-      &:last-of-type {
-        margin-right: 0;
+    &.item-date {
+      background-color: $info-color-xs;
+    }
+
+    &.item-tag {
+      background-color: $success-color-xs;
+
+      &:before {
+        margin-right: 4px;
+        content: "#";
       }
 
-      &.item-date {
-        background-color: $info-color-xs;
-      }
-
-      &.item-tag {
-        background-color: $success-color-xs;
-
-        a:not(:last-of-type) {
-          &:after {
-            content: "/";
-          }
-        }
-
-        &:before {
-          margin-right: 2px;
-          content: "#";
-        }
+      a:not(:last-of-type):after {
+        content: "/";
       }
     }
   }
@@ -147,14 +159,4 @@ main {
   .center {
     text-align: center;
   }
-
-  &.error {
-    header {
-      color: $danger-color;
-    }
-  }
-}
-
-a.error {
-  color: $danger-color !important;
 }

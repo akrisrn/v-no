@@ -71,7 +71,7 @@ const markdownIt = new MarkdownIt({
 markdownIt.linkify.tlds([], false);
 
 markdownIt.renderer.rules.footnote_block_open = () => {
-  return `<section class="footnotes"><span>${config.messages.footnotes}</span><ol class="footnotes-list">`;
+  return `<section class="footnotes"><p>${config.messages.footnotes}</p><ol class="footnotes-list">`;
 };
 
 const getDefaultRenderRule = (name: string) => {

@@ -1,7 +1,6 @@
 @import "var";
 
 #top {
-  font-family: $font-family;
   font-size: $font-size-s;
   padding: 0 16px;
   transition: background-color 0.5s, box-shadow 0.5s;
@@ -21,7 +20,6 @@
     img {
       height: 24px;
       margin-right: 8px;
-      transition: filter 0.5s;
     }
 
     span {
@@ -29,18 +27,7 @@
     }
 
     a {
-      transition: color 0.5s;
-      text-decoration: none;
       color: $dark-link-font-color;
-
-      &:hover {
-        text-decoration: underline;
-      }
-
-      &:after {
-        margin: 0 8px;
-        content: "|";
-      }
 
       &:first-of-type {
         margin-right: 8px;
@@ -50,6 +37,11 @@
         &:after {
           content: none;
         }
+      }
+
+      &:after {
+        margin: 0 8px;
+        content: "|";
       }
     }
 

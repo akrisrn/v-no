@@ -1,11 +1,11 @@
 @import "var";
 
 #toggle-dark, #toggle-zen, #to-top {
-  font-family: $font-family;
   font-size: 20px;
   position: fixed;
   right: 16px;
   cursor: pointer;
+  transition: color 0.5s;
   color: transparent;
 
   &:hover {
@@ -13,14 +13,14 @@
   }
 }
 
+$unit: 32px;
+
 #toggle-dark {
-  font-size: 22px;
-  bottom: 72px;
-  transition: color 0.5s;
+  bottom: 8px + $unit * 2;
 }
 
 #toggle-zen {
-  bottom: 40px;
+  bottom: 8px + $unit;
   transition: color 0.5s, transform 0.5s;
 
   &.spin {
@@ -30,7 +30,6 @@
 
 #to-top {
   bottom: 8px;
-  transition: color 0.5s;
 
   &.spin {
     animation: to-top-spin 0.5s;

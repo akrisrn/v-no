@@ -1,6 +1,10 @@
 @import "var";
 
 body.zen {
+  #app .custom {
+    opacity: 0;
+  }
+
   #top {
     box-shadow: none;
 
@@ -36,9 +40,5 @@ body.zen {
       height: 0;
       margin-top: 0;
     }
-  }
-
-  .custom {
-    opacity: 0;
   }
 }

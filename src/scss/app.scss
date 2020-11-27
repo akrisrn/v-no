@@ -1,3 +1,51 @@
-@import "body";
+@import "var";
+
+body {
+  margin: 0;
+  transition: background-color 0.5s;
+}
+
+#app {
+  font-family: $font-family;
+  font-size: $font-size;
+  line-height: 1.8;
+  transition: color 0.5s;
+  color: $font-color;
+
+  a {
+    cursor: pointer;
+    transition: color 0.5s;
+    text-decoration: none;
+    color: $link-font-color;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    svg {
+      margin: 0 4px;
+    }
+  }
+
+  svg {
+    transition: fill 0.5s;
+    fill: $font-color;
+  }
+
+  img {
+    transition: filter 0.5s;
+  }
+
+  .custom {
+    transition: opacity 0.5s;
+    opacity: 1;
+  }
+}
+
+#app a.error, main.error header {
+  font-weight: bold;
+  color: $danger-color-s !important;
+}
+
 @import "dark";
 @import "zen";

@@ -1,14 +1,15 @@
 $max-width: 700px;
 $media-max-width: $max-width + 50;
+
 $shadow-color: rgba(#000000, 0.1);
 $box-shadow: 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px $shadow-color;
 
 $background-color: #f1f1f1;
 $main-background-color: #ffffff;
 $code-background-color: rgba(#969696, 0.1);
-$border-color: #d3d3d3;
 $mark-color: #ffeb3b;
 $mark-color-s: rgba($mark-color, 0.3);
+
 $info-color: #448aff;
 $info-color-s: rgba($info-color, 0.5);
 $info-color-xs: rgba($info-color, 0.1);
@@ -21,19 +22,22 @@ $warning-color-xs: rgba($warning-color, 0.1);
 $danger-color: #ff1744;
 $danger-color-s: rgba($danger-color, 0.5);
 $danger-color-xs: rgba($danger-color, 0.1);
+$color-sets: (
+        "info": ($info-color, $info-color-s, $info-color-xs),
+        "success": ($success-color, $success-color-s, $success-color-xs),
+        "warning": ($warning-color, $warning-color-s, $warning-color-xs),
+        "danger": ($danger-color, $danger-color-s, $danger-color-xs)
+);
 
 $font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
-$font-family-no-emoji: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif;
-$font-size: 15px;
-$font-size-s: 13px;
-$font-size-xs: 12px;
+$mono-font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+$font-size: 14px;
+$font-size-s: 0.85em;
 $font-color: #464646;
-$gray-font-color: #737373;
-$light-gray-font-color: #969696;
+$gray-font-color: #8d8d8d;
 $link-font-color: #2864dc;
 
 $dark-background-color: #2b2b2b;
 $dark-main-background-color: #3b3b3b;
-$dark-border-color: #787878;
 $dark-font-color: #bebebe;
 $dark-link-font-color: #82b4e6;

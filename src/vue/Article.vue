@@ -1,5 +1,5 @@
 <template>
-  <article :class="['markdown-body', { rendering: isRendering }]" v-html="markdown"/>
+  <article :class="{ rendering: isRendering }" v-html="markdown"/>
 </template>
 
 <script lang="ts">

@@ -1,123 +1,41 @@
 @import "var";
 
 body.dark {
-  #top {
-    background-color: $dark-background-color;
-
-    img {
-      filter: brightness(0.7);
-    }
-
-    select {
-      background-color: $dark-background-color;
-    }
-  }
-
-  main {
-    background-color: $dark-main-background-color;
-
-    #cover {
-      img {
-        filter: brightness(0.7);
-      }
-    }
-
-    header {
-      color: $dark-font-color;
-    }
-
-    footer {
-      .date {
-        color: $dark-font-color;
-      }
-    }
-
-    &.error {
-      header {
-        color: $danger-color-s;
-      }
-    }
-  }
-
-  a.error {
-    color: $danger-color-s !important;
-  }
-
-  #toggle-dark, #toggle-zen, #to-top {
-    &:hover {
-      color: $dark-font-color;
-    }
-  }
-
-  .markdown-body {
-    &, .btn, #search-input, mark, code {
-      color: $dark-font-color;
-    }
+  #app {
+    color: $dark-font-color;
 
     a {
       color: $dark-link-font-color;
-
-      code {
-        color: $dark-link-font-color;
-      }
     }
 
     svg {
       fill: $dark-font-color;
     }
 
-    hr {
-      border-bottom-color: $dark-border-color;
-    }
-
-    blockquote, dl dd, .footnotes {
-      color: $light-gray-font-color;
-    }
-
-    table {
-      thead tr {
-        border-bottom-color: $dark-border-color;
-      }
-
-      tr + tr {
-        border-top-color: $dark-border-color;
-      }
-
-      td, th {
-        &:not(:last-of-type) {
-          border-right-color: $dark-border-color;
-        }
-      }
-    }
-
-    img, kbd {
+    img {
       filter: brightness(0.7);
-    }
-
-    s {
-      background-image: linear-gradient(transparent 45%, $dark-font-color 45% 55%, transparent 55%);
-    }
-
-    black {
-      background-color: $dark-font-color;
-
-      mark, code {
-        background-color: $dark-font-color;
-      }
-
-      a {
-        color: $dark-font-color;
-
-        code {
-          color: $dark-font-color;
-        }
-      }
     }
   }
 
-  .custom {
-    img {
-      filter: brightness(0.7);
+  #top {
+    &, > div select {
+      background-color: $dark-background-color;
+    }
+  }
+
+  main {
+    background-color: $dark-main-background-color;
+  }
+
+  article {
+    mark, #search-input, .btn {
+      color: $dark-font-color;
+    }
+  }
+
+  #toggle-dark, #toggle-zen, #to-top {
+    &:hover {
+      color: $dark-font-color;
     }
   }
 }

@@ -363,9 +363,6 @@ function updateHighlight() {
     }
   });
   Prism.highlightAll();
-  document.querySelectorAll<HTMLDivElement>('.line-highlight').forEach(div => {
-    div.style.top = `${parseInt(div.style.top) + 4}px`;
-  });
 }
 
 export function updateDom() {
@@ -599,7 +596,7 @@ function escapeHTML(html: string) {
 
 export async function updateSearchPage(query: Dict<string>) {
   let content = query.content !== undefined ? decodeURIComponent(query.content.trim()) : '';
-  const searchInput = document.querySelector<HTMLInputElement>('input#search-input');
+  const searchInput = document.querySelector<HTMLInputElement>('#search-input');
   if (searchInput) {
     searchInput.value = content;
     searchInput.addEventListener('keyup', e => {
@@ -612,7 +609,7 @@ export async function updateSearchPage(query: Dict<string>) {
       }
     });
   }
-  const resultUl = document.querySelector<HTMLUListElement>('ul#result');
+  const resultUl = document.querySelector<HTMLUListElement>('#result');
   if (content && resultUl) {
     content = content.toLowerCase();
     let queryFlag = '';
@@ -670,7 +667,7 @@ export async function updateSearchPage(query: Dict<string>) {
           }
           const endIndex = regexp.lastIndex + offset;
           const lastIndex = results.length - 1 as number;
-          let result = `<span class="hl">${escapeHTML(match[0])}</span>` +
+          let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
             escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
           if (startIndex <= prevEndIndex) {
             startIndex = prevEndIndex;
@@ -720,11 +717,11 @@ export async function updateSearchPage(query: Dict<string>) {
     } else {
       resultUl.innerText = config.messages.searchNothing;
     }
-    const searchTime = document.querySelector<HTMLSpanElement>('span#search-time');
+    const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
     if (searchTime) {
       searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
     }
-    const searchCount = document.querySelector<HTMLSpanElement>('span#search-count');
+    const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
     if (searchCount) {
       searchCount.innerText = `${resultFiles.length}/${count}`;
     }
