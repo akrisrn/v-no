@@ -70,8 +70,10 @@ export function getLinkRegExp(startWithSlash = false, isImg = false, isLine = fa
   return new RegExp(pattern, flags);
 }
 
-export function removeClass(element: Element, cls: string) {
-  element.classList.remove(cls);
+export function removeClass(element: Element, cls?: string) {
+  if (cls) {
+    element.classList.remove(cls);
+  }
   if (element.classList.length === 0) {
     element.removeAttribute('class');
   }

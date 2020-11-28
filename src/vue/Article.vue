@@ -1,11 +1,11 @@
 <template>
-  <article :class="{ rendering: isRendering }" v-html="markdown"/>
+  <article ref="article" :class="isRendering ? 'rendering' : null" v-html="markdown"/>
 </template>
 
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
-  import { exposeToWindow, replaceInlineScript } from '@/ts/utils';
+  import { exposeToWindow, removeClass, replaceInlineScript } from '@/ts/utils';
   import { config } from '@/ts/config';
   import { noRequest, resetRequestCount } from '@/ts/file';
   import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -16,6 +16,9 @@
     @Prop() data!: string;
     @Prop() query!: Dict<string>;
 
+    $refs!: {
+      article: HTMLElement;
+    };
     mdData = this.data ? replaceInlineScript(this.data) : '';
     markdown = this.mdData ? renderMD(this.mdData) : '';
     isRendering = false;
@@ -85,6 +88,7 @@
         }
       }
       this.isRendering = false;
+      this.$nextTick(() => removeClass(this.$refs.article));
     }
   }
 </script>

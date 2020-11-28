@@ -15,7 +15,7 @@
       </div>
     </div>
     <transition name="slide-fade">
-      <main v-if="isShow" :class="{error: isError}">
+      <main v-if="isShow" :class="isError ? 'error' : null">
         <div v-if="cover" id="cover" class="center">
           <img :src="cover" alt="cover"/>
         </div>
@@ -221,6 +221,7 @@
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
+        this.$nextTick(() => removeClass(this.$refs.toggleZen));
         removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
@@ -421,6 +422,7 @@
         this.isToTop = true;
         setTimeout(() => {
           this.isToTop = false;
+          this.$nextTick(() => removeClass(this.$refs.toTop));
         }, 500);
       }
       scroll(height);
