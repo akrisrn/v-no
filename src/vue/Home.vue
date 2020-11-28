@@ -91,7 +91,7 @@
   } from '@/ts/utils';
   import { config, getSelectConf } from '@/ts/config';
   import axios from 'axios';
-  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Vue } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
 
   Component.registerHooks([
@@ -193,38 +193,6 @@
 
     get metaThemeColor() {
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
-    }
-
-    @Watch('isShow')
-    onIsShowChanged() {
-      if (this.isShow) {
-        scroll(0, false);
-      }
-    }
-
-    @Watch('isDark')
-    onIsDarkChanged() {
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isDark) {
-        document.body.classList.add('dark');
-        localStorage.setItem('dark', String(true));
-      } else {
-        removeClass(document.body, 'dark');
-        localStorage.removeItem('dark');
-      }
-    }
-
-    @Watch('isZen')
-    onIsZenChanged() {
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isZen) {
-        document.body.classList.add('zen');
-        localStorage.setItem('zen', String(true));
-      } else {
-        this.$nextTick(() => removeClass(this.$refs.toggleZen));
-        removeClass(document.body, 'zen');
-        localStorage.removeItem('zen');
-      }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -368,6 +336,7 @@
       this.setFlags(flags);
       this.data = data;
       this.isShow = true;
+      scroll(0, false);
     }
 
     setFlags(flags: IFlags) {
@@ -411,10 +380,27 @@
 
     toggleDark() {
       this.isDark = !this.isDark;
+      this.metaTheme.setAttribute('content', this.metaThemeColor);
+      if (this.isDark) {
+        document.body.classList.add('dark');
+        localStorage.setItem('dark', String(true));
+      } else {
+        removeClass(document.body, 'dark');
+        localStorage.removeItem('dark');
+      }
     }
 
     toggleZen() {
       this.isZen = !this.isZen;
+      this.metaTheme.setAttribute('content', this.metaThemeColor);
+      if (this.isZen) {
+        document.body.classList.add('zen');
+        localStorage.setItem('zen', String(true));
+      } else {
+        this.$nextTick(() => removeClass(this.$refs.toggleZen));
+        removeClass(document.body, 'zen');
+        localStorage.removeItem('zen');
+      }
     }
 
     toTop(height = 0) {
