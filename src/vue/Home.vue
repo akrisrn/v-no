@@ -67,9 +67,9 @@
         </footer>
       </main>
     </transition>
-    <span id="toggle-dark" ref="toggleDark" @click="toggleDark">{{ darkMarks[0] }}</span>
-    <span id="toggle-zen" ref="toggleZen" @click="toggleZen">{{ zenMark }}</span>
-    <span id="to-top" ref="toTop" @click="toTop()">{{ toTopMark }}</span>
+    <span id="toggle-dark" @click="toggleDark">{{ darkMarks[isDark ? 1 : 0] }}</span>
+    <span id="toggle-zen" ref="toggleZen" :class="isZen ? 'spin' : null" @click="toggleZen">{{ zenMark }}</span>
+    <span id="to-top" ref="toTop" :class="isToTop ? 'spin' : null" @click="toTop()">{{ toTopMark }}</span>
   </div>
 </template>
 
@@ -103,7 +103,6 @@
   @Component({ components: { Article } })
   export default class Home extends Vue {
     $refs!: {
-      toggleDark: HTMLSpanElement;
       toggleZen: HTMLSpanElement;
       toTop: HTMLSpanElement;
     };
@@ -129,6 +128,7 @@
     metaTheme!: HTMLMetaElement;
     isDark = false;
     isZen = false;
+    isToTop = false;
     darkMarks = ['★', '☆'];
     zenMark = '▣';
     toTopMark = 'と';
@@ -206,11 +206,9 @@
     onIsDarkChanged() {
       this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isDark) {
-        this.$refs.toggleDark.innerText = this.darkMarks[1];
         document.body.classList.add('dark');
         localStorage.setItem('dark', String(true));
       } else {
-        this.$refs.toggleDark.innerText = this.darkMarks[0];
         removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
@@ -220,11 +218,9 @@
     onIsZenChanged() {
       this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
-        this.$refs.toggleZen.classList.add('spin');
         document.body.classList.add('zen');
         localStorage.setItem('zen', String(true));
       } else {
-        removeClass(this.$refs.toggleZen, 'spin');
         removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
@@ -421,17 +417,13 @@
     }
 
     toTop(height = 0) {
-      this.addTempClass(this.$refs.toTop, 'spin');
-      scroll(height);
-    }
-
-    addTempClass(element: Element, cls: string, timeout = 500) {
-      if (!element.classList.contains(cls)) {
-        element.classList.add(cls);
+      if (!this.isToTop) {
+        this.isToTop = true;
         setTimeout(() => {
-          removeClass(element, cls);
-        }, timeout);
+          this.isToTop = false;
+        }, 500);
       }
+      scroll(height);
     }
 
     addInputBind(input: string, bind: () => void) {
