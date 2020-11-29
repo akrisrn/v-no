@@ -157,6 +157,29 @@ function updateImagePath() {
   });
 }
 
+function createBar(flags: IFlags) {
+  const bar = document.createElement('div');
+  bar.classList.add('bar');
+  flags.tags.forEach(tag => {
+    const itemTag = document.createElement('code');
+    itemTag.classList.add('item-tag');
+    getSearchTagLinks(tag).forEach(link => {
+      const a = document.createElement('a');
+      a.href = link[0];
+      a.innerText = link[1];
+      itemTag.append(a);
+    });
+    bar.append(itemTag);
+  });
+  if (flags.startDate) {
+    const itemDate = document.createElement('code');
+    itemDate.classList.add('item-date');
+    itemDate.innerText = flags.startDate;
+    bar.append(itemDate);
+  }
+  return bar.childElementCount > 0 ? bar : null;
+}
+
 export function updateLinkPath() {
   for (const a of document.querySelectorAll<HTMLLinkElement>('a[href^="#/"]')) {
     if (a.innerText !== '') {
@@ -172,8 +195,7 @@ export function updateLinkPath() {
       if (file.isError) {
         a.classList.add('error');
       }
-      const flags = file.flags;
-      a.innerText = flags.title;
+      a.innerText = file.flags.title;
       const parent = a.parentElement!;
       if (parent.tagName === 'LI') {
         let isPass = true;
@@ -188,33 +210,14 @@ export function updateLinkPath() {
         }
         if (!isPass) {
           parent.classList.add('article');
-          if (file.isError) {
-            return;
-          }
-          const bar = document.createElement('div');
-          bar.classList.add('bar');
-          flags.tags.forEach(tag => {
-            const itemTag = document.createElement('code');
-            itemTag.classList.add('item-tag');
-            getSearchTagLinks(tag).forEach(link => {
-              const a = document.createElement('a');
-              a.href = link[0];
-              a.innerText = link[1];
-              itemTag.append(a);
-            });
-            bar.append(itemTag);
-          });
-          if (flags.startDate) {
-            const itemDate = document.createElement('code');
-            itemDate.classList.add('item-date');
-            itemDate.innerText = flags.startDate;
-            bar.append(itemDate);
-          }
-          if (bar.childElementCount > 0) {
-            if (hasQuote) {
-              parent.insertBefore(bar, parent.lastElementChild);
-            } else {
-              parent.append(bar);
+          if (!file.isError) {
+            const bar = createBar(file.flags);
+            if (bar) {
+              if (hasQuote) {
+                parent.insertBefore(bar, parent.lastElementChild);
+              } else {
+                parent.append(bar);
+              }
             }
           }
         }
@@ -704,16 +707,21 @@ export async function updateSearchPage(query: Dict<string>) {
       resultUl.innerText = '';
       resultFiles.sort(sortFiles).forEach(file => {
         const li = document.createElement('li');
+        li.classList.add('article');
         const a = document.createElement('a');
         a.href = `#${file.path}`;
+        a.innerText = file.flags.title;
         li.append(a);
+        const bar = createBar(file.flags);
+        if (bar) {
+          li.append(bar);
+        }
         const blockquote = quoteDict[file.path];
         if (blockquote) {
           li.append(blockquote);
         }
         resultUl.append(li);
       });
-      updateLinkPath();
     } else {
       resultUl.innerText = config.messages.searchNothing;
     }
