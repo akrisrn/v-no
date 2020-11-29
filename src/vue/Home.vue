@@ -34,7 +34,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :filePath="filePath" :query="query"></Article>
+        <Article :data="data" :filePath="filePath" :hash="hash" :query="query"></Article>
         <div v-if="!isError" id="backlinks">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -120,6 +120,7 @@
     updated = '';
     cover = '';
     query: Dict<string> = {};
+    hash = '';
 
     backlinkFiles: TFile[] = [];
     isLoadingBacklinks = false;
@@ -152,38 +153,16 @@
     }
 
     get filePath() {
+      const { path, query, hash } = this.parseRoute(this.$route);
       this.query = {};
-      let path = this.$route.path;
-      if (path.endsWith('/')) {
-        path += 'index.html';
-      }
-      if (path === `/${this.indexPath}`) {
-        const hash = this.$route.hash;
-        if (hash.startsWith('#/')) {
-          path = hash.substr(1);
-          if (path !== '/') {
-            const indexOf = path.indexOf('?');
-            if (indexOf >= 0) {
-              path.substr(indexOf + 1).split('&').forEach(param => {
-                const indexOfEQ = param.indexOf('=');
-                if (indexOfEQ >= 0) {
-                  this.query[param.substring(0, indexOfEQ)] = param.substring(indexOfEQ + 1);
-                }
-              });
-              path = path.substring(0, indexOf);
-            }
-            if (path.endsWith('/')) {
-              path += 'index.md';
-            }
-            return path;
-          }
+      query.split('&').forEach(param => {
+        const indexOf = param.indexOf('=');
+        if (indexOf >= 0) {
+          this.query[param.substring(0, indexOf)] = param.substring(indexOf + 1);
         }
-        return this.config.paths.index;
-      } else if (path.endsWith('.html')) {
-        return path.replace(/\.html$/, '.md');
-      } else {
-        return path;
-      }
+      });
+      this.hash = hash;
+      return path;
     }
 
     get rawFilePath() {
@@ -362,6 +341,38 @@
       this.date = flags.startDate;
       this.updated = flags.endDate;
       this.cover = flags.cover;
+    }
+
+    parseRoute(route: Route) {
+      let path = route.path;
+      let query = '';
+      let hash = '';
+      if (path.endsWith('/')) {
+        path += 'index.html';
+      }
+      if (path === `/${this.indexPath}`) {
+        if (route.hash.startsWith('#/')) {
+          path = route.hash.substr(1);
+          let indexOf = path.indexOf('?');
+          if (indexOf >= 0) {
+            query = path.substr(indexOf + 1);
+            path = path.substring(0, indexOf);
+          }
+          indexOf = path.indexOf('#');
+          if (indexOf >= 0) {
+            hash = path.substr(indexOf + 1);
+            path = path.substring(0, indexOf);
+          }
+          if (path.endsWith('/')) {
+            path += 'index.md';
+          }
+        } else {
+          path = this.config.paths.index;
+        }
+      } else if (path.endsWith('.html')) {
+        path = path.replace(/\.html$/, '.md');
+      }
+      return { path, query, hash };
     }
 
     returnHome() {

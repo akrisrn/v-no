@@ -14,6 +14,7 @@
     @Prop() filePath!: string;
     @Prop() data!: string;
     @Prop() query!: Dict<string>;
+    @Prop() hash!: string;
 
     $refs!: {
       article: HTMLElement;
