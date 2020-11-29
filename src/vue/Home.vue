@@ -180,11 +180,14 @@
     // noinspection JSUnusedGlobalSymbols
     created() {
       if (document.body.id === 'prerender') {
+        let hashPath = this.homePath;
         let filePath = this.filePath;
-        if (filePath.endsWith('index.md')) {
-          filePath = filePath.replace(/index\.md$/, '');
+        if (filePath !== this.config.paths.index) {
+          if (filePath.endsWith('index.md')) {
+            filePath = filePath.replace(/index\.md$/, '');
+          }
+          hashPath += `#${filePath}`;
         }
-        const hashPath = filePath === '/' ? this.homePath : `${this.homePath}#${filePath}`;
         location.href = hashPath + location.search;
         return;
       }
