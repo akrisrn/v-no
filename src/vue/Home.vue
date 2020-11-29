@@ -217,7 +217,9 @@
           return;
         }
       }
-      this.updateData();
+      this.getData().then(({ data, flags }) => {
+        this.setData(data, flags);
+      });
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
       this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
@@ -292,56 +294,55 @@
       next();
       exposeToWindow({ filePath: this.filePath });
       cleanEventListenerDict();
-      document.querySelectorAll('.custom').forEach(element => {
-        element.remove();
+      this.getData().then(({ data, flags }) => {
+        document.querySelectorAll('.custom').forEach(element => {
+          element.remove();
+        });
+        this.setData(data, flags);
       });
-      this.updateData();
     }
 
-    updateData() {
+    async getData() {
       if (this.filePath.endsWith('.md')) {
-        const promises = [getFile(this.filePath)];
+        const promises = [];
+        promises.push(getFile(this.filePath));
         const commonPath = this.config.paths.common;
         if (commonPath && this.filePath !== commonPath) {
           promises.push(getFile(commonPath));
         }
-        Promise.all(promises).then(files => {
-          const file = files[0];
-          if (file.isError) {
-            this.isError = true;
-            this.setData(file.data, file.flags);
-            return;
-          }
-          this.isError = false;
-          let data = file.data;
-          if (files.length > 1 && !files[1].isError) {
-            const commonData = files[1].data;
-            let headerData = '';
-            let footerData = commonData;
-            const indexOf = commonData.indexOf('--8<--');
-            if (indexOf >= 0) {
-              headerData = commonData.substring(0, indexOf).trimEnd();
-              footerData = commonData.substring(indexOf + 6).trimStart();
-            }
-            if (headerData) {
-              data = headerData + '\n\n' + data;
-            }
-            if (footerData) {
-              data += '\n\n' + footerData;
-            }
-          }
-          this.setData(data, file.flags);
-          if (this.hasLoadedBacklinks) {
-            this.getBacklinks();
-          }
-        });
-      } else {
-        setTimeout(() => {
+        const files = await Promise.all(promises);
+        const file = files[0];
+        let data = file.data;
+        const flags = file.flags;
+        if (file.isError) {
           this.isError = true;
-          const { data, flags } = createErrorFile(this.filePath);
-          this.setData(data, flags);
-        }, 0);
+          return { data, flags };
+        }
+        this.isError = false;
+        if (this.hasLoadedBacklinks) {
+          this.getBacklinks();
+        }
+        if (files.length > 1 && !files[1].isError) {
+          const commonData = files[1].data;
+          let headerData = '';
+          let footerData = commonData;
+          const indexOf = commonData.indexOf('--8<--');
+          if (indexOf >= 0) {
+            headerData = commonData.substring(0, indexOf).trimEnd();
+            footerData = commonData.substring(indexOf + 6).trimStart();
+          }
+          if (headerData) {
+            data = headerData + '\n\n' + data;
+          }
+          if (footerData) {
+            data += '\n\n' + footerData;
+          }
+        }
+        return { data, flags };
       }
+      this.isError = true;
+      const { data, flags } = createErrorFile(this.filePath);
+      return { data, flags };
     }
 
     setData(data: string, flags: IFlags) {
