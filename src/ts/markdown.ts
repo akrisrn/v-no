@@ -147,12 +147,40 @@ markdownIt.renderer.rules.thead_open = (tokens, idx, options, env, self) => {
   return defaultTheadRenderRule(tokens, idx, options, env, self);
 };
 
-const defaultHeadingRenderRule = getDefaultRenderRule('heading_close');
+let headingCount: Dict<number> = {};
+
+const defaultHeadingRenderRule = getDefaultRenderRule('heading_open');
+markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
+  let headingTag = '';
+  const token = tokens[idx];
+  if (token.level === 0) {
+    const tag = token.tag;
+    let count = headingCount[tag];
+    count = count === undefined ? 1 : (count + 1);
+    headingCount[tag] = count;
+    token.attrSet('id', `${tag}-${count}`);
+    const span = document.createElement('span');
+    span.classList.add('heading-tag');
+    span.innerText = 'H';
+    const small = document.createElement('small');
+    small.innerText = tag.substr(1);
+    span.append(small);
+    headingTag = span.outerHTML;
+  }
+  return defaultHeadingRenderRule(tokens, idx, options, env, self) + headingTag;
+};
+
+const defaultHeadingCloseRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
-  const span = document.createElement('span');
-  span.classList.add('heading-link');
-  span.innerHTML = getIcon(EIcon.link, 14);
-  return span.outerHTML + defaultHeadingRenderRule(tokens, idx, options, env, self);
+  let headingLink = '';
+  const token = tokens[idx];
+  if (token.level === 0) {
+    const span = document.createElement('span');
+    span.classList.add('heading-link');
+    span.innerHTML = getIcon(EIcon.link, 14);
+    headingLink = span.outerHTML;
+  }
+  return headingLink + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultLinkRenderRule = getDefaultRenderRule('link_open');
@@ -225,12 +253,10 @@ export function renderMD(data: string) {
         prefix = headingLevel.replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
       }
       const headingTag = `h${headingLevel.length}`;
-      if (headingCount[headingTag] === undefined) {
-        headingCount[headingTag] = 0;
-      } else {
-        headingCount[headingTag]++;
-      }
-      headingList.push(`${prefix} [${headingText}](#${headingTag}-${headingCount[headingTag]})`);
+      let count = headingCount[headingTag];
+      count = count === undefined ? 1 : (count + 1);
+      headingCount[headingTag] = count;
+      headingList.push(`${prefix} [${headingText}](#${headingTag}-${count})`);
       headingMatch = headingRegExp.exec(data);
     }
     const headingLength = headingList.length;
@@ -292,5 +318,6 @@ export function renderMD(data: string) {
     }
     data = data.replace(tocRegExpG, '');
   }
+  headingCount = {};
   return markdownIt.render(data);
 }

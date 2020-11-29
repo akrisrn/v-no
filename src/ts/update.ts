@@ -93,11 +93,9 @@ function updateAnchor() {
       }
     }
   });
-  document.querySelectorAll<HTMLHeadingElement>([1, 2, 3, 4, 5, 6].map(n => {
-    return `article h${n}`;
-  }).join(',')).forEach(heading => {
-    addEventListener(heading.querySelector('.heading-link')!, 'click', e => {
-      e.preventDefault();
+  document.querySelectorAll<HTMLSpanElement>('.heading-link').forEach(headingLink => {
+    const heading = headingLink.parentElement!;
+    addEventListener(headingLink, 'click', () => {
       scroll(heading.offsetTop - 10);
     });
   });
@@ -333,16 +331,7 @@ function updateFoldableHeading() {
   for (; i < header.children.length; i++) {
     const heading = header.children[i] as THeading;
     const headingElement = heading.element;
-    let headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
-    if (!headingTag) {
-      headingTag = document.createElement('span');
-      headingTag.classList.add('heading-tag');
-      headingTag.innerText = 'H';
-      const small = document.createElement('small');
-      small.innerText = headingElement.tagName.substr(1);
-      headingTag.append(small);
-      headingElement.insertBefore(headingTag, headingElement.childNodes[0]);
-    }
+    const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
     addEventListener(headingTag, 'click', () => {
       heading.isFolded = !heading.isFolded;
       if (heading.isFolded) {
