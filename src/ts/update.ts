@@ -57,58 +57,48 @@ function addEventListener(element: Element, type: string, listener: EventListene
 
 function updateAnchor() {
   document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
-    const text = a.innerText;
-    if (text.startsWith('/')) {
-      const path = checkLinkPath(text);
-      if (path) {
-        a.classList.add('rendering');
-        getFile(path).then(file => {
-          if (file.isError) {
-            a.classList.add('error');
-          }
-          a.innerText = file.flags.title;
-        }).finally(() => {
-          removeClass(a, 'rendering');
-        });
-      }
-    }
     const anchor = a.getAttribute('href')!.substr(1);
     if (/^h[2-6]-\d+$/.test(anchor)) {
-      const [tagName, numStr] = anchor.split('-');
-      const num = parseInt(numStr);
-      const headings: HTMLHeadingElement[] = [];
-      document.querySelectorAll<HTMLHeadingElement>(`article ${tagName}`).forEach(heading => {
-        if (heading.parentElement!.tagName !== 'SUMMARY') {
-          headings.push(heading);
+      const text = a.innerText;
+      if (text.startsWith('/')) {
+        const path = checkLinkPath(text);
+        if (path) {
+          a.classList.add('rendering');
+          getFile(path).then(file => {
+            if (file.isError) {
+              a.classList.add('error');
+            }
+            a.innerText = file.flags.title;
+          }).finally(() => {
+            removeClass(a, 'rendering');
+          });
+        }
+      }
+      const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
+      addEventListener(a, 'click', e => {
+        e.preventDefault();
+        if (heading && heading.offsetTop > 0) {
+          scroll(heading.offsetTop - 6);
         }
       });
-      if (num < headings.length) {
-        const heading = headings[num];
-        addEventListener(a, 'click', e => {
-          e.preventDefault();
-          if (heading.offsetTop > 0) {
-            scroll(heading.offsetTop - 10);
-          }
-        });
-      }
     }
   });
   document.querySelectorAll<HTMLSpanElement>('.heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
-      scroll(heading.offsetTop - 10);
+      scroll(heading.offsetTop - 6);
     });
   });
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
     const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
     addEventListener(fnref, 'click', e => {
       e.preventDefault();
-      scroll(backref.offsetTop - 10);
+      scroll(backref.offsetTop - 6);
     });
     addEventListener(backref, 'click', e => {
       e.preventDefault();
       if (fnref.offsetTop > 0) {
-        scroll(fnref.offsetTop - 10);
+        scroll(fnref.offsetTop - 6);
       }
     });
   });
