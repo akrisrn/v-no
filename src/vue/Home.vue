@@ -269,6 +269,11 @@
 
     // noinspection JSUnusedGlobalSymbols
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
+      const routeTo = this.parseRoute(to);
+      const routeFrom = this.parseRoute(from);
+      if (routeTo.path === routeFrom.path && routeTo.query === routeFrom.query) {
+        return;
+      }
       this.isShow = false;
       next();
       exposeToWindow({ filePath: this.filePath });
