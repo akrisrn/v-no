@@ -157,7 +157,7 @@ function updateImagePath() {
   });
 }
 
-function updateLinkPath() {
+export function updateLinkPath() {
   for (const a of document.querySelectorAll<HTMLLinkElement>('a[href^="#/"]')) {
     if (a.innerText !== '') {
       continue;

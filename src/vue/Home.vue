@@ -86,10 +86,13 @@
     homePathForRoute,
     indexPath,
     removeClass,
+    replaceInlineScript,
     scroll,
     sortFiles,
   } from '@/ts/utils';
   import { config, getSelectConf } from '@/ts/config';
+  import { updateDom, updateLinkPath } from '@/ts/update';
+  import { renderMD } from '@/ts/markdown';
   import axios from 'axios';
   import { Component, Vue } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
@@ -253,11 +256,20 @@
         homePath: this.homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
+        renderMD: (data: string) => {
+          data = data.trim();
+          if (data) {
+            data = replaceInlineScript(data);
+          }
+          return data ? renderMD(data) : '';
+        },
+        updateDom: () => updateDom(),
       });
     }
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
+      updateLinkPath();
       addEventListener('keydown', e => {
         if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           this.keyInput += e.key;

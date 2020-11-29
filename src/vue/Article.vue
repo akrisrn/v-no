@@ -5,9 +5,8 @@
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
-  import { exposeToWindow, removeClass, replaceInlineScript } from '@/ts/utils';
+  import { removeClass, replaceInlineScript } from '@/ts/utils';
   import { config } from '@/ts/config';
-  import { noRequest, resetRequestCount } from '@/ts/file';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
@@ -20,8 +19,8 @@
       article: HTMLElement;
     };
     mdData = this.data ? replaceInlineScript(this.data) : '';
-    markdown = this.mdData ? renderMD(this.mdData) : '';
-    isRendering = false;
+    markdown = '';
+    isRendering = true;
 
     get isCategoryFile() {
       return this.filePath === config.paths.category;
@@ -33,31 +32,9 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
-      // noinspection JSUnusedGlobalSymbols
-      exposeToWindow({
-        renderMD: (data: string) => {
-          data = data.trim();
-          if (data) {
-            data = replaceInlineScript(data);
-          }
-          return data ? renderMD(data) : '';
-        },
-        updateMD: () => {
-          if (this.mdData) {
-            this.isRendering = true;
-            resetRequestCount();
-            updateSnippet(this.mdData).then(data => this.updateData(data));
-          }
-          setTimeout(() => updateDom(), 0);
-        },
-      });
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    mounted() {
       if (this.mdData) {
-        this.isRendering = true;
-        resetRequestCount();
+        this.markdown = renderMD(this.mdData);
+        this.$nextTick(() => updateDom());
         updateSnippet(this.mdData).then(data => {
           if (this.isCategoryFile) {
             if (data) {
@@ -68,25 +45,33 @@
           } else {
             this.updateData(data);
             if (this.isSearchFile) {
-              setTimeout(() => updateSearchPage(this.query), 0);
+              this.$nextTick(() => updateSearchPage(this.query));
             }
           }
         });
+      } else {
+        this.renderComplete();
       }
-      setTimeout(() => updateDom(), 0);
     }
 
     updateData(data: string) {
       if (data !== this.mdData) {
         if (data) {
           this.markdown = renderMD(data);
-          if (!noRequest()) {
-            setTimeout(() => updateDom(), 0);
-          }
+          this.$nextTick(() => {
+            updateDom();
+            this.renderComplete();
+          });
         } else {
           this.markdown = '';
+          this.renderComplete();
         }
+      } else {
+        this.renderComplete();
       }
+    }
+
+    renderComplete() {
       this.isRendering = false;
       this.$nextTick(() => removeClass(this.$refs.article));
     }
