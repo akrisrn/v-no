@@ -60,9 +60,9 @@
         <footer v-if="!isIndexFile">
           <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
-            <span v-if="date" class="date">
-              {{ updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date }}
-            </span>
+            <span v-if="date" class="date">{{
+                updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date
+              }}</span>
           </template>
         </footer>
       </main>
@@ -99,15 +99,13 @@
       toTop: HTMLSpanElement;
     };
 
-    selectConf = getSelectConf();
-    confList = this.config.multiConf ? Object.keys(this.config.multiConf).sort() : [];
-
     data = '';
     title = '';
     tags: string[] = [];
     date = '';
     updated = '';
     cover = '';
+
     query: Dict<string> = {};
     hash = '';
 
@@ -134,7 +132,8 @@
     inputBinds: Dict<() => void> = {};
 
     homePath = homePath;
-    homePathForRoute = homePathForRoute;
+    selectConf = getSelectConf();
+    confList = this.config.multiConf ? Object.keys(this.config.multiConf).sort() : [];
 
     get config() {
       return config;
@@ -181,8 +180,9 @@
       }
       const match = this.filePath.match(/\.(.*?)\.md$/);
       if (match) {
-        if (this.confList.includes(match[1]) && this.selectConf !== match[1]) {
-          localStorage.setItem('conf', match[1]);
+        const matchConf = match[1];
+        if (this.confList.includes(matchConf) && this.selectConf !== matchConf) {
+          localStorage.setItem('conf', matchConf);
           this.$router.go(0);
           return;
         }
@@ -332,8 +332,8 @@
     }
 
     returnHome() {
-      if (this.$route.fullPath !== this.homePathForRoute) {
-        this.$router.push(this.homePathForRoute);
+      if (this.$route.fullPath !== homePathForRoute) {
+        this.$router.push(homePathForRoute);
       }
     }
 
@@ -386,12 +386,12 @@
     toTop(height = 0) {
       if (!this.isToTop) {
         this.isToTop = true;
+        scroll(height);
         setTimeout(() => {
           this.isToTop = false;
           this.$nextTick(() => removeClass(this.$refs.toTop));
         }, 500);
       }
-      scroll(height);
     }
 
     addInputBind(input: string, bind: () => void) {

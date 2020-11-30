@@ -18,36 +18,32 @@ const markdownIt = new MarkdownIt({
   html: true,
   breaks: true,
   linkify: true,
+  typographer: true,
 }).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
-  validate: (params: string) => {
-    return params.match(detailsRegExp) || params === '';
-  },
+  validate: (params: string) => params.match(detailsRegExp) || params === '',
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
     if (token.nesting === 1) {
-      let isOpen = false;
+      let isOpen = true;
       let classList: string[] = [];
       let summary = '';
       const match = token.info.match(detailsRegExp);
       if (match) {
-        if (match[2]) {
-          classList = trimList(match[2].split('.'));
+        const openMatch = match[1];
+        const classMatch = match[2];
+        const summaryMatch = match[3];
+        if (classMatch) {
+          classList = trimList(classMatch.split('.'));
         }
-        if (classList.includes('empty')) {
-          isOpen = true;
-        } else if (match[3]) {
-          if (match[3] !== '\\') {
-            summary = markdownIt.render(match[3]);
+        if (!classList.includes('empty')) {
+          if (!openMatch) {
+            isOpen = false;
           }
-          if (match[1]) {
-            isOpen = true;
+          if (summaryMatch !== '\\') {
+            summary = markdownIt.render(summaryMatch);
           }
-        } else {
-          isOpen = true;
-          classList.push('empty');
         }
       } else {
-        isOpen = true;
         classList.push('empty');
       }
       let attrs = '';
@@ -106,13 +102,15 @@ const defaultFenceRenderRule = getDefaultRenderRule('fence');
 markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   if (token.tag === 'code') {
-    const indexOf = token.info.indexOf('|');
     let dataLine = '';
+    let lang = token.info.trim();
+    const indexOf = lang.indexOf('|');
     if (indexOf >= 0) {
-      dataLine = token.info.substring(indexOf + 1);
-      token.info = token.info.substring(0, indexOf);
+      dataLine = lang.substring(indexOf + 1);
+      lang = lang.substring(0, indexOf);
     }
-    if (token.info) {
+    token.info = lang;
+    if (lang) {
       token.attrJoin('class', 'line-numbers');
       if (dataLine) {
         token.attrSet('data-line', dataLine);
@@ -220,17 +218,15 @@ export function renderMD(data: string) {
   const tocRegExpStr = '^\\[toc]$';
   const tocRegExp = new RegExp(tocRegExpStr, 'im');
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
-  const needRenderToc = tocRegExp.test(data);
-  if (needRenderToc) {
-    const tocDiv = document.createElement('div');
-    tocDiv.id = 'toc';
+  if (tocRegExp.test(data)) {
     const details = document.createElement('details');
     details.open = true;
     details.classList.add('empty');
     details.append(document.createElement('summary'));
+    const tocDiv = document.createElement('div');
+    tocDiv.id = 'toc';
     details.append(tocDiv);
-    data = data.replace(tocRegExp, details.outerHTML);
-    data = data.replace(tocRegExpG, '');
+    data = data.replace(tocRegExp, details.outerHTML).replace(tocRegExpG, '');
   }
   headingCount = {};
   return markdownIt.render(data);

@@ -129,7 +129,7 @@ function createBar(flags: IFlags) {
 }
 
 export function updateLinkPath() {
-  for (const a of document.querySelectorAll<HTMLLinkElement>('a[href^="#/"]')) {
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
     if (a.innerText !== '') {
       continue;
     }
@@ -174,6 +174,38 @@ export function updateLinkPath() {
       removeClass(a, 'rendering');
     });
   }
+}
+
+function updateCustomScript() {
+  document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]').forEach(a => {
+    if (a.innerText === '$') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`script[src="${href}"]`)) {
+        const script = document.createElement('script');
+        script.src = href;
+        script.classList.add('custom');
+        document.body.appendChild(script);
+      }
+      a.parentElement!.remove();
+    }
+  });
+}
+
+function updateCustomStyle() {
+  document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]').forEach(a => {
+    if (a.innerText === '*') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`link[href="${href}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = href;
+        link.classList.add('custom');
+        document.head.appendChild(link);
+      }
+      a.parentElement!.remove();
+    }
+  });
 }
 
 function foldElement(element: Element, isFolded: boolean) {
@@ -234,7 +266,7 @@ function updateHeading() {
     children: [],
     parent: null,
   };
-  let cursor = header;
+  let cursor: THeading | null = null;
   for (const child of document.querySelector('article')!.children) {
     if (child.classList.contains('footnotes')) {
       break;
@@ -250,7 +282,7 @@ function updateHeading() {
         parent: null,
       };
       header.children.push(heading);
-      if (cursor !== header) {
+      if (cursor) {
         if (level > cursor.level) {
           cursor.children.push(heading);
           heading.parent = cursor;
@@ -267,19 +299,12 @@ function updateHeading() {
         }
       }
       cursor = heading;
-    } else {
+    } else if (cursor) {
       cursor.children.push(child);
     }
   }
-  const childrenLength = header.children.length;
-  let i = 0;
-  for (; i < childrenLength; i++) {
-    if (!(header.children[i] instanceof Element)) {
-      break;
-    }
-  }
-  const tocDiv = document.querySelector('#toc');
-  const headingLength = childrenLength - i;
+  const tocDiv = document.querySelector('article #toc');
+  const headingLength = header.children.length;
   if (headingLength === 0) {
     if (tocDiv) {
       tocDiv.remove();
@@ -287,8 +312,7 @@ function updateHeading() {
     return;
   }
   const headingList: THeading[] = [];
-  for (; i < childrenLength; i++) {
-    const heading = header.children[i] as THeading;
+  (header.children as THeading[]).forEach(heading => {
     const headingElement = heading.element;
     const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
     addEventListener(headingTag, 'click', () => {
@@ -305,7 +329,7 @@ function updateHeading() {
     if (!heading.parent) {
       headingList.push(heading);
     }
-  }
+  });
   if (tocDiv) {
     tocDiv.innerHTML = '';
     let maxLength = headingLength;
@@ -341,7 +365,7 @@ function updateHeading() {
 }
 
 function updateAnchor() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
+  document.querySelectorAll<HTMLAnchorElement>('article a[href^="#h"]').forEach(a => {
     const anchor = a.getAttribute('href')!.substr(1);
     if (/^h[2-6]-\d+$/.test(anchor)) {
       const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
@@ -354,14 +378,14 @@ function updateAnchor() {
       });
     }
   });
-  document.querySelectorAll<HTMLSpanElement>('.heading-link').forEach(headingLink => {
+  document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
       scroll(heading.offsetTop - 6);
       changeHash(heading.id);
     });
   });
-  document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
+  document.querySelectorAll<HTMLAnchorElement>('article .footnote-backref').forEach(backref => {
     const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
     addEventListener(fnref, 'click', e => {
       e.preventDefault();
@@ -373,38 +397,6 @@ function updateAnchor() {
         scroll(fnref.offsetTop - 6);
       }
     });
-  });
-}
-
-function updateCustomScript() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
-    if (a.innerText === '$') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`script[src='${href}']`)) {
-        const script = document.createElement('script');
-        script.src = href;
-        script.classList.add('custom');
-        document.body.appendChild(script);
-      }
-      a.parentElement!.remove();
-    }
-  });
-}
-
-function updateCustomStyle() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
-    if (a.innerText === '*') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`link[href='${href}']`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = href;
-        link.classList.add('custom');
-        document.head.appendChild(link);
-      }
-      a.parentElement!.remove();
-    }
   });
 }
 
@@ -423,10 +415,10 @@ export function updateDom() {
   updateDD();
   updateImagePath();
   updateLinkPath();
-  updateHeading();
-  updateAnchor();
   updateCustomScript();
   updateCustomStyle();
+  updateHeading();
+  updateAnchor();
   updateHighlight();
 }
 
@@ -571,7 +563,7 @@ export async function updateSearchPage(query: Dict<string>) {
     }
     const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
     if (searchTime) {
-      searchTime.innerText = ((new Date().getTime() - timeStart) / 1000).toString();
+      searchTime.innerText = `${(new Date().getTime() - timeStart) / 1000}`;
     }
     const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
     if (searchCount) {

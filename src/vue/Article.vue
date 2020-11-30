@@ -75,13 +75,11 @@
             updateDom();
             this.renderComplete();
           });
-        } else {
-          this.markdown = '';
-          this.renderComplete();
+          return;
         }
-      } else {
-        this.renderComplete();
+        this.markdown = '';
       }
+      this.renderComplete();
     }
 
     renderComplete() {

@@ -258,6 +258,7 @@ article {
     }
 
     summary {
+      overflow: hidden;
       margin: 0 -16px;
       padding: 8px 16px;
       outline: none;
@@ -450,7 +451,7 @@ article {
     }
   }
 
-  .hidden, .folded {
+  .folded {
     display: none;
   }
 }

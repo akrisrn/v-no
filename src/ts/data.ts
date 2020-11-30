@@ -4,7 +4,7 @@ import { getFile, getFiles } from '@/ts/file';
 import { checkLinkPath } from '@/ts/path';
 import { getHeadingRegExp, getWrapRegExp } from '@/ts/regexp';
 
-function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree,
+function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
   const category: string[] = [];
   let count = 0;
@@ -14,12 +14,12 @@ function getCategories(level: number, parentTag: string, sortedTags: string[], t
     let fileCount = 0;
     const taggedFiles = taggedDict[nestedTag];
     if (taggedFiles) {
-      list = taggedFiles.sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
+      list = taggedFiles.sort(sortFiles).map(file => `- [](#${file.path})`).join('\n');
       fileCount = taggedFiles.length;
       count += fileCount;
     }
     const subTree = tagTree[tag];
-    const categories = getCategories(level + 1, nestedTag, Object.keys(subTree).sort(), subTree, taggedDict);
+    const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
     const countSpan = `<span class="count">( ${fileCount + categories.count} )</span>`;
     category.push(`${'#'.repeat(level)} ${tag}${countSpan}${list ? `\n\n${list}` : ''}`);
     if (categories.data) {
@@ -45,11 +45,11 @@ export async function updateCategoryPage(data: string) {
     if (file.isError) {
       continue;
     }
-    const flags = file.flags;
-    if (flags.tags.length === 0) {
+    const tags = file.flags.tags;
+    if (tags.length === 0) {
       untaggedFiles.push(file);
     } else {
-      flags.tags.forEach(tag => {
+      tags.forEach(tag => {
         let cursor = tagTree;
         tag.split('/').forEach(seg => {
           let subTree = cursor[seg];
@@ -76,7 +76,7 @@ export async function updateCategoryPage(data: string) {
     sortedTags.push(untagged);
     taggedDict[untagged] = untaggedFiles;
   }
-  const categories = getCategories(2, '', sortedTags, tagTree, taggedDict);
+  const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
@@ -122,26 +122,26 @@ export function replaceInlineScript(data: string) {
 }
 
 function degradeHeading(data: string, level: number) {
-  if (level > 0) {
-    const headingRegExp = getHeadingRegExp(1, 5);
-    data = data.split('\n').map(line => {
-      const headingMatch = line.match(headingRegExp);
-      if (headingMatch) {
-        const headingLevel = headingMatch[1];
-        const headingText = headingMatch[2];
-        let newLine = headingLevel + '#'.repeat(level);
-        if (newLine.length >= 7) {
-          newLine = newLine.substr(0, 6);
-        }
-        if (headingText) {
-          newLine += ` ${headingText}`;
-        }
-        return newLine;
-      }
-      return line;
-    }).join('\n');
+  if (level <= 0) {
+    return data;
   }
-  return data;
+  const headingRegExp = getHeadingRegExp(1, 5);
+  return data.split('\n').map(line => {
+    const headingMatch = line.match(headingRegExp);
+    if (headingMatch) {
+      const headingLevel = headingMatch[1];
+      const headingText = headingMatch[2];
+      let newLine = headingLevel + '#'.repeat(level);
+      if (newLine.length >= 7) {
+        newLine = newLine.substr(0, 6);
+      }
+      if (headingText) {
+        newLine += ` ${headingText}`;
+      }
+      return newLine;
+    }
+    return line;
+  }).join('\n');
 }
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
@@ -190,7 +190,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     return getFile(path);
   }));
   for (const file of files) {
+    const isError = file.isError;
     const path = file.path;
+    const title = file.flags.title;
     const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
@@ -228,7 +230,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         }
         let dataWithHeading = snippetData;
         if (heading > 1) {
-          const headingText = `# [#](${path})`;
+          const headingText = `# [](#${path})`;
           if (snippetData) {
             dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
           } else {
@@ -243,7 +245,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       }
       data = data.split('\n').map(line => {
         if (line === match) {
-          return file.isError ? `::: .danger.empty .\n${snippetData}\n:::` : snippetData;
+          return isError ? `::: .danger.empty .\n${snippetData}\n:::` : snippetData;
         }
         return line;
       }).join('\n');

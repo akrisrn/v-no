@@ -102,9 +102,15 @@ export function parseRoute(route: Route) {
 
 export function changeHash(anchor: string) {
   let hash = location.hash;
-  const indexOf = hash.substr(1).indexOf('#');
+  let query = '';
+  let indexOf = hash.indexOf('?');
+  if (indexOf >= 0) {
+    query = hash.substr(indexOf);
+    hash = hash.substr(0, indexOf);
+  }
+  indexOf = hash.substr(1).indexOf('#');
   if (indexOf >= 0) {
     hash = hash.substr(0, indexOf + 1);
   }
-  location.hash = `${hash}#${anchor}`;
+  location.hash = `${hash}#${anchor}${query}`;
 }

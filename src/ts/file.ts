@@ -6,8 +6,6 @@ import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
 import { trimList } from '@/ts/utils';
 import axios from 'axios';
 
-const cachedBacklinks: Dict<string[]> = {};
-
 function createFlags(title: string): IFlags {
   return {
     title,
@@ -28,6 +26,8 @@ export function createErrorFile(path: string): TFile {
     isError: true,
   };
 }
+
+const cachedBacklinks: Dict<string[]> = {};
 
 function parseData(path: string, data: string): TFile {
   const flags = createFlags(path);
@@ -94,7 +94,7 @@ function parseData(path: string, data: string): TFile {
   const dateList = [...flags.updated];
   const dateMatch = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
   if (dateMatch) {
-    dateList.push(formatDate(new Date(dateMatch[1])));
+    dateList.push(dateMatch[1]);
   }
   if (dateList.length > 0) {
     const timeList = Array.from(new Set(dateList.map(date => {
@@ -121,22 +121,21 @@ export async function getFile(path: string) {
     await new Promise(_ => setTimeout(_, 100));
   }
   isRequesting[path] = true;
-  return new Promise<TFile>(resolve => {
-    if (cachedFiles[path] !== undefined) {
-      isRequesting[path] = false;
-      resolve(cachedFiles[path]);
-    } else {
+  if (cachedFiles[path] !== undefined) {
+    isRequesting[path] = false;
+    return cachedFiles[path];
+  } else {
+    return new Promise<TFile>(resolve => {
       axios.get<string>(addBaseUrl(path)).then(response => {
         cachedFiles[path] = parseData(path, response.data.trim());
-        isRequesting[path] = false;
-        resolve(cachedFiles[path]);
       }).catch(() => {
         cachedFiles[path] = createErrorFile(path);
+      }).finally(() => {
         isRequesting[path] = false;
         resolve(cachedFiles[path]);
       });
-    }
-  });
+    });
+  }
 }
 
 const walkedPaths = [...baseFiles];
