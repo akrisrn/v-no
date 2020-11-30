@@ -294,7 +294,7 @@ function transHeading(heading: THeading) {
   return { li, count };
 }
 
-function updateFoldableHeading() {
+function updateHeading() {
   const header: THeading = {
     element: document.querySelector('header')!,
     level: 1,
@@ -423,7 +423,7 @@ export function updateDom() {
   updateDD();
   updateImagePath();
   updateLinkPath();
-  updateFoldableHeading();
+  updateHeading();
   updateAnchor();
   updateCustomScript();
   updateCustomStyle();
