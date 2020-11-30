@@ -76,30 +76,22 @@ function updateImagePath() {
         removeClass(img, cls);
       }
     });
-    let loadings = parent.previousElementSibling;
-    if (!parent.classList.contains('hidden') || loadings && loadings.classList.contains('lds-ellipsis')) {
+    if (!parent.classList.contains('hidden') && img.naturalWidth === 0) {
       parent.classList.add('hidden');
-      if (!loadings || !loadings.classList.contains('lds-ellipsis')) {
-        loadings = document.createElement('div');
-        loadings.classList.add('lds-ellipsis');
-        for (let i = 0; i < 4; i++) {
-          loadings.append(document.createElement('div'));
-        }
-        parent.parentElement!.insertBefore(loadings, parent);
+      const loadings = document.createElement('div');
+      loadings.classList.add('lds-ellipsis');
+      for (let i = 0; i < 4; i++) {
+        loadings.append(document.createElement('div'));
       }
-      const onload = () => {
+      parent.parentElement!.insertBefore(loadings, parent);
+      img.onload = () => {
+        loadings.remove();
         removeClass(parent, 'hidden');
-        loadings!.remove();
       };
-      if (img.naturalWidth === 0) {
-        img.onload = onload;
-      } else {
-        onload();
-      }
     }
     if (parent.tagName === 'DT') {
       parent.parentElement!.classList.add('center');
-    } else if (parent.parentElement!.tagName !== 'BLOCKQUOTE') {
+    } else {
       parent.classList.add('center');
     }
   });
