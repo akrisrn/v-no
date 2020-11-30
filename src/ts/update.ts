@@ -55,6 +55,15 @@ function addEventListener(element: Element, type: string, listener: EventListene
   element.addEventListener(type, listener);
 }
 
+function changeHash(anchor: string) {
+  let hash = location.hash;
+  const indexOf = hash.substr(1).indexOf('#');
+  if (indexOf >= 0) {
+    hash = hash.substr(0, indexOf + 1);
+  }
+  location.hash = `${hash}#${anchor}`;
+}
+
 function updateAnchor() {
   document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
     const anchor = a.getAttribute('href')!.substr(1);
@@ -79,6 +88,7 @@ function updateAnchor() {
         e.preventDefault();
         if (heading && heading.offsetTop > 0) {
           scroll(heading.offsetTop - 6);
+          changeHash(anchor);
         }
       });
     }
@@ -87,6 +97,7 @@ function updateAnchor() {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
       scroll(heading.offsetTop - 6);
+      changeHash(heading.id);
     });
   });
   document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {

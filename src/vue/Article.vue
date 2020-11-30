@@ -5,7 +5,7 @@
 <script lang="ts">
   import { renderMD } from '@/ts/markdown';
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
-  import { removeClass, replaceInlineScript } from '@/ts/utils';
+  import { removeClass, replaceInlineScript, scroll } from '@/ts/utils';
   import { config } from '@/ts/config';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -74,7 +74,15 @@
 
     renderComplete() {
       this.isRendering = false;
-      this.$nextTick(() => removeClass(this.$refs.article));
+      this.$nextTick(() => {
+        removeClass(this.$refs.article);
+        if (/^h[2-6]-\d+$/.test(this.hash)) {
+          const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.hash}"]`);
+          if (heading) {
+            scroll(heading.offsetTop - 6);
+          }
+        }
+      });
     }
   }
 </script>
