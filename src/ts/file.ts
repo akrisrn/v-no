@@ -1,14 +1,9 @@
-import {
-  addBaseUrl,
-  EFlag,
-  formatDate,
-  getHeadingRegExp,
-  getLinkRegExp,
-  getWrapRegExp,
-  isExternalLink,
-  trimList,
-} from '@/ts/utils';
 import { baseFiles, config } from '@/ts/config';
+import { formatDate } from '@/ts/date';
+import { EFlag } from '@/ts/enums';
+import { addBaseUrl, checkLinkPath, isExternalLink } from '@/ts/path';
+import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
+import { trimList } from '@/ts/utils';
 import axios from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
@@ -32,17 +27,6 @@ export function createErrorFile(path: string): TFile {
     links: [],
     isError: true,
   };
-}
-
-export function checkLinkPath(path: string) {
-  if (!path.endsWith('.md')) {
-    if (path.endsWith('/')) {
-      path += 'index.md';
-    } else {
-      path = '';
-    }
-  }
-  return path;
 }
 
 function parseData(path: string, data: string): TFile {

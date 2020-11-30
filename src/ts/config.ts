@@ -1,4 +1,4 @@
-import { getFromWindow } from '@/ts/utils';
+import { getFromWindow } from '@/ts/window';
 
 function merge(target: IConfig, source: IConfig) {
   for (const key of Object.keys(source)) {

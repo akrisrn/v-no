@@ -74,28 +74,17 @@
 </template>
 
 <script lang="ts">
-  import { createErrorFile, getFile, getFiles } from '@/ts/file';
-  import {
-    addBaseUrl,
-    cleanEventListenerDict,
-    EIcon,
-    exposeToWindow,
-    getIcon,
-    getSearchTagLinks,
-    homePath,
-    homePathForRoute,
-    indexPath,
-    removeClass,
-    replaceInlineScript,
-    scroll,
-    sortFiles,
-  } from '@/ts/utils';
+  import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf } from '@/ts/config';
-  import { updateDom, updateLinkPath } from '@/ts/update';
-  import { renderMD } from '@/ts/markdown';
+  import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
+  import { EIcon } from '@/ts/enums';
+  import { createErrorFile, getFile, getFiles } from '@/ts/file';
+  import { addBaseUrl, getSearchTagLinks, homePath, homePathForRoute, parseRoute } from '@/ts/path';
+  import scroll from '@/ts/scroll';
+  import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
-  import { Component, Vue } from 'vue-property-decorator';
   import { RawLocation, Route } from 'vue-router';
+  import { Component, Vue } from 'vue-property-decorator';
 
   Component.registerHooks([
     'beforeRouteUpdate',
@@ -144,7 +133,6 @@
     keyInput = '';
     inputBinds: Dict<() => void> = {};
 
-    indexPath = indexPath;
     homePath = homePath;
     homePathForRoute = homePathForRoute;
 
@@ -153,7 +141,7 @@
     }
 
     get filePath() {
-      const { path, query, hash } = this.parseRoute(this.$route);
+      const { path, query, hash } = parseRoute(this.$route);
       this.query = {};
       query.split('&').forEach(param => {
         const indexOf = param.indexOf('=');
@@ -240,14 +228,6 @@
         homePath: this.homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
-        renderMD: (data: string) => {
-          data = data.trim();
-          if (data) {
-            data = replaceInlineScript(data);
-          }
-          return data ? renderMD(data) : '';
-        },
-        updateDom: () => updateDom(),
       });
     }
 
@@ -272,8 +252,8 @@
 
     // noinspection JSUnusedGlobalSymbols
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
-      const routeTo = this.parseRoute(to);
-      const routeFrom = this.parseRoute(from);
+      const routeTo = parseRoute(to);
+      const routeFrom = parseRoute(from);
       if (routeTo.path === routeFrom.path && routeTo.query === routeFrom.query) {
         return;
       }
@@ -349,38 +329,6 @@
       this.date = flags.startDate;
       this.updated = flags.endDate;
       this.cover = flags.cover;
-    }
-
-    parseRoute(route: Route) {
-      let path = route.path;
-      let query = '';
-      let hash = '';
-      if (path.endsWith('/')) {
-        path += 'index.html';
-      }
-      if (path === `/${this.indexPath}`) {
-        if (route.hash.startsWith('#/')) {
-          path = route.hash.substr(1);
-          let indexOf = path.indexOf('?');
-          if (indexOf >= 0) {
-            query = path.substr(indexOf + 1);
-            path = path.substring(0, indexOf);
-          }
-          indexOf = path.indexOf('#');
-          if (indexOf >= 0) {
-            hash = path.substr(indexOf + 1);
-            path = path.substring(0, indexOf);
-          }
-          if (path.endsWith('/')) {
-            path += 'index.md';
-          }
-        } else {
-          path = this.config.paths.index;
-        }
-      } else if (path.endsWith('.html')) {
-        path = path.replace(/\.html$/, '.md');
-      }
-      return { path, query, hash };
     }
 
     returnHome() {

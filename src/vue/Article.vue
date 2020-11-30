@@ -3,10 +3,12 @@
 </template>
 
 <script lang="ts">
-  import { renderMD } from '@/ts/markdown';
-  import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/update';
-  import { removeClass, replaceInlineScript, scroll } from '@/ts/utils';
   import { config } from '@/ts/config';
+  import { replaceInlineScript, updateCategoryPage, updateSnippet } from '@/ts/data';
+  import { removeClass, updateDom, updateSearchPage } from '@/ts/dom';
+  import { renderMD } from '@/ts/markdown';
+  import scroll from '@/ts/scroll';
+  import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
@@ -53,6 +55,16 @@
       } else {
         this.renderComplete();
       }
+      exposeToWindow({
+        renderMD: (data: string) => {
+          data = data.trim();
+          if (data) {
+            data = replaceInlineScript(data);
+          }
+          return data ? renderMD(data) : '';
+        },
+        updateDom: () => updateDom(),
+      });
     }
 
     updateData(data: string) {

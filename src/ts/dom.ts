@@ -1,41 +1,17 @@
-import { checkLinkPath, getFile, getFiles } from '@/ts/file';
-import {
-  buildQueryContent,
-  EFlag,
-  getEventListenerDict,
-  getHeadingRegExp,
-  getSearchTagLinks,
-  getWrapRegExp,
-  removeClass,
-  replaceByRegExp,
-  replaceInlineScript,
-  scroll,
-  sortFiles,
-  trimList,
-} from '@/ts/utils';
+import { sortFiles } from '@/ts/compare';
 import { config } from '@/ts/config';
+import { EFlag, EIcon } from '@/ts/enums';
+import { getFile, getFiles } from '@/ts/file';
+import { buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks } from '@/ts/path';
+import scroll from '@/ts/scroll';
+import { trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
-function updateDD() {
-  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
-    if (p.innerHTML.startsWith(': ')) {
-      const dl = document.createElement('dl');
-      const dd = document.createElement('dd');
-      dl.append(dd);
-      dd.innerHTML = p.innerHTML.substr(2).trimStart();
-      p.outerHTML = dl.outerHTML;
-    }
-  });
-  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
-    if (dt.innerHTML.startsWith(': ')) {
-      const dd = document.createElement('dd');
-      dd.innerHTML = dt.innerHTML.substr(2).trimStart();
-      dt.outerHTML = dd.outerHTML;
-    }
-  });
-}
+let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
 
-const eventListenerDict = getEventListenerDict();
+export function cleanEventListenerDict() {
+  eventListenerDict = {};
+}
 
 function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
   let eventListeners = eventListenerDict[type];
@@ -55,48 +31,36 @@ function addEventListener(element: Element, type: string, listener: EventListene
   element.addEventListener(type, listener);
 }
 
-function changeHash(anchor: string) {
-  let hash = location.hash;
-  const indexOf = hash.substr(1).indexOf('#');
-  if (indexOf >= 0) {
-    hash = hash.substr(0, indexOf + 1);
+export function removeClass(element: Element, cls?: string) {
+  if (cls) {
+    element.classList.remove(cls);
   }
-  location.hash = `${hash}#${anchor}`;
+  if (element.classList.length === 0) {
+    element.removeAttribute('class');
+  }
 }
 
-function updateAnchor() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
-    const anchor = a.getAttribute('href')!.substr(1);
-    if (/^h[2-6]-\d+$/.test(anchor)) {
-      const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
-      addEventListener(a, 'click', e => {
-        e.preventDefault();
-        if (heading && heading.offsetTop > 0) {
-          scroll(heading.offsetTop - 6);
-          changeHash(anchor);
-        }
-      });
+// noinspection JSSuspiciousNameCombination
+export function getIcon(type: EIcon, width = 16, height = width) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
+}
+
+function updateDD() {
+  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
+    if (p.innerHTML.startsWith(': ')) {
+      const dl = document.createElement('dl');
+      const dd = document.createElement('dd');
+      dl.append(dd);
+      dd.innerHTML = p.innerHTML.substr(2).trimStart();
+      p.outerHTML = dl.outerHTML;
     }
   });
-  document.querySelectorAll<HTMLSpanElement>('.heading-link').forEach(headingLink => {
-    const heading = headingLink.parentElement!;
-    addEventListener(headingLink, 'click', () => {
-      scroll(heading.offsetTop - 6);
-      changeHash(heading.id);
-    });
-  });
-  document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
-    const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
-    addEventListener(fnref, 'click', e => {
-      e.preventDefault();
-      scroll(backref.offsetTop - 6);
-    });
-    addEventListener(backref, 'click', e => {
-      e.preventDefault();
-      if (fnref.offsetTop > 0) {
-        scroll(fnref.offsetTop - 6);
-      }
-    });
+  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
+    if (dt.innerHTML.startsWith(': ')) {
+      const dd = document.createElement('dd');
+      dd.innerHTML = dt.innerHTML.substr(2).trimStart();
+      dt.outerHTML = dd.outerHTML;
+    }
   });
 }
 
@@ -210,38 +174,6 @@ export function updateLinkPath() {
       removeClass(a, 'rendering');
     });
   }
-}
-
-function updateCustomScript() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
-    if (a.innerText === '$') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`script[src='${href}']`)) {
-        const script = document.createElement('script');
-        script.src = href;
-        script.classList.add('custom');
-        document.body.appendChild(script);
-      }
-      a.parentElement!.remove();
-    }
-  });
-}
-
-function updateCustomStyle() {
-  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
-    if (a.innerText === '*') {
-      const href = a.getAttribute('href')!;
-      if (!document.querySelector(`link[href='${href}']`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = href;
-        link.classList.add('custom');
-        document.head.appendChild(link);
-      }
-      a.parentElement!.remove();
-    }
-  });
 }
 
 function foldElement(element: Element, isFolded: boolean) {
@@ -408,6 +340,74 @@ function updateHeading() {
   }
 }
 
+function updateAnchor() {
+  document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
+    const anchor = a.getAttribute('href')!.substr(1);
+    if (/^h[2-6]-\d+$/.test(anchor)) {
+      const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
+      addEventListener(a, 'click', e => {
+        e.preventDefault();
+        if (heading && heading.offsetTop > 0) {
+          scroll(heading.offsetTop - 6);
+          changeHash(anchor);
+        }
+      });
+    }
+  });
+  document.querySelectorAll<HTMLSpanElement>('.heading-link').forEach(headingLink => {
+    const heading = headingLink.parentElement!;
+    addEventListener(headingLink, 'click', () => {
+      scroll(heading.offsetTop - 6);
+      changeHash(heading.id);
+    });
+  });
+  document.querySelectorAll<HTMLLinkElement>('article .footnote-backref').forEach(backref => {
+    const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
+    addEventListener(fnref, 'click', e => {
+      e.preventDefault();
+      scroll(backref.offsetTop - 6);
+    });
+    addEventListener(backref, 'click', e => {
+      e.preventDefault();
+      if (fnref.offsetTop > 0) {
+        scroll(fnref.offsetTop - 6);
+      }
+    });
+  });
+}
+
+function updateCustomScript() {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".js"]').forEach(a => {
+    if (a.innerText === '$') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`script[src='${href}']`)) {
+        const script = document.createElement('script');
+        script.src = href;
+        script.classList.add('custom');
+        document.body.appendChild(script);
+      }
+      a.parentElement!.remove();
+    }
+  });
+}
+
+function updateCustomStyle() {
+  document.querySelectorAll<HTMLLinkElement>('article a[href$=".css"]').forEach(a => {
+    if (a.innerText === '*') {
+      const href = a.getAttribute('href')!;
+      if (!document.querySelector(`link[href='${href}']`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = href;
+        link.classList.add('custom');
+        document.head.appendChild(link);
+      }
+      a.parentElement!.remove();
+    }
+  });
+}
+
 function updateHighlight() {
   document.querySelectorAll('article pre > code').forEach(code => {
     const dataLine = code.getAttribute('data-line');
@@ -428,213 +428,6 @@ export function updateDom() {
   updateCustomScript();
   updateCustomStyle();
   updateHighlight();
-}
-
-function degradeHeading(data: string, level: number) {
-  if (level > 0) {
-    const headingRegExp = getHeadingRegExp(1, 5);
-    data = data.split('\n').map(line => {
-      const headingMatch = line.match(headingRegExp);
-      if (headingMatch) {
-        const headingLevel = headingMatch[1];
-        const headingText = headingMatch[2];
-        let newLine = headingLevel + '#'.repeat(level);
-        if (newLine.length >= 7) {
-          newLine = newLine.substr(0, 6);
-        }
-        if (headingText) {
-          newLine += ` ${headingText}`;
-        }
-        return newLine;
-      }
-      return line;
-    }).join('\n');
-  }
-  return data;
-}
-
-export async function updateSnippet(data: string, updatedPaths: string[] = []) {
-  const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const linkRegExp = /^(?: {0,3}(#{2,6}) )?\s*\[\+(#.+)?]\((\/.*?)\)$/;
-  data = data.split('\n').map(line => {
-    const match = line.match(linkRegExp);
-    if (match) {
-      const path = checkLinkPath(match[3]);
-      if (path) {
-        if (updatedPaths.includes(path)) {
-          return '';
-        }
-        let snippetDict = dict[path];
-        if (snippetDict === undefined) {
-          snippetDict = {};
-          dict[path] = snippetDict;
-        }
-        if (snippetDict[match[0]] === undefined) {
-          const heading = match[1] ? match[1].length : 0;
-          const params: Dict<string> = {};
-          if (match[2]) {
-            match[2].substr(1).split('|').forEach((seg, i) => {
-              let param = seg;
-              const paramMatch = seg.match(/(.+?)=(.+)/);
-              if (paramMatch) {
-                param = paramMatch[2];
-                params[paramMatch[1]] = param;
-              }
-              params[i + 1] = param;
-            });
-          }
-          snippetDict[match[0]] = { heading, params };
-        }
-      }
-    }
-    return line;
-  }).join('\n');
-  const paths = Object.keys(dict);
-  if (paths.length === 0) {
-    return data;
-  }
-  const paramRegExp = getWrapRegExp('{{', '}}', 'g');
-  const files = await Promise.all(paths.map(path => {
-    updatedPaths.push(path);
-    return getFile(path);
-  }));
-  for (const file of files) {
-    const path = file.path;
-    const fileData = file.data ? replaceInlineScript(file.data) : '';
-    const snippetDict = dict[path];
-    for (const match of Object.keys(snippetDict)) {
-      let snippetData = fileData;
-      if (snippetData) {
-        const { heading, params } = snippetDict[match];
-        snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
-          let defaultValue: string;
-          [match, defaultValue] = match.split('|');
-          const param = params[match];
-          let result: string;
-          if (param !== undefined) {
-            result = param;
-          } else if (defaultValue !== undefined) {
-            result = defaultValue;
-          } else {
-            result = 'undefined';
-          }
-          return result.replace(/\\n/g, '\n');
-        });
-        const clip = params['clip'];
-        if (clip !== undefined) {
-          const slips = snippetData.split('--8<--');
-          if (slips.length > 1) {
-            let num = parseInt(clip);
-            if (isNaN(num)) {
-              num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
-            } else if (num < 0) {
-              num = 0;
-            } else if (num >= slips.length) {
-              num = slips.length - 1;
-            }
-            snippetData = slips[num].trim();
-          }
-        }
-        let dataWithHeading = snippetData;
-        if (heading > 1) {
-          const headingText = `# [#](${path})`;
-          if (snippetData) {
-            dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
-          } else {
-            dataWithHeading = degradeHeading(headingText, heading - 1);
-          }
-        }
-        if (snippetData) {
-          snippetData = await updateSnippet(dataWithHeading, [...updatedPaths]);
-        } else if (dataWithHeading) {
-          snippetData = dataWithHeading;
-        }
-      }
-      data = data.split('\n').map(line => {
-        if (line === match) {
-          return file.isError ? `::: .danger.empty .\n${snippetData}\n:::` : snippetData;
-        }
-        return line;
-      }).join('\n');
-    }
-  }
-  return data.trim();
-}
-
-function getCategories(level: number, parentTag: string, sortedTags: string[], tagTree: TTagTree,
-                       taggedDict: Dict<TFile[]>) {
-  const category: string[] = [];
-  let count = 0;
-  sortedTags.forEach(tag => {
-    const nestedTag = parentTag ? `${parentTag}/${tag}` : tag;
-    let list = '';
-    let fileCount = 0;
-    const taggedFiles = taggedDict[nestedTag];
-    if (taggedFiles) {
-      list = taggedFiles.sort(sortFiles).map(file => `- [#](${file.path})`).join('\n');
-      fileCount = taggedFiles.length;
-      count += fileCount;
-    }
-    const subTree = tagTree[tag];
-    const categories = getCategories(level + 1, nestedTag, Object.keys(subTree).sort(), subTree, taggedDict);
-    const countSpan = `<span class="count">( ${fileCount + categories.count} )</span>`;
-    category.push(`${'#'.repeat(level)} ${tag}${countSpan}${list ? `\n\n${list}` : ''}`);
-    if (categories.data) {
-      category.push(categories.data);
-    }
-    count += categories.count;
-  });
-  return { data: category.join('\n\n'), count: count };
-}
-
-export async function updateCategoryPage(data: string) {
-  const listRegExpStr = '^\\[list]$';
-  const listRegExp = new RegExp(listRegExpStr, 'im');
-  const listRegExpG = new RegExp(listRegExpStr, 'img');
-  if (!listRegExp.test(data)) {
-    return data;
-  }
-  const { files } = await getFiles();
-  const tagTree: TTagTree = {};
-  const taggedDict: Dict<TFile[]> = {};
-  const untaggedFiles: TFile[] = [];
-  for (const file of Object.values(files)) {
-    if (file.isError) {
-      continue;
-    }
-    const flags = file.flags;
-    if (flags.tags.length === 0) {
-      untaggedFiles.push(file);
-    } else {
-      flags.tags.forEach(tag => {
-        let cursor = tagTree;
-        tag.split('/').forEach(seg => {
-          let subTree = cursor[seg];
-          if (subTree === undefined) {
-            subTree = {};
-            cursor[seg] = subTree;
-          }
-          cursor = subTree;
-        });
-        let taggedFiles = taggedDict[tag];
-        if (taggedFiles === undefined) {
-          taggedFiles = [file];
-          taggedDict[tag] = taggedFiles;
-        } else {
-          taggedFiles.push(file);
-        }
-      });
-    }
-  }
-  const sortedTags = Object.keys(tagTree).sort();
-  if (untaggedFiles.length > 0) {
-    const untagged = config.messages.untagged;
-    tagTree[untagged] = {};
-    sortedTags.push(untagged);
-    taggedDict[untagged] = untaggedFiles;
-  }
-  const categories = getCategories(2, '', sortedTags, tagTree, taggedDict);
-  return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
 const htmlSymbolDict: Dict<string> = {

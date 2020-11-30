@@ -1,5 +1,8 @@
-import { addBaseUrl, EIcon, getIcon, homePath, isExternalLink, trimList } from '@/ts/utils';
 import { config } from '@/ts/config';
+import { getIcon } from '@/ts/dom';
+import { EIcon } from '@/ts/enums';
+import { addBaseUrl, homePath, isExternalLink } from '@/ts/path';
+import { trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
