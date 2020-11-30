@@ -1,13 +1,4 @@
-import {
-  addBaseUrl,
-  EIcon,
-  getHeadingRegExp,
-  getIcon,
-  getLinkRegExp,
-  homePath,
-  isExternalLink,
-  trimList,
-} from '@/ts/utils';
+import { addBaseUrl, EIcon, getIcon, homePath, isExternalLink, trimList } from '@/ts/utils';
 import { config } from '@/ts/config';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -228,94 +219,14 @@ export function renderMD(data: string) {
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
   const needRenderToc = tocRegExp.test(data);
   if (needRenderToc) {
-    const headingList: string[] = [];
-    let firstHeading = '';
-    const headingCount: Dict<number> = {};
-    const headingRegExp = getHeadingRegExp(2, 6, 'gm');
-    const linkRegExp = getLinkRegExp();
-    let headingMatch = headingRegExp.exec(data);
-    while (headingMatch) {
-      const headingLevel = headingMatch[1];
-      let headingText = headingMatch[2];
-      if (headingText) {
-        const linkMatch = headingText.match(linkRegExp);
-        if (linkMatch) {
-          headingText = markdownIt.render(headingText).trim().replace(/^<p>(.*)<\/p>$/, '$1');
-        }
-      } else {
-        headingText = `[${null}]`;
-      }
-      if (!firstHeading) {
-        firstHeading = headingLevel;
-      }
-      let prefix = '-';
-      if (headingLevel !== firstHeading) {
-        prefix = headingLevel.replace(new RegExp(`${firstHeading}$`), '-').replace(/#/g, '  ');
-      }
-      const headingTag = `h${headingLevel.length}`;
-      let count = headingCount[headingTag];
-      count = count === undefined ? 1 : (count + 1);
-      headingCount[headingTag] = count;
-      headingList.push(`${prefix} [${headingText}](#${headingTag}-${count})`);
-      headingMatch = headingRegExp.exec(data);
-    }
-    const headingLength = headingList.length;
-    if (headingLength > 0) {
-      let left = headingLength;
-      let right = headingLength;
-      if (headingLength > 11) {
-        left = Math.ceil(headingLength / 3);
-        while (headingList[left] && !headingList[left].startsWith('-')) {
-          left += 1;
-        }
-        if (left < headingLength) {
-          let count = 0;
-          for (let i = 0; i < left; i++) {
-            if (headingList[i].startsWith('-')) {
-              count++;
-            }
-          }
-          right = left + count;
-          while (headingList[right] && !headingList[right].startsWith('-')) {
-            right += 1;
-          }
-        }
-      } else if (headingLength > 7) {
-        left = Math.ceil(headingLength / 2);
-        while (headingList[left] && !headingList[left].startsWith('-')) {
-          left += 1;
-        }
-      }
-      const tocDiv = document.createElement('div');
-      tocDiv.classList.add('toc');
-      if (left >= headingLength) {
-        tocDiv.innerHTML = markdownIt.render(headingList.join('\n'));
-      } else if (right >= headingLength) {
-        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, left).join('\n')) +
-          markdownIt.render(headingList.slice(left, headingLength).join('\n'));
-        tocDiv.firstElementChild!.classList.add('ul-a');
-        tocDiv.lastElementChild!.classList.add('ul-b');
-      } else {
-        tocDiv.innerHTML = markdownIt.render(headingList.slice(0, left).join('\n')) +
-          markdownIt.render(headingList.slice(left, right).join('\n')) +
-          markdownIt.render(headingList.slice(right, headingLength).join('\n'));
-        for (let i = 0; i < tocDiv.children.length; i++) {
-          tocDiv.children[i].classList.add(`ul-${i + 1}`);
-        }
-      }
-      tocDiv.querySelectorAll('a').forEach(a => {
-        const count = a.querySelector<HTMLSpanElement>('.count');
-        if (count) {
-          a.parentElement!.insertBefore(count, a.nextElementSibling);
-        }
-      });
-      const details = document.createElement('details');
-      details.open = true;
-      details.classList.add('empty');
-      details.append(document.createElement('summary'));
-      details.append(tocDiv);
-      data = data.replace(tocRegExp, details.outerHTML);
-    }
+    const tocDiv = document.createElement('div');
+    tocDiv.id = 'toc';
+    const details = document.createElement('details');
+    details.open = true;
+    details.classList.add('empty');
+    details.append(document.createElement('summary'));
+    details.append(tocDiv);
+    data = data.replace(tocRegExp, details.outerHTML);
     data = data.replace(tocRegExpG, '');
   }
   headingCount = {};

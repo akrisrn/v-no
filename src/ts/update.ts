@@ -68,21 +68,6 @@ function updateAnchor() {
   document.querySelectorAll<HTMLLinkElement>('article a[href^="#h"]').forEach(a => {
     const anchor = a.getAttribute('href')!.substr(1);
     if (/^h[2-6]-\d+$/.test(anchor)) {
-      const text = a.innerText;
-      if (text.startsWith('/')) {
-        const path = checkLinkPath(text);
-        if (path) {
-          a.classList.add('rendering');
-          getFile(path).then(file => {
-            if (file.isError) {
-              a.classList.add('error');
-            }
-            a.innerText = file.flags.title;
-          }).finally(() => {
-            removeClass(a, 'rendering');
-          });
-        }
-      }
       const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
       addEventListener(a, 'click', e => {
         e.preventDefault();
@@ -278,6 +263,37 @@ function foldChild(child: Element | THeading, isFolded: boolean) {
   }
 }
 
+function transHeading(heading: THeading) {
+  const headingElement = heading.element as HTMLHeadingElement;
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  a.href = `#${headingElement.id}`;
+  let text = headingElement.innerText.substr(2);
+  const spanCount = headingElement.querySelector<HTMLSpanElement>('.count');
+  if (spanCount) {
+    text = text.substr(0, text.length - spanCount.innerText.length);
+    li.append(spanCount.cloneNode(true));
+  }
+  text = text.trim();
+  a.innerText = text ? text : `[${null}]`;
+  li.insertBefore(a, li.firstChild);
+  let count = 1;
+  if (heading.children.length > 0) {
+    const ul = document.createElement('ul');
+    heading.children.forEach(child => {
+      if (!(child instanceof Element)) {
+        const list = transHeading(child);
+        ul.append(list.li);
+        count += list.count;
+      }
+    });
+    if (ul.childElementCount > 0) {
+      li.append(ul);
+    }
+  }
+  return { li, count };
+}
+
 function updateFoldableHeading() {
   const header: THeading = {
     element: document.querySelector('header')!,
@@ -302,20 +318,20 @@ function updateFoldableHeading() {
         parent: null,
       };
       header.children.push(heading);
-      if (cursor === header) {
-        heading.parent = header;
-      } else if (level > cursor.level) {
-        cursor.children.push(heading);
-        heading.parent = cursor;
-      } else {
-        let parent = cursor.parent;
-        while (parent && parent !== header) {
-          if (level > parent.level) {
-            parent.children.push(heading);
-            heading.parent = parent;
-            break;
+      if (cursor !== header) {
+        if (level > cursor.level) {
+          cursor.children.push(heading);
+          heading.parent = cursor;
+        } else {
+          let parent = cursor.parent;
+          while (parent && parent !== header) {
+            if (level > parent.level) {
+              parent.children.push(heading);
+              heading.parent = parent;
+              break;
+            }
+            parent = parent.parent;
           }
-          parent = parent.parent;
         }
       }
       cursor = heading;
@@ -323,13 +339,23 @@ function updateFoldableHeading() {
       cursor.children.push(child);
     }
   }
+  const childrenLength = header.children.length;
   let i = 0;
-  for (; i < header.children.length; i++) {
+  for (; i < childrenLength; i++) {
     if (!(header.children[i] instanceof Element)) {
       break;
     }
   }
-  for (; i < header.children.length; i++) {
+  const tocDiv = document.querySelector('#toc');
+  const headingLength = childrenLength - i;
+  if (headingLength === 0) {
+    if (tocDiv) {
+      tocDiv.remove();
+    }
+    return;
+  }
+  const headingList: THeading[] = [];
+  for (; i < childrenLength; i++) {
     const heading = header.children[i] as THeading;
     const headingElement = heading.element;
     const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
@@ -344,6 +370,41 @@ function updateFoldableHeading() {
         foldChild(child, heading.isFolded);
       });
     });
+    if (!heading.parent) {
+      headingList.push(heading);
+    }
+  }
+  if (tocDiv) {
+    tocDiv.innerHTML = '';
+    let maxLength = headingLength;
+    if (headingLength > 11) {
+      maxLength = Math.ceil(headingLength / 3);
+    } else if (headingLength > 7) {
+      maxLength = Math.ceil(headingLength / 2);
+    }
+    let currentUl = document.createElement('ul');
+    tocDiv.append(currentUl);
+    let count = 0;
+    headingList.forEach(heading => {
+      const list = transHeading(heading);
+      count += list.count;
+      if (count > maxLength) {
+        count = list.count;
+        if (tocDiv.childElementCount < 3) {
+          currentUl = document.createElement('ul');
+          tocDiv.append(currentUl);
+        }
+      }
+      currentUl.append(list.li);
+    });
+    if (tocDiv.childElementCount === 3) {
+      for (let i = 0; i < tocDiv.children.length; i++) {
+        tocDiv.children[i].classList.add(`ul-${i + 1}`);
+      }
+    } else if (tocDiv.childElementCount === 2) {
+      tocDiv.firstElementChild!.classList.add('ul-a');
+      tocDiv.lastElementChild!.classList.add('ul-b');
+    }
   }
 }
 
@@ -360,12 +421,12 @@ function updateHighlight() {
 
 export function updateDom() {
   updateDD();
-  updateAnchor();
   updateImagePath();
   updateLinkPath();
+  updateFoldableHeading();
+  updateAnchor();
   updateCustomScript();
   updateCustomStyle();
-  updateFoldableHeading();
   updateHighlight();
 }
 
