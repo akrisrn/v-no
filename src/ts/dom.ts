@@ -120,6 +120,12 @@ function createBar(flags: IFlags) {
   return bar.childElementCount > 0 ? bar : null;
 }
 
+let waitingList: { heading: HTMLHeadingElement; a: HTMLAnchorElement }[] = [];
+
+function getHeadingText(heading: HTMLHeadingElement) {
+  return heading.innerText.substr(2).trim() || `[${null}]`;
+}
+
 export function updateLinkPath() {
   const dict: Dict<HTMLAnchorElement[]> = {};
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
@@ -179,6 +185,9 @@ export function updateLinkPath() {
           }
           removeClass(a, 'rendering');
         });
+      });
+      waitingList.forEach(({ heading, a }) => {
+        a.innerText = getHeadingText(heading);
       });
     });
   }
@@ -240,8 +249,11 @@ function transHeading(heading: THeading) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = `#${headingElement.id}`;
-  a.innerText = headingElement.innerText.substr(2).trim() || `[${null}]`;
+  a.innerText = getHeadingText(headingElement);
   li.append(a);
+  if (headingElement.querySelector<HTMLAnchorElement>('a.rendering')) {
+    waitingList.push({ heading: headingElement, a });
+  }
   let count = 1;
   if (heading.children.length > 0) {
     const ul = document.createElement('ul');
@@ -413,6 +425,7 @@ function updateHighlight() {
 }
 
 export function updateDom() {
+  waitingList = [];
   updateDD();
   updateImagePath();
   updateLinkPath();
