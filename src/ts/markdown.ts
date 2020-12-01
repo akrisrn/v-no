@@ -181,31 +181,32 @@ markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   return headingLink + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
 };
 
+let isExternal = false;
+
 const defaultLinkRenderRule = getDefaultRenderRule('link_open');
 markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  const textToken = tokens[idx + 1];
-  const closeToken = textToken.type === 'text' ? tokens[idx + 2] : textToken;
-  const text = textToken.content;
   let href = token.attrGet('href')!;
   if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
-    closeToken.attrSet('external', 'true');
+    isExternal = true;
   } else {
-    if (href.startsWith('/')) {
-      if (href.endsWith('.md') || href.endsWith('/')) {
-        if (text.endsWith('#')) {
-          textToken.content = text.substr(0, text.length - 1);
-          href = `#${href}`;
+    isExternal = false;
+    if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
+      let title = token.attrGet('title');
+      if (title && title.endsWith('#')) {
+        href = `#${href}`;
+        title = title.substr(0, title.length - 1);
+        if (title) {
+          token.attrSet('title', title);
         } else {
-          href = addBaseUrl(href);
+          token.attrs!.splice(token.attrIndex('title'), 1);
         }
-      } else {
-        href = addBaseUrl(href);
       }
-      token.attrSet('href', href);
     }
+    href = addBaseUrl(href);
+    token.attrSet('href', href);
     if (!href.startsWith('#') && href !== homePath) {
       token.attrSet('target', '_blank');
     }
@@ -215,8 +216,7 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
 
 const defaultLinkCloseRenderRule = getDefaultRenderRule('link_close');
 markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
-  const token = tokens[idx];
-  const icon = token.attrGet('external') ? getIcon(EIcon.external, 14) : '';
+  const icon = isExternal ? getIcon(EIcon.external, 14) : '';
   return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
