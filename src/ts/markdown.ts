@@ -73,28 +73,34 @@ const getDefaultRenderRule = (name: string) => {
 const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  let src = token.attrGet('src')!;
-  // put '#' suffix to 'alt' will be better, but no way to get/set it for now.
-  const match = src.match(/#(.+)$/);
-  if (match) {
-    const width = parseInt(match[1]);
-    if (isNaN(width)) {
-      if (match[1].startsWith('.')) {
-        trimList(match[1].split('.')).forEach(cls => {
-          token.attrJoin('class', cls);
-        });
+  let title = token.attrGet('title');
+  if (title) {
+    const match = title.match(/#(.+)$/);
+    if (match) {
+      const width = parseInt(match[1]);
+      if (isNaN(width)) {
+        if (match[1].startsWith('.')) {
+          trimList(match[1].split('.')).forEach(cls => {
+            token.attrJoin('class', cls);
+          });
+        } else {
+          token.attrSet('style', match[1]);
+        }
       } else {
-        token.attrSet('style', match[1]);
+        token.attrSet('width', `${width}`);
       }
-    } else {
-      token.attrSet('width', width.toString());
+      title = title.replace(/#.+$/, '');
+      if (title) {
+        token.attrSet('title', title);
+      } else {
+        token.attrs!.splice(token.attrIndex('title'), 1);
+      }
     }
-    src = src.replace(/#.+$/, '');
   }
+  const src = token.attrGet('src')!;
   if (!isExternalLink(src)) {
-    src = addBaseUrl(src);
+    token.attrSet('src', addBaseUrl(src));
   }
-  token.attrSet('src', src);
   return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
