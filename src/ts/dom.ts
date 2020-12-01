@@ -121,6 +121,7 @@ function createBar(flags: IFlags) {
 }
 
 export function updateLinkPath() {
+  const dict: Dict<HTMLAnchorElement[]> = {};
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
     if (a.innerText !== '') {
       continue;
@@ -131,39 +132,54 @@ export function updateLinkPath() {
       continue;
     }
     a.classList.add('rendering');
-    getFile(path).then(file => {
-      if (file.isError) {
-        a.classList.add('error');
-      }
-      a.innerText = file.flags.title;
-      const parent = a.parentElement!;
-      if (parent.tagName === 'LI') {
-        let isPass = true;
-        let hasQuote = false;
-        if (parent.childNodes[0].nodeType === 1) {
-          if (parent.childElementCount === 1) {
-            isPass = false;
-          } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-            isPass = false;
-            hasQuote = true;
+    let links = dict[path];
+    if (links === undefined) {
+      links = [a];
+      dict[path] = links;
+    } else {
+      links.push(a);
+    }
+  }
+  const paths = Object.keys(dict);
+  if (paths.length > 0) {
+    Promise.all(paths.map(path => getFile(path))).then(files => {
+      files.forEach(file => {
+        const isError = file.isError;
+        const flags = file.flags;
+        dict[file.path].forEach(a => {
+          if (isError) {
+            a.classList.add('error');
           }
-        }
-        if (!isPass) {
-          parent.classList.add('article');
-          if (!file.isError) {
-            const bar = createBar(file.flags);
-            if (bar) {
-              if (hasQuote) {
-                parent.insertBefore(bar, parent.lastElementChild);
-              } else {
-                parent.append(bar);
+          a.innerText = flags.title;
+          const parent = a.parentElement!;
+          if (parent.tagName === 'LI') {
+            let isPass = true;
+            let hasQuote = false;
+            if (parent.childNodes[0].nodeType === 1) {
+              if (parent.childElementCount === 1) {
+                isPass = false;
+              } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+                isPass = false;
+                hasQuote = true;
+              }
+            }
+            if (!isPass) {
+              parent.classList.add('article');
+              if (!isError) {
+                const bar = createBar(flags);
+                if (bar) {
+                  if (hasQuote) {
+                    parent.insertBefore(bar, parent.lastElementChild);
+                  } else {
+                    parent.append(bar);
+                  }
+                }
               }
             }
           }
-        }
-      }
-    }).finally(() => {
-      removeClass(a, 'rendering');
+          removeClass(a, 'rendering');
+        });
+      });
     });
   }
 }
