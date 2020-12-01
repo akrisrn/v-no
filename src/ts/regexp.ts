@@ -7,7 +7,7 @@ export function getHeadingRegExp(min = 1, max = 6, flags?: string) {
 }
 
 export function getLinkRegExp(startWithSlash = false, isImg = false, isLine = false, flags?: string) {
-  let pattern = `\\[(.*?)]\\((${startWithSlash ? '/' : ''}.*?)\\)`;
+  let pattern = `\\[(.*?)]\\(\\s*(${startWithSlash ? '/' : ''}.*?)(?:\\s+["'].*?["'])?\\s*\\)`;
   if (isImg) {
     pattern = `!${pattern}`;
   }
