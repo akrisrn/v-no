@@ -240,15 +240,8 @@ function transHeading(heading: THeading) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = `#${headingElement.id}`;
-  let text = headingElement.innerText.substr(2);
-  const spanCount = headingElement.querySelector<HTMLSpanElement>('.count');
-  if (spanCount) {
-    text = text.substr(0, text.length - spanCount.innerText.length);
-    li.append(spanCount.cloneNode(true));
-  }
-  text = text.trim();
-  a.innerText = text ? text : `[${null}]`;
-  li.insertBefore(a, li.firstChild);
+  a.innerText = headingElement.innerText.substr(2).trim() || `[${null}]`;
+  li.append(a);
   let count = 1;
   if (heading.children.length > 0) {
     const ul = document.createElement('ul');

@@ -20,8 +20,7 @@ function getCategories(level: number, parentTag: string, tagTree: TTagTree, sort
     }
     const subTree = tagTree[tag];
     const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
-    const countSpan = `<span class="count">( ${fileCount + categories.count} )</span>`;
-    category.push(`${'#'.repeat(level)} ${tag}${countSpan}${list ? `\n\n${list}` : ''}`);
+    category.push(`${'#'.repeat(level)} ${tag} - ( ${fileCount + categories.count} )${list ? `\n\n${list}` : ''}`);
     if (categories.data) {
       category.push(categories.data);
     }
