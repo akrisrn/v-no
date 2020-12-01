@@ -9,8 +9,8 @@
         <a :href="`#${config.paths.archive}`"></a>
         <a :href="`#${config.paths.category}`"></a>
         <a :href="`#${config.paths.search}`"></a>
-        <select v-if="selectConf && confList.length > 1" v-model="selectConf" @change="confChanged">
-          <option v-for="conf in confList" :key="conf" :value="conf">{{ conf }}</option>
+        <select v-if="selectConf && confList && confList[0].length > 1" v-model="selectConf" @change="confChanged">
+          <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
       </div>
     </div>
@@ -133,10 +133,19 @@
 
     homePath = homePath;
     selectConf = getSelectConf();
-    confList = this.config.multiConf ? Object.keys(this.config.multiConf).sort() : [];
 
     get config() {
       return config;
+    }
+
+    get confList() {
+      const multiConf = this.config.multiConf;
+      if (multiConf) {
+        const keys = Object.keys(multiConf).sort();
+        const alias = keys.map(key => multiConf[key].alias || key);
+        return [keys, alias];
+      }
+      return null;
     }
 
     get filePath() {
@@ -181,7 +190,7 @@
       const match = this.filePath.match(/\.(.*?)\.md$/);
       if (match) {
         const matchConf = match[1];
-        if (this.confList.includes(matchConf) && this.selectConf !== matchConf) {
+        if (this.confList && this.confList[0].includes(matchConf) && this.selectConf !== matchConf) {
           localStorage.setItem('conf', matchConf);
           this.$router.go(0);
           return;

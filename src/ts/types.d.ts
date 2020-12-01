@@ -25,6 +25,7 @@ interface IConfig {
     noBacklinks: string;
     loading: string;
   };
+  alias?: string;
   defaultConf?: string;
   multiConf?: Dict<IConfig>;
 
