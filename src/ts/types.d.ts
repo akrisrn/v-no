@@ -66,3 +66,9 @@ type TTagTree = {
 }
 
 type TQuery = Dict<string | null>
+
+type THashPath = {
+  path: string;
+  anchor: string;
+  query: string;
+}
