@@ -79,7 +79,7 @@
   import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
-  import { addBaseUrl, buildHash, getSearchTagLinks, homePath, parseQuery, parseRoute } from '@/ts/path';
+  import { addBaseUrl, buildHash, getSearchTagLinks, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
   import scroll from '@/ts/scroll';
   import { chopStr } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
@@ -172,12 +172,9 @@
     created() {
       if (document.body.id === 'prerender') {
         let hashPath = this.homePath;
-        let filePath = this.filePath;
+        const filePath = this.filePath;
         if (filePath !== this.config.paths.index) {
-          if (filePath.endsWith('index.md')) {
-            filePath = filePath.replace(/index\.md$/, '');
-          }
-          hashPath += `#${filePath}`;
+          hashPath += `#${shortenPath(filePath)}`;
         }
         location.href = hashPath + location.search;
         return;

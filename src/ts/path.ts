@@ -6,11 +6,18 @@ import { Route } from 'vue-router';
 const baseUrl: string = process.env.BASE_URL;
 const indexPath: string = process.env.VUE_APP_INDEX_PATH;
 
-let shortIndexPath = indexPath;
-if (indexPath.endsWith('index.html')) {
-  shortIndexPath = indexPath.replace(/index\.html$/, '');
+export function shortenPath(path: string, ext = 'md') {
+  const indexFile = `index.${ext}`;
+  if (path === indexFile) {
+    return '';
+  }
+  if (path.endsWith(`/${indexFile}`)) {
+    return path.replace(new RegExp(`index\\.${ext}$`), '');
+  }
+  return path;
 }
-export const homePath = baseUrl + shortIndexPath;
+
+export const homePath = baseUrl + shortenPath(indexPath, 'html');
 
 export function addBaseUrl(path: string) {
   if (path.startsWith('/')) {
@@ -105,8 +112,8 @@ export function parseHash(hash: string, isShort = false) {
       path += 'index.md';
     }
   }
-  if (isShort && path.endsWith('/index.md')) {
-    path = path.replace(/index\.md$/, '');
+  if (isShort) {
+    path = shortenPath(path);
   }
   return { path, anchor, query } as THashPath;
 }
