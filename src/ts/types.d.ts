@@ -64,3 +64,5 @@ type THeading = {
 type TTagTree = {
   [index: string]: TTagTree;
 }
+
+type TQuery = Dict<string | null>

@@ -106,7 +106,7 @@
     updated = '';
     cover = '';
 
-    query: Dict<string> = {};
+    query: TQuery = {};
     hash = '';
 
     backlinkFiles: TFile[] = [];

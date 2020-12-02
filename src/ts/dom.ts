@@ -447,8 +447,8 @@ function escapeHTML(html: string) {
   return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
 }
 
-export async function updateSearchPage(query: Dict<string>) {
-  let content = query.content !== undefined ? decodeURIComponent(query.content.trim()) : '';
+export async function updateSearchPage(query: TQuery) {
+  let content = query.content ? decodeURIComponent(query.content.trim()) : '';
   const searchInput = document.querySelector<HTMLInputElement>('#search-input');
   if (searchInput) {
     searchInput.value = content;

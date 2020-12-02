@@ -15,7 +15,7 @@
   export default class Article extends Vue {
     @Prop() filePath!: string;
     @Prop() data!: string;
-    @Prop() query!: Dict<string>;
+    @Prop() query!: TQuery;
     @Prop() hash!: string;
 
     $refs!: {
