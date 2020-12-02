@@ -79,7 +79,7 @@
   import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
-  import { addBaseUrl, getSearchTagLinks, homePath, homePathForRoute, parseQuery, parseRoute } from '@/ts/path';
+  import { addBaseUrl, buildHash, getSearchTagLinks, homePath, parseQuery, parseRoute } from '@/ts/path';
   import scroll from '@/ts/scroll';
   import { chopStr } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
@@ -336,8 +336,8 @@
     }
 
     returnHome() {
-      if (this.$route.fullPath !== homePathForRoute) {
-        this.$router.push(homePathForRoute);
+      if (location.hash) {
+        location.hash = buildHash({ path: '/', anchor: '', query: '' });
       }
     }
 

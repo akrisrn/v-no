@@ -2,9 +2,9 @@ import { sortFiles } from '@/ts/compare';
 import { config } from '@/ts/config';
 import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
-import { buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks } from '@/ts/path';
+import { buildHash, buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks, parseHash } from '@/ts/path';
 import scroll from '@/ts/scroll';
-import { chopStr, trimList } from '@/ts/utils';
+import { trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
@@ -455,13 +455,9 @@ export async function updateSearchPage(content: string) {
       if (e.key === 'Enter') {
         const searchValue = searchInput.value.trim();
         searchInput.value = searchValue;
-        const param = searchValue ? buildQueryContent(searchValue) : '';
-        const { key, value } = chopStr(location.href, '?', false);
-        if (value !== null) {
-          location.href = key + param;
-        } else {
-          location.href += param;
-        }
+        const query = searchValue ? buildQueryContent(searchValue) : '';
+        const { path, anchor } = parseHash(location.hash, true);
+        location.hash = buildHash({ path, anchor, query });
       }
     });
   }

@@ -11,7 +11,6 @@ if (indexPath.endsWith('index.html')) {
   shortIndexPath = indexPath.replace(/index\.html$/, '');
 }
 export const homePath = baseUrl + shortIndexPath;
-export const homePathForRoute = '/' + shortIndexPath;
 
 export function addBaseUrl(path: string) {
   if (path.startsWith('/')) {
@@ -28,8 +27,25 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
+export function buildHash(hashPath: THashPath) {
+  const { path, anchor, query } = hashPath;
+  let hash = `#${path}`;
+  if (anchor) {
+    hash += `#${anchor}`;
+  }
+  if (query) {
+    hash += `?${query}`;
+  }
+  return hash;
+}
+
 export function buildQueryContent(content: string, isComplete = false) {
-  return (isComplete ? `#${config.paths.search}` : '') + `?content=${encodeURIComponent(content)}`;
+  const query = `content=${encodeURIComponent(content)}`;
+  return isComplete ? buildHash({
+    path: config.paths.search,
+    anchor: '',
+    query,
+  }) : query;
 }
 
 function buildSearchFlagUrl(flag: EFlag, text: string) {
@@ -145,16 +161,6 @@ export function formatQuery(query: TQuery) {
 }
 
 export function changeHash(anchor: string) {
-  let hash = location.hash;
-  let query = '';
-  let chop = chopStr(hash, '?', false);
-  if (chop.value !== null) {
-    hash = chop.key;
-    query = `?${chop.value}`;
-  }
-  chop = chopStr(hash.substr(1), '#', false);
-  if (chop.value !== null) {
-    hash = `#${chop.key}`;
-  }
-  location.hash = `${hash}#${anchor}${query}`;
+  const { path, query } = parseHash(location.hash, true);
+  location.hash = buildHash({ path, anchor, query });
 }
