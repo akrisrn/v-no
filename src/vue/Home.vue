@@ -81,6 +81,7 @@
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import { addBaseUrl, getSearchTagLinks, homePath, homePathForRoute, parseQuery, parseRoute } from '@/ts/path';
   import scroll from '@/ts/scroll';
+  import { chopStr } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
@@ -296,10 +297,10 @@
           const commonData = files[1].data;
           let headerData = '';
           let footerData = commonData;
-          const indexOf = commonData.indexOf('--8<--');
-          if (indexOf >= 0) {
-            headerData = commonData.substring(0, indexOf).trimEnd();
-            footerData = commonData.substring(indexOf + 6).trimStart();
+          const { key, value } = chopStr(commonData, '--8<--');
+          if (value !== null) {
+            headerData = key;
+            footerData = value;
           }
           if (headerData) {
             data = headerData + '\n\n' + data;

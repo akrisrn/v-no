@@ -2,7 +2,7 @@ import { config } from '@/ts/config';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink } from '@/ts/path';
-import { trimList } from '@/ts/utils';
+import { chopStr, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -110,10 +110,10 @@ markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   if (token.tag === 'code') {
     let dataLine = '';
     let lang = token.info.trim();
-    const indexOf = lang.indexOf('|');
-    if (indexOf >= 0) {
-      dataLine = lang.substring(indexOf + 1);
-      lang = lang.substring(0, indexOf);
+    const { key, value } = chopStr(lang, '|');
+    if (value !== null) {
+      lang = key;
+      dataLine = value;
     }
     token.info = lang;
     if (lang) {

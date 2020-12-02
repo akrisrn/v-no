@@ -3,6 +3,7 @@ import { config } from '@/ts/config';
 import { getFile, getFiles } from '@/ts/file';
 import { checkLinkPath } from '@/ts/path';
 import { getHeadingRegExp, getWrapRegExp } from '@/ts/regexp';
+import { chopStr } from '@/ts/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
@@ -164,12 +165,11 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           const params: Dict<string> = {};
           if (match[2]) {
             match[2].substr(1).split('|').forEach((seg, i) => {
-              let param = seg.trim();
-              const indexOf = param.indexOf('=');
-              if (indexOf >= 0) {
-                const key = param.substring(0, indexOf).trimEnd();
+              const { key, value } = chopStr(seg.trim(), '=');
+              let param = key;
+              if (value !== null) {
+                param = value;
                 if (key) {
-                  param = param.substring(indexOf + 1).trimStart();
                   params[key] = param;
                 }
               }
@@ -202,10 +202,10 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         const { heading, params } = snippetDict[match];
         snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
           let defaultValue: string | undefined = undefined;
-          const indexOf = match.indexOf('|');
-          if (indexOf >= 0) {
-            defaultValue = match.substring(indexOf + 1).trimStart();
-            match = match.substring(0, indexOf).trimEnd();
+          const { key, value } = chopStr(match, '|');
+          if (value !== null) {
+            match = key;
+            defaultValue = value;
           }
           const param = params[match];
           let result: string;

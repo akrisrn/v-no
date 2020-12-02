@@ -4,7 +4,7 @@ import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
 import { buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks } from '@/ts/path';
 import scroll from '@/ts/scroll';
-import { trimList } from '@/ts/utils';
+import { chopStr, trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
@@ -456,8 +456,12 @@ export async function updateSearchPage(content: string) {
         const searchValue = searchInput.value.trim();
         searchInput.value = searchValue;
         const param = searchValue ? buildQueryContent(searchValue) : '';
-        const indexOf = location.href.indexOf('?');
-        location.href = (indexOf >= 0 ? location.href.substring(0, indexOf) : location.href) + param;
+        const { key, value } = chopStr(location.href, '?', false);
+        if (value !== null) {
+          location.href = key + param;
+        } else {
+          location.href += param;
+        }
       }
     });
   }

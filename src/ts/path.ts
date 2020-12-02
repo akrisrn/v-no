@@ -1,5 +1,6 @@
 import { config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
+import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
 
 const baseUrl: string = process.env.BASE_URL;
@@ -78,15 +79,15 @@ export function parseRoute(route: Route) {
   if (path === `/${indexPath}`) {
     if (route.hash.startsWith('#/')) {
       path = route.hash.substr(1);
-      let indexOf = path.indexOf('?');
-      if (indexOf >= 0) {
-        query = path.substr(indexOf + 1);
-        path = path.substring(0, indexOf);
+      let chop = chopStr(path, '?', false);
+      if (chop.value !== null) {
+        path = chop.key;
+        query = chop.value;
       }
-      indexOf = path.indexOf('#');
-      if (indexOf >= 0) {
-        hash = path.substr(indexOf + 1);
-        path = path.substring(0, indexOf);
+      chop = chopStr(path, '#', false);
+      if (chop.value !== null) {
+        path = chop.key;
+        hash = chop.value;
       }
       if (path.endsWith('/')) {
         path += 'index.md';
@@ -103,11 +104,11 @@ export function parseRoute(route: Route) {
 export function parseQuery(queryStr: string) {
   const query: TQuery = {};
   queryStr.split('&').forEach(value => {
-    const indexOf = value.indexOf('=');
-    if (indexOf >= 0) {
-      const key = decodeURIComponent(value.substring(0, indexOf)).trim();
+    const chop = chopStr(value, '=', false);
+    if (chop.value !== null) {
+      const key = decodeURIComponent(chop.key).trim();
       if (key) {
-        query[key] = decodeURIComponent(value.substring(indexOf + 1)).trim();
+        query[key] = decodeURIComponent(chop.value).trim();
       }
     } else {
       value = decodeURIComponent(value).trim();
@@ -139,14 +140,14 @@ export function formatQuery(query: TQuery) {
 export function changeHash(anchor: string) {
   let hash = location.hash;
   let query = '';
-  let indexOf = hash.indexOf('?');
-  if (indexOf >= 0) {
-    query = hash.substr(indexOf);
-    hash = hash.substr(0, indexOf);
+  let chop = chopStr(hash, '?', false);
+  if (chop.value !== null) {
+    hash = chop.key;
+    query = `?${chop.value}`;
   }
-  indexOf = hash.substr(1).indexOf('#');
-  if (indexOf >= 0) {
-    hash = hash.substr(0, indexOf + 1);
+  chop = chopStr(hash.substr(1), '#', false);
+  if (chop.value !== null) {
+    hash = `#${chop.key}`;
   }
   location.hash = `${hash}#${anchor}${query}`;
 }
