@@ -164,11 +164,14 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           const params: Dict<string> = {};
           if (match[2]) {
             match[2].substr(1).split('|').forEach((seg, i) => {
-              let param = seg;
-              const paramMatch = seg.match(/(.+?)=(.+)/);
-              if (paramMatch) {
-                param = paramMatch[2];
-                params[paramMatch[1]] = param;
+              let param = seg.trim();
+              const indexOf = param.indexOf('=');
+              if (indexOf >= 0) {
+                const key = param.substring(0, indexOf).trimEnd();
+                if (key) {
+                  param = param.substring(indexOf + 1).trimStart();
+                  params[key] = param;
+                }
               }
               params[i + 1] = param;
             });
@@ -191,7 +194,6 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   for (const file of files) {
     const isError = file.isError;
     const path = file.path;
-    const title = file.flags.title;
     const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
@@ -199,8 +201,12 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       if (snippetData) {
         const { heading, params } = snippetDict[match];
         snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
-          let defaultValue: string;
-          [match, defaultValue] = match.split('|');
+          let defaultValue: string | undefined = undefined;
+          const indexOf = match.indexOf('|');
+          if (indexOf >= 0) {
+            defaultValue = match.substring(indexOf + 1).trimStart();
+            match = match.substring(0, indexOf).trimEnd();
+          }
           const param = params[match];
           let result: string;
           if (param !== undefined) {
@@ -208,7 +214,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           } else if (defaultValue !== undefined) {
             result = defaultValue;
           } else {
-            result = 'undefined';
+            return 'undefined';
           }
           return result.replace(/\\n/g, '\n');
         });
