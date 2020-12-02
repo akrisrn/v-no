@@ -79,7 +79,16 @@
   import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
-  import { addBaseUrl, buildHash, getSearchTagLinks, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
+  import {
+    addBaseUrl,
+    buildHash,
+    formatQuery,
+    getSearchTagLinks,
+    homePath,
+    parseQuery,
+    parseRoute,
+    shortenPath,
+  } from '@/ts/path';
   import scroll from '@/ts/scroll';
   import { chopStr } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
@@ -179,12 +188,23 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
+      const shortFilePath = this.shortFilePath;
       if (document.body.id === 'prerender') {
         let hashPath = this.homePath;
         if (this.filePath !== this.config.paths.index) {
-          hashPath += `#${this.shortFilePath}`;
+          hashPath += `#${shortFilePath}`;
         }
         location.href = hashPath + location.search;
+        this.isCancel = true;
+        return;
+      }
+      if (location.search) {
+        const query = location.search.substr(1) + (this.queryStr ? `&${this.queryStr}` : '');
+        location.href = location.pathname + buildHash({
+          path: shortFilePath,
+          anchor: this.anchor,
+          query: formatQuery(parseQuery(query)),
+        });
         this.isCancel = true;
         return;
       }
