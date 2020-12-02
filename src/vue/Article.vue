@@ -48,7 +48,7 @@
           } else {
             this.updateData(data);
             if (this.isSearchFile) {
-              this.$nextTick(() => updateSearchPage(this.query));
+              this.$nextTick(() => updateSearchPage(this.query.content || ''));
             }
           }
         });
