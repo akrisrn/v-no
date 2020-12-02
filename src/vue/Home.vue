@@ -34,7 +34,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :data="data" :filePath="filePath" :hash="hash" :query="query"></Article>
+        <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query"></Article>
         <div v-if="!isError" id="backlinks">
           <div :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -107,8 +107,8 @@
     updated = '';
     cover = '';
 
+    anchor = '';
     query: TQuery = {};
-    hash = '';
 
     backlinkFiles: TFile[] = [];
     isLoadingBacklinks = false;
@@ -150,9 +150,9 @@
     }
 
     get filePath() {
-      const { path, query, hash } = parseRoute(this.$route);
+      const { path, anchor, query } = parseRoute(this.$route);
+      this.anchor = anchor;
       this.query = parseQuery(query);
-      this.hash = hash;
       return path;
     }
 

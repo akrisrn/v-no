@@ -71,8 +71,8 @@ export function checkLinkPath(path: string) {
 
 export function parseRoute(route: Route) {
   let path = route.path;
+  let anchor = '';
   let query = '';
-  let hash = '';
   if (path.endsWith('/')) {
     path += 'index.html';
   }
@@ -87,7 +87,7 @@ export function parseRoute(route: Route) {
       chop = chopStr(path, '#', false);
       if (chop.value !== null) {
         path = chop.key;
-        hash = chop.value;
+        anchor = chop.value;
       }
       if (path.endsWith('/')) {
         path += 'index.md';
@@ -98,7 +98,7 @@ export function parseRoute(route: Route) {
   } else if (path.endsWith('.html')) {
     path = path.replace(/\.html$/, '.md');
   }
-  return { path, query, hash };
+  return { path, anchor, query };
 }
 
 export function parseQuery(queryStr: string) {

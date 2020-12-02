@@ -15,8 +15,8 @@
   export default class Article extends Vue {
     @Prop() filePath!: string;
     @Prop() data!: string;
+    @Prop() anchor!: string;
     @Prop() query!: TQuery;
-    @Prop() hash!: string;
 
     $refs!: {
       article: HTMLElement;
@@ -86,8 +86,8 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        if (/^h[2-6]-\d+$/.test(this.hash)) {
-          const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.hash}"]`);
+        if (/^h[2-6]-\d+$/.test(this.anchor)) {
+          const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.anchor}"]`);
           if (heading) {
             scroll(heading.offsetTop - 6);
           }
