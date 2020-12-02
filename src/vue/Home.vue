@@ -116,6 +116,7 @@
 
     isShow = false;
     isError = false;
+    isCancel = false;
 
     metaTheme!: HTMLMetaElement;
     isDark = false;
@@ -184,6 +185,7 @@
           hashPath += `#${this.shortFilePath}`;
         }
         location.href = hashPath + location.search;
+        this.isCancel = true;
         return;
       }
       const match = this.filePath.match(/\.(.*?)\.md$/);
@@ -192,6 +194,7 @@
         if (this.confList && this.confList[0].includes(matchConf) && this.selectConf !== matchConf) {
           localStorage.setItem('conf', matchConf);
           this.$router.go(0);
+          this.isCancel = true;
           return;
         }
       }
@@ -241,6 +244,9 @@
 
     // noinspection JSUnusedGlobalSymbols
     mounted() {
+      if (this.isCancel) {
+        return;
+      }
       updateLinkPath();
       addEventListener('keydown', e => {
         if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
