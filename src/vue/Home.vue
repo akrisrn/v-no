@@ -79,7 +79,7 @@
   import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
-  import { addBaseUrl, getSearchTagLinks, homePath, homePathForRoute, parseRoute } from '@/ts/path';
+  import { addBaseUrl, getSearchTagLinks, homePath, homePathForRoute, parseQuery, parseRoute } from '@/ts/path';
   import scroll from '@/ts/scroll';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
@@ -150,13 +150,7 @@
 
     get filePath() {
       const { path, query, hash } = parseRoute(this.$route);
-      this.query = {};
-      query.split('&').forEach(param => {
-        const indexOf = param.indexOf('=');
-        if (indexOf >= 0) {
-          this.query[param.substring(0, indexOf)] = param.substring(indexOf + 1);
-        }
-      });
+      this.query = parseQuery(query);
       this.hash = hash;
       return path;
     }

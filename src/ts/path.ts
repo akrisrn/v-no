@@ -100,6 +100,42 @@ export function parseRoute(route: Route) {
   return { path, query, hash };
 }
 
+export function parseQuery(queryStr: string) {
+  const query: TQuery = {};
+  queryStr.split('&').forEach(value => {
+    const indexOf = value.indexOf('=');
+    if (indexOf >= 0) {
+      const key = decodeURIComponent(value.substring(0, indexOf)).trim();
+      if (key) {
+        query[key] = decodeURIComponent(value.substring(indexOf + 1)).trim();
+      }
+    } else {
+      value = decodeURIComponent(value).trim();
+      if (value) {
+        query[value] = null;
+      }
+    }
+  });
+  return query;
+}
+
+export function formatQuery(query: TQuery) {
+  const list: string[] = [];
+  Object.keys(query).forEach(key => {
+    const value = query[key];
+    key = key.trim();
+    if (key) {
+      key = encodeURIComponent(key);
+      if (value !== null) {
+        list.push(`${key}=${encodeURIComponent(value.trim())}`);
+      } else {
+        list.push(key);
+      }
+    }
+  });
+  return list.join('&');
+}
+
 export function changeHash(anchor: string) {
   let hash = location.hash;
   let query = '';
