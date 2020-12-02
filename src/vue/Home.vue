@@ -108,7 +108,7 @@
     cover = '';
 
     anchor = '';
-    query: TQuery = {};
+    queryStr = '';
 
     backlinkFiles: TFile[] = [];
     isLoadingBacklinks = false;
@@ -152,12 +152,20 @@
     get filePath() {
       const { path, anchor, query } = parseRoute(this.$route);
       this.anchor = anchor;
-      this.query = parseQuery(query);
+      this.queryStr = query;
       return path;
+    }
+
+    get shortFilePath() {
+      return shortenPath(this.filePath);
     }
 
     get rawFilePath() {
       return addBaseUrl(this.filePath);
+    }
+
+    get query() {
+      return parseQuery(this.queryStr);
     }
 
     get isIndexFile() {
@@ -172,9 +180,8 @@
     created() {
       if (document.body.id === 'prerender') {
         let hashPath = this.homePath;
-        const filePath = this.filePath;
-        if (filePath !== this.config.paths.index) {
-          hashPath += `#${shortenPath(filePath)}`;
+        if (this.filePath !== this.config.paths.index) {
+          hashPath += `#${this.shortFilePath}`;
         }
         location.href = hashPath + location.search;
         return;
