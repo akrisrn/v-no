@@ -69,36 +69,43 @@ export function checkLinkPath(path: string) {
   return path;
 }
 
-export function parseRoute(route: Route) {
-  let path = route.path;
+export function parseHash(hash: string, isShort = false) {
+  let path = config.paths.index;
   let anchor = '';
   let query = '';
+  if (hash.startsWith('#/')) {
+    path = hash.substr(1);
+    let chop = chopStr(path, '?', false);
+    if (chop.value !== null) {
+      path = chop.key;
+      query = chop.value;
+    }
+    chop = chopStr(path, '#', false);
+    if (chop.value !== null) {
+      path = chop.key;
+      anchor = chop.value;
+    }
+    if (path.endsWith('/') && !isShort) {
+      path += 'index.md';
+    }
+  }
+  if (isShort && path.endsWith('/index.md')) {
+    path = path.replace(/index\.md$/, '');
+  }
+  return { path, anchor, query } as THashPath;
+}
+
+export function parseRoute(route: Route) {
+  let path = route.path;
   if (path.endsWith('/')) {
     path += 'index.html';
   }
   if (path === `/${indexPath}`) {
-    if (route.hash.startsWith('#/')) {
-      path = route.hash.substr(1);
-      let chop = chopStr(path, '?', false);
-      if (chop.value !== null) {
-        path = chop.key;
-        query = chop.value;
-      }
-      chop = chopStr(path, '#', false);
-      if (chop.value !== null) {
-        path = chop.key;
-        anchor = chop.value;
-      }
-      if (path.endsWith('/')) {
-        path += 'index.md';
-      }
-    } else {
-      path = config.paths.index;
-    }
+    return parseHash(route.hash);
   } else if (path.endsWith('.html')) {
     path = path.replace(/\.html$/, '.md');
   }
-  return { path, anchor, query };
+  return { path, anchor: '', query: '' };
 }
 
 export function parseQuery(queryStr: string) {
