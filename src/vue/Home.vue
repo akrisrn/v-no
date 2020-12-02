@@ -208,11 +208,10 @@
         this.isCancel = true;
         return;
       }
-      const match = this.filePath.match(/\.(.*?)\.md$/);
-      if (match) {
-        const matchConf = match[1];
-        if (this.confList && this.confList[0].includes(matchConf) && this.selectConf !== matchConf) {
-          localStorage.setItem('conf', matchConf);
+      const conf = this.query.conf;
+      if (conf) {
+        if (this.confList && this.confList[0].includes(conf) && this.selectConf !== conf) {
+          localStorage.setItem('conf', conf);
           this.$router.go(0);
           this.isCancel = true;
           return;
