@@ -5,9 +5,8 @@
 <script lang="ts">
   import { config } from '@/ts/config';
   import { replaceInlineScript, updateCategoryPage, updateSnippet } from '@/ts/data';
-  import { removeClass, updateDom, updateSearchPage } from '@/ts/dom';
+  import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
   import { renderMD } from '@/ts/markdown';
-  import scroll from '@/ts/scroll';
   import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 

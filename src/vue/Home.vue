@@ -76,7 +76,7 @@
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf } from '@/ts/config';
-  import { cleanEventListenerDict, getIcon, removeClass, updateLinkPath } from '@/ts/dom';
+  import { cleanEventListenerDict, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import {
@@ -89,7 +89,6 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import scroll from '@/ts/scroll';
   import { chopStr } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';

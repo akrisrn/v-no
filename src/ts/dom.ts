@@ -3,7 +3,6 @@ import { config } from '@/ts/config';
 import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
 import { buildHash, buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks, parseHash } from '@/ts/path';
-import scroll from '@/ts/scroll';
 import { trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
@@ -38,6 +37,13 @@ export function removeClass(element: Element, cls?: string) {
   if (element.classList.length === 0) {
     element.removeAttribute('class');
   }
+}
+
+export function scroll(height: number, isSmooth = true) {
+  document.documentElement.style.scrollBehavior = !isSmooth ? 'auto' : 'smooth';
+  setTimeout(() => {
+    scrollTo(0, height);
+  }, 0);
 }
 
 // noinspection JSSuspiciousNameCombination
