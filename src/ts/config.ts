@@ -1,3 +1,4 @@
+import { shortenPath } from '@/ts/path';
 import { getFromWindow } from '@/ts/window';
 
 function merge(target: IConfig, source: IConfig) {
@@ -52,3 +53,10 @@ export const baseFiles = [
 if (config.paths.common) {
   baseFiles.push(config.paths.common);
 }
+
+export const shortPaths = {
+  readme: shortenPath(config.paths.readme),
+  archive: shortenPath(config.paths.archive),
+  category: shortenPath(config.paths.category),
+  search: shortenPath(config.paths.search),
+};

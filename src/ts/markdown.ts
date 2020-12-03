@@ -1,7 +1,7 @@
 import { config } from '@/ts/config';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
-import { addBaseUrl, homePath, isExternalLink } from '@/ts/path';
+import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
 import { chopStr, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -196,7 +196,7 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
       let title = token.attrGet('title');
       if (title && title.endsWith('#')) {
-        href = `#${href}`;
+        href = `#${shortenPath(href)}`;
         title = title.substr(0, title.length - 1);
         if (title) {
           token.attrSet('title', title);

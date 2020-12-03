@@ -15,7 +15,7 @@ function getCategories(level: number, parentTag: string, tagTree: TTagTree, sort
     let fileCount = 0;
     const taggedFiles = taggedDict[nestedTag];
     if (taggedFiles) {
-      list = taggedFiles.sort(sortFiles).map(file => `- [](#${file.path})`).join('\n');
+      list = taggedFiles.sort(sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
       fileCount = taggedFiles.length;
       count += fileCount;
     }
@@ -235,7 +235,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         }
         let dataWithHeading = snippetData;
         if (heading > 1) {
-          const headingText = `# [](#${path})`;
+          const headingText = `# [](${path} "#")`;
           if (snippetData) {
             dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
           } else {

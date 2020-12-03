@@ -1,7 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import { formatDate } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
-import { addBaseUrl, checkLinkPath, isExternalLink } from '@/ts/path';
+import { addBaseUrl, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
 import { trimList } from '@/ts/utils';
 import axios from 'axios';
@@ -21,7 +21,7 @@ export function createErrorFile(path: string): TFile {
   return {
     path,
     data: config.messages.pageError,
-    flags: createFlags(path),
+    flags: createFlags(shortenPath(path)),
     links: [],
     isError: true,
   };
@@ -30,7 +30,7 @@ export function createErrorFile(path: string): TFile {
 const cachedBacklinks: Dict<string[]> = {};
 
 function parseData(path: string, data: string): TFile {
-  const flags = createFlags(path);
+  const flags = createFlags(shortenPath(path));
   const links: string[] = [];
   if (!data) {
     return { path, data, flags, links };

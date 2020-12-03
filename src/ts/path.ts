@@ -1,4 +1,4 @@
-import { config } from '@/ts/config';
+import { config, shortPaths } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
@@ -49,7 +49,7 @@ export function buildHash(hashPath: THashPath) {
 export function buildQueryContent(content: string, isComplete = false) {
   const query = `content=${encodeURIComponent(content)}`;
   return isComplete ? buildHash({
-    path: config.paths.search,
+    path: shortPaths.search,
     anchor: '',
     query,
   }) : query;

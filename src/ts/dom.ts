@@ -2,7 +2,15 @@ import { sortFiles } from '@/ts/compare';
 import { config } from '@/ts/config';
 import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
-import { buildHash, buildQueryContent, changeHash, checkLinkPath, getSearchTagLinks, parseHash } from '@/ts/path';
+import {
+  buildHash,
+  buildQueryContent,
+  changeHash,
+  checkLinkPath,
+  getSearchTagLinks,
+  parseHash,
+  shortenPath,
+} from '@/ts/path';
 import { trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
@@ -564,7 +572,7 @@ export async function updateSearchPage(content: string) {
         const li = document.createElement('li');
         li.classList.add('article');
         const a = document.createElement('a');
-        a.href = `#${file.path}`;
+        a.href = `#${shortenPath(file.path)}`;
         a.innerText = file.flags.title;
         li.append(a);
         const bar = createBar(file.flags);

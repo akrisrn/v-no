@@ -5,10 +5,10 @@
         <img v-if="favicon" :src="favicon" alt="favicon"/>
         <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span></span>
-        <a :href="`#${config.paths.readme}`"></a>
-        <a :href="`#${config.paths.archive}`"></a>
-        <a :href="`#${config.paths.category}`"></a>
-        <a :href="`#${config.paths.search}`"></a>
+        <a :href="`#${shortPaths.readme}`"></a>
+        <a :href="`#${shortPaths.archive}`"></a>
+        <a :href="`#${shortPaths.category}`"></a>
+        <a :href="`#${shortPaths.search}`"></a>
         <select v-if="selectConf && confList && confList[0].length > 1" v-model="selectConf" @change="confChanged">
           <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
@@ -43,7 +43,7 @@
           <template v-else>
             <ul v-if="backlinkFiles.length > 0">
               <li v-for="file in backlinkFiles" :key="file.path" class="article">
-                <a :href="`#${file.path}`">{{ file.flags.title }}</a>
+                <a :href="`#${shortenPath(file.path)}`">{{ file.flags.title }}</a>
                 <div class="bar">
                   <code v-for="tag in file.flags.tags" :key="tag" class="item-tag">
                     <template v-for="link in getSearchTagLinks(tag)">
@@ -75,7 +75,7 @@
 
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
-  import { config, getSelectConf } from '@/ts/config';
+  import { config, getSelectConf, shortPaths } from '@/ts/config';
   import { cleanEventListenerDict, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
   import { EIcon } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
@@ -141,6 +141,7 @@
     keyInput = '';
     inputBinds: Dict<() => void> = {};
 
+    shortPaths = shortPaths;
     homePath = homePath;
     selectConf = getSelectConf();
 
@@ -166,7 +167,7 @@
     }
 
     get shortFilePath() {
-      return shortenPath(this.filePath);
+      return this.shortenPath(this.filePath);
     }
 
     get rawFilePath() {
@@ -424,6 +425,10 @@
           this.$nextTick(() => removeClass(this.$refs.toTop));
         }, 500);
       }
+    }
+
+    shortenPath(path: string) {
+      return shortenPath(path);
     }
 
     addInputBind(input: string, bind: () => void) {
