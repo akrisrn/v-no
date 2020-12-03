@@ -29,7 +29,7 @@ article {
     .heading-tag {
       $width: 38px;
 
-      font-size: $font-size-s;
+      font-size: 0.85em;
       display: inline-block;
       width: $width;
       margin: 0 8px 0 (-$width - 8px);
@@ -108,7 +108,7 @@ article {
       }
     }
 
-    &:not(#result) li.article {
+    li.article {
       margin-left: -2em;
     }
   }
@@ -118,19 +118,29 @@ article {
   }
 
   dl {
+    margin: 0 0 16px;
+
+    &.center dd:before {
+      content: none;
+    }
+
     dd {
       font-size: $font-size-s;
       margin-left: 0;
       color: $gray-font-color;
 
-      &:not(.center):before {
+      &:before {
         margin-right: 8px;
         content: "»";
       }
-    }
 
-    &.center dd:before {
-      content: none;
+      &:last-of-type p {
+        margin-bottom: 0;
+      }
+
+      p {
+        display: inline-block;
+      }
     }
   }
 
@@ -209,8 +219,6 @@ article {
   }
 
   details {
-    $border-width: 6px;
-
     overflow: hidden;
     margin: 24px 0;
     padding: 0 16px;
@@ -239,7 +247,7 @@ article {
       content: "▼";
     }
 
-    &.readonly summary {
+    &.readonly > summary {
       pointer-events: none;
 
       &:after {
@@ -247,8 +255,8 @@ article {
       }
     }
 
-    &.empty {
-      > :last-child {
+    &.empty > {
+      :last-child {
         margin-bottom: 0;
       }
 
@@ -313,20 +321,27 @@ article {
     font-family: $font-family;
     font-size: 1em;
     line-height: 1.8;
+    display: block;
     box-sizing: border-box;
     width: 100%;
+    margin: 24px 0;
     padding: 0 0 0 16px;
     transition: color 0.5s;
     color: $font-color;
     border: none;
-    border-left: 6px solid $info-color-s;
+    border-left: $border-width solid $info-color-s;
     border-radius: 0;
     outline: none;
     background-color: transparent;
   }
 
   #result {
-    padding-left: 0;
+    padding-left: 16px;
+    border-left: $border-width solid $success-color-s;
+
+    li.article {
+      margin-left: 0;
+    }
 
     .highlight {
       font-weight: bold;
@@ -350,7 +365,7 @@ article {
     font-size: $font-size-s;
     margin: 24px 0;
     padding-left: 16px;
-    border-left: 6px solid $info-color-s;
+    border-left: $border-width solid $info-color-s;
 
     ul {
       margin-bottom: 0;
@@ -399,12 +414,8 @@ article {
     }
 
     > .toolbar {
-      top: -1px;
-      right: 4px;
-
-      .toolbar-item + .toolbar-item {
-        margin-left: 4px;
-      }
+      top: 0;
+      opacity: 1;
 
       button {
         cursor: pointer;
@@ -412,8 +423,14 @@ article {
       }
 
       button, span {
+        font-family: $mono-font-family;
+        font-size: $font-size-s;
+        font-weight: bold;
+        padding: 0 8px 0 0;
         transition: color 0.5s;
         color: $gray-font-color;
+        background: none;
+        box-shadow: none;
 
         &:hover {
           color: $dark-font-color;
@@ -422,8 +439,14 @@ article {
     }
   }
 
+  .line-numbers .line-numbers-rows {
+    top: -16px;
+    padding: 16px 0;
+  }
+
   .line-highlight {
-    margin-top: 24px;
+    margin-top: 8px;
+    background: linear-gradient(to right, $info-color-xs 70%, transparent);
   }
 
   .btn {

@@ -36,9 +36,13 @@ main {
   }
 
   #bar {
-    max-height: 25px * 2;
+    max-height: 29px * 2;
     transition: max-height 0.5s, opacity 0.5s;
     opacity: 1;
+
+    code {
+      margin-bottom: 4px;
+    }
   }
 
   header {
