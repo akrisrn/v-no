@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "clean-dist-template": "rimraf dist/assets/config.js dist/*.md dist/*.png"
+    "clean-dist-template": "rimraf dist/assets/config.js dist/*.md dist/*.png",
+    "build+clean": "yarn run build && yarn run clean-dist-template"
   },
   "dependencies": {
     "axios": "^0.21.0",
