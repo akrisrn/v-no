@@ -9,7 +9,7 @@
         <a :href="`#${shortPaths.archive}`"></a>
         <a :href="`#${shortPaths.category}`"></a>
         <a :href="`#${shortPaths.search}`"></a>
-        <select v-if="selectConf && confList && confList[0].length > 1" v-model="selectConf" @change="confChanged">
+        <select v-if="enableMultiConf" v-model="selectConf" @change="confChanged">
           <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
       </div>
@@ -143,6 +143,7 @@
 
     shortPaths = shortPaths;
     homePath = homePath;
+    homeHash = buildHash({ path: this.shortPaths.index, anchor: '', query: '' });
     selectConf = getSelectConf();
 
     get config() {
@@ -157,6 +158,10 @@
         return [keys, alias];
       }
       return null;
+    }
+
+    get enableMultiConf() {
+      return this.selectConf && this.confList && this.confList[0].length > 1;
     }
 
     get filePath() {
@@ -188,19 +193,20 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
+      const homePath = this.homePath;
       const shortFilePath = this.shortFilePath;
       if (document.body.id === 'prerender') {
-        let hashPath = this.homePath;
-        if (this.filePath !== this.config.paths.index) {
-          hashPath += `#${shortFilePath}`;
+        let path = homePath;
+        if (!this.isIndexFile) {
+          path += `#${shortFilePath}`;
         }
-        location.href = hashPath + location.search;
+        location.href = path + location.search;
         this.isCancel = true;
         return;
       }
       if (location.search) {
         const query = location.search.substr(1) + (this.queryStr ? `&${this.queryStr}` : '');
-        location.href = location.pathname + buildHash({
+        location.href = homePath + buildHash({
           path: shortFilePath,
           anchor: this.anchor,
           query: formatQuery(parseQuery(query)),
@@ -208,9 +214,9 @@
         this.isCancel = true;
         return;
       }
-      const conf = this.query.conf;
-      if (conf) {
-        if (this.confList && this.confList[0].includes(conf) && this.selectConf !== conf) {
+      if (this.enableMultiConf) {
+        const conf = this.query.conf;
+        if (conf && this.confList![0].includes(conf) && this.selectConf !== conf) {
           localStorage.setItem('conf', conf);
           this.$router.go(0);
           this.isCancel = true;
@@ -255,7 +261,7 @@
       exposeToWindow({
         version: process.env.VUE_APP_VERSION,
         axios,
-        homePath: this.homePath,
+        homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
       });
@@ -299,15 +305,17 @@
           element.remove();
         });
         this.setData(data, flags);
+        scroll(0, false);
       });
     }
 
     async getData() {
-      if (this.filePath.endsWith('.md')) {
+      const filePath = this.filePath;
+      if (filePath.endsWith('.md')) {
         const promises = [];
-        promises.push(getFile(this.filePath));
+        promises.push(getFile(filePath));
         const commonPath = this.config.paths.common;
-        if (commonPath && this.filePath !== commonPath) {
+        if (commonPath && filePath !== commonPath) {
           promises.push(getFile(commonPath));
         }
         const files = await Promise.all(promises);
@@ -341,7 +349,7 @@
         return { data, flags };
       }
       this.isError = true;
-      const { data, flags } = createErrorFile(this.filePath);
+      const { data, flags } = createErrorFile(filePath);
       return { data, flags };
     }
 
@@ -349,7 +357,6 @@
       this.setFlags(flags);
       this.data = data;
       this.isShow = true;
-      scroll(0, false);
     }
 
     setFlags(flags: IFlags) {
@@ -366,7 +373,7 @@
 
     returnHome() {
       if (location.hash) {
-        location.hash = buildHash({ path: '/', anchor: '', query: '' });
+        location.hash = this.homeHash;
       }
     }
 

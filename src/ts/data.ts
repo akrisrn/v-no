@@ -2,7 +2,7 @@ import { sortFiles } from '@/ts/compare';
 import { config } from '@/ts/config';
 import { getFile, getFiles } from '@/ts/file';
 import { checkLinkPath } from '@/ts/path';
-import { getHeadingRegExp, getWrapRegExp } from '@/ts/regexp';
+import { getHeadingPattern, getHeadingRegExp, getLinkPathPattern, getWrapRegExp } from '@/ts/regexp';
 import { chopStr } from '@/ts/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
@@ -106,7 +106,7 @@ function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string)
 }
 
 function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}){${evalStr}})`)(...Object.values(params));
+  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
 }
 
 export function replaceInlineScript(data: string) {
@@ -146,7 +146,7 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
-  const linkRegExp = /^(?: {0,3}(#{2,6}) )?\s*\[\+(#.+)?]\((\/.*?)\)$/;
+  const linkRegExp = new RegExp(`^(?:${getHeadingPattern(2, 6)} )?\\s*\\[\\+(#.+)?]${getLinkPathPattern(true)}$`);
   data = data.split('\n').map(line => {
     const match = line.match(linkRegExp);
     if (match) {
@@ -197,9 +197,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     const fileData = file.data ? replaceInlineScript(file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
+      const { heading, params } = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
-        const { heading, params } = snippetDict[match];
         snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
           let defaultValue: string | undefined = undefined;
           const { key, value } = chopStr(match, '|');
@@ -233,20 +233,20 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
             snippetData = slips[num].trim();
           }
         }
-        let dataWithHeading = snippetData;
-        if (heading > 1) {
-          const headingText = `# [](${path} "#")`;
-          if (snippetData) {
-            dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
-          } else {
-            dataWithHeading = degradeHeading(headingText, heading - 1);
-          }
-        }
+      }
+      let dataWithHeading = snippetData;
+      if (heading > 1) {
+        const headingText = `# [](${path} "#")`;
         if (snippetData) {
-          snippetData = await updateSnippet(dataWithHeading, [...updatedPaths]);
-        } else if (dataWithHeading) {
-          snippetData = dataWithHeading;
+          dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
+        } else {
+          dataWithHeading = degradeHeading(headingText, heading - 1);
         }
+      }
+      if (snippetData) {
+        snippetData = await updateSnippet(dataWithHeading, [...updatedPaths]);
+      } else if (dataWithHeading) {
+        snippetData = dataWithHeading;
       }
       data = data.split('\n').map(line => {
         if (line === match) {

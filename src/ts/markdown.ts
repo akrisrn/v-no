@@ -11,6 +11,7 @@ const deflist = require('markdown-it-deflist');
 const taskLists = require('markdown-it-task-lists');
 const container = require('markdown-it-container');
 
+let isRenderingSummary = false;
 const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
 
 // noinspection JSUnusedGlobalSymbols
@@ -40,7 +41,9 @@ const markdownIt = new MarkdownIt({
             isOpen = false;
           }
           if (summaryMatch !== '\\') {
+            isRenderingSummary = true;
             summary = markdownIt.render(summaryMatch);
+            isRenderingSummary = false;
           }
         }
       } else {
@@ -68,40 +71,6 @@ const getDefaultRenderRule = (name: string) => {
   return markdownIt.renderer.rules[name] || function(tokens, idx, options, env, self) {
     return self.renderToken(tokens, idx, options);
   };
-};
-
-const defaultImageRenderRule = getDefaultRenderRule('image');
-markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
-  const token = tokens[idx];
-  let title = token.attrGet('title');
-  if (title) {
-    const match = title.match(/#(.+)$/);
-    if (match) {
-      const width = parseInt(match[1]);
-      if (isNaN(width)) {
-        if (match[1].startsWith('.')) {
-          trimList(match[1].split('.')).forEach(cls => {
-            token.attrJoin('class', cls);
-          });
-        } else {
-          token.attrSet('style', match[1]);
-        }
-      } else {
-        token.attrSet('width', `${width}`);
-      }
-      title = title.replace(/#.+$/, '');
-      if (title) {
-        token.attrSet('title', title);
-      } else {
-        token.attrs!.splice(token.attrIndex('title'), 1);
-      }
-    }
-  }
-  const src = token.attrGet('src')!;
-  if (!isExternalLink(src)) {
-    token.attrSet('src', addBaseUrl(src));
-  }
-  return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultFenceRenderRule = getDefaultRenderRule('fence');
@@ -150,20 +119,22 @@ let headingCount: Dict<number> = {};
 const defaultHeadingRenderRule = getDefaultRenderRule('heading_open');
 markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
   let headingTag = '';
-  const token = tokens[idx];
-  if (token.level === 0) {
-    const tag = token.tag;
-    let count = headingCount[tag];
-    count = count === undefined ? 1 : (count + 1);
-    headingCount[tag] = count;
-    token.attrSet('id', `${tag}-${count}`);
-    const span = document.createElement('span');
-    span.classList.add('heading-tag');
-    span.innerText = 'H';
-    const small = document.createElement('small');
-    small.innerText = tag.substr(1);
-    span.append(small);
-    headingTag = span.outerHTML;
+  if (!isRenderingSummary) {
+    const token = tokens[idx];
+    if (token.level === 0) {
+      const tag = token.tag;
+      let count = headingCount[tag];
+      count = count === undefined ? 1 : (count + 1);
+      headingCount[tag] = count;
+      token.attrSet('id', `${tag}-${count}`);
+      const span = document.createElement('span');
+      span.classList.add('heading-tag');
+      span.innerText = 'H';
+      const small = document.createElement('small');
+      small.innerText = tag.substr(1);
+      span.append(small);
+      headingTag = span.outerHTML;
+    }
   }
   return defaultHeadingRenderRule(tokens, idx, options, env, self) + headingTag;
 };
@@ -171,14 +142,50 @@ markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
 const defaultHeadingCloseRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   let headingLink = '';
-  const token = tokens[idx];
-  if (token.level === 0) {
-    const span = document.createElement('span');
-    span.classList.add('heading-link');
-    span.innerHTML = getIcon(EIcon.link, 14);
-    headingLink = span.outerHTML;
+  if (!isRenderingSummary) {
+    const token = tokens[idx];
+    if (token.level === 0) {
+      const span = document.createElement('span');
+      span.classList.add('heading-link');
+      span.innerHTML = getIcon(EIcon.link, 14);
+      headingLink = span.outerHTML;
+    }
   }
   return headingLink + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
+};
+
+const defaultImageRenderRule = getDefaultRenderRule('image');
+markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  let title = token.attrGet('title');
+  if (title) {
+    const match = title.match(/#(.+)$/);
+    if (match) {
+      const width = parseInt(match[1]);
+      if (isNaN(width)) {
+        if (match[1].startsWith('.')) {
+          trimList(match[1].split('.')).forEach(cls => {
+            token.attrJoin('class', cls);
+          });
+        } else {
+          token.attrSet('style', match[1]);
+        }
+      } else {
+        token.attrSet('width', `${width}`);
+      }
+      title = title.replace(/#.+$/, '');
+      if (title) {
+        token.attrSet('title', title);
+      } else {
+        token.attrs!.splice(token.attrIndex('title'), 1);
+      }
+    }
+  }
+  const src = token.attrGet('src')!;
+  if (!isExternalLink(src)) {
+    token.attrSet('src', addBaseUrl(src));
+  }
+  return defaultImageRenderRule(tokens, idx, options, env, self);
 };
 
 let isExternal = false;
@@ -225,14 +232,9 @@ export function renderMD(data: string) {
   const tocRegExp = new RegExp(tocRegExpStr, 'im');
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
   if (tocRegExp.test(data)) {
-    const details = document.createElement('details');
-    details.open = true;
-    details.classList.add('empty');
-    details.append(document.createElement('summary'));
     const tocDiv = document.createElement('div');
     tocDiv.id = 'toc';
-    details.append(tocDiv);
-    data = data.replace(tocRegExp, details.outerHTML).replace(tocRegExpG, '');
+    data = data.replace(tocRegExp, tocDiv.outerHTML).replace(tocRegExpG, '');
   }
   headingCount = {};
   return markdownIt.render(data);

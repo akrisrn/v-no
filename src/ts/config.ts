@@ -55,6 +55,7 @@ if (config.paths.common) {
 }
 
 export const shortPaths = {
+  index: shortenPath(config.paths.index),
   readme: shortenPath(config.paths.readme),
   archive: shortenPath(config.paths.archive),
   category: shortenPath(config.paths.category),

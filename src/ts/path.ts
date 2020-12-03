@@ -46,9 +46,9 @@ export function buildHash(hashPath: THashPath) {
   return hash;
 }
 
-export function buildQueryContent(content: string, isComplete = false) {
+export function buildSearchContent(content: string, isFull = false) {
   const query = `content=${encodeURIComponent(content)}`;
-  return isComplete ? buildHash({
+  return isFull ? buildHash({
     path: shortPaths.search,
     anchor: '',
     query,
@@ -56,7 +56,7 @@ export function buildQueryContent(content: string, isComplete = false) {
 }
 
 function buildSearchFlagUrl(flag: EFlag, text: string) {
-  return buildQueryContent(`@${flag}: ${text}`, true);
+  return buildSearchContent(`@${flag}: ${text}`, true);
 }
 
 export function getSearchTagLinks(tag: string) {

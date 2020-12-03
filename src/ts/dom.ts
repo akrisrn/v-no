@@ -4,7 +4,7 @@ import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
 import {
   buildHash,
-  buildQueryContent,
+  buildSearchContent,
   changeHash,
   checkLinkPath,
   getSearchTagLinks,
@@ -47,8 +47,11 @@ export function removeClass(element: Element, cls?: string) {
   }
 }
 
+const html = document.documentElement;
+html.style.scrollBehavior = 'smooth';
+
 export function scroll(height: number, isSmooth = true) {
-  document.documentElement.style.scrollBehavior = !isSmooth ? 'auto' : 'smooth';
+  html.style.scrollBehavior = !isSmooth ? 'auto' : 'smooth';
   setTimeout(() => {
     scrollTo(0, height);
   }, 0);
@@ -469,7 +472,7 @@ export async function updateSearchPage(content: string) {
       if (e.key === 'Enter') {
         const searchValue = searchInput.value.trim();
         searchInput.value = searchValue;
-        const query = searchValue ? buildQueryContent(searchValue) : '';
+        const query = searchValue ? buildSearchContent(searchValue) : '';
         const { path, anchor } = parseHash(location.hash, true);
         location.hash = buildHash({ path, anchor, query });
       }
