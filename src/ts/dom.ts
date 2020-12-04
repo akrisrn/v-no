@@ -93,6 +93,13 @@ function updateImagePath() {
         removeClass(img, cls);
       }
     });
+    if (parent.childNodes.length === 1) {
+      if (['DT', 'DD'].includes(parent.tagName)) {
+        parent.parentElement!.classList.add('center');
+      } else if (parent.tagName === 'P') {
+        parent.classList.add('center');
+      }
+    }
     if (!parent.classList.contains('hidden') && img.naturalWidth === 0) {
       parent.classList.add('hidden');
       const loadings = document.createElement('div');
@@ -105,11 +112,6 @@ function updateImagePath() {
         loadings.remove();
         removeClass(parent, 'hidden');
       };
-    }
-    if (parent.tagName === 'DT') {
-      parent.parentElement!.classList.add('center');
-    } else {
-      parent.classList.add('center');
     }
   });
 }
