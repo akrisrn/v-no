@@ -26,7 +26,7 @@ jobs:
 
       - name: Build (hash)
         run: |
-          echo "VUE_APP_INDEX_PATH=-/index.html" > .env.local
+          cp .env.hash .env.local
           yarn run build
           cd dist && zip -r ../v-no-$RELEASE_VERSION-hash-template.zip ./* && cd ..
           yarn run clean-dist-template
@@ -92,8 +92,7 @@ jobs:
 
       - name: Build (doc)
         run: |
-          echo "VUE_APP_PUBLIC_PATH=/v-no-doc/" >> .env.local
-          echo "PRISM_LANGUAGES=javascript,bash,markdown" >> .env.local
+          cp .env.doc .env.local
           echo "" >> src/ts/dom.ts
           yarn run build+clean
           rm -r v-no-doc/assets/css/ v-no-doc/assets/js/
