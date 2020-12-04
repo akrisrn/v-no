@@ -23,7 +23,7 @@
           <code v-if="!isIndexFile" class="item-home">
             <a :href="homePath" @click.prevent="returnHome">«</a>
           </code>
-          <code v-if="date" class="item-date">{{ date }}</code>
+          <code v-if="date" class="item-date">{{ isIndexFile ? updated : date }}</code>
           <code v-for="tag in tags" :key="tag" class="item-tag">
             <template v-for="link in getSearchTagLinks(tag)">
               <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
@@ -340,10 +340,10 @@
             footerData = value;
           }
           if (headerData) {
-            data = headerData + '\n\n' + data;
+            data = headerData + '\n\n\n' + data;
           }
           if (footerData) {
-            data += '\n\n' + footerData;
+            data += '\n\n\n' + footerData;
           }
         }
         return { data, flags };

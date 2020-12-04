@@ -320,7 +320,7 @@ function updateHeading() {
           heading.parent = cursor;
         } else {
           let parent = cursor.parent;
-          while (parent && parent !== header) {
+          while (parent) {
             if (level > parent.level) {
               parent.children.push(heading);
               heading.parent = parent;
