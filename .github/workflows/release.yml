@@ -94,7 +94,7 @@ jobs:
         run: |
           cp .env.doc .env.local
           echo "" >> src/ts/dom.ts
-          yarn run build+clean
+          yarn run build-modern+clean
           rm -r v-no-doc/assets/css/ v-no-doc/assets/js/
           cp -r dist/* v-no-doc/
 
