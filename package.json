@@ -5,9 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-modern": "yarn run build --modern",
     "lint": "vue-cli-service lint",
     "clean-dist-template": "rimraf dist/assets/config.js dist/*.md dist/*.png",
-    "build+clean": "yarn run build && yarn run clean-dist-template"
+    "build+clean": "yarn run build && yarn run clean-dist-template",
+    "build-modern+clean": "yarn run build-modern && yarn run clean-dist-template"
   },
   "dependencies": {
     "axios": "^0.21.0",
