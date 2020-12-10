@@ -18,24 +18,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Build
-        run: |
-          yarn && yarn run build
-          cd dist && zip -r ../v-no-$RELEASE_VERSION-template.zip ./* && cd ..
-          yarn run clean-dist-template
-          cd dist && zip -r ../v-no-$RELEASE_VERSION.zip ./* && cd ..
-
-      - name: Build (hash)
-        run: |
-          cp .env.hash .env.local
-          yarn run build
-          cd dist && zip -r ../v-no-$RELEASE_VERSION-hash-template.zip ./* && cd ..
-          yarn run clean-dist-template
-          cd dist && zip -r ../v-no-$RELEASE_VERSION-hash.zip ./* && cd ..
-
-      - name: Unzip templates
-        run: |
-          unzip ./v-no-$RELEASE_VERSION-template.zip -d v-no-template
-          unzip ./v-no-$RELEASE_VERSION-hash-template.zip -d v-no-hash-template
+        run: yarn && yarn run build
 
       - name: Deploy v-no-template
         uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -44,8 +27,11 @@ jobs:
           GIT_CONFIG_NAME: AkrISrn
           REPOSITORY_NAME: akrisrn/v-no-template
           BRANCH: master
-          FOLDER: v-no-template
+          FOLDER: dist
           COMMIT_MESSAGE: release v${{ env.RELEASE_VERSION }}
+
+      - name: Build (hash)
+        run: cp .env.hash .env.local && yarn run build
 
       - name: Deploy v-no-hash-template
         uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -54,7 +40,7 @@ jobs:
           GIT_CONFIG_NAME: AkrISrn
           REPOSITORY_NAME: akrisrn/v-no-hash-template
           BRANCH: master
-          FOLDER: v-no-hash-template
+          FOLDER: dist
           COMMIT_MESSAGE: release v${{ env.RELEASE_VERSION }}
 
       - name: Checkout v-no-doc
