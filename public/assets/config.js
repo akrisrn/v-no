@@ -3,7 +3,7 @@ vnoConfig = {
   dateFormat: '',
   cdn: '',
   paths: {
-    favicon: '/favicon.png',
+    favicon: '/uploads/favicon.png',
     index: '/index.md',
     readme: '/README.md',
     archive: '/archives.md',

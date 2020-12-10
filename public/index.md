@@ -1,4 +1,4 @@
 # v-no
 
 @tags: root
-@cover: ![](/logo.png)
+@cover: ![](/uploads/logo.png)
