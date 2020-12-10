@@ -32,32 +32,6 @@ jobs:
           yarn run clean-dist-template
           cd dist && zip -r ../v-no-$RELEASE_VERSION-hash.zip ./* && cd ..
 
-      - name: Create release
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const { repo: { owner, repo } } = context;
-            const version = process.env.RELEASE_VERSION;
-            const release = await github.repos.createRelease({
-              owner, repo,
-              tag_name: `v${version}`,
-              name: `Draft of v${version}`,
-              draft: true,
-            });
-            await Promise.all([
-              '',
-              '-hash',
-              '-template',
-              '-hash-template',
-            ].map(ext => `v-no-${version}${ext}.zip`).map(file => github.repos.uploadReleaseAsset({
-              owner, repo,
-              release_id: release.data.id,
-              name: file,
-              data: fs.readFileSync(`./${file}`),
-            })));
-
       - name: Unzip templates
         run: |
           unzip ./v-no-$RELEASE_VERSION-template.zip -d v-no-template
