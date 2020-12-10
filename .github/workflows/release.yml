@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout v-no
         uses: actions/checkout@v2
         with:
           persist-credentials: false
@@ -23,7 +23,7 @@ jobs:
       - name: Deploy v-no-template
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          ACCESS_TOKEN: ${{ secrets.UPDATE_TEMPLATE_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GIT_CONFIG_NAME: AkrISrn
           REPOSITORY_NAME: akrisrn/v-no-template
           BRANCH: master
@@ -36,7 +36,7 @@ jobs:
       - name: Deploy v-no-hash-template
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          ACCESS_TOKEN: ${{ secrets.UPDATE_TEMPLATE_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GIT_CONFIG_NAME: AkrISrn
           REPOSITORY_NAME: akrisrn/v-no-hash-template
           BRANCH: master
@@ -61,7 +61,7 @@ jobs:
       - name: Deploy v-no-doc
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          ACCESS_TOKEN: ${{ secrets.UPDATE_TEMPLATE_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GIT_CONFIG_NAME: AkrISrn
           REPOSITORY_NAME: akrisrn/v-no-doc
           BRANCH: master
