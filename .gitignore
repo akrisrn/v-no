@@ -20,6 +20,4 @@ yarn-error.log*
 *.sln
 *.sw?
 
-public/uploads
-public/**/*.md
-scripts/yarn.lock
+/public/
