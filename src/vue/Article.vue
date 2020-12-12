@@ -20,7 +20,7 @@
     $refs!: {
       article: HTMLElement;
     };
-    mdData = this.data ? replaceInlineScript(this.data) : '';
+    mdData = this.data ? replaceInlineScript(this.filePath, this.data) : '';
     markdown = '';
     isRendering = true;
 
@@ -58,7 +58,7 @@
         renderMD: (data: string) => {
           data = data.trim();
           if (data) {
-            data = replaceInlineScript(data);
+            data = replaceInlineScript(this.filePath, data);
           }
           return data ? renderMD(data) : '';
         },

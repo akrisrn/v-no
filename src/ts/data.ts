@@ -109,11 +109,11 @@ function evalFunction(evalStr: string, params: Dict<any>) {
   return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
 }
 
-export function replaceInlineScript(data: string) {
+export function replaceInlineScript(path: string, data: string) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
     let result: string;
     try {
-      result = evalFunction(evalStr, { data });
+      result = evalFunction(evalStr, { path, data });
     } catch (e) {
       result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
@@ -194,7 +194,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   for (const file of files) {
     const isError = file.isError;
     const path = file.path;
-    const fileData = file.data ? replaceInlineScript(file.data) : '';
+    const fileData = file.data ? replaceInlineScript(path, file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
       const { heading, params } = snippetDict[match];
