@@ -47,5 +47,9 @@ body {
   color: $danger-color-s !important;
 }
 
+.filler {
+  margin-left: auto;
+}
+
 @import "dark";
 @import "zen";

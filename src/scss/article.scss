@@ -110,11 +110,11 @@ article {
 
     li.article {
       margin-left: -2em;
-    }
-  }
 
-  li.article blockquote {
-    margin: 16px 0;
+      + blockquote {
+        margin-left: -2em;
+      }
+    }
   }
 
   dl {
@@ -205,7 +205,6 @@ article {
     position: relative;
     margin: 24px 0;
     padding-left: 32px;
-    white-space: normal;
     color: $gray-font-color;
 
     &:before {
@@ -341,6 +340,10 @@ article {
 
     li.article {
       margin-left: 0;
+
+      + blockquote {
+        margin-left: 0;
+      }
     }
 
     .highlight {

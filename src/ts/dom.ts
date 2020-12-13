@@ -136,7 +136,13 @@ function createBar(flags: IFlags) {
     itemDate.innerText = flags.startDate;
     bar.append(itemDate);
   }
-  return bar.childElementCount > 0 ? bar : null;
+  if (bar.childElementCount > 0) {
+    const filler = document.createElement('span');
+    filler.classList.add('filler');
+    return [filler, bar];
+  } else {
+    return null;
+  }
 }
 
 export function createList(file: TFile, li?: HTMLLIElement) {
@@ -152,7 +158,8 @@ export function createList(file: TFile, li?: HTMLLIElement) {
   if (!file.isError) {
     const bar = createBar(flags);
     if (bar) {
-      li.append(bar);
+      li.append(bar[0]);
+      li.append(bar[1]);
     }
   }
   return li;

@@ -18,27 +18,5 @@ body.zen {
     margin: 0 auto;
     background-color: transparent;
     box-shadow: none;
-
-    > :first-child:not(#cover) + header {
-      margin-top: 0;
-    }
-
-    #cover {
-      margin-bottom: 0;
-    }
-
-    #bar, footer {
-      overflow: hidden;
-      opacity: 0;
-    }
-
-    #bar {
-      max-height: 0;
-    }
-
-    footer {
-      height: 0;
-      margin-top: 0;
-    }
   }
 }

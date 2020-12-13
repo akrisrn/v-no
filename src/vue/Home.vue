@@ -4,7 +4,7 @@
       <div>
         <img v-if="favicon" :src="favicon" alt="favicon"/>
         <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
-        <span></span>
+        <span class="filler"></span>
         <a :href="`#${shortPaths.readme}`"></a>
         <a :href="`#${shortPaths.archive}`"></a>
         <a :href="`#${shortPaths.category}`"></a>
@@ -40,7 +40,7 @@
         <header>{{ title }}</header>
         <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query"></Article>
         <div v-if="!isError" id="backlinks">
-          <div :class="['icon', { loading: isLoadingBacklinks }]"
+          <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
           <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
           <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
@@ -53,8 +53,9 @@
         </div>
         <footer v-if="!isIndexFile">
           <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
-          <template v-if="!isError">
-            <span v-if="date" class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
+          <template v-if="!isError && date">
+            <span class="filler"></span>
+            <span class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
           </template>
         </footer>
       </main>
