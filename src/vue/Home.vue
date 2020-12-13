@@ -46,17 +46,7 @@
           <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
           <template v-else>
             <ul v-if="backlinkFiles.length > 0">
-              <li v-for="file in backlinkFiles" :key="file.path" class="article">
-                <a :href="`#${shortenPath(file.path)}`">{{ file.flags.title }}</a>
-                <div class="bar">
-                  <code v-for="tag in file.flags.tags" :key="tag" class="item-tag">
-                    <template v-for="link in getSearchTagLinks(tag)">
-                      <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
-                    </template>
-                  </code>
-                  <code v-if="file.flags.startDate" class="item-date">{{ file.flags.startDate }}</code>
-                </div>
-              </li>
+              <li v-for="file in backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
             </ul>
             <span v-else>{{ config.messages.noBacklinks }}</span>
           </template>
@@ -78,7 +68,7 @@
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
-  import { cleanEventListenerDict, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
+  import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import {
@@ -177,7 +167,7 @@
     }
 
     get shortFilePath() {
-      return this.shortenPath(this.filePath);
+      return shortenPath(this.filePath);
     }
 
     get rawFilePath() {
@@ -410,6 +400,10 @@
       });
     }
 
+    getListHtml(file: TFile) {
+      return createList(file).innerHTML;
+    }
+
     confChanged() {
       localStorage.setItem('conf', this.selectConf);
       location.href = this.homePath;
@@ -449,10 +443,6 @@
           this.$nextTick(() => removeClass(this.$refs.toTop));
         }, 500);
       }
-    }
-
-    shortenPath(path: string) {
-      return shortenPath(path);
     }
 
     addInputBind(input: string, bind: () => void) {

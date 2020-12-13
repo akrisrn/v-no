@@ -139,6 +139,25 @@ function createBar(flags: IFlags) {
   return bar.childElementCount > 0 ? bar : null;
 }
 
+export function createList(file: TFile, li?: HTMLLIElement) {
+  const flags = file.flags;
+  if (!li) {
+    li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = `#${shortenPath(file.path)}`;
+    a.innerText = flags.title;
+    li.append(a);
+  }
+  li.classList.add('article');
+  if (!file.isError) {
+    const bar = createBar(flags);
+    if (bar) {
+      li.append(bar);
+    }
+  }
+  return li;
+}
+
 let waitingList: { heading: HTMLHeadingElement; a: HTMLAnchorElement }[] = [];
 
 function getHeadingText(heading: HTMLHeadingElement) {
@@ -169,13 +188,11 @@ export function updateLinkPath() {
   if (paths.length > 0) {
     Promise.all(paths.map(path => getFile(path))).then(files => {
       files.forEach(file => {
-        const isError = file.isError;
-        const flags = file.flags;
         dict[file.path].forEach(a => {
-          if (isError) {
+          if (file.isError) {
             a.classList.add('error');
           }
-          a.innerText = flags.title;
+          a.innerText = file.flags.title;
           const parent = a.parentElement!;
           if (parent.tagName === 'LI') {
             let isPass = true;
@@ -189,17 +206,10 @@ export function updateLinkPath() {
               }
             }
             if (!isPass) {
-              parent.classList.add('article');
-              if (!isError) {
-                const bar = createBar(flags);
-                if (bar) {
-                  if (hasQuote) {
-                    parent.insertBefore(bar, parent.lastElementChild);
-                  } else {
-                    parent.append(bar);
-                  }
-                }
+              if (hasQuote) {
+                parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
               }
+              createList(file, parent as HTMLLIElement);
             }
           }
           removeClass(a, 'rendering');
@@ -574,21 +584,11 @@ export async function updateSearchPage(content: string) {
     if (resultFiles.length > 0) {
       resultUl.innerText = '';
       resultFiles.sort(sortFiles).forEach(file => {
-        const li = document.createElement('li');
-        li.classList.add('article');
-        const a = document.createElement('a');
-        a.href = `#${shortenPath(file.path)}`;
-        a.innerText = file.flags.title;
-        li.append(a);
-        const bar = createBar(file.flags);
-        if (bar) {
-          li.append(bar);
-        }
+        resultUl.append(createList(file));
         const blockquote = quoteDict[file.path];
         if (blockquote) {
-          li.append(blockquote);
+          resultUl.append(blockquote);
         }
-        resultUl.append(li);
       });
     } else {
       resultUl.innerText = config.messages.searchNothing;
