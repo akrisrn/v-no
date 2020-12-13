@@ -385,6 +385,11 @@
       }
     }
 
+    confChanged() {
+      localStorage.setItem('conf', this.selectConf);
+      location.href = this.homePath;
+    }
+
     getSearchTagLinks(tag: string) {
       return getSearchTagLinks(tag);
     }
@@ -403,11 +408,6 @@
 
     getListHtml(file: TFile) {
       return createList(file).innerHTML;
-    }
-
-    confChanged() {
-      localStorage.setItem('conf', this.selectConf);
-      location.href = this.homePath;
     }
 
     toggleDark() {
