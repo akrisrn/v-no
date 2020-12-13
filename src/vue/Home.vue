@@ -30,6 +30,9 @@
               <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
             </template>
           </code>
+          <code v-for="key in Object.keys(otherFlags).sort()" :key="key" :class="`item-${key}`">{{
+              otherFlags[key]
+            }}</code>
           <code class="item-raw">
             <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
           </code>
@@ -76,7 +79,7 @@
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
   import { cleanEventListenerDict, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
-  import { EIcon } from '@/ts/enums';
+  import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
@@ -115,6 +118,7 @@
     cover = '';
     creator = '';
     updater = '';
+    otherFlags: Dict<string> = {};
 
     anchor = '';
     queryStr = '';
@@ -376,6 +380,12 @@
       this.cover = flags.cover || '';
       this.creator = flags.creator || '';
       this.updater = flags.updater || '';
+      this.otherFlags = {};
+      Object.keys(flags).forEach(key => {
+        if (!flagValues.includes(key as EFlag)) {
+          this.otherFlags[key] = flags[key] as string;
+        }
+      });
     }
 
     returnHome() {
