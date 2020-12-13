@@ -35,8 +35,7 @@ function parseData(path: string, data: string): TFile {
   if (!data) {
     return { path, data, flags, links };
   }
-  const flagMarks = Object.values(EFlag).map(flag => `@${flag}:`);
-  const flagRegExp = getWrapRegExp(`^(${flagMarks.join('|')})`, '$');
+  const flagRegExp = getWrapRegExp(`^@(\\S+?):`, '$');
   const titleRegExp = getHeadingRegExp(1, 1);
   const linkRegExp = getLinkRegExp(true, false, false, 'g');
   data = data.split('\n').map(line => {
@@ -45,11 +44,10 @@ function parseData(path: string, data: string): TFile {
     if (flagMatch) {
       const flagMark = flagMatch[1];
       const flagText = flagMatch[2];
-      const flag = flagMark.substring(1, flagMark.length - 1);
-      if ([EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
-        flags[flag] = trimList(flagText.split(/[,，、]/)).sort();
+      if ([EFlag.tags, EFlag.updated].includes(flagMark as EFlag)) {
+        flags[flagMark] = trimList(flagText.split(/[,，、]/)).sort();
       } else {
-        flags[flag] = flagText;
+        flags[flagMark] = flagText;
       }
       return '';
     }
