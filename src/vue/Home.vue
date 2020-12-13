@@ -370,10 +370,10 @@
       if (this.config.siteName && this.config.siteName !== this.title) {
         document.title += ` - ${this.config.siteName}`;
       }
-      this.tags = [...flags.tags];
-      this.date = flags.startDate;
-      this.updated = flags.endDate;
-      this.cover = flags.cover;
+      this.tags = flags.tags ? [...flags.tags] : [];
+      this.date = flags.startDate || '';
+      this.updated = flags.endDate || '';
+      this.cover = flags.cover || '';
       this.creator = flags.creator || '';
       this.updater = flags.updater || '';
     }

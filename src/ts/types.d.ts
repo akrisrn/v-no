@@ -35,11 +35,11 @@ interface IConfig {
 
 interface IFlags {
   title: string;
-  tags: string[];
-  updated: string[];
-  cover: string;
-  startDate: string;
-  endDate: string;
+  tags?: string[];
+  updated?: string[];
+  cover?: string;
+  startDate?: string;
+  endDate?: string;
   creator?: string;
   updater?: string;
 

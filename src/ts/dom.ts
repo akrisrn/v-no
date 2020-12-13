@@ -119,7 +119,7 @@ function updateImagePath() {
 function createBar(flags: IFlags) {
   const bar = document.createElement('div');
   bar.classList.add('bar');
-  flags.tags.forEach(tag => {
+  flags.tags && flags.tags.forEach(tag => {
     const itemTag = document.createElement('code');
     itemTag.classList.add('item-tag');
     getSearchTagLinks(tag).forEach(link => {
@@ -505,7 +505,7 @@ export async function updateSearchPage(content: string) {
       let isFind = false;
       let hasQuote = false;
       if (queryFlag) {
-        if (queryParam && queryFlag === EFlag.tags) {
+        if (queryParam && queryFlag === EFlag.tags && flags.tags) {
           for (const tag of flags.tags) {
             const a = tag.toLowerCase();
             const b = trimList(queryParam.split('/'), false).join('/');

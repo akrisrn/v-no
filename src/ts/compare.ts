@@ -8,16 +8,16 @@ function comparePath(pathA: string, pathB: string) {
   return baseFiles.includes(pathB) ? -1 : 0;
 }
 
-function compareDate(dateA: string, dateB: string) {
+function compareDate(dateA?: string, dateB?: string) {
   if (dateA) {
     return dateB ? parseDate(dateB).getTime() - parseDate(dateA).getTime() : -1;
   }
   return dateB ? 1 : 0;
 }
 
-function compareTags(tagsA: string[], tagsB: string[]) {
-  if (tagsA.length > 0) {
-    if (tagsB.length > 0) {
+function compareTags(tagsA?: string[], tagsB?: string[]) {
+  if (tagsA && tagsA.length > 0) {
+    if (tagsB && tagsB.length > 0) {
       if (tagsA.length === tagsB.length) {
         for (let i = 0; i < tagsA.length; i++) {
           const x = tagsA[i].localeCompare(tagsB[i]);
@@ -31,7 +31,7 @@ function compareTags(tagsA: string[], tagsB: string[]) {
     }
     return -1;
   }
-  return tagsB.length > 0 ? 1 : 0;
+  return tagsB && tagsB.length > 0 ? 1 : 0;
 }
 
 function compareTitle(titleA: string, titleB: string) {

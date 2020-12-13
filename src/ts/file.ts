@@ -7,14 +7,7 @@ import { trimList } from '@/ts/utils';
 import axios from 'axios';
 
 function createFlags(title: string): IFlags {
-  return {
-    title,
-    tags: [],
-    updated: [],
-    cover: '',
-    startDate: '',
-    endDate: '',
-  };
+  return { title };
 }
 
 export function createErrorFile(path: string): TFile {
@@ -75,7 +68,7 @@ function parseData(path: string, data: string): TFile {
     }
     return line;
   }).join('\n').trim();
-  if (flags.tags.length > 0) {
+  if (flags.tags && flags.tags.length > 0) {
     flags.tags = flags.tags.map(tag => trimList(tag.split('/'), false).join('/')).sort();
   }
   let cover = flags.cover;
@@ -89,7 +82,7 @@ function parseData(path: string, data: string): TFile {
     }
     flags.cover = cover;
   }
-  const dateList = [...flags.updated];
+  const dateList = flags.updated ? [...flags.updated] : [];
   const dateMatch = path.match(/\/(\d{4}[/-]\d{2}[/-]\d{2})[/-]/);
   if (dateMatch) {
     dateList.push(dateMatch[1]);

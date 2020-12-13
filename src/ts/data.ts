@@ -46,7 +46,7 @@ export async function updateCategoryPage(data: string) {
       continue;
     }
     const tags = file.flags.tags;
-    if (tags.length === 0) {
+    if (!tags || tags.length === 0) {
       untaggedFiles.push(file);
     } else {
       tags.forEach(tag => {
