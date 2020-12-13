@@ -146,6 +146,10 @@ main {
       background-color: $info-color-xs;
     }
 
+    &.item-creator {
+      background-color: $danger-color-xs;
+    }
+
     &.item-tag {
       background-color: $success-color-xs;
 

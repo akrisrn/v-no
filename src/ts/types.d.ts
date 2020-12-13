@@ -40,8 +40,10 @@ interface IFlags {
   cover: string;
   startDate: string;
   endDate: string;
+  creator?: string;
+  updater?: string;
 
-  [index: string]: string[] | string;
+  [index: string]: string[] | string | undefined;
 }
 
 type Dict<T> = { [index: string]: T }

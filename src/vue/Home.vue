@@ -24,6 +24,7 @@
             <a :href="homePath" @click.prevent="returnHome">«</a>
           </code>
           <code v-if="date" class="item-date">{{ isIndexFile ? updated : date }}</code>
+          <code v-if="creator" class="item-creator">{{ creator }}</code>
           <code v-for="tag in tags" :key="tag" class="item-tag">
             <template v-for="link in getSearchTagLinks(tag)">
               <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
@@ -60,9 +61,7 @@
         <footer v-if="!isIndexFile">
           <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
           <template v-if="!isError">
-            <span v-if="date" class="date">{{
-                updated !== date ? `${updated} | ${config.messages.lastUpdated}` : date
-              }}</span>
+            <span v-if="date" class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
           </template>
         </footer>
       </main>
@@ -114,6 +113,8 @@
     date = '';
     updated = '';
     cover = '';
+    creator = '';
+    updater = '';
 
     anchor = '';
     queryStr = '';
@@ -185,6 +186,10 @@
 
     get isIndexFile() {
       return this.filePath === this.config.paths.index;
+    }
+
+    get lastUpdatedMessage() {
+      return ` | ${config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
     }
 
     get metaThemeColor() {
@@ -369,6 +374,8 @@
       this.date = flags.startDate;
       this.updated = flags.endDate;
       this.cover = flags.cover;
+      this.creator = flags.creator || '';
+      this.updater = flags.updater || '';
     }
 
     returnHome() {
