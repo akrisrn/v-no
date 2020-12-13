@@ -395,7 +395,7 @@ function updateHeading() {
       count += list.count;
       if (count > maxLength) {
         count = list.count;
-        if (tocDiv.childElementCount < 3) {
+        if (currentUl.childElementCount > 0 && tocDiv.childElementCount < 3) {
           currentUl = document.createElement('ul');
           tocDiv.append(currentUl);
         }

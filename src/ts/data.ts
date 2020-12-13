@@ -81,26 +81,14 @@ export async function updateCategoryPage(data: string) {
 }
 
 function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
-  const list: { index: number; length: number; match: string }[] = [];
-  let match = regexp.exec(data);
-  while (match) {
-    list.push({
-      index: match.index,
-      length: match[0].length,
-      match: match[1],
-    });
-    match = regexp.exec(data);
-  }
-  if (list.length === 0) {
-    return data;
-  }
   let newData = '';
   let start = 0;
-  list.forEach(item => {
-    const { index, length, match } = item;
-    newData += data.substring(start, index) + callback(match);
-    start = index + length;
-  });
+  let match = regexp.exec(data);
+  while (match) {
+    newData += data.substring(start, match.index) + callback(match[1]);
+    start = match.index + match[0].length;
+    match = regexp.exec(data);
+  }
   newData += data.substring(start);
   return newData.trim();
 }
