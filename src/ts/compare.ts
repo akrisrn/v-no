@@ -1,12 +1,4 @@
-import { baseFiles } from '@/ts/config';
 import { parseDate } from '@/ts/date';
-
-function comparePath(pathA: string, pathB: string) {
-  if (baseFiles.includes(pathA)) {
-    return baseFiles.includes(pathB) ? 0 : 1;
-  }
-  return baseFiles.includes(pathB) ? -1 : 0;
-}
 
 function compareDate(dateA?: string, dateB?: string) {
   if (dateA) {
@@ -38,23 +30,20 @@ function compareTitle(titleA: string, titleB: string) {
   return titleA.localeCompare(titleB);
 }
 
-function comparePath2(pathA: string, pathB: string) {
+function comparePath(pathA: string, pathB: string) {
   return pathA.localeCompare(pathB);
 }
 
 export function sortFiles(fileA: TFile, fileB: TFile) {
   const flagsA = fileA.flags;
   const flagsB = fileB.flags;
-  let x = comparePath(fileA.path, fileB.path);
+  let x = compareDate(flagsA.startDate, flagsB.startDate);
   if (x === 0) {
-    x = compareDate(flagsA.startDate, flagsB.startDate);
+    x = compareTags(flagsA.tags, flagsB.tags);
     if (x === 0) {
-      x = compareTags(flagsA.tags, flagsB.tags);
+      x = compareTitle(flagsA.title, flagsB.title);
       if (x === 0) {
-        x = compareTitle(flagsA.title, flagsB.title);
-        if (x === 0) {
-          x = comparePath2(fileA.path, fileB.path);
-        }
+        x = comparePath(fileA.path, fileB.path);
       }
     }
   }
