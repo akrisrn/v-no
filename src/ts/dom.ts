@@ -232,7 +232,10 @@ export function updateLinkPath() {
 function updateCustomScript() {
   document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]').forEach(a => {
     if (a.innerText === '$') {
-      const href = a.getAttribute('href')!;
+      let href = a.getAttribute('href')!;
+      if (config.cacheKey) {
+        href += `?${config.cacheKey}`;
+      }
       if (!document.querySelector(`script[src="${href}"]`)) {
         const script = document.createElement('script');
         script.src = href;
@@ -247,7 +250,10 @@ function updateCustomScript() {
 function updateCustomStyle() {
   document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]').forEach(a => {
     if (a.innerText === '*') {
-      const href = a.getAttribute('href')!;
+      let href = a.getAttribute('href')!;
+      if (config.cacheKey) {
+        href += `?${config.cacheKey}`;
+      }
       if (!document.querySelector(`link[href="${href}"]`)) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
