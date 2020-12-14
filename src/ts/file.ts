@@ -1,7 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import { formatDate } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
-import { addBaseUrl, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
+import { addBaseUrl, addCacheKey, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
 import { trimList } from '@/ts/utils';
 import axios from 'axios';
@@ -117,11 +117,7 @@ export async function getFile(path: string) {
     return cachedFiles[path];
   } else {
     return new Promise<TFile>(resolve => {
-      let url = addBaseUrl(path);
-      if (config.cacheKey) {
-        url += `?${config.cacheKey}`;
-      }
-      axios.get<string>(url).then(response => {
+      axios.get<string>(addCacheKey(addBaseUrl(path))).then(response => {
         cachedFiles[path] = parseData(path, response.data.trim());
       }).catch(() => {
         cachedFiles[path] = createErrorFile(path);

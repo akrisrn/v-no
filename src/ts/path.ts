@@ -34,6 +34,10 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
+export function addCacheKey(path: string) {
+  return config.cacheKey ? `${path}?${config.cacheKey}` : path;
+}
+
 export function buildHash(hashPath: THashPath) {
   const { path, anchor, query } = hashPath;
   let hash = `#${path}`;

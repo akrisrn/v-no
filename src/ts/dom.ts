@@ -3,6 +3,7 @@ import { config } from '@/ts/config';
 import { EFlag, EIcon } from '@/ts/enums';
 import { getFile, getFiles } from '@/ts/file';
 import {
+  addCacheKey,
   buildHash,
   buildSearchContent,
   changeHash,
@@ -232,10 +233,7 @@ export function updateLinkPath() {
 function updateCustomScript() {
   document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]').forEach(a => {
     if (a.innerText === '$') {
-      let href = a.getAttribute('href')!;
-      if (config.cacheKey) {
-        href += `?${config.cacheKey}`;
-      }
+      const href = addCacheKey(a.getAttribute('href')!);
       if (!document.querySelector(`script[src="${href}"]`)) {
         const script = document.createElement('script');
         script.src = href;
@@ -250,10 +248,7 @@ function updateCustomScript() {
 function updateCustomStyle() {
   document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]').forEach(a => {
     if (a.innerText === '*') {
-      let href = a.getAttribute('href')!;
-      if (config.cacheKey) {
-        href += `?${config.cacheKey}`;
-      }
+      const href = addCacheKey(a.getAttribute('href')!);
       if (!document.querySelector(`link[href="${href}"]`)) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
