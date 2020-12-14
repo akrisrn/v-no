@@ -184,7 +184,7 @@
     }
 
     get lastUpdatedMessage() {
-      return ` | ${config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
+      return ` | ${this.config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
     }
 
     get metaThemeColor() {
@@ -223,9 +223,7 @@
           return;
         }
       }
-      this.getData().then(({ data, flags }) => {
-        this.setData(data, flags);
-      });
+      this.getData().then(({ data, flags }) => this.setData(data, flags));
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
       this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
@@ -237,25 +235,15 @@
       }
       // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
-        home: () => {
-          this.returnHome();
-        },
+        home: () => this.returnHome(),
         gg: () => {
           this.toTop(document.body.offsetHeight);
           this.keyInput += '_';
         },
-        G: () => {
-          this.toTop();
-        },
-        dark: () => {
-          this.toggleDark();
-        },
-        zen: () => {
-          this.toggleZen();
-        },
-        Backspace: () => {
-          this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
-        },
+        G: () => this.toTop(),
+        dark: () => this.toggleDark(),
+        zen: () => this.toggleZen(),
+        Backspace: () => this.keyInput = this.keyInput.replace(/.?Backspace$/, ''),
       });
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({

@@ -133,16 +133,17 @@ const walkedPaths = [...baseFiles];
 
 async function walkFiles(files: TFile[]) {
   const paths: string[] = [];
-  files.forEach(file => {
-    if (!file.isError) {
-      file.links.forEach(path => {
-        if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
-          paths.push(path);
-          walkedPaths.push(path);
-        }
-      });
+  for (const file of files) {
+    if (file.isError) {
+      continue;
     }
-  });
+    file.links.forEach(path => {
+      if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
+        paths.push(path);
+        walkedPaths.push(path);
+      }
+    });
+  }
   if (paths.length > 0) {
     await walkFiles(await Promise.all(paths.map(path => getFile(path))));
   }

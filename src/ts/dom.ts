@@ -53,9 +53,7 @@ html.style.scrollBehavior = 'smooth';
 
 export function scroll(height: number, isSmooth = true) {
   html.style.scrollBehavior = !isSmooth ? 'auto' : 'smooth';
-  setTimeout(() => {
-    scrollTo(0, height);
-  }, 0);
+  setTimeout(() => scrollTo(0, height), 0);
 }
 
 // noinspection JSSuspiciousNameCombination
@@ -262,6 +260,17 @@ function updateCustomStyle() {
   });
 }
 
+function updateHighlight() {
+  document.querySelectorAll('article pre > code').forEach(code => {
+    const dataLine = code.getAttribute('data-line');
+    if (dataLine) {
+      code.parentElement!.setAttribute('data-line', dataLine);
+      code.removeAttribute('data-line');
+    }
+  });
+  Prism.highlightAll();
+}
+
 function foldElement(element: Element, isFolded: boolean) {
   if (isFolded) {
     element.classList.add('folded');
@@ -450,17 +459,6 @@ function updateAnchor() {
   });
 }
 
-function updateHighlight() {
-  document.querySelectorAll('article pre > code').forEach(code => {
-    const dataLine = code.getAttribute('data-line');
-    if (dataLine) {
-      code.parentElement!.setAttribute('data-line', dataLine);
-      code.removeAttribute('data-line');
-    }
-  });
-  Prism.highlightAll();
-}
-
 export function updateDom() {
   waitingList = [];
   updateDD();
@@ -468,9 +466,9 @@ export function updateDom() {
   updateLinkPath();
   updateCustomScript();
   updateCustomStyle();
+  updateHighlight();
   updateHeading();
   updateAnchor();
-  updateHighlight();
 }
 
 const htmlSymbolDict: Dict<string> = {
