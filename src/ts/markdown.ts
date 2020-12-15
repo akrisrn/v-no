@@ -2,6 +2,7 @@ import { config } from '@/ts/config';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
+import { getAnchorRegExp } from '@/ts/regexp';
 import { chopStr, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -203,7 +204,8 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
       let title = token.attrGet('title');
       if (title) {
-        const match = title.match(/#(h[2-6]-\d+)?$/);
+        const regexp = new RegExp(`#(${getAnchorRegExp(false).source})?$`);
+        const match = title.match(regexp);
         if (match) {
           const anchor = match[1];
           href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;

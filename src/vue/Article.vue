@@ -7,6 +7,7 @@
   import { replaceInlineScript, updateCategoryPage, updateSnippet } from '@/ts/data';
   import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
   import { renderMD } from '@/ts/markdown';
+  import { getAnchorRegExp } from '@/ts/regexp';
   import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -85,7 +86,7 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        if (/^h[2-6]-\d+$/.test(this.anchor)) {
+        if (getAnchorRegExp().test(this.anchor)) {
           const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.anchor}"]`);
           if (heading) {
             scroll(heading.offsetTop - 6);

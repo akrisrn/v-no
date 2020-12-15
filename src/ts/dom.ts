@@ -12,6 +12,7 @@ import {
   parseHash,
   shortenPath,
 } from '@/ts/path';
+import { getAnchorRegExp } from '@/ts/regexp';
 import { trimList } from '@/ts/utils';
 import Prism from 'prismjs';
 
@@ -426,7 +427,7 @@ function updateHeading() {
 function updateAnchor() {
   document.querySelectorAll<HTMLAnchorElement>('article a[href^="#h"]').forEach(a => {
     const anchor = a.getAttribute('href')!.substr(1);
-    if (/^h[2-6]-\d+$/.test(anchor)) {
+    if (getAnchorRegExp().test(anchor)) {
       const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
       addEventListener(a, 'click', e => {
         e.preventDefault();
