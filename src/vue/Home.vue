@@ -252,6 +252,7 @@
         homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
+        config: this.config,
       });
     }
 
