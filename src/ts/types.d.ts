@@ -2,7 +2,7 @@ interface IConfig {
   siteName?: string;
   dateFormat?: string;
   cdn?: string;
-  cacheKey?: string;
+  cacheKey?: string | Dict<string>;
   paths: {
     favicon?: string;
     index: string;

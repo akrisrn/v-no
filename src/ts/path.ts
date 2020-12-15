@@ -49,8 +49,12 @@ function cleanBaseUrl(path: string) {
   return path;
 }
 
-export function addCacheKey(path: string) {
-  return config.cacheKey ? `${path}?${config.cacheKey}` : path;
+export function addCacheKey(path: string, needClean = true) {
+  let cacheKey = config.cacheKey;
+  if (typeof cacheKey === 'object') {
+    cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
+  }
+  return cacheKey ? `${path}?${cacheKey}` : path;
 }
 
 export function buildHash(hashPath: THashPath) {

@@ -117,7 +117,7 @@ export async function getFile(path: string) {
     return cachedFiles[path];
   } else {
     return new Promise<TFile>(resolve => {
-      axios.get<string>(addCacheKey(addBaseUrl(path))).then(response => {
+      axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(response => {
         cachedFiles[path] = parseData(path, response.data.trim());
       }).catch(() => {
         cachedFiles[path] = createErrorFile(path);
