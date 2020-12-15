@@ -202,13 +202,17 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     isExternal = false;
     if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
       let title = token.attrGet('title');
-      if (title && title.endsWith('#')) {
-        href = `#${shortenPath(href)}`;
-        title = title.substr(0, title.length - 1);
-        if (title) {
-          token.attrSet('title', title);
-        } else {
-          token.attrs!.splice(token.attrIndex('title'), 1);
+      if (title) {
+        const match = title.match(/#(h[2-6]-\d+)?$/);
+        if (match) {
+          const anchor = match[1];
+          href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;
+          title = title.substr(0, title.length - match[0].length);
+          if (title) {
+            token.attrSet('title', title);
+          } else {
+            token.attrs!.splice(token.attrIndex('title'), 1);
+          }
         }
       }
     }
