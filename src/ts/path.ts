@@ -34,6 +34,21 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
+function cleanBaseUrl(path: string) {
+  if (path.startsWith('/')) {
+    if (path === homePath) {
+      return '/';
+    }
+    if (config.cdn && path.startsWith(config.cdn)) {
+      return path.substr(config.cdn.length - 1);
+    }
+    if (baseUrl !== '/' && path.startsWith(baseUrl)) {
+      return path.substr(baseUrl.length - 1);
+    }
+  }
+  return path;
+}
+
 export function addCacheKey(path: string) {
   return config.cacheKey ? `${path}?${config.cacheKey}` : path;
 }
