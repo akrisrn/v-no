@@ -375,7 +375,7 @@ function updateHeading() {
   (header.children as THeading[]).forEach(heading => {
     const headingElement = heading.element;
     const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
-    addEventListener(headingTag, 'click', () => {
+    const toggleFold = () => {
       heading.isFolded = !heading.isFolded;
       if (heading.isFolded) {
         headingTag.classList.add('folding');
@@ -385,7 +385,11 @@ function updateHeading() {
       heading.children.forEach(child => {
         foldChild(child, heading.isFolded);
       });
-    });
+    };
+    if (headingElement.classList.contains('fold')) {
+      toggleFold();
+    }
+    addEventListener(headingTag, 'click', toggleFold);
     if (!heading.parent) {
       headingList.push(heading);
     }

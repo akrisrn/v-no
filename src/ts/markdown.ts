@@ -123,6 +123,13 @@ markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
   if (!isRenderingSummary) {
     const token = tokens[idx];
     if (token.level === 0) {
+      const nextToken = tokens[idx + 1];
+      const match = nextToken.content.match(/^\+\s+/);
+      if (match) {
+        const textToken = nextToken.children![0];
+        textToken.content = textToken.content.substr(match[0].length);
+        token.attrJoin('class', 'fold');
+      }
       const tag = token.tag;
       let count = headingCount[tag];
       count = count === undefined ? 1 : (count + 1);
