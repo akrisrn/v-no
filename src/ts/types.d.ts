@@ -1,6 +1,7 @@
 interface IConfig {
   siteName?: string;
   dateFormat?: string;
+  replacer?: [string, string][];
   cdn?: string;
   cacheKey?: string | Dict<string>;
   paths: {
