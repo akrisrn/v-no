@@ -15,12 +15,14 @@ const container = require('markdown-it-container');
 let isRenderingSummary = false;
 const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
 
+const quotes = config.smartQuotes;
 // noinspection JSUnusedGlobalSymbols
 const markdownIt = new MarkdownIt({
   html: true,
   breaks: true,
   linkify: true,
   typographer: true,
+  quotes,
 }).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
   validate: (params: string) => params.match(detailsRegExp) || params === '',
   render: (tokens: Token[], idx: number) => {
@@ -63,6 +65,10 @@ const markdownIt = new MarkdownIt({
   },
 });
 markdownIt.linkify.tlds([], false);
+
+if (!quotes || quotes.length < 4) {
+  markdownIt.disable('smartquotes');
+}
 
 markdownIt.renderer.rules.footnote_block_open = () => {
   return `<section class="footnotes"><p>${config.messages.footnotes}</p><ol class="footnotes-list">`;
