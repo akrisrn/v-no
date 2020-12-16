@@ -112,7 +112,12 @@ article {
       margin-left: -2em;
 
       + blockquote {
-        margin-left: -2em;
+        margin: 8px 0 8px -1em;
+        padding-left: 0;
+
+        &:before {
+          content: none;
+        }
       }
     }
   }
@@ -214,6 +219,14 @@ article {
       top: -28px;
       left: 0;
       content: "“";
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
     }
   }
 
@@ -342,7 +355,7 @@ article {
       margin-left: 0;
 
       + blockquote {
-        margin-left: 0;
+        margin-left: 1em;
       }
     }
 

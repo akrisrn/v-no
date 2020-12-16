@@ -20,6 +20,10 @@ body {
 
     &:hover {
       text-decoration: underline;
+
+      code {
+        text-decoration: underline;
+      }
     }
 
     svg {
