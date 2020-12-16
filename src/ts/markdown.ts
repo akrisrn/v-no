@@ -74,6 +74,24 @@ const getDefaultRenderRule = (name: string) => {
   };
 };
 
+const replacer = config.replacer;
+const replacerList = replacer ? replacer.map(item => {
+  return [new RegExp(item[0], 'g'), item[1]] as [RegExp, string];
+}) : [];
+
+const defaultTextRenderRule = getDefaultRenderRule('text');
+markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
+  if (replacerList.length > 0) {
+    const token = tokens[idx];
+    let content = token.content;
+    replacerList.forEach(item => {
+      content = content.replace(item[0], item[1]);
+    });
+    token.content = content;
+  }
+  return defaultTextRenderRule(tokens, idx, options, env, self);
+};
+
 const defaultFenceRenderRule = getDefaultRenderRule('fence');
 markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
