@@ -81,9 +81,15 @@ const getDefaultRenderRule = (name: string) => {
 };
 
 const replacer = config.replacer;
-const replacerList = replacer ? replacer.map(item => {
-  return [new RegExp(item[0], 'g'), item[1]] as [RegExp, string];
-}) : [];
+const replacerList: [RegExp, string][] = [];
+replacer?.forEach(item => {
+  try {
+    replacerList.push([new RegExp(item[0], 'g'), item[1]]);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+});
 
 const defaultTextRenderRule = getDefaultRenderRule('text');
 markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
