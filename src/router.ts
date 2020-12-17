@@ -7,7 +7,7 @@ const Home = () => import(/* webpackChunkName: "home" */ '@/vue/Home.vue');
 
 const router = new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.VUE_APP_PUBLIC_PATH,
   routes: [{
     path: '*',
     name: 'home',

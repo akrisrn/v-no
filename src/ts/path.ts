@@ -3,9 +3,6 @@ import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
 
-const baseUrl: string = process.env.BASE_URL;
-const indexPath: string = process.env.VUE_APP_INDEX_PATH;
-
 export function shortenPath(path: string, ext = 'md') {
   const indexFile = `index.${ext}`;
   if (path === indexFile) {
@@ -17,7 +14,12 @@ export function shortenPath(path: string, ext = 'md') {
   return path;
 }
 
-export const homePath = baseUrl + shortenPath(indexPath, 'html');
+const baseUrl: string = process.env.BASE_URL;
+const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
+const indexPath: string = process.env.VUE_APP_INDEX_PATH;
+const hasCdnUrl = !!process.env.VUE_APP_CDN_URL;
+
+export const homePath = publicPath + shortenPath(indexPath, 'html');
 
 export function addBaseUrl(path: string) {
   if (!path.startsWith('/')) {
@@ -26,7 +28,7 @@ export function addBaseUrl(path: string) {
   if (path === '/') {
     return homePath;
   }
-  if (config.cdn) {
+  if (!hasCdnUrl && config.cdn) {
     return config.cdn + path.substr(1);
   }
   if (baseUrl !== '/') {
@@ -42,7 +44,7 @@ function cleanBaseUrl(path: string) {
   if (path === homePath) {
     return '/';
   }
-  if (config.cdn && path.startsWith(config.cdn)) {
+  if (!hasCdnUrl && config.cdn && path.startsWith(config.cdn)) {
     return path.substr(config.cdn.length - 1);
   }
   if (baseUrl !== '/' && path.startsWith(baseUrl)) {
