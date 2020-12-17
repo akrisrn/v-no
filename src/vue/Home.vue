@@ -148,12 +148,12 @@
 
     get confList() {
       const multiConf = this.config.multiConf;
-      if (multiConf) {
-        const keys = Object.keys(multiConf).sort();
-        const alias = keys.map(key => multiConf[key].alias || key);
-        return [keys, alias];
+      if (!multiConf) {
+        return null;
       }
-      return null;
+      const keys = Object.keys(multiConf).sort();
+      const alias = keys.map(key => multiConf[key].alias || key);
+      return [keys, alias];
     }
 
     get enableMultiConf() {
@@ -263,16 +263,17 @@
       }
       updateLinkPath();
       addEventListener('keydown', e => {
-        if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-          this.keyInput += e.key;
-          if (this.keyInput.length > 20) {
-            this.keyInput = this.keyInput.substr(10);
-          }
-          for (const key of Object.keys(this.inputBinds)) {
-            if (this.keyInput.endsWith(key)) {
-              this.inputBinds[key]();
-              break;
-            }
+        if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          return;
+        }
+        this.keyInput += e.key;
+        if (this.keyInput.length > 20) {
+          this.keyInput = this.keyInput.substr(10);
+        }
+        for (const key of Object.keys(this.inputBinds)) {
+          if (this.keyInput.endsWith(key)) {
+            this.inputBinds[key]();
+            break;
           }
         }
       });
@@ -300,45 +301,46 @@
 
     async getData() {
       const filePath = this.filePath;
-      if (filePath.endsWith('.md')) {
-        const promises = [];
-        promises.push(getFile(filePath));
-        const commonPath = this.config.paths.common;
-        if (commonPath && filePath !== commonPath) {
-          promises.push(getFile(commonPath));
-        }
-        const files = await Promise.all(promises);
-        const file = files[0];
-        let data = file.data;
-        const flags = file.flags;
-        if (file.isError) {
-          this.isError = true;
-          return { data, flags };
-        }
-        this.isError = false;
-        if (this.hasLoadedBacklinks) {
-          this.getBacklinks();
-        }
-        if (files.length > 1 && !files[1].isError) {
-          const commonData = files[1].data;
-          let headerData = '';
-          let footerData = commonData;
-          const { key, value } = chopStr(commonData, '--8<--');
-          if (value !== null) {
-            headerData = key;
-            footerData = value;
-          }
-          if (headerData) {
-            data = headerData + '\n\n\n' + data;
-          }
-          if (footerData) {
-            data += '\n\n\n' + footerData;
-          }
-        }
+      if (!filePath.endsWith('.md')) {
+        this.isError = true;
+        const { data, flags } = createErrorFile(filePath);
         return { data, flags };
       }
-      this.isError = true;
-      const { data, flags } = createErrorFile(filePath);
+      const promises = [];
+      promises.push(getFile(filePath));
+      const commonPath = this.config.paths.common;
+      if (commonPath && filePath !== commonPath) {
+        promises.push(getFile(commonPath));
+      }
+      const files = await Promise.all(promises);
+      const file = files[0];
+      let data = file.data;
+      const flags = file.flags;
+      if (file.isError) {
+        this.isError = true;
+        return { data, flags };
+      }
+      this.isError = false;
+      if (this.hasLoadedBacklinks) {
+        this.getBacklinks();
+      }
+      if (files.length < 2 || files[1].isError) {
+        return { data, flags };
+      }
+      const commonData = files[1].data;
+      let headerData = '';
+      let footerData = commonData;
+      const { key, value } = chopStr(commonData, '--8<--');
+      if (value !== null) {
+        headerData = key;
+        footerData = value;
+      }
+      if (headerData) {
+        data = headerData + '\n\n\n' + data;
+      }
+      if (footerData) {
+        data += '\n\n\n' + footerData;
+      }
       return { data, flags };
     }
 
@@ -425,14 +427,15 @@
     }
 
     toTop(height = 0) {
-      if (!this.isToTop) {
-        this.isToTop = true;
-        scroll(height);
-        setTimeout(() => {
-          this.isToTop = false;
-          this.$nextTick(() => removeClass(this.$refs.toTop));
-        }, 500);
+      if (this.isToTop) {
+        return;
       }
+      this.isToTop = true;
+      scroll(height);
+      setTimeout(() => {
+        this.isToTop = false;
+        this.$nextTick(() => removeClass(this.$refs.toTop));
+      }, 500);
     }
 
     addInputBind(input: string, bind: () => void) {

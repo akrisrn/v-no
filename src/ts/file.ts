@@ -54,15 +54,17 @@ function parseData(path: string, data: string): TFile {
     let linkMatch = linkRegExp.exec(line);
     while (linkMatch) {
       const linkPath = checkLinkPath(linkMatch[2]);
-      if (linkPath && linkPath !== path && !links.includes(linkPath)) {
-        links.push(linkPath);
-        let backlinks = cachedBacklinks[linkPath];
-        if (backlinks === undefined) {
-          backlinks = [path];
-          cachedBacklinks[linkPath] = backlinks;
-        } else if (!backlinks.includes(path)) {
-          backlinks.push(path);
-        }
+      if (!linkPath || linkPath === path || links.includes(linkPath)) {
+        linkMatch = linkRegExp.exec(line);
+        continue;
+      }
+      links.push(linkPath);
+      let backlinks = cachedBacklinks[linkPath];
+      if (backlinks === undefined) {
+        backlinks = [path];
+        cachedBacklinks[linkPath] = backlinks;
+      } else if (!backlinks.includes(path)) {
+        backlinks.push(path);
       }
       linkMatch = linkRegExp.exec(line);
     }
@@ -137,12 +139,13 @@ async function walkFiles(files: TFile[]) {
     if (file.isError) {
       continue;
     }
-    file.links.forEach(path => {
-      if (!paths.includes(path) && (cachedFiles[path] === undefined || !walkedPaths.includes(path))) {
-        paths.push(path);
-        walkedPaths.push(path);
+    for (const path of file.links) {
+      if (paths.includes(path) || cachedFiles[path] !== undefined && walkedPaths.includes(path)) {
+        continue;
       }
-    });
+      paths.push(path);
+      walkedPaths.push(path);
+    }
   }
   if (paths.length > 0) {
     await walkFiles(await Promise.all(paths.map(path => getFile(path))));

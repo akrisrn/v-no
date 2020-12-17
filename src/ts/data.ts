@@ -48,26 +48,26 @@ export async function updateCategoryPage(data: string) {
     const tags = file.flags.tags;
     if (!tags || tags.length === 0) {
       untaggedFiles.push(file);
-    } else {
-      tags.forEach(tag => {
-        let cursor = tagTree;
-        tag.split('/').forEach(seg => {
-          let subTree = cursor[seg];
-          if (subTree === undefined) {
-            subTree = {};
-            cursor[seg] = subTree;
-          }
-          cursor = subTree;
-        });
-        let taggedFiles = taggedDict[tag];
-        if (taggedFiles === undefined) {
-          taggedFiles = [file];
-          taggedDict[tag] = taggedFiles;
-        } else {
-          taggedFiles.push(file);
-        }
-      });
+      continue;
     }
+    tags.forEach(tag => {
+      let cursor = tagTree;
+      tag.split('/').forEach(seg => {
+        let subTree = cursor[seg];
+        if (subTree === undefined) {
+          subTree = {};
+          cursor[seg] = subTree;
+        }
+        cursor = subTree;
+      });
+      let taggedFiles = taggedDict[tag];
+      if (taggedFiles === undefined) {
+        taggedFiles = [file];
+        taggedDict[tag] = taggedFiles;
+      } else {
+        taggedFiles.push(file);
+      }
+    });
   }
   const sortedTags = Object.keys(tagTree).sort();
   if (untaggedFiles.length > 0) {
@@ -116,19 +116,19 @@ function degradeHeading(data: string, level: number) {
   const headingRegExp = getHeadingRegExp(1, 5);
   return data.split('\n').map(line => {
     const headingMatch = line.match(headingRegExp);
-    if (headingMatch) {
-      const headingLevel = headingMatch[1];
-      const headingText = headingMatch[2];
-      let newLine = headingLevel + '#'.repeat(level);
-      if (newLine.length >= 7) {
-        newLine = newLine.substr(0, 6);
-      }
-      if (headingText) {
-        newLine += ` ${headingText}`;
-      }
-      return newLine;
+    if (!headingMatch) {
+      return line;
     }
-    return line;
+    const headingLevel = headingMatch[1];
+    const headingText = headingMatch[2];
+    let newLine = headingLevel + '#'.repeat(level);
+    if (newLine.length >= 7) {
+      newLine = newLine.substr(0, 6);
+    }
+    if (headingText) {
+      newLine += ` ${headingText}`;
+    }
+    return newLine;
   }).join('\n');
 }
 
@@ -137,37 +137,38 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const linkRegExp = new RegExp(`^(?:${getHeadingPattern(2, 6)} )?\\s*\\[\\+(#.+)?]${getLinkPathPattern(true)}$`);
   data = data.split('\n').map(line => {
     const match = line.match(linkRegExp);
-    if (match) {
-      const path = checkLinkPath(match[3]);
-      if (path) {
-        if (updatedPaths.includes(path)) {
-          return '';
-        }
-        let snippetDict = dict[path];
-        if (snippetDict === undefined) {
-          snippetDict = {};
-          dict[path] = snippetDict;
-        }
-        if (snippetDict[match[0]] === undefined) {
-          const heading = match[1] ? match[1].length : 0;
-          const params: Dict<string> = {};
-          if (match[2]) {
-            match[2].substr(1).split('|').forEach((seg, i) => {
-              const { key, value } = chopStr(seg.trim(), '=');
-              let param = key;
-              if (value !== null) {
-                param = value;
-                if (key) {
-                  params[key] = param;
-                }
-              }
-              params[i + 1] = param;
-            });
-          }
-          snippetDict[match[0]] = { heading, params };
+    if (!match) {
+      return line;
+    }
+    const path = checkLinkPath(match[3]);
+    if (!path) {
+      return line;
+    }
+    if (updatedPaths.includes(path)) {
+      return '';
+    }
+    let snippetDict = dict[path];
+    if (snippetDict === undefined) {
+      snippetDict = {};
+      dict[path] = snippetDict;
+    }
+    if (snippetDict[match[0]] !== undefined) {
+      return line;
+    }
+    const heading = match[1] ? match[1].length : 0;
+    const params: Dict<string> = {};
+    match[2]?.substr(1).split('|').forEach((seg, i) => {
+      const { key, value } = chopStr(seg.trim(), '=');
+      let param = key;
+      if (value !== null) {
+        param = value;
+        if (key) {
+          params[key] = param;
         }
       }
-    }
+      params[i + 1] = param;
+    });
+    snippetDict[match[0]] = { heading, params };
     return line;
   }).join('\n');
   const paths = Object.keys(dict);

@@ -82,7 +82,7 @@ function updateDD() {
 }
 
 function updateImagePath() {
-  document.querySelectorAll<HTMLImageElement>('#cover img, article img').forEach(img => {
+  for (const img of document.querySelectorAll<HTMLImageElement>('#cover img, article img')) {
     let parent = img.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
@@ -100,20 +100,21 @@ function updateImagePath() {
         parent.classList.add('center');
       }
     }
-    if (!parent.classList.contains('hidden') && img.naturalWidth === 0) {
-      parent.classList.add('hidden');
-      const loadings = document.createElement('div');
-      loadings.classList.add('lds-ellipsis');
-      for (let i = 0; i < 4; i++) {
-        loadings.append(document.createElement('div'));
-      }
-      parent.parentElement!.insertBefore(loadings, parent);
-      img.onload = () => {
-        loadings.remove();
-        removeClass(parent, 'hidden');
-      };
+    if (parent.classList.contains('hidden') || img.naturalWidth !== 0) {
+      continue;
     }
-  });
+    parent.classList.add('hidden');
+    const loadings = document.createElement('div');
+    loadings.classList.add('lds-ellipsis');
+    for (let i = 0; i < 4; i++) {
+      loadings.append(document.createElement('div'));
+    }
+    parent.parentElement!.insertBefore(loadings, parent);
+    img.onload = () => {
+      loadings.remove();
+      removeClass(parent, 'hidden');
+    };
+  }
 }
 
 function createBar(flags: IFlags) {
@@ -155,12 +156,13 @@ export function createList(file: TFile, li?: HTMLLIElement) {
     li.append(a);
   }
   li.classList.add('article');
-  if (!file.isError) {
-    const bar = createBar(flags);
-    if (bar) {
-      li.append(bar[0]);
-      li.append(bar[1]);
-    }
+  if (file.isError) {
+    return li;
+  }
+  const bar = createBar(flags);
+  if (bar) {
+    li.append(bar[0]);
+    li.append(bar[1]);
   }
   return li;
 }
@@ -192,73 +194,78 @@ export function updateLinkPath() {
     }
   }
   const paths = Object.keys(dict);
-  if (paths.length > 0) {
-    Promise.all(paths.map(path => getFile(path))).then(files => {
-      files.forEach(file => {
-        dict[file.path].forEach(a => {
-          if (file.isError) {
-            a.classList.add('error');
-          }
-          a.innerText = file.flags.title;
-          const parent = a.parentElement!;
-          if (parent.tagName === 'LI') {
-            let isPass = true;
-            let hasQuote = false;
-            if (parent.childNodes[0].nodeType === 1) {
-              if (parent.childElementCount === 1) {
-                isPass = false;
-              } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-                isPass = false;
-                hasQuote = true;
-              }
-            }
-            if (!isPass) {
-              if (hasQuote) {
-                parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
-              }
-              createList(file, parent as HTMLLIElement);
-            }
-          }
-          removeClass(a, 'rendering');
-        });
-      });
-      waitingList.forEach(({ heading, a }) => {
-        a.innerText = getHeadingText(heading);
-      });
-    });
+  if (paths.length === 0) {
+    return;
   }
+  Promise.all(paths.map(path => getFile(path))).then(files => {
+    files.forEach(file => {
+      for (const a of dict[file.path]) {
+        if (file.isError) {
+          a.classList.add('error');
+        }
+        a.innerText = file.flags.title;
+        const parent = a.parentElement!;
+        if (parent.tagName !== 'LI') {
+          removeClass(a, 'rendering');
+          continue;
+        }
+        let isPass = true;
+        let hasQuote = false;
+        if (parent.childNodes[0].nodeType === 1) {
+          if (parent.childElementCount === 1) {
+            isPass = false;
+          } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+            isPass = false;
+            hasQuote = true;
+          }
+        }
+        if (!isPass) {
+          if (hasQuote) {
+            parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
+          }
+          createList(file, parent as HTMLLIElement);
+        }
+        removeClass(a, 'rendering');
+      }
+    });
+    waitingList.forEach(({ heading, a }) => {
+      a.innerText = getHeadingText(heading);
+    });
+  });
 }
 
 function updateCustomScript() {
-  document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]').forEach(a => {
-    if (a.innerText === '$') {
-      const href = addCacheKey(a.getAttribute('href')!);
-      if (!document.querySelector(`script[src="${href}"]`)) {
-        const script = document.createElement('script');
-        script.src = href;
-        script.classList.add('custom');
-        document.body.appendChild(script);
-      }
-      a.parentElement!.remove();
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]')) {
+    if (a.innerText !== '$') {
+      continue;
     }
-  });
+    const href = addCacheKey(a.getAttribute('href')!);
+    if (!document.querySelector(`script[src="${href}"]`)) {
+      const script = document.createElement('script');
+      script.src = href;
+      script.classList.add('custom');
+      document.body.appendChild(script);
+    }
+    a.parentElement!.remove();
+  }
 }
 
 function updateCustomStyle() {
-  document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]').forEach(a => {
-    if (a.innerText === '*') {
-      const href = addCacheKey(a.getAttribute('href')!);
-      if (!document.querySelector(`link[href="${href}"]`)) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = href;
-        link.classList.add('custom');
-        document.head.appendChild(link);
-      }
-      a.parentElement!.remove();
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]')) {
+    if (a.innerText !== '*') {
+      continue;
     }
-  });
+    const href = addCacheKey(a.getAttribute('href')!);
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = href;
+      link.classList.add('custom');
+      document.head.appendChild(link);
+    }
+    a.parentElement!.remove();
+  }
 }
 
 function updateHighlight() {
@@ -302,18 +309,19 @@ function transHeading(heading: THeading) {
     waitingList.push({ heading: headingElement, a });
   }
   let count = 1;
-  if (heading.children.length > 0) {
-    const ul = document.createElement('ul');
-    heading.children.forEach(child => {
-      if (!(child instanceof Element)) {
-        const list = transHeading(child);
-        ul.append(list.li);
-        count += list.count;
-      }
-    });
-    if (ul.childElementCount > 0) {
-      li.append(ul);
+  if (heading.children.length === 0) {
+    return { li, count };
+  }
+  const ul = document.createElement('ul');
+  heading.children.forEach(child => {
+    if (!(child instanceof Element)) {
+      const list = transHeading(child);
+      ul.append(list.li);
+      count += list.count;
     }
+  });
+  if (ul.childElementCount > 0) {
+    li.append(ul);
   }
   return { li, count };
 }
@@ -332,36 +340,42 @@ function updateHeading() {
       break;
     }
     const match = child.tagName.match(/^H([2-6])$/);
-    if (match) {
-      const level = parseInt(match[1]);
-      const heading: THeading = {
-        element: child,
-        level,
-        isFolded: false,
-        children: [],
-        parent: null,
-      };
-      header.children.push(heading);
+    if (!match) {
       if (cursor) {
-        if (level > cursor.level) {
-          cursor.children.push(heading);
-          heading.parent = cursor;
-        } else {
-          let parent = cursor.parent;
-          while (parent) {
-            if (level > parent.level) {
-              parent.children.push(heading);
-              heading.parent = parent;
-              break;
-            }
-            parent = parent.parent;
-          }
-        }
+        cursor.children.push(child);
       }
-      cursor = heading;
-    } else if (cursor) {
-      cursor.children.push(child);
+      continue;
     }
+    const level = parseInt(match[1]);
+    const heading: THeading = {
+      element: child,
+      level,
+      isFolded: false,
+      children: [],
+      parent: null,
+    };
+    header.children.push(heading);
+    if (!cursor) {
+      cursor = heading;
+      continue;
+    }
+    if (level > cursor.level) {
+      cursor.children.push(heading);
+      heading.parent = cursor;
+      cursor = heading;
+      continue;
+    }
+    let parent = cursor.parent;
+    while (parent) {
+      if (level <= parent.level) {
+        parent = parent.parent;
+        continue;
+      }
+      parent.children.push(heading);
+      heading.parent = parent;
+      break;
+    }
+    cursor = heading;
   }
   const tocDiv = document.querySelector('article #toc');
   const headingLength = header.children.length;
@@ -394,54 +408,58 @@ function updateHeading() {
       headingList.push(heading);
     }
   });
-  if (tocDiv) {
-    tocDiv.innerHTML = '';
-    let maxLength = headingLength;
-    if (headingLength > 11) {
-      maxLength = Math.ceil(headingLength / 3);
-    } else if (headingLength > 7) {
-      maxLength = Math.ceil(headingLength / 2);
-    }
-    let currentUl = document.createElement('ul');
-    tocDiv.append(currentUl);
-    let count = 0;
-    headingList.forEach(heading => {
-      const list = transHeading(heading);
-      count += list.count;
-      if (count > maxLength) {
-        count = list.count;
-        if (currentUl.childElementCount > 0 && tocDiv.childElementCount < 3) {
-          currentUl = document.createElement('ul');
-          tocDiv.append(currentUl);
-        }
-      }
+  if (!tocDiv) {
+    return;
+  }
+  tocDiv.innerHTML = '';
+  let maxLength = headingLength;
+  if (headingLength > 11) {
+    maxLength = Math.ceil(headingLength / 3);
+  } else if (headingLength > 7) {
+    maxLength = Math.ceil(headingLength / 2);
+  }
+  let currentUl = document.createElement('ul');
+  tocDiv.append(currentUl);
+  let count = 0;
+  for (const heading of headingList) {
+    const list = transHeading(heading);
+    count += list.count;
+    if (count <= maxLength) {
       currentUl.append(list.li);
-    });
-    if (tocDiv.childElementCount === 3) {
-      for (let i = 0; i < tocDiv.children.length; i++) {
-        tocDiv.children[i].classList.add(`ul-${i + 1}`);
-      }
-    } else if (tocDiv.childElementCount === 2) {
-      tocDiv.firstElementChild!.classList.add('ul-a');
-      tocDiv.lastElementChild!.classList.add('ul-b');
+      continue;
     }
+    count = list.count;
+    if (currentUl.childElementCount > 0 && tocDiv.childElementCount < 3) {
+      currentUl = document.createElement('ul');
+      tocDiv.append(currentUl);
+    }
+    currentUl.append(list.li);
+  }
+  if (tocDiv.childElementCount === 3) {
+    for (let i = 0; i < tocDiv.children.length; i++) {
+      tocDiv.children[i].classList.add(`ul-${i + 1}`);
+    }
+  } else if (tocDiv.childElementCount === 2) {
+    tocDiv.firstElementChild!.classList.add('ul-a');
+    tocDiv.lastElementChild!.classList.add('ul-b');
   }
 }
 
 function updateAnchor() {
-  document.querySelectorAll<HTMLAnchorElement>('article a[href^="#h"]').forEach(a => {
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#h"]')) {
     const anchor = a.getAttribute('href')!.substr(1);
-    if (getAnchorRegExp().test(anchor)) {
-      const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
-      addEventListener(a, 'click', e => {
-        e.preventDefault();
-        if (heading && heading.offsetTop > 0) {
-          scroll(heading.offsetTop - 6);
-          changeHash(anchor);
-        }
-      });
+    if (!getAnchorRegExp().test(anchor)) {
+      continue;
     }
-  });
+    const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
+    addEventListener(a, 'click', e => {
+      e.preventDefault();
+      if (heading && heading.offsetTop > 0) {
+        scroll(heading.offsetTop - 6);
+        changeHash(anchor);
+      }
+    });
+  }
   document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
@@ -492,125 +510,132 @@ export async function updateSearchPage(content: string) {
   if (searchInput) {
     searchInput.value = content;
     searchInput.addEventListener('keyup', e => {
-      if (e.key === 'Enter') {
-        const searchValue = searchInput.value.trim();
-        searchInput.value = searchValue;
-        const query = searchValue ? buildSearchContent(searchValue) : '';
-        const { path, anchor } = parseHash(location.hash, true);
-        location.hash = buildHash({ path, anchor, query });
+      if (e.key !== 'Enter') {
+        return;
       }
+      const searchValue = searchInput.value.trim();
+      searchInput.value = searchValue;
+      const query = searchValue ? buildSearchContent(searchValue) : '';
+      const { path, anchor } = parseHash(location.hash, true);
+      location.hash = buildHash({ path, anchor, query });
     });
   }
   const resultUl = document.querySelector<HTMLUListElement>('#result');
-  if (content && resultUl) {
-    content = content.toLowerCase();
-    let queryFlag = '';
-    let queryParam = '';
-    const match = content.match(/^@(\S+?):\s*(.*)$/);
-    if (match) {
-      queryFlag = match[1];
-      queryParam = match[2];
+  if (!content || !resultUl) {
+    return;
+  }
+  content = content.toLowerCase();
+  let queryFlag = '';
+  let queryParam = '';
+  const match = content.match(/^@(\S+?):\s*(.*)$/);
+  if (match) {
+    queryFlag = match[1];
+    queryParam = match[2];
+  }
+  resultUl.innerText = config.messages.searching;
+  const timeStart = new Date().getTime();
+  const { files } = await getFiles();
+  const resultFiles: TFile[] = [];
+  const quoteDict: Dict<HTMLQuoteElement> = {};
+  let count = 0;
+  for (const file of Object.values(files)) {
+    if (file.isError) {
+      continue;
     }
-    resultUl.innerText = config.messages.searching;
-    const timeStart = new Date().getTime();
-    const { files } = await getFiles();
-    const resultFiles: TFile[] = [];
-    const quoteDict: Dict<HTMLQuoteElement> = {};
-    let count = 0;
-    for (const file of Object.values(files)) {
-      if (file.isError) {
-        continue;
-      }
-      count++;
-      const { data, flags } = file;
-      let isFind = false;
-      let hasQuote = false;
-      if (queryFlag) {
-        if (queryParam && queryFlag === EFlag.tags && flags.tags) {
-          for (const tag of flags.tags) {
-            const a = tag.toLowerCase();
-            const b = trimList(queryParam.split('/'), false).join('/');
-            if (a === b || a.startsWith(`${b}/`)) {
-              isFind = true;
-              break;
-            }
-          }
-        }
-      } else if (flags.title.toLowerCase().indexOf(content) >= 0) {
+    count++;
+    const { data, flags } = file;
+    let isFind = false;
+    let hasQuote = false;
+    if (!queryFlag) {
+      if (flags.title.toLowerCase().indexOf(content) >= 0) {
         isFind = true;
       } else if (data.toLowerCase().indexOf(content) >= 0) {
         isFind = true;
         hasQuote = true;
       }
-      if (!isFind) {
+    } else if (queryParam) {
+      if (queryFlag === EFlag.tags && flags.tags) {
+        for (const tag of flags.tags) {
+          const a = tag.toLowerCase();
+          const b = trimList(queryParam.split('/'), false).join('/');
+          if (a === b || a.startsWith(`${b}/`)) {
+            isFind = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!isFind) {
+      continue;
+    }
+    resultFiles.push(file);
+    if (!hasQuote) {
+      continue;
+    }
+    const results = [];
+    let prevEndIndex = 0;
+    const regexp = new RegExp(content, 'ig');
+    let match = regexp.exec(data);
+    while (match) {
+      const offset = 10;
+      let startIndex = match.index - offset;
+      if (prevEndIndex === 0 && startIndex > 0) {
+        results.push('');
+      }
+      const endIndex = regexp.lastIndex + offset;
+      const lastIndex = results.length - 1 as number;
+      let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
+        escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+      if (startIndex > prevEndIndex) {
+        results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
+        prevEndIndex = endIndex;
+        match = regexp.exec(data);
         continue;
       }
-      resultFiles.push(file);
-      if (hasQuote) {
-        const results = [];
-        let prevEndIndex = 0;
-        const regexp = new RegExp(content, 'ig');
-        let match = regexp.exec(data);
-        while (match) {
-          const offset = 10;
-          let startIndex = match.index - offset;
-          if (prevEndIndex === 0 && startIndex > 0) {
-            results.push('');
-          }
-          const endIndex = regexp.lastIndex + offset;
-          const lastIndex = results.length - 1 as number;
-          let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
-            escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
-          if (startIndex <= prevEndIndex) {
-            startIndex = prevEndIndex;
-            if (startIndex > match.index) {
-              if (lastIndex >= 0) {
-                const lastResult = results[lastIndex] as string;
-                results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
-              }
-            } else if (startIndex < match.index) {
-              result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
-            }
-            if (lastIndex >= 0) {
-              results[lastIndex] += result;
-            } else {
-              results.push(result);
-            }
-          } else {
-            results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
-          }
-          prevEndIndex = endIndex;
-          match = regexp.exec(data);
+      startIndex = prevEndIndex;
+      if (startIndex > match.index) {
+        if (lastIndex >= 0) {
+          const lastResult = results[lastIndex] as string;
+          results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
         }
-        if (prevEndIndex < data.length) {
-          results.push('');
-        }
-        const blockquote = document.createElement('blockquote');
-        const p = document.createElement('p');
-        p.innerHTML = results.join('<span class="ellipsis">...</span>');
-        blockquote.append(p);
-        quoteDict[file.path] = blockquote;
+      } else if (startIndex < match.index) {
+        result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
       }
+      if (lastIndex >= 0) {
+        results[lastIndex] += result;
+      } else {
+        results.push(result);
+      }
+      prevEndIndex = endIndex;
+      match = regexp.exec(data);
     }
-    if (resultFiles.length > 0) {
-      resultUl.innerText = '';
-      resultFiles.sort(sortFiles).forEach(file => {
-        resultUl.append(createList(file));
-        const blockquote = quoteDict[file.path];
-        if (blockquote) {
-          resultUl.append(blockquote);
-        }
-      });
-    } else {
-      resultUl.innerText = config.messages.searchNothing;
+    if (prevEndIndex < data.length) {
+      results.push('');
     }
-    const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
-    if (searchTime) {
-      searchTime.innerText = `${(new Date().getTime() - timeStart) / 1000}`;
-    }
-    const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
-    if (searchCount) {
-      searchCount.innerText = `${resultFiles.length}/${count}`;
-    }
+    const blockquote = document.createElement('blockquote');
+    const p = document.createElement('p');
+    p.innerHTML = results.join('<span class="ellipsis">...</span>');
+    blockquote.append(p);
+    quoteDict[file.path] = blockquote;
+  }
+  if (resultFiles.length === 0) {
+    resultUl.innerText = config.messages.searchNothing;
+  } else {
+    resultUl.innerText = '';
+    resultFiles.sort(sortFiles).forEach(file => {
+      resultUl.append(createList(file));
+      const blockquote = quoteDict[file.path];
+      if (blockquote) {
+        resultUl.append(blockquote);
+      }
+    });
+  }
+  const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
+  if (searchTime) {
+    searchTime.innerText = `${(new Date().getTime() - timeStart) / 1000}`;
+  }
+  const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
+  if (searchCount) {
+    searchCount.innerText = `${resultFiles.length}/${count}`;
   }
 }

@@ -35,26 +35,6 @@
 
     // noinspection JSUnusedGlobalSymbols
     created() {
-      if (this.mdData) {
-        this.markdown = renderMD(this.mdData);
-        this.$nextTick(() => updateDom());
-        updateSnippet(this.mdData).then(data => {
-          if (this.isCategoryFile) {
-            if (data) {
-              updateCategoryPage(data).then(data => this.updateData(data));
-            } else {
-              this.updateData(data);
-            }
-          } else {
-            this.updateData(data);
-            if (this.isSearchFile) {
-              this.$nextTick(() => updateSearchPage(this.query.content || ''));
-            }
-          }
-        });
-      } else {
-        this.renderComplete();
-      }
       exposeToWindow({
         renderMD: (data: string) => {
           data = data.trim();
@@ -65,32 +45,53 @@
         },
         updateDom: () => updateDom(),
       });
+      if (!this.mdData) {
+        this.renderComplete();
+        return;
+      }
+      this.markdown = renderMD(this.mdData);
+      this.$nextTick(() => updateDom());
+      updateSnippet(this.mdData).then(data => {
+        if (!this.isCategoryFile) {
+          this.updateData(data);
+          if (this.isSearchFile) {
+            this.$nextTick(() => updateSearchPage(this.query.content || ''));
+          }
+        } else if (data) {
+          updateCategoryPage(data).then(data => this.updateData(data));
+        } else {
+          this.updateData(data);
+        }
+      });
     }
 
     updateData(data: string) {
-      if (data !== this.mdData) {
-        if (data) {
-          this.markdown = renderMD(data);
-          this.$nextTick(() => {
-            updateDom();
-            this.renderComplete();
-          });
-          return;
-        }
-        this.markdown = '';
+      if (data === this.mdData) {
+        this.renderComplete();
+        return;
       }
-      this.renderComplete();
+      if (!data) {
+        this.markdown = '';
+        this.renderComplete();
+        return;
+      }
+      this.markdown = renderMD(data);
+      this.$nextTick(() => {
+        updateDom();
+        this.renderComplete();
+      });
     }
 
     renderComplete() {
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        if (getAnchorRegExp().test(this.anchor)) {
-          const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.anchor}"]`);
-          if (heading) {
-            scroll(heading.offsetTop - 6);
-          }
+        if (!getAnchorRegExp().test(this.anchor)) {
+          return;
+        }
+        const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.anchor}"]`);
+        if (heading) {
+          scroll(heading.offsetTop - 6);
         }
       });
     }

@@ -3,17 +3,16 @@ export function trimList(list: string[], distinct = true) {
   return distinct ? Array.from(new Set(list)) : list;
 }
 
-export function chopStr(str: string, sep: string, trim = true) {
-  const result: { key: string; value: string | null } = {
-    key: str,
-    value: null,
-  };
+export function chopStr(str: string, sep: string, trim = true): { key: string; value: string | null } {
   const indexOf = str.indexOf(sep);
-  if (indexOf >= 0) {
-    const key = str.substring(0, indexOf);
-    const value = str.substring(indexOf + sep.length);
-    result.key = trim ? key.trimEnd() : key;
-    result.value = trim ? value.trimStart() : value;
+  if (indexOf < 0) {
+    return { key: str, value: null };
   }
-  return result;
+  let key = str.substring(0, indexOf);
+  let value = str.substring(indexOf + sep.length);
+  if (trim) {
+    key = key.trimEnd();
+    value = value.trimStart();
+  }
+  return { key, value };
 }

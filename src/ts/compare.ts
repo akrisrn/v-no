@@ -8,22 +8,22 @@ function compareDate(dateA?: string, dateB?: string) {
 }
 
 function compareTags(tagsA?: string[], tagsB?: string[]) {
-  if (tagsA && tagsA.length > 0) {
-    if (tagsB && tagsB.length > 0) {
-      if (tagsA.length === tagsB.length) {
-        for (let i = 0; i < tagsA.length; i++) {
-          const x = tagsA[i].localeCompare(tagsB[i]);
-          if (x !== 0) {
-            return x;
-          }
-        }
-        return 0;
-      }
-      return tagsB.length - tagsA.length;
-    }
+  if (!tagsA || tagsA.length === 0) {
+    return tagsB && tagsB.length > 0 ? 1 : 0;
+  }
+  if (!tagsB || tagsB.length === 0) {
     return -1;
   }
-  return tagsB && tagsB.length > 0 ? 1 : 0;
+  if (tagsA.length !== tagsB.length) {
+    return tagsB.length - tagsA.length;
+  }
+  for (let i = 0; i < tagsA.length; i++) {
+    const x = tagsA[i].localeCompare(tagsB[i]);
+    if (x !== 0) {
+      return x;
+    }
+  }
+  return 0;
 }
 
 function compareTitle(titleA: string, titleB: string) {

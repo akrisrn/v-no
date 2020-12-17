@@ -20,31 +20,33 @@ export function shortenPath(path: string, ext = 'md') {
 export const homePath = baseUrl + shortenPath(indexPath, 'html');
 
 export function addBaseUrl(path: string) {
-  if (path.startsWith('/')) {
-    if (path === '/') {
-      return homePath;
-    }
-    if (config.cdn) {
-      return config.cdn + path.substr(1);
-    }
-    if (baseUrl !== '/') {
-      return baseUrl + path.substr(1);
-    }
+  if (!path.startsWith('/')) {
+    return path;
+  }
+  if (path === '/') {
+    return homePath;
+  }
+  if (config.cdn) {
+    return config.cdn + path.substr(1);
+  }
+  if (baseUrl !== '/') {
+    return baseUrl + path.substr(1);
   }
   return path;
 }
 
 function cleanBaseUrl(path: string) {
-  if (path.startsWith('/')) {
-    if (path === homePath) {
-      return '/';
-    }
-    if (config.cdn && path.startsWith(config.cdn)) {
-      return path.substr(config.cdn.length - 1);
-    }
-    if (baseUrl !== '/' && path.startsWith(baseUrl)) {
-      return path.substr(baseUrl.length - 1);
-    }
+  if (!path.startsWith('/')) {
+    return path;
+  }
+  if (path === homePath) {
+    return '/';
+  }
+  if (config.cdn && path.startsWith(config.cdn)) {
+    return path.substr(config.cdn.length - 1);
+  }
+  if (baseUrl !== '/' && path.startsWith(baseUrl)) {
+    return path.substr(baseUrl.length - 1);
   }
   return path;
 }
@@ -105,40 +107,41 @@ export function isExternalLink(href: string) {
 }
 
 export function checkLinkPath(path: string) {
-  if (!path.endsWith('.md')) {
-    if (path.endsWith('/')) {
-      path += 'index.md';
-    } else {
-      path = '';
-    }
+  if (path.endsWith('.md')) {
+    return path;
   }
-  return path;
+  if (path.endsWith('/')) {
+    return path + 'index.md';
+  }
+  return '';
 }
 
-export function parseHash(hash: string, isShort = false) {
+export function parseHash(hash: string, isShort = false): THashPath {
   let path = config.paths.index;
   let anchor = '';
   let query = '';
-  if (hash.startsWith('#/')) {
-    path = hash.substr(1);
-    let chop = chopStr(path, '?', false);
-    if (chop.value !== null) {
-      path = chop.key;
-      query = chop.value;
-    }
-    chop = chopStr(path, '#', false);
-    if (chop.value !== null) {
-      path = chop.key;
-      anchor = chop.value;
-    }
-    if (path.endsWith('/') && !isShort) {
+  if (!hash.startsWith('#/')) {
+    return { path: isShort ? shortenPath(path) : path, anchor, query };
+  }
+  path = hash.substr(1);
+  let chop = chopStr(path, '?', false);
+  if (chop.value !== null) {
+    path = chop.key;
+    query = chop.value;
+  }
+  chop = chopStr(path, '#', false);
+  if (chop.value !== null) {
+    path = chop.key;
+    anchor = chop.value;
+  }
+  if (path.endsWith('/')) {
+    if (!isShort) {
       path += 'index.md';
     }
-  }
-  if (isShort) {
+  } else if (isShort) {
     path = shortenPath(path);
   }
-  return { path, anchor, query } as THashPath;
+  return { path, anchor, query };
 }
 
 export function parseRoute(route: Route) {
@@ -148,7 +151,8 @@ export function parseRoute(route: Route) {
   }
   if (path === `/${indexPath}`) {
     return parseHash(route.hash);
-  } else if (path.endsWith('.html')) {
+  }
+  if (path.endsWith('.html')) {
     path = path.replace(/\.html$/, '.md');
   }
   return { path, anchor: '', query: '' };
@@ -175,18 +179,19 @@ export function parseQuery(queryStr: string) {
 
 export function formatQuery(query: TQuery) {
   const list: string[] = [];
-  Object.keys(query).forEach(key => {
-    const value = query[key];
-    key = key.trim();
-    if (key) {
-      key = encodeURIComponent(key);
-      if (value !== null) {
-        list.push(`${key}=${encodeURIComponent(value.trim())}`);
-      } else {
-        list.push(key);
-      }
+  for (const key of Object.keys(query)) {
+    let trimKey = key.trim();
+    if (!trimKey) {
+      continue;
     }
-  });
+    trimKey = encodeURIComponent(trimKey);
+    const value = query[key];
+    if (value !== null) {
+      list.push(`${trimKey}=${encodeURIComponent(value.trim())}`);
+    } else {
+      list.push(trimKey);
+    }
+  }
   return list.join('&');
 }
 

@@ -27,41 +27,41 @@ const markdownIt = new MarkdownIt({
   validate: (params: string) => params.match(detailsRegExp) || params === '',
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
-    if (token.nesting === 1) {
-      let isOpen = true;
-      let classList: string[] = [];
-      let summary = '';
-      const match = token.info.match(detailsRegExp);
-      if (match) {
-        const openMatch = match[1];
-        const classMatch = match[2];
-        const summaryMatch = match[3];
-        if (classMatch) {
-          classList = trimList(classMatch.split('.'));
-        }
-        if (!classList.includes('empty')) {
-          if (!openMatch) {
-            isOpen = false;
-          }
-          if (summaryMatch !== '\\') {
-            isRenderingSummary = true;
-            summary = markdownIt.render(summaryMatch);
-            isRenderingSummary = false;
-          }
-        }
-      } else {
-        classList.push('empty');
-      }
-      let attrs = '';
-      if (isOpen) {
-        attrs += ' open';
-      }
-      if (classList.length > 0) {
-        attrs += ` class="${classList.join(' ')}"`;
-      }
-      return `<details${attrs}><summary>${summary}</summary>`;
+    if (token.nesting !== 1) {
+      return '</details>';
     }
-    return '</details>';
+    let isOpen = true;
+    let classList: string[] = [];
+    let summary = '';
+    const match = token.info.match(detailsRegExp);
+    if (!match) {
+      classList.push('empty');
+    } else {
+      const openMatch = match[1];
+      const classMatch = match[2];
+      const summaryMatch = match[3];
+      if (classMatch) {
+        classList = trimList(classMatch.split('.'));
+      }
+      if (!classList.includes('empty')) {
+        if (!openMatch) {
+          isOpen = false;
+        }
+        if (summaryMatch !== '\\') {
+          isRenderingSummary = true;
+          summary = markdownIt.render(summaryMatch);
+          isRenderingSummary = false;
+        }
+      }
+    }
+    let attrs = '';
+    if (isOpen) {
+      attrs += ' open';
+    }
+    if (classList.length > 0) {
+      attrs += ` class="${classList.join(' ')}"`;
+    }
+    return `<details${attrs}><summary>${summary}</summary>`;
   },
 });
 markdownIt.linkify.tlds([], false);
@@ -93,34 +93,36 @@ replacer?.forEach(item => {
 
 const defaultTextRenderRule = getDefaultRenderRule('text');
 markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
-  if (replacerList.length > 0) {
-    const token = tokens[idx];
-    let content = token.content;
-    replacerList.forEach(item => {
-      content = content.replace(item[0], item[1]);
-    });
-    token.content = content;
+  if (replacerList.length === 0) {
+    return defaultTextRenderRule(tokens, idx, options, env, self);
   }
+  const token = tokens[idx];
+  let content = token.content;
+  replacerList.forEach(item => {
+    content = content.replace(item[0], item[1]);
+  });
+  token.content = content;
   return defaultTextRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultFenceRenderRule = getDefaultRenderRule('fence');
 markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  if (token.tag === 'code') {
-    let dataLine = '';
-    let lang = token.info.trim();
-    const { key, value } = chopStr(lang, '|');
-    if (value !== null) {
-      lang = key;
-      dataLine = value;
-    }
-    token.info = lang;
-    if (lang) {
-      token.attrJoin('class', 'line-numbers');
-      if (dataLine) {
-        token.attrSet('data-line', dataLine);
-      }
+  if (token.tag !== 'code') {
+    return defaultFenceRenderRule(tokens, idx, options, env, self);
+  }
+  let dataLine = '';
+  let lang = token.info.trim();
+  const { key, value } = chopStr(lang, '|');
+  if (value !== null) {
+    lang = key;
+    dataLine = value;
+  }
+  token.info = lang;
+  if (lang) {
+    token.attrJoin('class', 'line-numbers');
+    if (dataLine) {
+      token.attrSet('data-line', dataLine);
     }
   }
   return defaultFenceRenderRule(tokens, idx, options, env, self);
@@ -149,79 +151,73 @@ let headingCount: Dict<number> = {};
 
 const defaultHeadingRenderRule = getDefaultRenderRule('heading_open');
 markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
-  let headingTag = '';
-  if (!isRenderingSummary) {
-    const token = tokens[idx];
-    if (token.level === 0) {
-      const nextToken = tokens[idx + 1];
-      const match = nextToken.content.match(/^\+\s+/);
-      if (match) {
-        const textToken = nextToken.children![0];
-        textToken.content = textToken.content.substr(match[0].length);
-        token.attrJoin('class', 'fold');
-      }
-      const tag = token.tag;
-      let count = headingCount[tag];
-      count = count === undefined ? 1 : (count + 1);
-      headingCount[tag] = count;
-      token.attrSet('id', `${tag}-${count}`);
-      const span = document.createElement('span');
-      span.classList.add('heading-tag');
-      span.innerText = 'H';
-      const small = document.createElement('small');
-      small.innerText = tag.substr(1);
-      span.append(small);
-      headingTag = span.outerHTML;
-    }
+  const token = tokens[idx];
+  if (isRenderingSummary || token.level !== 0) {
+    return defaultHeadingRenderRule(tokens, idx, options, env, self);
   }
-  return defaultHeadingRenderRule(tokens, idx, options, env, self) + headingTag;
+  const nextToken = tokens[idx + 1];
+  const match = nextToken.content.match(/^\+\s+/);
+  if (match) {
+    const textToken = nextToken.children![0];
+    textToken.content = textToken.content.substr(match[0].length);
+    token.attrJoin('class', 'fold');
+  }
+  const tag = token.tag;
+  let count = headingCount[tag];
+  count = count === undefined ? 1 : (count + 1);
+  headingCount[tag] = count;
+  token.attrSet('id', `${tag}-${count}`);
+  const span = document.createElement('span');
+  span.classList.add('heading-tag');
+  span.innerText = 'H';
+  const small = document.createElement('small');
+  small.innerText = tag.substr(1);
+  span.append(small);
+  return defaultHeadingRenderRule(tokens, idx, options, env, self) + span.outerHTML;
 };
 
 const defaultHeadingCloseRenderRule = getDefaultRenderRule('heading_close');
 markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
-  let headingLink = '';
-  if (!isRenderingSummary) {
-    const token = tokens[idx];
-    if (token.level === 0) {
-      const span = document.createElement('span');
-      span.classList.add('heading-link');
-      span.innerHTML = getIcon(EIcon.link, 14);
-      headingLink = span.outerHTML;
-    }
+  const token = tokens[idx];
+  if (isRenderingSummary || token.level !== 0) {
+    return defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
   }
-  return headingLink + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
+  const span = document.createElement('span');
+  span.classList.add('heading-link');
+  span.innerHTML = getIcon(EIcon.link, 14);
+  return span.outerHTML + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  let title = token.attrGet('title');
-  if (title) {
-    const match = title.match(/#(.+)$/);
-    if (match) {
-      const width = parseInt(match[1]);
-      if (isNaN(width)) {
-        if (match[1].startsWith('.')) {
-          trimList(match[1].split('.')).forEach(cls => {
-            token.attrJoin('class', cls);
-          });
-        } else {
-          token.attrSet('style', match[1]);
-        }
-      } else {
-        token.attrSet('width', `${width}`);
-      }
-      title = title.replace(/#.+$/, '');
-      if (title) {
-        token.attrSet('title', title);
-      } else {
-        token.attrs!.splice(token.attrIndex('title'), 1);
-      }
-    }
-  }
   const src = token.attrGet('src')!;
   if (!isExternalLink(src)) {
     token.attrSet('src', addBaseUrl(src));
+  }
+  let title = token.attrGet('title');
+  if (!title) {
+    return defaultImageRenderRule(tokens, idx, options, env, self);
+  }
+  const match = title.match(/#(.+)$/);
+  if (!match) {
+    return defaultImageRenderRule(tokens, idx, options, env, self);
+  }
+  const width = parseInt(match[1]);
+  if (!isNaN(width)) {
+    token.attrSet('width', `${width}`);
+  } else if (match[1].startsWith('.')) {
+    trimList(match[1].split('.')).forEach(cls => {
+      token.attrJoin('class', cls);
+    });
+  } else {
+    token.attrSet('style', match[1]);
+  }
+  title = title.replace(/#.+$/, '');
+  if (title) {
+    token.attrSet('title', title);
+  } else {
+    token.attrs!.splice(token.attrIndex('title'), 1);
   }
   return defaultImageRenderRule(tokens, idx, options, env, self);
 };
@@ -236,30 +232,30 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
     isExternal = true;
-  } else {
-    isExternal = false;
-    if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
-      let title = token.attrGet('title');
-      if (title) {
-        const regexp = new RegExp(`#(${getAnchorRegExp(false).source})?$`);
-        const match = title.match(regexp);
-        if (match) {
-          const anchor = match[1];
-          href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;
-          title = title.substr(0, title.length - match[0].length);
-          if (title) {
-            token.attrSet('title', title);
-          } else {
-            token.attrs!.splice(token.attrIndex('title'), 1);
-          }
+    return defaultLinkRenderRule(tokens, idx, options, env, self);
+  }
+  isExternal = false;
+  if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
+    let title = token.attrGet('title');
+    if (title) {
+      const regexp = new RegExp(`#(${getAnchorRegExp(false).source})?$`);
+      const match = title.match(regexp);
+      if (match) {
+        const anchor = match[1];
+        href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;
+        title = title.substr(0, title.length - match[0].length);
+        if (title) {
+          token.attrSet('title', title);
+        } else {
+          token.attrs!.splice(token.attrIndex('title'), 1);
         }
       }
     }
-    href = addBaseUrl(href);
-    token.attrSet('href', href);
-    if (!href.startsWith('#') && href !== homePath) {
-      token.attrSet('target', '_blank');
-    }
+  }
+  href = addBaseUrl(href);
+  token.attrSet('href', href);
+  if (!href.startsWith('#') && href !== homePath) {
+    token.attrSet('target', '_blank');
   }
   return defaultLinkRenderRule(tokens, idx, options, env, self);
 };
