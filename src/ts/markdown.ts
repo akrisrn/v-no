@@ -3,7 +3,7 @@ import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp } from '@/ts/regexp';
-import { chopStr, trimList } from '@/ts/utils';
+import { chopStr, snippetMark, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -267,6 +267,7 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 };
 
 export function renderMD(data: string) {
+  data = data.replaceAll(snippetMark, '');
   const tocRegExpStr = '^\\[toc]$';
   const tocRegExp = new RegExp(tocRegExpStr, 'im');
   const tocRegExpG = new RegExp(tocRegExpStr, 'img');
