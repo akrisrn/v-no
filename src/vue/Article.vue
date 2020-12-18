@@ -8,6 +8,7 @@
   import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
   import { renderMD } from '@/ts/markdown';
   import { getAnchorRegExp } from '@/ts/regexp';
+  import { renderedEvent } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
@@ -94,6 +95,9 @@
           scroll(heading.offsetTop - 6);
         }
       });
+      setTimeout(() => {
+        document.dispatchEvent(renderedEvent);
+      }, 100);
     }
   }
 </script>
