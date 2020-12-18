@@ -263,7 +263,7 @@
         return;
       }
       updateLinkPath();
-      addEventListener('keydown', e => {
+      document.addEventListener('keydown', e => {
         if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           return;
         }
@@ -297,7 +297,9 @@
         });
         let destructor = destructors.shift();
         while (destructor) {
-          destructor();
+          if (typeof destructor === 'function') {
+            destructor();
+          }
           destructor = destructors.shift();
         }
         this.setData(data, flags);

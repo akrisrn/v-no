@@ -89,8 +89,11 @@ export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: 
     start = match.index + match[0].length;
     match = regexp.exec(data);
   }
+  if (start === 0) {
+    return data;
+  }
   newData += data.substring(start);
-  return newData.trim();
+  return newData;
 }
 
 function evalFunction(evalStr: string, params: Dict<any>) {
@@ -106,7 +109,7 @@ export function replaceInlineScript(path: string, data: string) {
       result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
     return result;
-  });
+  }).trim();
 }
 
 function degradeHeading(data: string, level: number) {
@@ -206,7 +209,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
             return 'undefined';
           }
           return result.replace(/\\n/g, '\n');
-        });
+        }).trim();
         const clip = params['clip'];
         if (clip !== undefined) {
           const slips = snippetData.split(snippetMark);

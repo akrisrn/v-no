@@ -234,8 +234,8 @@ export function updateLinkPath() {
   });
 }
 
-function updateCustomScript() {
-  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]')) {
+function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
+  for (const a of links) {
     if (a.innerText !== '$') {
       continue;
     }
@@ -250,8 +250,8 @@ function updateCustomScript() {
   }
 }
 
-function updateCustomStyle() {
-  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]')) {
+function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
+  for (const a of links) {
     if (a.innerText !== '*') {
       continue;
     }
@@ -487,8 +487,10 @@ export function updateDom() {
   updateDD();
   updateImagePath();
   updateLinkPath();
-  updateCustomScript();
-  updateCustomStyle();
+  const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
+  const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
+  updateCustomScript(scripts);
+  updateCustomStyle(styles);
   updateHighlight();
   updateHeading();
   updateAnchor();
