@@ -82,7 +82,7 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import { chopStr, snippetMark } from '@/ts/utils';
+  import { chopStr, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
@@ -253,6 +253,7 @@
         filePath: this.filePath,
         addInputBind: this.addInputBind,
         config: this.config,
+        destructors,
       });
     }
 
@@ -294,6 +295,11 @@
         document.querySelectorAll('.custom').forEach(element => {
           element.remove();
         });
+        let destructor = destructors.shift();
+        while (destructor) {
+          destructor();
+          destructor = destructors.shift();
+        }
         this.setData(data, flags);
         scroll(0, false);
       });
