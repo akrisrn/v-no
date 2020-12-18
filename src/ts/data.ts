@@ -3,7 +3,7 @@ import { config } from '@/ts/config';
 import { getFile, getFiles } from '@/ts/file';
 import { checkLinkPath } from '@/ts/path';
 import { getHeadingPattern, getHeadingRegExp, getLinkPathPattern, getWrapRegExp } from '@/ts/regexp';
-import { chopStr } from '@/ts/utils';
+import { chopStr, snippetMark } from '@/ts/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
@@ -209,7 +209,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         });
         const clip = params['clip'];
         if (clip !== undefined) {
-          const slips = snippetData.split('--8<--');
+          const slips = snippetData.split(snippetMark);
           if (slips.length > 1) {
             let num = parseInt(clip);
             if (isNaN(num)) {

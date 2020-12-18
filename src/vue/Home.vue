@@ -82,7 +82,7 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import { chopStr } from '@/ts/utils';
+  import { chopStr, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
@@ -330,7 +330,7 @@
       const commonData = files[1].data;
       let headerData = '';
       let footerData = commonData;
-      const { key, value } = chopStr(commonData, '--8<--');
+      const { key, value } = chopStr(commonData, snippetMark);
       if (value !== null) {
         headerData = key;
         footerData = value;
