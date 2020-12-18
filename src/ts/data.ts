@@ -80,7 +80,7 @@ export async function updateCategoryPage(data: string) {
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
-function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
+export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
   let newData = '';
   let start = 0;
   let match = regexp.exec(data);

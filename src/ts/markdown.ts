@@ -1,4 +1,5 @@
 import { config } from '@/ts/config';
+import { replaceByRegExp } from '@/ts/data';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
@@ -93,11 +94,20 @@ replacer?.forEach(item => {
 
 const defaultTextRenderRule = getDefaultRenderRule('text');
 markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
-  if (replacerList.length === 0) {
-    return defaultTextRenderRule(tokens, idx, options, env, self);
-  }
   const token = tokens[idx];
   let content = token.content;
+  content = replaceByRegExp(/(\\u[0-9a-f]{4}|u\+[0-9a-f]{4,6})/ig, content, match => {
+    let code = parseInt(match.substr(2), 16);
+    if (match.startsWith('\\') || code < 0x10000) {
+      return String.fromCharCode(code);
+    }
+    code -= 0x10000;
+    return String.fromCharCode(0xD800 + (code >> 10), 0xDC00 + (code & 0x3FF));
+  });
+  if (replacerList.length === 0) {
+    token.content = content;
+    return defaultTextRenderRule(tokens, idx, options, env, self);
+  }
   replacerList.forEach(item => {
     content = content.replace(item[0], item[1]);
   });
