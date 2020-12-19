@@ -6,8 +6,8 @@
   import { config } from '@/ts/config';
   import { replaceInlineScript, updateCategoryPage, updateSnippet } from '@/ts/data';
   import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
-  import { renderMD } from '@/ts/markdown';
   import { getAnchorRegExp } from '@/ts/regexp';
+  import { renderMD } from '@/ts/render';
   import { renderedEvent } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -35,14 +35,14 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    created() {
+    async created() {
       exposeToWindow({
-        renderMD: (data: string) => {
+        renderMD: async (data: string) => {
           data = data.trim();
           if (data) {
             data = replaceInlineScript(this.filePath, data);
           }
-          return data ? renderMD(data) : '';
+          return data ? await renderMD(data) : '';
         },
         updateDom: () => updateDom(),
       });
@@ -50,23 +50,23 @@
         this.renderComplete();
         return;
       }
-      this.markdown = renderMD(this.mdData);
+      this.markdown = await renderMD(this.mdData);
       this.$nextTick(() => updateDom());
-      updateSnippet(this.mdData).then(data => {
+      updateSnippet(this.mdData).then(async data => {
         if (!this.isCategoryFile) {
-          this.updateData(data);
+          await this.updateData(data);
           if (this.isSearchFile) {
             this.$nextTick(() => updateSearchPage(this.query.content || ''));
           }
         } else if (data) {
           updateCategoryPage(data).then(data => this.updateData(data));
         } else {
-          this.updateData(data);
+          await this.updateData(data);
         }
       });
     }
 
-    updateData(data: string) {
+    async updateData(data: string) {
       if (data === this.mdData) {
         this.renderComplete();
         return;
@@ -76,7 +76,7 @@
         this.renderComplete();
         return;
       }
-      this.markdown = renderMD(data);
+      this.markdown = await renderMD(data);
       this.$nextTick(() => {
         updateDom();
         this.renderComplete();
