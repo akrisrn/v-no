@@ -53,7 +53,7 @@ jobs:
       - name: Build (doc)
         run: |
           cp .env.doc .env.local
-          echo "" >> src/ts/dom.ts
+          echo "" >> src/ts/prismjs.ts
           yarn run build-modern+clean
           rm -r v-no-doc/assets/css/ v-no-doc/assets/js/
           cp -r dist/* v-no-doc/
