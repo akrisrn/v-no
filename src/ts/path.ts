@@ -38,17 +38,14 @@ export function addBaseUrl(path: string) {
 }
 
 function cleanBaseUrl(path: string) {
-  if (!path.startsWith('/')) {
-    return path;
+  if (baseUrl !== '/' && path.startsWith(baseUrl)) {
+    return path.substr(baseUrl.length - 1);
+  }
+  if (config.cdn && path.startsWith(config.cdn)) {
+    return path.substr(config.cdn.length - 1);
   }
   if (path === homePath) {
     return '/';
-  }
-  if (!hasCdnUrl && config.cdn && path.startsWith(config.cdn)) {
-    return path.substr(config.cdn.length - 1);
-  }
-  if (baseUrl !== '/' && path.startsWith(baseUrl)) {
-    return path.substr(baseUrl.length - 1);
   }
   return path;
 }
