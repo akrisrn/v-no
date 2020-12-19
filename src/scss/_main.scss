@@ -94,6 +94,7 @@ main {
       min-width: 120px;
 
       &:before {
+        font-family: $arial-font-family;
         content: "« ";
       }
     }
@@ -103,8 +104,8 @@ main {
     }
   }
 
-  code, code[class*="language-"], kbd {
-    font-family: $mono-font-family;
+  code, kbd {
+    font-family: $mono-font-family !important;
     font-size: $font-size-s;
     display: inline-block;
     padding: 0 0.5em;
@@ -123,7 +124,8 @@ main {
       flex-wrap: wrap;
 
       &:before {
-        margin: 0 8px 4px 0;
+        font-family: $arial-font-family;
+        margin-right: 8px;
         content: "»";
       }
 
@@ -152,6 +154,7 @@ main {
       background-color: $success-color-xs;
 
       &:before {
+        font-family: $arial-font-family;
         margin-right: 4px;
         content: "#";
       }

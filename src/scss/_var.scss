@@ -8,32 +8,34 @@ $box-shadow: 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px 
 $background-color: #f1f1f1;
 $main-background-color: #ffffff;
 $code-background-color: rgba(#969696, 0.1);
-$mark-color: #ffeb3b;
+$mark-color: var(--mark-color);
 $mark-color-s: rgba($mark-color, 0.3);
 
-$info-color: #448aff;
+$info-color: var(--info-color);
 $info-color-s: rgba($info-color, 0.5);
 $info-color-xs: rgba($info-color, 0.1);
-$success-color: #00c853;
+$success-color: var(--success-color);
 $success-color-s: rgba($success-color, 0.5);
 $success-color-xs: rgba($success-color, 0.1);
-$warning-color: #ff9100;
+$warning-color: var(--warning-color);
 $warning-color-s: rgba($warning-color, 0.5);
 $warning-color-xs: rgba($warning-color, 0.1);
-$danger-color: #ff1744;
+$danger-color: var(--danger-color);
 $danger-color-s: rgba($danger-color, 0.5);
 $danger-color-xs: rgba($danger-color, 0.1);
 $color-sets: (
         "info": ($info-color, $info-color-s, $info-color-xs),
         "success": ($success-color, $success-color-s, $success-color-xs),
         "warning": ($warning-color, $warning-color-s, $warning-color-xs),
-        "danger": ($danger-color, $danger-color-s, $danger-color-xs)
+        "danger": ($danger-color, $danger-color-s, $danger-color-xs),
+        "dark": (#000000, rgba(#000000, 0.5), rgba(#000000, 0.1))
 );
 
-$font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
-$mono-font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-$font-size: 14px;
-$font-size-s: 12px;
+$font-family: var(--font-family);
+$mono-font-family: var(--mono-font-family);
+$arial-font-family: Arial, serif;
+$font-size: var(--font-size);
+$font-size-s: var(--font-size-s);
 $font-color: #464646;
 $gray-font-color: #8d8d8d;
 $link-font-color: #2864dc;

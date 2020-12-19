@@ -4,6 +4,7 @@
   font-size: $font-size-s;
   padding: 0 16px;
   transition: background-color 0.5s, box-shadow 0.5s;
+  color: $dark-font-color;
   background-color: $dark-main-background-color;
   box-shadow: $box-shadow;
 
@@ -36,6 +37,7 @@
       }
 
       &:after {
+        font-family: $arial-font-family;
         margin: 0 8px;
         content: "|";
       }

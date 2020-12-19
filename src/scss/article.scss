@@ -135,6 +135,7 @@ article {
       color: $gray-font-color;
 
       &:before {
+        font-family: $arial-font-family;
         margin-right: 8px;
         content: "»";
       }
@@ -213,7 +214,7 @@ article {
     color: $gray-font-color;
 
     &:before {
-      font-family: Arial, serif;
+      font-family: $arial-font-family;
       font-size: 4em;
       position: absolute;
       top: -28px;
@@ -423,12 +424,12 @@ article {
     }
 
     .footnote-backref {
-      font-family: Arial, serif;
+      font-family: $arial-font-family;
       margin-left: 4px;
     }
   }
 
-  .code-toolbar {
+  div.code-toolbar {
     &:last-child pre {
       margin-bottom: 0;
     }

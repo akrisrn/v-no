@@ -1,5 +1,17 @@
 @import "var";
 
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  --mono-font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  --font-size: 14px;
+  --font-size-s: 12px;
+  --info-color: 0, 150, 255;
+  --success-color: 0, 200, 100;
+  --warning-color: 255, 150, 0;
+  --danger-color: 255, 50, 100;
+  --mark-color: 255, 255, 0;
+}
+
 body {
   margin: 0;
   transition: background-color 0.5s;
