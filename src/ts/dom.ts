@@ -80,6 +80,46 @@ function updateDD() {
   });
 }
 
+function updateAnchor(onlyToc = false) {
+  for (const a of document.querySelectorAll<HTMLAnchorElement>(`article ${onlyToc ? '#toc' : ''} a[href^="#h"]`)) {
+    const anchor = a.getAttribute('href')!.substr(1);
+    if (!getAnchorRegExp().test(anchor)) {
+      continue;
+    }
+    const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
+    addEventListener(a, 'click', e => {
+      e.preventDefault();
+      if (heading && heading.offsetTop > 0) {
+        scroll(heading.offsetTop - 6);
+        changeHash(anchor);
+      }
+    });
+  }
+  if (onlyToc) {
+    return;
+  }
+  document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
+    const heading = headingLink.parentElement!;
+    addEventListener(headingLink, 'click', () => {
+      scroll(heading.offsetTop - 6);
+      changeHash(heading.id);
+    });
+  });
+  document.querySelectorAll<HTMLAnchorElement>('article .footnote-backref').forEach(backref => {
+    const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
+    addEventListener(fnref, 'click', e => {
+      e.preventDefault();
+      scroll(backref.offsetTop - 6);
+    });
+    addEventListener(backref, 'click', e => {
+      e.preventDefault();
+      if (fnref.offsetTop > 0) {
+        scroll(fnref.offsetTop - 6);
+      }
+    });
+  });
+}
+
 function updateImagePath() {
   for (const img of document.querySelectorAll<HTMLImageElement>('#cover img, article img')) {
     let parent = img.parentElement!;
@@ -452,48 +492,13 @@ function updateHeading() {
     tocDiv.firstElementChild!.classList.add('ul-a');
     tocDiv.lastElementChild!.classList.add('ul-b');
   }
-}
-
-function updateAnchor() {
-  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#h"]')) {
-    const anchor = a.getAttribute('href')!.substr(1);
-    if (!getAnchorRegExp().test(anchor)) {
-      continue;
-    }
-    const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
-    addEventListener(a, 'click', e => {
-      e.preventDefault();
-      if (heading && heading.offsetTop > 0) {
-        scroll(heading.offsetTop - 6);
-        changeHash(anchor);
-      }
-    });
-  }
-  document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
-    const heading = headingLink.parentElement!;
-    addEventListener(headingLink, 'click', () => {
-      scroll(heading.offsetTop - 6);
-      changeHash(heading.id);
-    });
-  });
-  document.querySelectorAll<HTMLAnchorElement>('article .footnote-backref').forEach(backref => {
-    const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
-    addEventListener(fnref, 'click', e => {
-      e.preventDefault();
-      scroll(backref.offsetTop - 6);
-    });
-    addEventListener(backref, 'click', e => {
-      e.preventDefault();
-      if (fnref.offsetTop > 0) {
-        scroll(fnref.offsetTop - 6);
-      }
-    });
-  });
+  updateAnchor(true);
 }
 
 export function updateDom() {
   waitingList = [];
   updateDD();
+  updateAnchor();
   updateImagePath();
   updateLinkPath();
   const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
@@ -502,7 +507,6 @@ export function updateDom() {
   updateCustomStyle(styles);
   updateHighlight().then(() => {
     updateHeading();
-    updateAnchor();
   });
 }
 
