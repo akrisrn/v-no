@@ -9,7 +9,6 @@
   import { getAnchorRegExp } from '@/ts/regexp';
   import { renderMD } from '@/ts/render';
   import { renderedEvent } from '@/ts/utils';
-  import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
@@ -36,16 +35,6 @@
 
     // noinspection JSUnusedGlobalSymbols
     async created() {
-      exposeToWindow({
-        renderMD: async (data: string) => {
-          data = data.trim();
-          if (data) {
-            data = replaceInlineScript(this.filePath, data);
-          }
-          return data ? await renderMD(data) : '';
-        },
-        updateDom: () => updateDom(),
-      });
       if (!this.mdData) {
         this.renderComplete();
         return;

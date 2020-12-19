@@ -69,7 +69,16 @@
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
-  import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, updateLinkPath } from '@/ts/dom';
+  import { replaceInlineScript } from '@/ts/data';
+  import {
+    cleanEventListenerDict,
+    createList,
+    getIcon,
+    removeClass,
+    scroll,
+    updateDom,
+    updateLinkPath,
+  } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
   import {
@@ -82,6 +91,7 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
+  import { renderMD } from '@/ts/render';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
@@ -247,12 +257,14 @@
       });
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        version: process.env.VUE_APP_VERSION,
         axios,
+        version: process.env.VUE_APP_VERSION,
+        config: this.config,
         homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
-        config: this.config,
+        renderMD: this.renderMD,
+        updateDom,
         destructors,
       });
     }
@@ -454,6 +466,18 @@
       Object.keys(binds).forEach(key => {
         this.addInputBind(key, binds[key]);
       });
+    }
+
+    async renderMD(data?: string) {
+      if (!data) {
+        return '';
+      }
+      data = data.trim();
+      if (data) {
+        data = replaceInlineScript(this.filePath, data);
+        return data ? await renderMD(data) : '';
+      }
+      return '';
     }
   }
 </script>
