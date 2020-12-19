@@ -281,6 +281,10 @@ article {
       }
     }
 
+    &.bold > summary {
+      font-weight: bold;
+    }
+
     summary {
       overflow: hidden;
       margin: 0 -16px;

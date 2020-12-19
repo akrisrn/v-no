@@ -38,6 +38,11 @@ body {
 
   img {
     transition: filter 0.5s;
+
+    &.emoji {
+      height: 18px;
+      vertical-align: -3px;
+    }
   }
 
   .custom {
