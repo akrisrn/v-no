@@ -14,7 +14,6 @@ import {
 } from '@/ts/path';
 import { getAnchorRegExp } from '@/ts/regexp';
 import { trimList } from '@/ts/utils';
-import Prism from 'prismjs';
 
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
 
@@ -268,15 +267,25 @@ function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
   }
 }
 
-function updateHighlight() {
-  document.querySelectorAll('article pre > code').forEach(code => {
+const prismjs = () => import(/* webpackChunkName: "prismjs" */ '@/ts/prismjs');
+let highlightAll: () => void;
+
+async function updateHighlight() {
+  const codes = document.querySelectorAll('article pre > code');
+  if (codes.length === 0) {
+    return;
+  }
+  codes.forEach(code => {
     const dataLine = code.getAttribute('data-line');
     if (dataLine) {
       code.parentElement!.setAttribute('data-line', dataLine);
       code.removeAttribute('data-line');
     }
   });
-  Prism.highlightAll();
+  if (!highlightAll) {
+    highlightAll = (await prismjs()).highlightAll;
+  }
+  highlightAll();
 }
 
 function foldElement(element: Element, isFolded: boolean) {
@@ -491,9 +500,10 @@ export function updateDom() {
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
   updateCustomScript(scripts);
   updateCustomStyle(styles);
-  updateHighlight();
-  updateHeading();
-  updateAnchor();
+  updateHighlight().then(() => {
+    updateHeading();
+    updateAnchor();
+  });
 }
 
 const htmlSymbolDict: Dict<string> = {
