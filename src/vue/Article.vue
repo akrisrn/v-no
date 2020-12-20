@@ -40,18 +40,22 @@
       }
       const markdownTs = await importMarkdownTs();
       this.markdown = markdownTs.renderMD(this.mdData);
-      this.$nextTick(() => markdownTs.updateDom());
-      markdownTs.updateSnippet(this.mdData).then(data => {
-        if (!this.isCategoryFile) {
-          this.updateData(data, markdownTs);
-          if (this.isSearchFile) {
-            this.$nextTick(() => markdownTs.updateSearchPage(this.query.content || ''));
+      this.$nextTick(() => {
+        Promise.all([
+          markdownTs.updateSnippet(this.mdData),
+          markdownTs.updateDom(),
+        ]).then(([data]) => {
+          if (!this.isCategoryFile) {
+            this.updateData(data, markdownTs);
+            if (this.isSearchFile) {
+              this.$nextTick(() => markdownTs.updateSearchPage(this.query.content || ''));
+            }
+          } else if (data) {
+            markdownTs.updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
+          } else {
+            this.updateData(data, markdownTs);
           }
-        } else if (data) {
-          markdownTs.updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
-        } else {
-          this.updateData(data, markdownTs);
-        }
+        });
       });
     }
 
@@ -67,8 +71,9 @@
       }
       this.markdown = renderMD(data);
       this.$nextTick(() => {
-        updateDom();
-        this.renderComplete();
+        updateDom().then(() => {
+          this.renderComplete();
+        });
       });
     }
 

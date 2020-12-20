@@ -567,7 +567,7 @@ function updateHeading() {
   updateAnchor(true);
 }
 
-export function updateDom() {
+export async function updateDom() {
   waitingList = [];
   updateDD();
   updateAnchor();
@@ -577,9 +577,8 @@ export function updateDom() {
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
   updateCustomScript(scripts);
   updateCustomStyle(styles);
-  updateHighlight().then(() => {
-    updateHeading();
-  });
+  await updateHighlight();
+  updateHeading();
 }
 
 const htmlSymbolDict: Dict<string> = {

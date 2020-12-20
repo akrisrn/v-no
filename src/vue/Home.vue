@@ -472,7 +472,7 @@
     }
 
     async updateDom() {
-      (await importMarkdownTs()).updateDom();
+      await (await importMarkdownTs()).updateDom();
     }
   }
 </script>
