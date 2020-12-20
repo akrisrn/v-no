@@ -76,8 +76,8 @@
     getIcon,
     removeClass,
     scroll,
+    simpleUpdateLinkPath,
     updateDom,
-    updateLinkPath,
   } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { createErrorFile, getFile, getFiles } from '@/ts/file';
@@ -274,7 +274,7 @@
       if (this.isCancel) {
         return;
       }
-      updateLinkPath();
+      simpleUpdateLinkPath();
       document.addEventListener('keydown', e => {
         if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           return;

@@ -212,7 +212,7 @@ function getHeadingText(heading: HTMLHeadingElement) {
   return heading.innerText.substr(2).trim() || `[${null}]`;
 }
 
-export function updateLinkPath() {
+export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAnchorElement) => void) {
   const dict: Dict<HTMLAnchorElement[]> = {};
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
     if (a.innerText !== '') {
@@ -236,37 +236,45 @@ export function updateLinkPath() {
   if (paths.length === 0) {
     return;
   }
-  Promise.all(paths.map(path => getFile(path))).then(files => {
-    files.forEach(file => {
-      for (const a of dict[file.path]) {
-        if (file.isError) {
-          a.classList.add('error');
-        }
-        a.innerText = file.flags.title;
-        const parent = a.parentElement!;
-        if (parent.tagName !== 'LI') {
-          removeClass(a, 'rendering');
-          continue;
-        }
-        let isPass = true;
-        let hasQuote = false;
-        if (parent.childNodes[0].nodeType === 1) {
-          if (parent.childElementCount === 1) {
-            isPass = false;
-          } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-            isPass = false;
-            hasQuote = true;
-          }
-        }
-        if (!isPass) {
-          if (hasQuote) {
-            parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
-          }
-          createList(file, parent as HTMLLIElement);
-        }
-        removeClass(a, 'rendering');
+  const files = await Promise.all(paths.map(path => getFile(path)));
+  files.forEach(file => {
+    for (const a of dict[file.path]) {
+      if (file.isError) {
+        a.classList.add('error');
       }
-    });
+      a.innerText = file.flags.title;
+      if (callback) {
+        callback(file, a);
+      }
+      removeClass(a, 'rendering');
+    }
+  });
+}
+
+function updateLinkPath() {
+  simpleUpdateLinkPath((file, a) => {
+    const parent = a.parentElement!;
+    if (parent.tagName !== 'LI') {
+      return;
+    }
+    let isPass = true;
+    let hasQuote = false;
+    if (parent.childNodes[0].nodeType === 1) {
+      if (parent.childElementCount === 1) {
+        isPass = false;
+      } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+        isPass = false;
+        hasQuote = true;
+      }
+    }
+    if (isPass) {
+      return;
+    }
+    if (hasQuote) {
+      parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
+    }
+    createList(file, parent as HTMLLIElement);
+  }).then(() => {
     waitingList.forEach(({ heading, a }) => {
       a.innerText = getHeadingText(heading);
     });
