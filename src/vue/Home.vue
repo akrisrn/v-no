@@ -82,7 +82,7 @@
   } from '@/ts/path';
   import { chopStr, createErrorFile, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import { importFileTs, importMarkdownTs } from '@/ts/async/import';
+  import { importFileTs, importMarkdownTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';

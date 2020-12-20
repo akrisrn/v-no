@@ -3,7 +3,7 @@ import { createList, eventListenerDict, removeClass, scroll, simpleUpdateLinkPat
 import { EFlag } from '@/ts/enums';
 import { buildHash, buildSearchContent, checkLinkPath, parseHash } from '@/ts/path';
 import { chopStr, getAnchorRegExp, snippetMark } from '@/ts/utils';
-import { importFileTs, importPrismjsTs } from '@/ts/async/import';
+import { importFileTs, importPrismjsTs } from '@/ts/async';
 import {
   addCacheKey,
   getHeadingPattern,

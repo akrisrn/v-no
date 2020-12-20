@@ -7,7 +7,7 @@
   import { removeClass, scroll } from '@/ts/dom';
   import { getAnchorRegExp, renderedEvent } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
-  import { importMarkdownTs } from '@/ts/async/import';
+  import { importMarkdownTs } from '@/ts/async';
 
   @Component
   export default class Article extends Vue {
