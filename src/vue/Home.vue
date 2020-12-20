@@ -83,6 +83,7 @@
   import { chopStr, createErrorFile, destructors, replaceInlineScript, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async/import';
+  import Article from '@/vue/Article.vue';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
@@ -90,8 +91,6 @@
   Component.registerHooks([
     'beforeRouteUpdate',
   ]);
-
-  const Article = () => import(/* webpackChunkName: "article" */ '@/vue/Article.vue');
 
   @Component({ components: { Article } })
   export default class Home extends Vue {

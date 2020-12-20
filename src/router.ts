@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Home from '@/vue/Home.vue';
 
 Vue.use(Router);
-
-const Home = () => import(/* webpackChunkName: "home" */ '@/vue/Home.vue');
 
 const router = new Router({
   mode: 'history',
