@@ -1,4 +1,4 @@
-let version = require('./package.json').version;
+let { version, dependencies } = require('./package.json');
 let publicPath = process.env.VUE_APP_PUBLIC_PATH;
 if (process.env.NODE_ENV !== 'production') {
   version += '-dev';
@@ -11,5 +11,6 @@ module.exports = {
   publicPath,
   assetsDir: 'assets',
   indexPath: process.env.VUE_APP_INDEX_PATH,
+  transpileDependencies: Object.keys(dependencies),
   productionSourceMap: false,
 };
