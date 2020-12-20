@@ -69,6 +69,7 @@
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
+  import { updateDom } from '@/ts/data';
   import {
     cleanEventListenerDict,
     createList,
@@ -76,7 +77,6 @@
     removeClass,
     scroll,
     simpleUpdateLinkPath,
-    updateDom,
   } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { getFile, getFiles } from '@/ts/file';

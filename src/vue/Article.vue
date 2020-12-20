@@ -4,8 +4,8 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { updateCategoryPage, updateSnippet } from '@/ts/data';
-  import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
+  import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/data';
+  import { removeClass, scroll } from '@/ts/dom';
   import { getAnchorRegExp } from '@/ts/regexp';
   import { renderMD } from '@/ts/render';
   import { replaceInlineScript, renderedEvent } from '@/ts/utils';
