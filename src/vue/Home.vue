@@ -69,7 +69,6 @@
 <script lang="ts">
   import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
-  import { replaceInlineScript } from '@/ts/data';
   import {
     cleanEventListenerDict,
     createList,
@@ -80,7 +79,7 @@
     updateDom,
   } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
-  import { createErrorFile, getFile, getFiles } from '@/ts/file';
+  import { getFile, getFiles } from '@/ts/file';
   import {
     addBaseUrl,
     buildHash,
@@ -92,7 +91,7 @@
     shortenPath,
   } from '@/ts/path';
   import { renderMD } from '@/ts/render';
-  import { chopStr, destructors, snippetMark } from '@/ts/utils';
+  import { chopStr, createErrorFile, destructors, replaceInlineScript, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';

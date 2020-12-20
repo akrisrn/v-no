@@ -1,10 +1,9 @@
 import { config } from '@/ts/config';
-import { replaceByRegExp } from '@/ts/data';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp } from '@/ts/regexp';
-import { chopStr, trimList } from '@/ts/utils';
+import { chopStr, replaceByRegExp, trimList } from '@/ts/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 

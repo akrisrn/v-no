@@ -1,24 +1,10 @@
-import { baseFiles, config } from '@/ts/config';
+import { baseFiles } from '@/ts/config';
 import { formatDate } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, addCacheKey, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
-import { trimList } from '@/ts/utils';
+import { createErrorFile, createFlags, trimList } from '@/ts/utils';
 import axios from 'axios';
-
-function createFlags(title: string): IFlags {
-  return { title };
-}
-
-export function createErrorFile(path: string): TFile {
-  return {
-    path,
-    data: config.messages.pageError,
-    flags: createFlags(shortenPath(path)),
-    links: [],
-    isError: true,
-  };
-}
 
 const cachedBacklinks: Dict<string[]> = {};
 

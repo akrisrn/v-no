@@ -3,7 +3,7 @@ import { config } from '@/ts/config';
 import { getFile, getFiles } from '@/ts/file';
 import { checkLinkPath } from '@/ts/path';
 import { getHeadingPattern, getHeadingRegExp, getLinkPathPattern, getWrapRegExp } from '@/ts/regexp';
-import { chopStr, snippetMark } from '@/ts/utils';
+import { chopStr, replaceByRegExp, replaceInlineScript, snippetMark } from '@/ts/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
@@ -78,38 +78,6 @@ export async function updateCategoryPage(data: string) {
   }
   const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
-}
-
-export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
-  let newData = '';
-  let start = 0;
-  let match = regexp.exec(data);
-  while (match) {
-    newData += data.substring(start, match.index) + callback(match[1]);
-    start = match.index + match[0].length;
-    match = regexp.exec(data);
-  }
-  if (start === 0) {
-    return data;
-  }
-  newData += data.substring(start);
-  return newData;
-}
-
-function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
-}
-
-export function replaceInlineScript(path: string, data: string) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
-    let result: string;
-    try {
-      result = evalFunction(evalStr, { path, data });
-    } catch (e) {
-      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
-    }
-    return result;
-  }).trim();
 }
 
 function degradeHeading(data: string, level: number) {

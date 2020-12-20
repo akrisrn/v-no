@@ -4,11 +4,11 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { replaceInlineScript, updateCategoryPage, updateSnippet } from '@/ts/data';
+  import { updateCategoryPage, updateSnippet } from '@/ts/data';
   import { removeClass, scroll, updateDom, updateSearchPage } from '@/ts/dom';
   import { getAnchorRegExp } from '@/ts/regexp';
   import { renderMD } from '@/ts/render';
-  import { renderedEvent } from '@/ts/utils';
+  import { replaceInlineScript, renderedEvent } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
