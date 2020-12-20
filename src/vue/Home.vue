@@ -67,20 +67,10 @@
 </template>
 
 <script lang="ts">
-  import { sortFiles } from '@/ts/compare';
   import { config, getSelectConf, shortPaths } from '@/ts/config';
-  import { updateDom } from '@/ts/data';
-  import {
-    cleanEventListenerDict,
-    createList,
-    getIcon,
-    removeClass,
-    scroll,
-    simpleUpdateLinkPath,
-  } from '@/ts/dom';
-  import { renderMD } from '@/ts/markdown';
+  import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
-  import { getFile, getFiles } from '@/ts/file';
+  import { importFileTs, importMarkdownTs } from '@/ts/import';
   import {
     addBaseUrl,
     buildHash,
@@ -232,6 +222,7 @@
           return;
         }
       }
+      importMarkdownTs();
       this.getData().then(({ data, flags }) => this.setData(data, flags));
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
@@ -263,7 +254,7 @@
         filePath: this.filePath,
         addInputBind: this.addInputBind,
         renderMD: this.renderMD,
-        updateDom,
+        updateDom: this.updateDom,
         destructors,
       });
     }
@@ -325,6 +316,7 @@
         const { data, flags } = createErrorFile(filePath);
         return { data, flags };
       }
+      const { getFile } = await importFileTs();
       const promises = [];
       promises.push(getFile(filePath));
       const commonPath = this.config.paths.common;
@@ -341,7 +333,7 @@
       }
       this.isError = false;
       if (this.hasLoadedBacklinks) {
-        this.getBacklinks();
+        this.getBacklinks().then();
       }
       if (files.length < 2 || files[1].isError) {
         return { data, flags };
@@ -404,16 +396,16 @@
       return getSearchTagLinks(tag);
     }
 
-    getBacklinks() {
+    async getBacklinks() {
       this.isLoadingBacklinks = true;
-      getFiles().then(({ files, backlinks }) => {
-        const paths = backlinks[this.filePath];
-        this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => files[path]).sort(sortFiles) : [];
-        this.isLoadingBacklinks = false;
-        if (!this.hasLoadedBacklinks) {
-          this.hasLoadedBacklinks = true;
-        }
-      });
+      const { getFiles, sortFiles } = await importFileTs();
+      const { files, backlinks } = await getFiles();
+      const paths = backlinks[this.filePath];
+      this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => files[path]).sort(sortFiles) : [];
+      this.isLoadingBacklinks = false;
+      if (!this.hasLoadedBacklinks) {
+        this.hasLoadedBacklinks = true;
+      }
     }
 
     getListHtml(file: TFile) {
@@ -474,9 +466,13 @@
       data = data.trim();
       if (data) {
         data = replaceInlineScript(this.filePath, data);
-        return data ? renderMD(data) : '';
+        return data ? (await importMarkdownTs()).renderMD(data) : '';
       }
       return '';
+    }
+
+    async updateDom() {
+      (await importMarkdownTs()).updateDom();
     }
   }
 </script>

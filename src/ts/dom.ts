@@ -1,4 +1,5 @@
 import { EIcon } from '@/ts/enums';
+import { importFileTs } from '@/ts/import';
 import { checkLinkPath, getSearchTagLinks, shortenPath } from '@/ts/path';
 
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
@@ -121,7 +122,7 @@ export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAncho
   if (paths.length === 0) {
     return;
   }
-  const files = await Promise.all(paths.map(path => getFile(path)));
+  const files = await Promise.all(paths.map(async path => (await importFileTs()).getFile(path)));
   files.forEach(file => {
     for (const a of dict[file.path]) {
       if (file.isError) {

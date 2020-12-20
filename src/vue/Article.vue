@@ -4,9 +4,8 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/data';
   import { removeClass, scroll } from '@/ts/dom';
-  import { renderMD } from '@/ts/markdown';
+  import { importMarkdownTs } from '@/ts/import';
   import { getAnchorRegExp } from '@/ts/regexp';
   import { renderedEvent, replaceInlineScript } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
@@ -34,28 +33,29 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    created() {
+    async created() {
       if (!this.mdData) {
         this.renderComplete();
         return;
       }
-      this.markdown = renderMD(this.mdData);
-      this.$nextTick(() => updateDom());
-      updateSnippet(this.mdData).then(data => {
+      const markdownTs = await importMarkdownTs();
+      this.markdown = markdownTs.renderMD(this.mdData);
+      this.$nextTick(() => markdownTs.updateDom());
+      markdownTs.updateSnippet(this.mdData).then(data => {
         if (!this.isCategoryFile) {
-          this.updateData(data);
+          this.updateData(data, markdownTs);
           if (this.isSearchFile) {
-            this.$nextTick(() => updateSearchPage(this.query.content || ''));
+            this.$nextTick(() => markdownTs.updateSearchPage(this.query.content || ''));
           }
         } else if (data) {
-          updateCategoryPage(data).then(data => this.updateData(data));
+          markdownTs.updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
         } else {
-          this.updateData(data);
+          this.updateData(data, markdownTs);
         }
       });
     }
 
-    updateData(data: string) {
+    updateData(data: string, { renderMD, updateDom }: TMarkdownTs) {
       if (data === this.mdData) {
         this.renderComplete();
         return;

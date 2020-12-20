@@ -77,3 +77,7 @@ type THashPath = {
   anchor: string;
   query: string;
 }
+
+type TFileTs = typeof import('@/ts/file');
+type TMarkdownTs = typeof import('@/ts/markdown');
+type TPrismjsTs = typeof import('@/ts/prismjs');

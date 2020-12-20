@@ -1,34 +1,33 @@
-import { sortFiles } from '@/ts/compare';
 import { config } from '@/ts/config';
 import { addEventListener, createList, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
 import { EFlag } from '@/ts/enums';
-import { getFile, getFiles } from '@/ts/file';
+import { importFileTs, importPrismjsTs } from '@/ts/import';
 import { addCacheKey, buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
 import { getAnchorRegExp, getHeadingPattern, getHeadingRegExp, getLinkPathPattern, getWrapRegExp } from '@/ts/regexp';
 import { chopStr, replaceByRegExp, replaceInlineScript, snippetMark, trimList } from '@/ts/utils';
 
-function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
-                       taggedDict: Dict<TFile[]>) {
+async function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
+                             taggedDict: Dict<TFile[]>) {
   const category: string[] = [];
   let count = 0;
-  sortedTags.forEach(tag => {
+  for (const tag of sortedTags) {
     const nestedTag = parentTag ? `${parentTag}/${tag}` : tag;
     let list = '';
     let fileCount = 0;
     const taggedFiles = taggedDict[nestedTag];
     if (taggedFiles) {
-      list = taggedFiles.sort(sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
+      list = taggedFiles.sort((await importFileTs()).sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
       fileCount = taggedFiles.length;
       count += fileCount;
     }
     const subTree = tagTree[tag];
-    const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
+    const categories = await getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
     category.push(`${'#'.repeat(level)} ${tag} - ( ${fileCount + categories.count} )${list ? `\n\n${list}` : ''}`);
     if (categories.data) {
       category.push(categories.data);
     }
     count += categories.count;
-  });
+  }
   return { data: category.join('\n\n'), count };
 }
 
@@ -39,7 +38,7 @@ export async function updateCategoryPage(data: string) {
   if (!listRegExp.test(data)) {
     return data;
   }
-  const { files } = await getFiles();
+  const { files } = await (await importFileTs()).getFiles();
   const tagTree: TTagTree = {};
   const taggedDict: Dict<TFile[]> = {};
   const untaggedFiles: TFile[] = [];
@@ -78,7 +77,7 @@ export async function updateCategoryPage(data: string) {
     sortedTags.push(untagged);
     taggedDict[untagged] = untaggedFiles;
   }
-  const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
+  const categories = await getCategories(2, '', tagTree, sortedTags, taggedDict);
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
@@ -149,9 +148,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     return data;
   }
   const paramRegExp = getWrapRegExp('{{', '}}', 'g');
-  const files = await Promise.all(paths.map(path => {
+  const files = await Promise.all(paths.map(async path => {
     updatedPaths.push(path);
-    return getFile(path);
+    return (await importFileTs()).getFile(path);
   }));
   for (const file of files) {
     const isError = file.isError;
@@ -386,9 +385,6 @@ function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
   }
 }
 
-const prismjs = () => import(/* webpackChunkName: "prismjs" */ '@/ts/prismjs');
-let highlightAll: () => void;
-
 async function updateHighlight() {
   const codes = document.querySelectorAll('article pre > code');
   if (codes.length === 0) {
@@ -401,10 +397,7 @@ async function updateHighlight() {
       code.removeAttribute('data-line');
     }
   });
-  if (!highlightAll) {
-    highlightAll = (await prismjs()).highlightAll;
-  }
-  highlightAll();
+  (await importPrismjsTs()).highlightAll();
 }
 
 function foldElement(element: Element, isFolded: boolean) {
