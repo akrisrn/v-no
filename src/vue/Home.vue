@@ -84,7 +84,6 @@
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
-  import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
 
@@ -246,7 +245,9 @@
       });
       // noinspection JSUnusedGlobalSymbols
       exposeToWindow({
-        axios,
+        getAxios: async () => {
+          return (await importFileTs()).axios;
+        },
         version: process.env.VUE_APP_VERSION,
         config: this.config,
         homePath,

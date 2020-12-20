@@ -166,4 +166,5 @@ export async function getFiles() {
   return { files: cachedFiles, backlinks: cachedBacklinks };
 }
 
+export { axios };
 export { sortFiles } from '@/ts/async/compare';
