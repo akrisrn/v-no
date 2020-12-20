@@ -3,7 +3,9 @@ import { createList, eventListenerDict, removeClass, scroll, simpleUpdateLinkPat
 import { EFlag } from '@/ts/enums';
 import { buildHash, buildSearchContent, checkLinkPath, parseHash } from '@/ts/path';
 import { chopStr, getAnchorRegExp, snippetMark } from '@/ts/utils';
-import { importFileTs, importPrismjsTs } from '@/ts/async';
+import { importPrismjsTs } from '@/ts/async';
+import { sortFiles } from '@/ts/async/compare';
+import { getFile, getFiles } from '@/ts/async/file';
 import {
   addCacheKey,
   getHeadingPattern,
@@ -13,8 +15,8 @@ import {
   trimList,
 } from '@/ts/async/utils';
 
-async function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
-                             taggedDict: Dict<TFile[]>) {
+function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
+                       taggedDict: Dict<TFile[]>) {
   const category: string[] = [];
   let count = 0;
   for (const tag of sortedTags) {
@@ -23,12 +25,12 @@ async function getCategories(level: number, parentTag: string, tagTree: TTagTree
     let fileCount = 0;
     const taggedFiles = taggedDict[nestedTag];
     if (taggedFiles) {
-      list = taggedFiles.sort((await importFileTs()).sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
+      list = taggedFiles.sort(sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
       fileCount = taggedFiles.length;
       count += fileCount;
     }
     const subTree = tagTree[tag];
-    const categories = await getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
+    const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
     category.push(`${'#'.repeat(level)} ${tag} - ( ${fileCount + categories.count} )${list ? `\n\n${list}` : ''}`);
     if (categories.data) {
       category.push(categories.data);
@@ -45,7 +47,7 @@ export async function updateCategoryPage(data: string) {
   if (!listRegExp.test(data)) {
     return data;
   }
-  const { files } = await (await importFileTs()).getFiles();
+  const { files } = await getFiles();
   const tagTree: TTagTree = {};
   const taggedDict: Dict<TFile[]> = {};
   const untaggedFiles: TFile[] = [];
@@ -84,7 +86,7 @@ export async function updateCategoryPage(data: string) {
     sortedTags.push(untagged);
     taggedDict[untagged] = untaggedFiles;
   }
-  const categories = await getCategories(2, '', tagTree, sortedTags, taggedDict);
+  const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
@@ -187,9 +189,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     return data;
   }
   const paramRegExp = getWrapRegExp('{{', '}}', 'g');
-  const files = await Promise.all(paths.map(async path => {
+  const files = await Promise.all(paths.map(path => {
     updatedPaths.push(path);
-    return (await importFileTs()).getFile(path);
+    return getFile(path);
   }));
   for (const file of files) {
     const isError = file.isError;
@@ -579,9 +581,7 @@ function updateHeading() {
       } else {
         removeClass(headingTag, 'folding');
       }
-      heading.children.forEach(child => {
-        foldChild(child, heading.isFolded);
-      });
+      heading.children.forEach(child => foldChild(child, heading.isFolded));
     };
     if (headingElement.classList.contains('fold')) {
       toggleFold();
@@ -683,7 +683,7 @@ export async function updateSearchPage(content: string) {
   }
   resultUl.innerText = config.messages.searching;
   const timeStart = new Date().getTime();
-  const { files } = await (await importFileTs()).getFiles();
+  const { files } = await getFiles();
   const resultFiles: TFile[] = [];
   const quoteDict: Dict<HTMLQuoteElement> = {};
   let count = 0;
@@ -771,7 +771,7 @@ export async function updateSearchPage(content: string) {
     resultUl.innerText = config.messages.searchNothing;
   } else {
     resultUl.innerText = '';
-    resultFiles.sort((await importFileTs()).sortFiles).forEach(file => {
+    resultFiles.sort(sortFiles).forEach(file => {
       resultUl.append(createList(file));
       const blockquote = quoteDict[file.path];
       if (blockquote) {

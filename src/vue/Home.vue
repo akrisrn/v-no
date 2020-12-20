@@ -220,7 +220,23 @@
           return;
         }
       }
-      importMarkdownTs();
+      importFileTs().then(({ axios }) => exposeToWindow({ axios }));
+      importMarkdownTs().then(({ renderMD, replaceInlineScript, updateDom }) => {
+        exposeToWindow({
+          renderMD: (data?: string) => {
+            if (!data) {
+              return '';
+            }
+            data = data.trim();
+            if (!data) {
+              return '';
+            }
+            data = replaceInlineScript(this.filePath, data);
+            return data ? renderMD(data) : '';
+          },
+          updateDom,
+        });
+      });
       this.getData().then(({ data, flags }) => this.setData(data, flags));
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
@@ -231,7 +247,6 @@
       } else if (icon) {
         icon.remove();
       }
-      // noinspection JSUnusedGlobalSymbols
       this.addInputBinds({
         home: () => this.returnHome(),
         gg: () => {
@@ -241,20 +256,16 @@
         G: () => this.toTop(),
         dark: () => this.toggleDark(),
         zen: () => this.toggleZen(),
-        Backspace: () => this.keyInput = this.keyInput.replace(/.?Backspace$/, ''),
-      });
-      // noinspection JSUnusedGlobalSymbols
-      exposeToWindow({
-        getAxios: async () => {
-          return (await importFileTs()).axios;
+        Backspace: () => {
+          this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
+      });
+      exposeToWindow({
         version: process.env.VUE_APP_VERSION,
         config: this.config,
         homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
-        renderMD: this.renderMD,
-        updateDom: this.updateDom,
         destructors,
       });
     }
@@ -282,7 +293,6 @@
       });
     }
 
-    // noinspection JSUnusedGlobalSymbols
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
       const routeTo = parseRoute(to);
       const routeFrom = parseRoute(from);
@@ -294,9 +304,7 @@
       exposeToWindow({ filePath: this.filePath });
       cleanEventListenerDict();
       this.getData().then(({ data, flags }) => {
-        document.querySelectorAll('.custom').forEach(element => {
-          element.remove();
-        });
+        document.querySelectorAll('.custom').forEach(element => element.remove());
         let destructor = destructors.shift();
         while (destructor) {
           if (typeof destructor === 'function') {
@@ -454,26 +462,7 @@
     }
 
     addInputBinds(binds: Dict<() => void>) {
-      Object.keys(binds).forEach(key => {
-        this.addInputBind(key, binds[key]);
-      });
-    }
-
-    async renderMD(data?: string) {
-      if (!data) {
-        return '';
-      }
-      data = data.trim();
-      if (data) {
-        const { renderMD: render, replaceInlineScript } = await importMarkdownTs();
-        data = replaceInlineScript(this.filePath, data);
-        return data ? render(data) : '';
-      }
-      return '';
-    }
-
-    async updateDom() {
-      await (await importMarkdownTs()).updateDom();
+      Object.keys(binds).forEach(key => this.addInputBind(key, binds[key]));
     }
   }
 </script>

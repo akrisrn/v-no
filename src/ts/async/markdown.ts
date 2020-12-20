@@ -8,23 +8,31 @@ import { isExternalLink, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
-const footnote = require('markdown-it-footnote');
-const deflist = require('markdown-it-deflist');
-const taskLists = require('markdown-it-task-lists');
-const container = require('markdown-it-container');
-
-let isRenderingSummary = false;
-const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
-
 const quotes = config.smartQuotes;
-// noinspection JSUnusedGlobalSymbols
+
 const markdownIt = new MarkdownIt({
   html: true,
   breaks: true,
   linkify: true,
   typographer: true,
   quotes,
-}).use(footnote).use(deflist).use(taskLists).use(container, 'details', {
+});
+markdownIt.linkify.tlds([], false);
+
+if (!quotes || quotes.length < 4) {
+  markdownIt.disable('smartquotes');
+}
+
+[
+  require('markdown-it-deflist'),
+  require('markdown-it-footnote'),
+  require('markdown-it-task-lists'),
+].forEach(plugin => markdownIt.use(plugin));
+
+let isRenderingSummary = false;
+const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
+
+markdownIt.use(require('markdown-it-container'), 'details', {
   validate: (params: string) => params.match(detailsRegExp) || params === '',
   render: (tokens: Token[], idx: number) => {
     const token = tokens[idx];
@@ -65,11 +73,6 @@ const markdownIt = new MarkdownIt({
     return `<details${attrs}><summary>${summary}</summary>`;
   },
 });
-markdownIt.linkify.tlds([], false);
-
-if (!quotes || quotes.length < 4) {
-  markdownIt.disable('smartquotes');
-}
 
 markdownIt.renderer.rules.footnote_block_open = () => {
   return `<section class="footnotes"><p>${config.messages.footnotes}</p><ol class="footnotes-list">`;
@@ -217,9 +220,7 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   if (!isNaN(width)) {
     token.attrSet('width', `${width}`);
   } else if (match[1].startsWith('.')) {
-    trimList(match[1].split('.')).forEach(cls => {
-      token.attrJoin('class', cls);
-    });
+    trimList(match[1].split('.')).forEach(cls => token.attrJoin('class', cls));
   } else {
     token.attrSet('style', match[1]);
   }
