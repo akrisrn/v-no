@@ -78,6 +78,7 @@
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/dom';
+  import { renderMD } from '@/ts/markdown';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
   import { getFile, getFiles } from '@/ts/file';
   import {
@@ -90,7 +91,6 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import { renderMD } from '@/ts/render';
   import { chopStr, createErrorFile, destructors, replaceInlineScript, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import axios from 'axios';
@@ -474,7 +474,7 @@
       data = data.trim();
       if (data) {
         data = replaceInlineScript(this.filePath, data);
-        return data ? await renderMD(data) : '';
+        return data ? renderMD(data) : '';
       }
       return '';
     }

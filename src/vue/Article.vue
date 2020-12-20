@@ -6,9 +6,9 @@
   import { config } from '@/ts/config';
   import { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/data';
   import { removeClass, scroll } from '@/ts/dom';
+  import { renderMD } from '@/ts/markdown';
   import { getAnchorRegExp } from '@/ts/regexp';
-  import { renderMD } from '@/ts/render';
-  import { replaceInlineScript, renderedEvent } from '@/ts/utils';
+  import { renderedEvent, replaceInlineScript } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
@@ -34,28 +34,28 @@
     }
 
     // noinspection JSUnusedGlobalSymbols
-    async created() {
+    created() {
       if (!this.mdData) {
         this.renderComplete();
         return;
       }
-      this.markdown = await renderMD(this.mdData);
+      this.markdown = renderMD(this.mdData);
       this.$nextTick(() => updateDom());
-      updateSnippet(this.mdData).then(async data => {
+      updateSnippet(this.mdData).then(data => {
         if (!this.isCategoryFile) {
-          await this.updateData(data);
+          this.updateData(data);
           if (this.isSearchFile) {
             this.$nextTick(() => updateSearchPage(this.query.content || ''));
           }
         } else if (data) {
           updateCategoryPage(data).then(data => this.updateData(data));
         } else {
-          await this.updateData(data);
+          this.updateData(data);
         }
       });
     }
 
-    async updateData(data: string) {
+    updateData(data: string) {
       if (data === this.mdData) {
         this.renderComplete();
         return;
@@ -65,7 +65,7 @@
         this.renderComplete();
         return;
       }
-      this.markdown = await renderMD(data);
+      this.markdown = renderMD(data);
       this.$nextTick(() => {
         updateDom();
         this.renderComplete();
