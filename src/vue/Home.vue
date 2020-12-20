@@ -80,7 +80,7 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import { chopStr, createErrorFile, destructors, replaceInlineScript, snippetMark } from '@/ts/utils';
+  import { chopStr, createErrorFile, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async/import';
   import Article from '@/vue/Article.vue';
@@ -464,8 +464,9 @@
       }
       data = data.trim();
       if (data) {
+        const { renderMD: render, replaceInlineScript } = await importMarkdownTs();
         data = replaceInlineScript(this.filePath, data);
-        return data ? (await importMarkdownTs()).renderMD(data) : '';
+        return data ? render(data) : '';
       }
       return '';
     }

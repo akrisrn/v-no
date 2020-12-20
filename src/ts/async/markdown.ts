@@ -1,9 +1,10 @@
 import { config } from '@/ts/config';
 import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
-import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
-import { getAnchorRegExp } from '@/ts/regexp';
-import { chopStr, replaceByRegExp, snippetMark, trimList } from '@/ts/utils';
+import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
+import { chopStr, getAnchorRegExp, snippetMark } from '@/ts/utils';
+import { replaceByRegExp } from '@/ts/async/updata';
+import { isExternalLink, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 
@@ -289,4 +290,4 @@ export function renderMD(data: string) {
   return markdownIt.render(data);
 }
 
-export { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/updata';
+export { replaceInlineScript, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/updata';

@@ -5,8 +5,7 @@
 <script lang="ts">
   import { config } from '@/ts/config';
   import { removeClass, scroll } from '@/ts/dom';
-  import { getAnchorRegExp } from '@/ts/regexp';
-  import { renderedEvent, replaceInlineScript } from '@/ts/utils';
+  import { getAnchorRegExp, renderedEvent } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async/import';
 
@@ -20,7 +19,7 @@
     $refs!: {
       article: HTMLElement;
     };
-    mdData = this.data ? replaceInlineScript(this.filePath, this.data) : '';
+    mdData = '';
     markdown = '';
     isRendering = true;
 
@@ -34,24 +33,35 @@
 
     // noinspection JSUnusedGlobalSymbols
     async created() {
+      const markdownTs = await importMarkdownTs();
+      const {
+        renderMD,
+        replaceInlineScript,
+        updateCategoryPage,
+        updateDom,
+        updateSearchPage,
+        updateSnippet,
+      } = markdownTs;
+      if (this.data) {
+        this.mdData = replaceInlineScript(this.filePath, this.data);
+      }
       if (!this.mdData) {
         this.renderComplete();
         return;
       }
-      const markdownTs = await importMarkdownTs();
-      this.markdown = markdownTs.renderMD(this.mdData);
+      this.markdown = renderMD(this.mdData);
       this.$nextTick(() => {
         Promise.all([
-          markdownTs.updateSnippet(this.mdData),
-          markdownTs.updateDom(),
+          updateSnippet(this.mdData),
+          updateDom(),
         ]).then(([data]) => {
           if (!this.isCategoryFile) {
             this.updateData(data, markdownTs);
             if (this.isSearchFile) {
-              this.$nextTick(() => markdownTs.updateSearchPage(this.query.content || ''));
+              this.$nextTick(() => updateSearchPage(this.query.content || ''));
             }
           } else if (data) {
-            markdownTs.updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
+            updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
           } else {
             this.updateData(data, markdownTs);
           }

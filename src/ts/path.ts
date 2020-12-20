@@ -37,7 +37,7 @@ export function addBaseUrl(path: string) {
   return path;
 }
 
-function cleanBaseUrl(path: string) {
+export function cleanBaseUrl(path: string) {
   if (baseUrl !== '/' && path.startsWith(baseUrl)) {
     return path.substr(baseUrl.length - 1);
   }
@@ -48,14 +48,6 @@ function cleanBaseUrl(path: string) {
     return '/';
   }
   return path;
-}
-
-export function addCacheKey(path: string, needClean = true) {
-  let cacheKey = config.cacheKey;
-  if (typeof cacheKey === 'object') {
-    cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
-  }
-  return cacheKey ? `${path}?${cacheKey}` : path;
 }
 
 export function buildHash(hashPath: THashPath) {
@@ -95,14 +87,6 @@ export function getSearchTagLinks(tag: string) {
   }
   list.push([buildSearchFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
   return list;
-}
-
-export function isExternalLink(href: string) {
-  try {
-    return !!new URL(href).host;
-  } catch (e) {
-    return false;
-  }
 }
 
 export function checkLinkPath(path: string) {
@@ -192,9 +176,4 @@ export function formatQuery(query: TQuery) {
     }
   }
   return list.join('&');
-}
-
-export function changeHash(anchor: string) {
-  const { path, query } = parseHash(location.hash, true);
-  location.hash = buildHash({ path, anchor, query });
 }

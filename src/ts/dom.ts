@@ -2,28 +2,10 @@ import { EIcon } from '@/ts/enums';
 import { checkLinkPath, getSearchTagLinks, shortenPath } from '@/ts/path';
 import { importFileTs } from '@/ts/async/import';
 
-let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
+export let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
 
 export function cleanEventListenerDict() {
   eventListenerDict = {};
-}
-
-export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
-  let eventListeners = eventListenerDict[type];
-  if (eventListeners === undefined) {
-    eventListeners = { elements: [element], listeners: [listener] };
-    eventListenerDict[type] = eventListeners;
-  } else {
-    const indexOf = eventListeners.elements.indexOf(element);
-    if (indexOf >= 0) {
-      element.removeEventListener(type, eventListeners.listeners[indexOf]);
-      eventListeners.listeners.splice(indexOf, 1, listener);
-    } else {
-      eventListeners.elements.push(element);
-      eventListeners.listeners.push(listener);
-    }
-  }
-  element.addEventListener(type, listener);
 }
 
 export function removeClass(element: Element, cls?: string) {
