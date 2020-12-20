@@ -288,3 +288,5 @@ export function renderMD(data: string) {
   headingCount = {};
   return markdownIt.render(data);
 }
+
+export { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/data';
