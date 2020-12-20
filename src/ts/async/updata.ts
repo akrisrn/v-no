@@ -1,10 +1,10 @@
 import { config } from '@/ts/config';
 import { addEventListener, createList, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
 import { EFlag } from '@/ts/enums';
-import { importFileTs, importPrismjsTs } from '@/ts/import';
 import { addCacheKey, buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
 import { getAnchorRegExp, getHeadingPattern, getHeadingRegExp, getLinkPathPattern, getWrapRegExp } from '@/ts/regexp';
 import { chopStr, replaceByRegExp, replaceInlineScript, snippetMark, trimList } from '@/ts/utils';
+import { importFileTs, importPrismjsTs } from '@/ts/async/import';
 
 async function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                              taggedDict: Dict<TFile[]>) {

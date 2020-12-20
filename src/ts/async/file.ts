@@ -1,9 +1,9 @@
 import { baseFiles } from '@/ts/config';
-import { formatDate } from '@/ts/date';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, addCacheKey, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
 import { createErrorFile, createFlags, trimList } from '@/ts/utils';
+import { formatDate } from '@/ts/async/date';
 import axios from 'axios';
 
 const cachedBacklinks: Dict<string[]> = {};
@@ -148,4 +148,4 @@ export async function getFiles() {
   return { files: cachedFiles, backlinks: cachedBacklinks };
 }
 
-export { sortFiles } from '@/ts/compare';
+export { sortFiles } from '@/ts/async/compare';

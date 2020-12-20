@@ -5,10 +5,10 @@
 <script lang="ts">
   import { config } from '@/ts/config';
   import { removeClass, scroll } from '@/ts/dom';
-  import { importMarkdownTs } from '@/ts/import';
   import { getAnchorRegExp } from '@/ts/regexp';
   import { renderedEvent, replaceInlineScript } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { importMarkdownTs } from '@/ts/async/import';
 
   @Component
   export default class Article extends Vue {

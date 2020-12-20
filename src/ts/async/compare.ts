@@ -1,4 +1,4 @@
-import { parseDate } from '@/ts/date';
+import { parseDate } from '@/ts/async/date';
 
 function compareDate(dateA?: string, dateB?: string) {
   if (dateA) {

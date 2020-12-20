@@ -70,7 +70,6 @@
   import { config, getSelectConf, shortPaths } from '@/ts/config';
   import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
   import { EFlag, EIcon, flagValues } from '@/ts/enums';
-  import { importFileTs, importMarkdownTs } from '@/ts/import';
   import {
     addBaseUrl,
     buildHash,
@@ -83,6 +82,7 @@
   } from '@/ts/path';
   import { chopStr, createErrorFile, destructors, replaceInlineScript, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
+  import { importFileTs, importMarkdownTs } from '@/ts/async/import';
   import axios from 'axios';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';

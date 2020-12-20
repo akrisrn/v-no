@@ -1,6 +1,6 @@
 import { EIcon } from '@/ts/enums';
-import { importFileTs } from '@/ts/import';
 import { checkLinkPath, getSearchTagLinks, shortenPath } from '@/ts/path';
+import { importFileTs } from '@/ts/async/import';
 
 let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
 

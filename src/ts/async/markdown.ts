@@ -289,4 +289,4 @@ export function renderMD(data: string) {
   return markdownIt.render(data);
 }
 
-export { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/updata';
+export { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/updata';

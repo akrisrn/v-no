@@ -78,6 +78,6 @@ type THashPath = {
   query: string;
 }
 
-type TFileTs = typeof import('@/ts/file');
-type TMarkdownTs = typeof import('@/ts/markdown');
-type TPrismjsTs = typeof import('@/ts/prismjs');
+type TFileTs = typeof import('@/ts/async/file');
+type TMarkdownTs = typeof import('@/ts/async/markdown');
+type TPrismjsTs = typeof import('@/ts/async/prismjs');
