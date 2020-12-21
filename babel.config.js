@@ -1,3 +1,8 @@
+let languages = [];
+if (process.env.PRISM_LANGUAGES) {
+  languages = process.env.PRISM_LANGUAGES.split(',').map(lang => lang.trim()).filter(lang => lang);
+}
+
 module.exports = {
   presets: [
     '@vue/cli-plugin-babel/preset',
@@ -6,12 +11,10 @@ module.exports = {
     [
       'prismjs',
       {
-        languages: process.env.PRISM_LANGUAGES ? process.env.PRISM_LANGUAGES.split(',').
-            map(lang => lang.trim()).
-            filter(lang => lang) : [],
-        plugins: ['line-numbers', 'line-highlight', 'show-language', 'copy-to-clipboard'],
+        languages,
+        plugins: languages.length > 0 ? ['line-numbers', 'line-highlight', 'show-language', 'copy-to-clipboard'] : [],
         theme: 'tomorrow',
-        css: true,
+        css: languages.length > 0,
       },
     ],
   ],
