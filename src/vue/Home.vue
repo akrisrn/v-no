@@ -72,6 +72,7 @@
   import { EEvent, EFlag, EIcon, flagValues } from '@/ts/enums';
   import {
     addBaseUrl,
+    baseUrl,
     buildHash,
     formatQuery,
     getSearchTagLinks,
@@ -263,6 +264,7 @@
       exposeToWindow({
         version: process.env.VUE_APP_VERSION,
         config: this.config,
+        baseUrl,
         homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,

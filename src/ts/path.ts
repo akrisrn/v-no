@@ -14,7 +14,7 @@ export function shortenPath(path: string, ext = 'md') {
   return path;
 }
 
-const baseUrl: string = process.env.BASE_URL;
+export const baseUrl: string = process.env.BASE_URL;
 const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
 const indexPath: string = process.env.VUE_APP_INDEX_PATH;
 const hasCdnUrl = !!process.env.VUE_APP_CDN_URL;
