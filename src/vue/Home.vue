@@ -69,7 +69,7 @@
 <script lang="ts">
   import { config, getSelectConf, shortPaths } from '@/ts/config';
   import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
-  import { EFlag, EIcon, flagValues } from '@/ts/enums';
+  import { EEvent, EFlag, EIcon, flagValues } from '@/ts/enums';
   import {
     addBaseUrl,
     buildHash,
@@ -80,7 +80,7 @@
     parseRoute,
     shortenPath,
   } from '@/ts/path';
-  import { chopStr, createErrorFile, destructors, snippetMark } from '@/ts/utils';
+  import { chopStr, createErrorFile, destructors, dispatchEvent, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
@@ -431,6 +431,7 @@
         removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
+      dispatchEvent(EEvent.toggleDark, this.isDark);
     }
 
     toggleZen() {
@@ -444,6 +445,7 @@
         removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
+      dispatchEvent(EEvent.toggleZen, this.isZen);
     }
 
     toTop(toBottom = false) {
@@ -456,6 +458,7 @@
         this.isToTop = false;
         this.$nextTick(() => removeClass(this.$refs.toTop));
       }, 500);
+      dispatchEvent(EEvent.toTop, !toBottom);
     }
 
     addInputBind(input: string, bind: () => void) {

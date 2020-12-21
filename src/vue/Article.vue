@@ -5,7 +5,8 @@
 <script lang="ts">
   import { config } from '@/ts/config';
   import { removeClass, scroll } from '@/ts/dom';
-  import { getAnchorRegExp, renderedEvent } from '@/ts/utils';
+  import { EEvent } from '@/ts/enums';
+  import { dispatchEvent, getAnchorRegExp } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async';
 
@@ -22,6 +23,7 @@
     mdData = '';
     markdown = '';
     isRendering = true;
+    timeStart = new Date().getTime();
 
     get isCategoryFile() {
       return this.filePath === config.paths.category;
@@ -99,9 +101,7 @@
           scroll(element.offsetTop - 6);
         }
       });
-      setTimeout(() => {
-        document.dispatchEvent(renderedEvent);
-      }, 100);
+      dispatchEvent(EEvent.rendered, new Date().getTime() - this.timeStart, 100);
     }
   }
 </script>

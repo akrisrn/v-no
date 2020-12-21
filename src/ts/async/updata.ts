@@ -1,8 +1,8 @@
 import { config } from '@/ts/config';
 import { createList, eventListenerDict, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
-import { EFlag } from '@/ts/enums';
+import { EEvent, EFlag } from '@/ts/enums';
 import { buildHash, buildSearchContent, checkLinkPath, parseHash } from '@/ts/path';
-import { chopStr, getAnchorRegExp, snippetMark } from '@/ts/utils';
+import { chopStr, dispatchEvent, getAnchorRegExp, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { getFile, getFiles } from '@/ts/async/file';
@@ -843,12 +843,15 @@ export async function updateSearchPage(content: string) {
       }
     });
   }
+  const time = new Date().getTime() - timeStart;
   const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
   if (searchTime) {
-    searchTime.innerText = `${(new Date().getTime() - timeStart) / 1000}`;
+    searchTime.innerText = `${time / 1000}`;
   }
+  const result = resultFiles.length;
   const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
   if (searchCount) {
-    searchCount.innerText = `${resultFiles.length}/${count}`;
+    searchCount.innerText = `${result}/${count}`;
   }
+  dispatchEvent(EEvent.searchCompleted, { time, result, count }, 100).then();
 }

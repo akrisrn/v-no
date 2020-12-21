@@ -1,11 +1,10 @@
 import { config } from '@/ts/config';
+import { EEvent } from '@/ts/enums';
 import { shortenPath } from '@/ts/path';
 
 export const snippetMark = '--8<--';
 
 export const destructors: (() => void)[] = [];
-
-export const renderedEvent = new CustomEvent('rendered');
 
 export function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string) {
   let pattern = `h[${min}-${max}]-\\d+`;
@@ -41,4 +40,11 @@ export function createErrorFile(path: string): TFile {
     links: [],
     isError: true,
   };
+}
+
+export async function dispatchEvent<T>(type: EEvent, payload?: T, timeout?: number) {
+  if (timeout) {
+    await new Promise(_ => setTimeout(_, timeout));
+  }
+  return document.dispatchEvent(new CustomEvent<T>(type, { detail: payload }));
 }
