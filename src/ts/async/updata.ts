@@ -454,14 +454,26 @@ async function updateHighlight() {
   if (codes.length === 0) {
     return;
   }
-  codes.forEach(code => {
+  let needHighlight = false;
+  for (const code of codes) {
     const dataLine = code.getAttribute('data-line');
     if (dataLine) {
       code.parentElement!.setAttribute('data-line', dataLine);
       code.removeAttribute('data-line');
     }
-  });
-  (await importPrismjsTs()).highlightAll();
+    if (needHighlight) {
+      continue;
+    }
+    for (const cls of code.classList) {
+      if (/^(language|lang)-\S+$/.test(cls)) {
+        needHighlight = true;
+        break;
+      }
+    }
+  }
+  if (needHighlight) {
+    (await importPrismjsTs()).highlightAll();
+  }
 }
 
 function foldElement(element: Element, isFolded: boolean) {
