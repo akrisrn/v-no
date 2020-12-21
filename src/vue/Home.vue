@@ -266,6 +266,7 @@
         homePath,
         filePath: this.filePath,
         addInputBind: this.addInputBind,
+        addEventListener: this.addEventListener,
         destructors,
       });
     }
@@ -463,6 +464,11 @@
 
     addInputBinds(binds: Dict<() => void>) {
       Object.keys(binds).forEach(key => this.addInputBind(key, binds[key]));
+    }
+
+    addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
+      element.addEventListener(type, listener);
+      destructors.push(() => element.removeEventListener(type, listener));
     }
   }
 </script>
