@@ -250,7 +250,7 @@
       this.addInputBinds({
         home: () => this.returnHome(),
         gg: () => {
-          this.toTop(document.body.offsetHeight);
+          this.toTop(true);
           this.keyInput += '_';
         },
         G: () => this.toTop(),
@@ -445,12 +445,12 @@
       }
     }
 
-    toTop(height = 0) {
+    toTop(toBottom = false) {
       if (this.isToTop) {
         return;
       }
       this.isToTop = true;
-      scroll(height);
+      scroll(toBottom ? document.body.offsetHeight : 0);
       setTimeout(() => {
         this.isToTop = false;
         this.$nextTick(() => removeClass(this.$refs.toTop));
