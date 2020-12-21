@@ -303,24 +303,34 @@ function changeHash(anchor: string) {
   location.hash = buildHash({ path, anchor, query });
 }
 
-function updateAnchor(onlyToc = false) {
-  for (const a of document.querySelectorAll<HTMLAnchorElement>(`article ${onlyToc ? '#toc' : ''} a[href^="#h"]`)) {
+function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, links: NodeListOf<HTMLAnchorElement>) {
+  for (const a of links) {
     const anchor = a.getAttribute('href')!.substr(1);
-    if (!getAnchorRegExp().test(anchor)) {
+    if (!anchorRegExp.test(anchor)) {
       continue;
     }
-    const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${anchor}"]`);
+    const element = anchorDict[anchor];
     addEventListener(a, 'click', e => {
       e.preventDefault();
-      if (heading && heading.offsetTop > 0) {
-        scroll(heading.offsetTop - 6);
+      if (element && element.offsetTop > 0) {
+        scroll(element.offsetTop - 6);
         changeHash(anchor);
       }
     });
   }
-  if (onlyToc) {
-    return;
+}
+
+function updateAnchor() {
+  const anchorRegExp = getAnchorRegExp();
+  const anchorDict: Dict<HTMLElement> = {};
+  for (const element of document.querySelectorAll<HTMLElement>('article > *[id^="h"]')) {
+    const anchor = element.id;
+    if (!anchorRegExp.test(anchor)) {
+      continue;
+    }
+    anchorDict[anchor] = element;
   }
+  updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll<HTMLAnchorElement>(`article a[href^="#h"]`));
   document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
@@ -341,6 +351,7 @@ function updateAnchor(onlyToc = false) {
       }
     });
   });
+  return [anchorRegExp, anchorDict] as [RegExp, Dict<HTMLElement>];
 }
 
 function updateImagePath() {
@@ -638,13 +649,12 @@ function updateHeading() {
     tocDiv.firstElementChild!.classList.add('ul-a');
     tocDiv.lastElementChild!.classList.add('ul-b');
   }
-  updateAnchor(true);
 }
 
 export async function updateDom() {
   waitingList = [];
   updateDD();
-  updateAnchor();
+  const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
   updateLinkPath();
   const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
@@ -653,6 +663,7 @@ export async function updateDom() {
   updateCustomStyle(styles);
   await updateHighlight();
   updateHeading();
+  updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
 }
 
 const htmlSymbolDict: Dict<string> = {
