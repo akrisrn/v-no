@@ -32,6 +32,7 @@ if (!quotes || quotes.length < 4) {
 let isRenderingSummary = false;
 const detailsRegExp = /^\s+(open\s+)?(?:\.(.*?)\s+)?(.*)$/;
 
+// noinspection JSUnusedGlobalSymbols
 markdownIt.use(require('markdown-it-container'), 'details', {
   validate: (params: string) => params.match(detailsRegExp) || params === '',
   render: (tokens: Token[], idx: number) => {

@@ -94,9 +94,9 @@
         if (!getAnchorRegExp().test(this.anchor)) {
           return;
         }
-        const heading = document.querySelector<HTMLHeadingElement>(`article > *[id="${this.anchor}"]`);
-        if (heading) {
-          scroll(heading.offsetTop - 6);
+        const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);
+        if (element && element.offsetTop > 0) {
+          scroll(element.offsetTop - 6);
         }
       });
       setTimeout(() => {

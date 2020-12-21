@@ -92,13 +92,12 @@ export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAncho
       continue;
     }
     a.classList.add('rendering');
-    let links = dict[path];
-    if (links === undefined) {
-      links = [a];
-      dict[path] = links;
-    } else {
+    const links = dict[path];
+    if (links !== undefined) {
       links.push(a);
+      continue;
     }
+    dict[path] = [a];
   }
   const paths = Object.keys(dict);
   if (paths.length === 0) {

@@ -60,7 +60,7 @@ export async function updateCategoryPage(data: string) {
       untaggedFiles.push(file);
       continue;
     }
-    tags.forEach(tag => {
+    for (const tag of tags) {
       let cursor = tagTree;
       tag.split('/').forEach(seg => {
         let subTree = cursor[seg];
@@ -70,14 +70,13 @@ export async function updateCategoryPage(data: string) {
         }
         cursor = subTree;
       });
-      let taggedFiles = taggedDict[tag];
-      if (taggedFiles === undefined) {
-        taggedFiles = [file];
-        taggedDict[tag] = taggedFiles;
-      } else {
+      const taggedFiles = taggedDict[tag];
+      if (taggedFiles !== undefined) {
         taggedFiles.push(file);
+        continue;
       }
-    });
+      taggedDict[tag] = [file];
+    }
   }
   const sortedTags = Object.keys(tagTree).sort();
   if (untaggedFiles.length > 0) {
@@ -285,15 +284,16 @@ function addEventListener(element: Element, type: string, listener: EventListene
   if (eventListeners === undefined) {
     eventListeners = { elements: [element], listeners: [listener] };
     eventListenerDict[type] = eventListeners;
+    element.addEventListener(type, listener);
+    return;
+  }
+  const indexOf = eventListeners.elements.indexOf(element);
+  if (indexOf >= 0) {
+    element.removeEventListener(type, eventListeners.listeners[indexOf]);
+    eventListeners.listeners.splice(indexOf, 1, listener);
   } else {
-    const indexOf = eventListeners.elements.indexOf(element);
-    if (indexOf >= 0) {
-      element.removeEventListener(type, eventListeners.listeners[indexOf]);
-      eventListeners.listeners.splice(indexOf, 1, listener);
-    } else {
-      eventListeners.elements.push(element);
-      eventListeners.listeners.push(listener);
-    }
+    eventListeners.elements.push(element);
+    eventListeners.listeners.push(listener);
   }
   element.addEventListener(type, listener);
 }

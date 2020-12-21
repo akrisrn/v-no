@@ -121,18 +121,17 @@ export async function getFile(path: string) {
   if (cachedFiles[path] !== undefined) {
     isRequesting[path] = false;
     return cachedFiles[path];
-  } else {
-    return new Promise<TFile>(resolve => {
-      axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(response => {
-        cachedFiles[path] = parseData(path, response.data.trim());
-      }).catch(() => {
-        cachedFiles[path] = createErrorFile(path);
-      }).finally(() => {
-        isRequesting[path] = false;
-        resolve(cachedFiles[path]);
-      });
-    });
   }
+  return new Promise<TFile>(resolve => {
+    axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(response => {
+      cachedFiles[path] = parseData(path, response.data.trim());
+    }).catch(() => {
+      cachedFiles[path] = createErrorFile(path);
+    }).finally(() => {
+      isRequesting[path] = false;
+      resolve(cachedFiles[path]);
+    });
+  });
 }
 
 const walkedPaths = [...baseFiles];
