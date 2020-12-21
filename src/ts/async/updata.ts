@@ -323,14 +323,55 @@ function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, l
 function updateAnchor() {
   const anchorRegExp = getAnchorRegExp();
   const anchorDict: Dict<HTMLElement> = {};
+  const anchorsDictByHref: Dict<{ elements: HTMLElement[]; links: HTMLAnchorElement[] }> = {};
   for (const element of document.querySelectorAll<HTMLElement>('article > *[id^="h"]')) {
     const anchor = element.id;
     if (!anchorRegExp.test(anchor)) {
       continue;
     }
     anchorDict[anchor] = element;
+    for (const a of element.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
+      const href = a.getAttribute('href')!;
+      const anchors = anchorsDictByHref[href];
+      if (anchors !== undefined) {
+        anchors.elements.push(element);
+        anchors.links.push(a);
+        continue;
+      }
+      anchorsDictByHref[href] = {
+        elements: [element],
+        links: [a],
+      };
+    }
   }
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll<HTMLAnchorElement>(`article a[href^="#h"]`));
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#/"]')) {
+    const anchors = anchorsDictByHref[a.getAttribute('href')!];
+    if (anchors === undefined || anchors.links.includes(a)) {
+      continue;
+    }
+    const elements = anchors.elements;
+    let nearestElement = elements[0];
+    let minDistance = Math.abs(nearestElement.offsetTop - a.offsetTop);
+    if (elements.length > 1) {
+      for (let i = 1; i < elements.length; i++) {
+        const element = elements[i];
+        const distance = Math.abs(element.offsetTop - a.offsetTop);
+        if (distance >= minDistance) {
+          break;
+        }
+        nearestElement = element;
+        minDistance = distance;
+      }
+    }
+    addEventListener(a, 'click', e => {
+      if (nearestElement.offsetTop > 0) {
+        e.preventDefault();
+        scroll(nearestElement.offsetTop - 6);
+        changeHash(nearestElement.id);
+      }
+    });
+  }
   document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
