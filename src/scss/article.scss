@@ -293,6 +293,7 @@ article {
       outline: none;
 
       &:after {
+        font-family: $arial-font-family;
         float: right;
         content: "▲";
       }
@@ -311,6 +312,14 @@ article {
         li:before {
           margin-right: 8px;
           content: "•";
+        }
+      }
+
+      blockquote {
+        padding-left: 0;
+
+        &:before {
+          content: none;
         }
       }
     }
