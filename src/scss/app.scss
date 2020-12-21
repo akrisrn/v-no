@@ -5,16 +5,32 @@
   --mono-font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
   --font-size: 14px;
   --font-size-s: 12px;
+  --font-color: #464646;
+  --gray-font-color: #8d8d8d;
+  --link-font-color: #2864dc;
+
+  --mark-color: rgba(255, 255, 0, 0.3);
+
   --info-color: 0, 150, 255;
   --success-color: 0, 200, 100;
   --warning-color: 255, 150, 0;
   --danger-color: 255, 50, 100;
-  --mark-color: 255, 255, 0;
+  --dark-color: 0, 0, 0;
+
+  --background-color: #f1f1f1;
+  --main-background-color: #ffffff;
+  --code-background-color: rgba(150, 150, 150, 0.1);
+
+  --dark-background-color: #2b2b2b;
+  --dark-main-background-color: #3b3b3b;
+  --dark-font-color: #bebebe;
+  --dark-link-font-color: #82b4e6;
 }
 
 body {
   margin: 0;
   transition: background-color 0.5s;
+  background-color: $background-color;
 }
 
 #app {

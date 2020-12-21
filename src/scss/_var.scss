@@ -2,45 +2,52 @@ $max-width: 700px;
 $media-max-width: $max-width + 50;
 $border-width: 6px;
 
-$shadow-color: rgba(#000000, 0.1);
-$box-shadow: 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px $shadow-color;
-
-$background-color: #f1f1f1;
-$main-background-color: #ffffff;
-$code-background-color: rgba(#969696, 0.1);
-$mark-color: var(--mark-color);
-$mark-color-s: rgba($mark-color, 0.3);
-
-$info-color: var(--info-color);
-$info-color-s: rgba($info-color, 0.5);
-$info-color-xs: rgba($info-color, 0.1);
-$success-color: var(--success-color);
-$success-color-s: rgba($success-color, 0.5);
-$success-color-xs: rgba($success-color, 0.1);
-$warning-color: var(--warning-color);
-$warning-color-s: rgba($warning-color, 0.5);
-$warning-color-xs: rgba($warning-color, 0.1);
-$danger-color: var(--danger-color);
-$danger-color-s: rgba($danger-color, 0.5);
-$danger-color-xs: rgba($danger-color, 0.1);
-$color-sets: (
-        "info": ($info-color, $info-color-s, $info-color-xs),
-        "success": ($success-color, $success-color-s, $success-color-xs),
-        "warning": ($warning-color, $warning-color-s, $warning-color-xs),
-        "danger": ($danger-color, $danger-color-s, $danger-color-xs),
-        "dark": (#000000, rgba(#000000, 0.5), rgba(#000000, 0.1))
-);
-
 $font-family: var(--font-family);
 $mono-font-family: var(--mono-font-family);
 $arial-font-family: Arial, serif;
 $font-size: var(--font-size);
 $font-size-s: var(--font-size-s);
-$font-color: #464646;
-$gray-font-color: #8d8d8d;
-$link-font-color: #2864dc;
+$font-color: var(--font-color);
+$gray-font-color: var(--gray-font-color);
+$link-font-color: var(--link-font-color);
 
-$dark-background-color: #2b2b2b;
-$dark-main-background-color: #3b3b3b;
-$dark-font-color: #bebebe;
-$dark-link-font-color: #82b4e6;
+$mark-color: var(--mark-color);
+$shadow-color: rgba(#000000, 0.1);
+$box-shadow: 0 3px 3px 0 $shadow-color, 0 3px 6px 0 $shadow-color, 0 3px 0 -3px $shadow-color;
+
+$info-color: var(--info-color);
+$info-color-s: rgba($info-color, 0.5);
+$info-color-xs: rgba($info-color, 0.1);
+
+$success-color: var(--success-color);
+$success-color-s: rgba($success-color, 0.5);
+$success-color-xs: rgba($success-color, 0.1);
+
+$warning-color: var(--warning-color);
+$warning-color-s: rgba($warning-color, 0.5);
+$warning-color-xs: rgba($warning-color, 0.1);
+
+$danger-color: var(--danger-color);
+$danger-color-s: rgba($danger-color, 0.5);
+$danger-color-xs: rgba($danger-color, 0.1);
+
+$dark-color: var(--dark-color);
+$dark-color-s: rgba($dark-color, 0.5);
+$dark-color-xs: rgba($dark-color, 0.1);
+
+$color-sets: (
+        "info": ($info-color-s, $info-color-xs),
+        "success": ($success-color-s, $success-color-xs),
+        "warning": ($warning-color-s, $warning-color-xs),
+        "danger": ($danger-color-s, $danger-color-xs),
+        "dark": ($dark-color-s, $dark-color-xs)
+);
+
+$background-color: var(--background-color);
+$main-background-color: var(--main-background-color);
+$code-background-color: var(--code-background-color);
+
+$dark-background-color: var(--dark-background-color);
+$dark-main-background-color: var(--dark-main-background-color);
+$dark-font-color: var(--dark-font-color);
+$dark-link-font-color: var(--dark-link-font-color);

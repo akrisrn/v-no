@@ -1,6 +1,8 @@
 @import "var";
 
 body.dark {
+  background-color: $dark-background-color;
+
   #app {
     color: $dark-font-color;
 

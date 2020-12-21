@@ -164,7 +164,7 @@ article {
     transition: color 0.5s;
     color: $font-color;
     border-radius: 3px;
-    background-color: $mark-color-s;
+    background-color: $mark-color;
   }
 
   pre, pre[class*="language-"] {
@@ -326,17 +326,17 @@ article {
 
     @each $name, $colors in $color-sets {
       &#{if($name == "info", "", "." + $name)} {
-        border-color: nth($colors, 2);
+        border-color: nth($colors, 1);
 
         &[open]:not(.empty):after {
-          border-color: nth($colors, 2);
+          border-color: nth($colors, 1);
         }
 
         summary {
-          background-color: nth($colors, 3);
+          background-color: nth($colors, 2);
 
           &:after {
-            color: nth($colors, 2);
+            color: nth($colors, 1);
           }
         }
       }
@@ -493,10 +493,10 @@ article {
 
     @each $name, $colors in $color-sets {
       &#{if($name == "info", "", "." + $name)} {
-        border-color: nth($colors, 2);
+        border-color: nth($colors, 1);
 
         &:hover {
-          background-color: nth($colors, 3);
+          background-color: nth($colors, 2);
         }
       }
     }
