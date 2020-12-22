@@ -3,7 +3,7 @@ import { getIcon } from '@/ts/dom';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
 import { chopStr, getAnchorRegExp, snippetMark } from '@/ts/utils';
-import { replaceByRegExp } from '@/ts/async/updata';
+import { replaceByRegExp } from '@/ts/async/update';
 import { isExternalLink, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -292,4 +292,4 @@ export function renderMD(data: string) {
   return markdownIt.render(data);
 }
 
-export { replaceInlineScript, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/updata';
+export { replaceInlineScript, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/update';
