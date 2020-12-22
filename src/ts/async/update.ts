@@ -1,5 +1,5 @@
 import { config } from '@/ts/config';
-import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
+import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
 import { EEvent, EFlag } from '@/ts/enums';
 import { buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
 import { chopStr, snippetMark } from '@/ts/utils';

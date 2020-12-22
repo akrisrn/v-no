@@ -77,7 +77,7 @@
     removeClass,
     scroll,
     simpleUpdateLinkPath,
-  } from '@/ts/dom';
+  } from '@/ts/element';
   import { EEvent, EFlag, EIcon } from '@/ts/enums';
   import {
     addBaseUrl,

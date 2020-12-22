@@ -1,5 +1,5 @@
 import { config } from '@/ts/config';
-import { getIcon } from '@/ts/dom';
+import { getIcon } from '@/ts/element';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
 import { chopStr, snippetMark } from '@/ts/utils';

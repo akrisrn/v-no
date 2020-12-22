@@ -4,7 +4,7 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { dispatchEvent, removeClass, scroll } from '@/ts/dom';
+  import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async';
