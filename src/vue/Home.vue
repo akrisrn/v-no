@@ -98,6 +98,8 @@
       toTop: HTMLSpanElement;
     };
 
+    file: TFileTs | null = null;
+
     data = '';
     title = '';
     tags: string[] = [];
@@ -136,6 +138,7 @@
 
     homePath = homePath;
     homeHash = buildHash({ path: this.shortBaseFiles.index, anchor: '', query: '' });
+
     selectConf = getSelectConf();
 
     get config() {
@@ -302,7 +305,10 @@
     }
 
     async getData() {
-      const { createErrorFile, getFile } = await importFileTs();
+      if (!this.file) {
+        this.file = await importFileTs();
+      }
+      const { createErrorFile, getFile } = this.file;
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
@@ -390,7 +396,10 @@
 
     async getBacklinks() {
       this.isLoadingBacklinks = true;
-      const { getFiles, sortFiles } = await importFileTs();
+      if (!this.file) {
+        this.file = await importFileTs();
+      }
+      const { getFiles, sortFiles } = this.file;
       const { files, backlinks } = await getFiles();
       const paths = backlinks[this.filePath];
       this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => files[path]).sort(sortFiles) : [];
