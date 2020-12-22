@@ -5,10 +5,10 @@
         <img v-if="favicon" :src="favicon" alt="favicon"/>
         <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span class="filler"></span>
-        <a :href="`#${shortPaths.readme}`"></a>
-        <a :href="`#${shortPaths.archive}`"></a>
-        <a :href="`#${shortPaths.category}`"></a>
-        <a :href="`#${shortPaths.search}`"></a>
+        <a :href="`#${shortBaseFiles.readme}`"></a>
+        <a :href="`#${shortBaseFiles.archive}`"></a>
+        <a :href="`#${shortBaseFiles.category}`"></a>
+        <a :href="`#${shortBaseFiles.search}`"></a>
         <select v-if="enableMultiConf" v-model="selectConf" @change="confChanged">
           <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-  import { config, getSelectConf } from '@/ts/config';
+  import { config, getSelectConf, shortBaseFiles } from '@/ts/config';
   import {
     cleanEventListenerDict,
     createList,
@@ -79,16 +79,7 @@
     simpleUpdateLinkPath,
   } from '@/ts/element';
   import { EEvent, EFlag, EIcon } from '@/ts/enums';
-  import {
-    addBaseUrl,
-    buildHash,
-    formatQuery,
-    homePath,
-    parseQuery,
-    parseRoute,
-    shortenPath,
-    shortPaths,
-  } from '@/ts/path';
+  import { addBaseUrl, buildHash, formatQuery, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
   import { addInputBinds, chopStr, destructors, inputBinds, snippetMark } from '@/ts/utils';
   import { exposeToWindow, smallBang } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
@@ -143,13 +134,16 @@
 
     keyInput = '';
 
-    shortPaths = shortPaths;
     homePath = homePath;
-    homeHash = buildHash({ path: this.shortPaths.index, anchor: '', query: '' });
+    homeHash = buildHash({ path: this.shortBaseFiles.index, anchor: '', query: '' });
     selectConf = getSelectConf();
 
     get config() {
       return config;
+    }
+
+    get shortBaseFiles() {
+      return shortBaseFiles;
     }
 
     get confList() {

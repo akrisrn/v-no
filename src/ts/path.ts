@@ -1,4 +1,4 @@
-import { config } from '@/ts/config';
+import { config, shortBaseFiles } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
@@ -23,14 +23,6 @@ export function shortenPath(path: string, ext = 'md') {
   }
   return path;
 }
-
-export const shortPaths = {
-  index: shortenPath(config.paths.index),
-  readme: shortenPath(config.paths.readme),
-  archive: shortenPath(config.paths.archive),
-  category: shortenPath(config.paths.category),
-  search: shortenPath(config.paths.search),
-};
 
 export const baseUrl: string = process.env.BASE_URL;
 export const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
@@ -83,7 +75,7 @@ export function buildHash(hashPath: THashPath) {
 export function buildSearchContent(content: string, isFull = false) {
   const query = `content=${encodeURIComponent(content)}`;
   return isFull ? buildHash({
-    path: shortPaths.search,
+    path: shortBaseFiles.search,
     anchor: '',
     query,
   }) : query;
