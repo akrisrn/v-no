@@ -11,6 +11,7 @@ module.exports = {
   publicPath,
   assetsDir: 'assets',
   indexPath: process.env.VUE_APP_INDEX_PATH,
+  runtimeCompiler: !!process.env.RUNTIME_COMPILER,
   transpileDependencies: Object.keys(dependencies),
   productionSourceMap: false,
 };
