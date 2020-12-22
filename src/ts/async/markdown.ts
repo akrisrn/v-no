@@ -288,7 +288,7 @@ export function renderMD(data: string) {
     data = data.replace(tocRegExp, tocDiv.outerHTML).replace(tocRegExpG, '');
   }
   headingCount = {};
-  return markdownIt.render(data);
+  return markdownIt.render(data).trim();
 }
 
 export * from '@/ts/async/update';

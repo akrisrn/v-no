@@ -37,41 +37,30 @@
     // noinspection JSUnusedGlobalSymbols
     async created() {
       exposeToWindow({ articleSelf: this });
-      const markdownTs = await importMarkdownTs();
-      const {
-        renderMD,
-        updateCategoryPage,
-        updateDom,
-        updateSearchPage,
-        updateSnippet,
-        utils: {
-          getAnchorRegExp,
-          replaceInlineScript,
-        },
-      } = markdownTs;
-      this.anchorRegExp = getAnchorRegExp()
+      const markdown = await importMarkdownTs();
+      this.anchorRegExp = markdown.utils.getAnchorRegExp();
       if (this.data) {
-        this.mdData = replaceInlineScript(this.filePath, this.data);
+        this.mdData = markdown.utils.replaceInlineScript(this.filePath, this.data);
       }
       if (!this.mdData) {
         this.renderComplete();
         return;
       }
-      this.markdown = renderMD(this.mdData);
+      this.markdown = markdown.renderMD(this.mdData);
       this.$nextTick(() => {
         Promise.all([
-          updateSnippet(this.mdData),
-          updateDom(),
+          markdown.updateSnippet(this.mdData),
+          markdown.updateDom(),
         ]).then(([data]) => {
           if (!this.isCategoryFile) {
-            this.updateData(data, markdownTs);
+            this.updateData(data, markdown);
             if (this.isSearchFile) {
-              this.$nextTick(() => updateSearchPage(this.query.content || ''));
+              this.$nextTick(() => markdown.updateSearchPage(this.query.content || ''));
             }
           } else if (data) {
-            updateCategoryPage(data).then(data => this.updateData(data, markdownTs));
+            markdown.updateCategoryPage(data).then(data => this.updateData(data, markdown));
           } else {
-            this.updateData(data, markdownTs);
+            this.updateData(data, markdown);
           }
         });
       });
