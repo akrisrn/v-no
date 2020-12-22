@@ -417,14 +417,17 @@ function updateLinkPath() {
 
 function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
   for (const a of links) {
-    if (a.innerText !== '$') {
+    if (!/\$+/.test(a.innerText)) {
       continue;
     }
+    const persist = a.innerText.length > 1;
     const href = addCacheKey(a.getAttribute('href')!);
     if (!document.querySelector(`script[src="${href}"]`)) {
       const script = document.createElement('script');
       script.src = href;
-      script.classList.add('custom');
+      if (!persist) {
+        script.classList.add('custom');
+      }
       document.body.appendChild(script);
     }
     a.parentElement!.remove();
@@ -433,16 +436,19 @@ function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
 
 function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
   for (const a of links) {
-    if (a.innerText !== '*') {
+    if (!/\*+/.test(a.innerText)) {
       continue;
     }
+    const persist = a.innerText.length > 1;
     const href = addCacheKey(a.getAttribute('href')!);
     if (!document.querySelector(`link[href="${href}"]`)) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.type = 'text/css';
       link.href = href;
-      link.classList.add('custom');
+      if (!persist) {
+        link.classList.add('custom');
+      }
       document.head.appendChild(link);
     }
     a.parentElement!.remove();
