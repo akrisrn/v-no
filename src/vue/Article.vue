@@ -6,7 +6,7 @@
   import { config } from '@/ts/config';
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
-  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async';
   import { exposeToWindow } from '@/ts/window';
 
@@ -16,6 +16,7 @@
     @Prop() data!: string;
     @Prop() anchor!: string;
     @Prop() query!: TQuery;
+    @Prop() showTime!: number;
 
     $refs!: {
       article: HTMLElement;
@@ -44,6 +45,7 @@
       this.renderMD();
     }
 
+    @Watch('showTime')
     renderMD() {
       this.timeStart = new Date().getTime();
       this.isRendering = true;

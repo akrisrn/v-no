@@ -38,7 +38,7 @@
           </code>
         </div>
         <header>{{ title }}</header>
-        <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query"></Article>
+        <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query" :showTime="showTime"></Article>
         <div v-if="!isError" id="backlinks">
           <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
                v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -119,6 +119,8 @@
     hasLoadedBacklinks = false;
 
     isShow = false;
+    showTime = 0;
+
     isError = false;
     isCancel = false;
 
@@ -229,6 +231,7 @@
       exposeToWindow({
         Vue,
         homeSelf: this,
+        reload: this.reload,
         filePath: this.filePath,
       });
       smallBang();
@@ -289,6 +292,10 @@
       this.isShow = false;
       next();
       exposeToWindow({ filePath: this.filePath });
+      this.reload();
+    }
+
+    reload(toTop = true) {
       cleanEventListenerDict();
       this.getData().then(({ data, flags }) => {
         document.querySelectorAll('.custom').forEach(element => element.remove());
@@ -300,7 +307,9 @@
           destructor = destructors.shift();
         }
         this.setData(data, flags);
-        scroll(0, false);
+        if (toTop) {
+          scroll(0, false);
+        }
       });
     }
 
@@ -357,6 +366,7 @@
       this.setFlags(flags);
       this.data = data;
       this.isShow = true;
+      this.showTime = new Date().getTime();
     }
 
     setFlags(flags: IFlags) {
