@@ -689,7 +689,7 @@ export async function updateSearchPage(content: string) {
     queryParam = match[2];
   }
   resultUl.innerText = config.messages.searching;
-  const timeStart = new Date().getTime();
+  const startTime = new Date().getTime();
   const { files } = await getFiles();
   const resultFiles: TFile[] = [];
   const quoteDict: Dict<HTMLQuoteElement> = {};
@@ -786,7 +786,7 @@ export async function updateSearchPage(content: string) {
       }
     });
   }
-  const time = new Date().getTime() - timeStart;
+  const time = new Date().getTime() - startTime;
   const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
   if (searchTime) {
     searchTime.innerText = `${time / 1000}`;

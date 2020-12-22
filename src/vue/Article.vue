@@ -22,7 +22,7 @@
       article: HTMLElement;
     };
     markdown!: TMarkdownTs;
-    timeStart = 0;
+    startTime = 0;
     isRendering = true;
     html = '';
 
@@ -47,7 +47,7 @@
 
     @Watch('showTime')
     renderMD() {
-      this.timeStart = new Date().getTime();
+      this.startTime = new Date().getTime();
       this.isRendering = true;
       if (!this.sourceData) {
         this.html = '';
@@ -107,7 +107,7 @@
           scroll(element.offsetTop - 6);
         }
       });
-      dispatchEvent(EEvent.rendered, new Date().getTime() - this.timeStart, 100);
+      dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
     }
   }
 </script>
