@@ -8,6 +8,7 @@
   import { EEvent } from '@/ts/enums';
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async';
+  import { exposeToWindow } from '@/ts/window';
 
   @Component
   export default class Article extends Vue {
@@ -35,15 +36,18 @@
 
     // noinspection JSUnusedGlobalSymbols
     async created() {
+      exposeToWindow({ articleSelf: this });
       const markdownTs = await importMarkdownTs();
       const {
         renderMD,
-        replaceInlineScript,
         updateCategoryPage,
         updateDom,
         updateSearchPage,
         updateSnippet,
-        getAnchorRegExp,
+        utils: {
+          getAnchorRegExp,
+          replaceInlineScript,
+        },
       } = markdownTs;
       this.anchorRegExp = getAnchorRegExp()
       if (this.data) {

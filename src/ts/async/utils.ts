@@ -99,3 +99,5 @@ export function isExternalLink(href: string) {
     return false;
   }
 }
+
+export * from '@/ts/async/date';

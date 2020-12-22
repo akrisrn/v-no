@@ -291,5 +291,5 @@ export function renderMD(data: string) {
   return markdownIt.render(data);
 }
 
-export { getAnchorRegExp };
-export { replaceInlineScript, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } from '@/ts/async/update';
+export * from '@/ts/async/update';
+export * as utils from '@/ts/async/utils';

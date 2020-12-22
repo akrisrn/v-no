@@ -792,5 +792,3 @@ export async function updateSearchPage(content: string) {
   }
   dispatchEvent(EEvent.searchCompleted, { time, result, count }, 100).then();
 }
-
-export { replaceInlineScript };

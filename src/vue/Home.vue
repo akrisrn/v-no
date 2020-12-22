@@ -81,7 +81,6 @@
   import { EEvent, EFlag, EIcon } from '@/ts/enums';
   import {
     addBaseUrl,
-    baseUrl,
     buildHash,
     formatQuery,
     homePath,
@@ -91,8 +90,8 @@
     shortPaths,
   } from '@/ts/path';
   import { addInputBinds, chopStr, destructors, inputBinds, snippetMark } from '@/ts/utils';
-  import { exposeToWindow } from '@/ts/window';
-  import { importFileTs, importMarkdownTs } from '@/ts/async';
+  import { exposeToWindow, smallBang } from '@/ts/window';
+  import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
@@ -230,23 +229,12 @@
           return;
         }
       }
-      importFileTs().then(({ axios, dayjs }) => exposeToWindow({ axios, dayjs }));
-      importMarkdownTs().then(({ renderMD, replaceInlineScript, updateDom }) => {
-        exposeToWindow({
-          renderMD: (data?: string) => {
-            if (!data) {
-              return '';
-            }
-            data = data.trim();
-            if (!data) {
-              return '';
-            }
-            data = replaceInlineScript(this.filePath, data);
-            return data ? renderMD(data) : '';
-          },
-          updateDom,
-        });
+      exposeToWindow({
+        Vue,
+        homeSelf: this,
+        filePath: this.filePath,
       });
+      smallBang();
       this.getData().then(({ data, flags }) => this.setData(data, flags));
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
@@ -269,19 +257,6 @@
         Backspace: () => {
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
-      });
-      exposeToWindow({
-        version: process.env.VUE_APP_VERSION,
-        config: this.config,
-        baseUrl,
-        homePath,
-        filePath: this.filePath,
-        addInputBinds,
-        addEventListener: (element: Element, type: string, listener: EventListenerOrEventListenerObject) => {
-          element.addEventListener(type, listener);
-          destructors.push(() => element.removeEventListener(type, listener));
-        },
-        destructors,
       });
     }
 
