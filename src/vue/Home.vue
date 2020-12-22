@@ -221,7 +221,7 @@
           return;
         }
       }
-      importFileTs().then(({ axios }) => exposeToWindow({ axios }));
+      importFileTs().then(({ axios, dayjs }) => exposeToWindow({ axios, dayjs }));
       importMarkdownTs().then(({ renderMD, replaceInlineScript, updateDom }) => {
         exposeToWindow({
           renderMD: (data?: string) => {

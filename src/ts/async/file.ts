@@ -2,7 +2,7 @@ import { baseFiles } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
 import { createErrorFile, createFlags } from '@/ts/utils';
-import { formatDate } from '@/ts/async/date';
+import { dayjs, formatDate } from '@/ts/async/date';
 import {
   addCacheKey,
   getHeadingRegExp,
@@ -165,5 +165,5 @@ export async function getFiles() {
   return { files: cachedFiles, backlinks: cachedBacklinks };
 }
 
-export { axios };
+export { axios, dayjs };
 export { sortFiles } from '@/ts/async/compare';

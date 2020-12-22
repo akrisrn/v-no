@@ -13,3 +13,5 @@ export function parseDate(dateStr: string) {
 export function formatDate(date: Date) {
   return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
 }
+
+export { dayjs };
