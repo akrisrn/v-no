@@ -112,6 +112,18 @@ function parseData(path: string, data: string): TFile {
   return { path, data, flags, links };
 }
 
+let noCache = false;
+
+// noinspection JSUnusedGlobalSymbols
+export function disableCache() {
+  noCache = true;
+}
+
+// noinspection JSUnusedGlobalSymbols
+export function enableCache() {
+  noCache = false;
+}
+
 const isRequesting: Dict<boolean> = {};
 const cachedFiles: Dict<TFile> = {};
 
@@ -120,7 +132,7 @@ export async function getFile(path: string) {
     await new Promise(_ => setTimeout(_, 100));
   }
   isRequesting[path] = true;
-  if (cachedFiles[path] !== undefined) {
+  if (!noCache && cachedFiles[path] !== undefined) {
     isRequesting[path] = false;
     return cachedFiles[path];
   }
@@ -160,7 +172,7 @@ async function walkFiles(files: TFile[]) {
 let isCacheCompleted = false;
 
 export async function getFiles() {
-  if (!isCacheCompleted) {
+  if (noCache || !isCacheCompleted) {
     await walkFiles(await Promise.all(baseFiles.map(path => getFile(path))));
     isCacheCompleted = true;
   }
