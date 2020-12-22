@@ -1,5 +1,5 @@
 <template>
-  <article ref="article" :class="isRendering ? 'rendering' : null" v-html="markdown"/>
+  <article ref="article" :class="isRendering ? 'rendering' : null" v-html="html"/>
 </template>
 
 <script lang="ts">
@@ -20,11 +20,14 @@
     $refs!: {
       article: HTMLElement;
     };
-    mdData = '';
-    markdown = '';
+    markdown!: TMarkdownTs;
+    timeStart = 0;
     isRendering = true;
-    anchorRegExp!: RegExp;
-    timeStart = new Date().getTime();
+    html = '';
+
+    get sourceData() {
+      return this.data ? this.markdown.utils.replaceInlineScript(this.filePath, this.data) : '';
+    }
 
     get isCategoryFile() {
       return this.filePath === config.paths.category;
@@ -37,46 +40,51 @@
     // noinspection JSUnusedGlobalSymbols
     async created() {
       exposeToWindow({ articleSelf: this });
-      const markdown = await importMarkdownTs();
-      this.anchorRegExp = markdown.utils.getAnchorRegExp();
-      if (this.data) {
-        this.mdData = markdown.utils.replaceInlineScript(this.filePath, this.data);
-      }
-      if (!this.mdData) {
+      this.markdown = await importMarkdownTs();
+      this.renderMD();
+    }
+
+    renderMD() {
+      this.timeStart = new Date().getTime();
+      this.isRendering = true;
+      if (!this.sourceData) {
+        this.html = '';
         this.renderComplete();
         return;
       }
-      this.markdown = markdown.renderMD(this.mdData);
+      const { renderMD, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdown;
+      this.html = renderMD(this.sourceData);
       this.$nextTick(() => {
         Promise.all([
-          markdown.updateSnippet(this.mdData),
-          markdown.updateDom(),
+          updateSnippet(this.sourceData),
+          updateDom(),
         ]).then(([data]) => {
           if (!this.isCategoryFile) {
-            this.updateData(data, markdown);
+            this.updateData(data);
             if (this.isSearchFile) {
-              this.$nextTick(() => markdown.updateSearchPage(this.query.content || ''));
+              this.$nextTick(() => updateSearchPage(this.query.content || ''));
             }
           } else if (data) {
-            markdown.updateCategoryPage(data).then(data => this.updateData(data, markdown));
+            updateCategoryPage(data).then(data => this.updateData(data));
           } else {
-            this.updateData(data, markdown);
+            this.updateData(data);
           }
         });
       });
     }
 
-    updateData(data: string, { renderMD, updateDom }: TMarkdownTs) {
-      if (data === this.mdData) {
+    updateData(data: string) {
+      if (data === this.sourceData) {
         this.renderComplete();
         return;
       }
       if (!data) {
-        this.markdown = '';
+        this.html = '';
         this.renderComplete();
         return;
       }
-      this.markdown = renderMD(data);
+      const { renderMD, updateDom } = this.markdown;
+      this.html = renderMD(data);
       this.$nextTick(() => {
         updateDom().then(() => {
           this.renderComplete();
@@ -88,7 +96,8 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        if (!this.anchorRegExp.test(this.anchor)) {
+        const anchorRegExp = this.markdown.utils.getAnchorRegExp();
+        if (!anchorRegExp.test(this.anchor)) {
           return;
         }
         const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);
