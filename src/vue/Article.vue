@@ -4,9 +4,8 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { removeClass, scroll } from '@/ts/dom';
+  import { dispatchEvent, removeClass, scroll } from '@/ts/dom';
   import { EEvent } from '@/ts/enums';
-  import { dispatchEvent, getAnchorRegExp } from '@/ts/utils';
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { importMarkdownTs } from '@/ts/async';
 
@@ -23,6 +22,7 @@
     mdData = '';
     markdown = '';
     isRendering = true;
+    anchorRegExp!: RegExp;
     timeStart = new Date().getTime();
 
     get isCategoryFile() {
@@ -43,7 +43,9 @@
         updateDom,
         updateSearchPage,
         updateSnippet,
+        getAnchorRegExp,
       } = markdownTs;
+      this.anchorRegExp = getAnchorRegExp()
       if (this.data) {
         this.mdData = replaceInlineScript(this.filePath, this.data);
       }
@@ -93,7 +95,7 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        if (!getAnchorRegExp().test(this.anchor)) {
+        if (!this.anchorRegExp.test(this.anchor)) {
           return;
         }
         const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);

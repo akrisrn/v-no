@@ -1,30 +1,32 @@
-import { baseFiles } from '@/ts/config';
+import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
-import { createErrorFile, createFlags } from '@/ts/utils';
 import { dayjs, formatDate } from '@/ts/async/date';
 import {
   addCacheKey,
   getHeadingRegExp,
-  getLinkPathPattern,
+  getLinkRegExp,
   getWrapRegExp,
   isExternalLink,
   trimList,
 } from '@/ts/async/utils';
 import axios from 'axios';
 
-const cachedBacklinks: Dict<string[]> = {};
-
-function getLinkRegExp(startWithSlash = false, isImg = false, isLine = false, flags?: string) {
-  let pattern = `\\[(.*?)]${getLinkPathPattern(startWithSlash)}`;
-  if (isImg) {
-    pattern = `!${pattern}`;
-  }
-  if (isLine) {
-    pattern = `^${pattern}$`;
-  }
-  return new RegExp(pattern, flags);
+function createFlags(title: string): IFlags {
+  return { title };
 }
+
+export function createErrorFile(path: string): TFile {
+  return {
+    path,
+    data: config.messages.pageError,
+    flags: createFlags(shortenPath(path)),
+    links: [],
+    isError: true,
+  };
+}
+
+const cachedBacklinks: Dict<string[]> = {};
 
 function parseData(path: string, data: string): TFile {
   const flags = createFlags(shortenPath(path));

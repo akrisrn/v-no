@@ -1,17 +1,21 @@
 import { config } from '@/ts/config';
-import { createList, eventListenerDict, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
+import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
 import { EEvent, EFlag } from '@/ts/enums';
-import { buildHash, buildSearchContent, checkLinkPath, parseHash } from '@/ts/path';
-import { chopStr, dispatchEvent, getAnchorRegExp, snippetMark } from '@/ts/utils';
+import { buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
+import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { getFile, getFiles } from '@/ts/async/file';
 import {
   addCacheKey,
+  escapeHTML,
+  getAnchorRegExp,
   getHeadingPattern,
   getHeadingRegExp,
   getLinkPathPattern,
   getWrapRegExp,
+  replaceByRegExp,
+  replaceInlineScript,
   trimList,
 } from '@/ts/async/utils';
 
@@ -110,38 +114,6 @@ function degradeHeading(data: string, level: number) {
     }
     return newLine;
   }).join('\n');
-}
-
-export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
-  let newData = '';
-  let start = 0;
-  let match = regexp.exec(data);
-  while (match) {
-    newData += data.substring(start, match.index) + callback(match[1]);
-    start = match.index + match[0].length;
-    match = regexp.exec(data);
-  }
-  if (start === 0) {
-    return data;
-  }
-  newData += data.substring(start);
-  return newData;
-}
-
-function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
-}
-
-export function replaceInlineScript(path: string, data: string) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
-    let result: string;
-    try {
-      result = evalFunction(evalStr, { path, data });
-    } catch (e) {
-      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
-    }
-    return result;
-  }).trim();
 }
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
@@ -277,30 +249,6 @@ function updateDD() {
       dt.outerHTML = dd.outerHTML;
     }
   });
-}
-
-function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
-  let eventListeners = eventListenerDict[type];
-  if (eventListeners === undefined) {
-    eventListeners = { elements: [element], listeners: [listener] };
-    eventListenerDict[type] = eventListeners;
-    element.addEventListener(type, listener);
-    return;
-  }
-  const indexOf = eventListeners.elements.indexOf(element);
-  if (indexOf >= 0) {
-    element.removeEventListener(type, eventListeners.listeners[indexOf]);
-    eventListeners.listeners.splice(indexOf, 1, listener);
-  } else {
-    eventListeners.elements.push(element);
-    eventListeners.listeners.push(listener);
-  }
-  element.addEventListener(type, listener);
-}
-
-function changeHash(anchor: string) {
-  const { path, query } = parseHash(location.hash, true);
-  location.hash = buildHash({ path, anchor, query });
 }
 
 function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, links: NodeListOf<HTMLAnchorElement>) {
@@ -707,17 +655,6 @@ export async function updateDom() {
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
 }
 
-const htmlSymbolDict: Dict<string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-};
-const htmlSymbolRegExp = new RegExp(`[${Object.keys(htmlSymbolDict).join('')}]`, 'g');
-
-function escapeHTML(html: string) {
-  return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
-}
-
 export async function updateSearchPage(content: string) {
   const searchInput = document.querySelector<HTMLInputElement>('#search-input');
   if (searchInput) {
@@ -855,3 +792,5 @@ export async function updateSearchPage(content: string) {
   }
   dispatchEvent(EEvent.searchCompleted, { time, result, count }, 100).then();
 }
+
+export { replaceInlineScript };

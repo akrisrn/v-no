@@ -67,21 +67,30 @@
 </template>
 
 <script lang="ts">
-  import { config, getSelectConf, shortPaths } from '@/ts/config';
-  import { cleanEventListenerDict, createList, getIcon, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/dom';
-  import { EEvent, EFlag, EIcon, flagValues } from '@/ts/enums';
+  import { config, getSelectConf } from '@/ts/config';
+  import {
+    cleanEventListenerDict,
+    createList,
+    dispatchEvent,
+    getIcon,
+    getSearchTagLinks,
+    removeClass,
+    scroll,
+    simpleUpdateLinkPath,
+  } from '@/ts/dom';
+  import { EEvent, EFlag, EIcon } from '@/ts/enums';
   import {
     addBaseUrl,
     baseUrl,
     buildHash,
     formatQuery,
-    getSearchTagLinks,
     homePath,
     parseQuery,
     parseRoute,
     shortenPath,
+    shortPaths,
   } from '@/ts/path';
-  import { chopStr, createErrorFile, destructors, dispatchEvent, snippetMark } from '@/ts/utils';
+  import { addInputBinds, chopStr, destructors, inputBinds, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
@@ -108,6 +117,7 @@
     creator = '';
     updater = '';
     otherFlags: Dict<string> = {};
+    flagNames = Object.values(EFlag);
 
     anchor = '';
     queryStr = '';
@@ -133,7 +143,6 @@
     iconBacklink = getIcon(EIcon.backlink, 18);
 
     keyInput = '';
-    inputBinds: Dict<() => void> = {};
 
     shortPaths = shortPaths;
     homePath = homePath;
@@ -248,7 +257,7 @@
       } else if (icon) {
         icon.remove();
       }
-      this.addInputBinds({
+      addInputBinds({
         home: () => this.returnHome(),
         gg: () => {
           this.toTop(true);
@@ -267,7 +276,7 @@
         baseUrl,
         homePath,
         filePath: this.filePath,
-        addInputBind: this.addInputBind,
+        addInputBinds,
         addEventListener: (element: Element, type: string, listener: EventListenerOrEventListenerObject) => {
           element.addEventListener(type, listener);
           destructors.push(() => element.removeEventListener(type, listener));
@@ -290,9 +299,9 @@
         if (this.keyInput.length > 20) {
           this.keyInput = this.keyInput.substr(10);
         }
-        for (const key of Object.keys(this.inputBinds)) {
+        for (const key of Object.keys(inputBinds)) {
           if (this.keyInput.endsWith(key)) {
-            this.inputBinds[key]();
+            inputBinds[key]();
             break;
           }
         }
@@ -324,13 +333,13 @@
     }
 
     async getData() {
+      const { createErrorFile, getFile } = await importFileTs();
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
         const { data, flags } = createErrorFile(filePath);
         return { data, flags };
       }
-      const { getFile } = await importFileTs();
       const promises = [];
       promises.push(getFile(filePath));
       const commonPath = this.config.paths.common;
@@ -389,7 +398,7 @@
       this.updater = flags.updater || '';
       this.otherFlags = {};
       Object.keys(flags).forEach(key => {
-        if (!flagValues.includes(key as EFlag)) {
+        if (!this.flagNames.includes(key as EFlag)) {
           this.otherFlags[key] = flags[key] as string;
         }
       });
@@ -464,14 +473,6 @@
         this.$nextTick(() => removeClass(this.$refs.toTop));
       }, 500);
       dispatchEvent(EEvent.toTop, !toBottom);
-    }
-
-    addInputBind(input: string, bind: () => void) {
-      this.inputBinds[input] = bind;
-    }
-
-    addInputBinds(binds: Dict<() => void>) {
-      Object.keys(binds).forEach(key => this.addInputBind(key, binds[key]));
     }
   }
 </script>

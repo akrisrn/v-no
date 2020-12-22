@@ -1,11 +1,37 @@
-import { EIcon } from '@/ts/enums';
-import { checkLinkPath, getSearchTagLinks, shortenPath } from '@/ts/path';
+import { EEvent, EFlag, EIcon } from '@/ts/enums';
+import { buildSearchFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
 import { importFileTs } from '@/ts/async';
 
-export let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
+let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
 
 export function cleanEventListenerDict() {
   eventListenerDict = {};
+}
+
+export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
+  let eventListeners = eventListenerDict[type];
+  if (eventListeners === undefined) {
+    eventListeners = { elements: [element], listeners: [listener] };
+    eventListenerDict[type] = eventListeners;
+    element.addEventListener(type, listener);
+    return;
+  }
+  const indexOf = eventListeners.elements.indexOf(element);
+  if (indexOf >= 0) {
+    element.removeEventListener(type, eventListeners.listeners[indexOf]);
+    eventListeners.listeners.splice(indexOf, 1, listener);
+  } else {
+    eventListeners.elements.push(element);
+    eventListeners.listeners.push(listener);
+  }
+  element.addEventListener(type, listener);
+}
+
+export async function dispatchEvent<T>(type: EEvent, payload?: T, timeout?: number) {
+  if (timeout) {
+    await new Promise(_ => setTimeout(_, timeout));
+  }
+  return document.dispatchEvent(new CustomEvent<T>(type, { detail: payload }));
 }
 
 export function removeClass(element: Element, cls?: string) {
@@ -28,6 +54,20 @@ export function scroll(height: number, isSmooth = true) {
 // noinspection JSSuspiciousNameCombination
 export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
+}
+
+export function getSearchTagLinks(tag: string) {
+  const list: string[][] = [];
+  let start = 0;
+  let indexOf = tag.indexOf('/');
+  while (indexOf >= 0) {
+    indexOf += start;
+    list.push([buildSearchFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
+    start = indexOf + 1;
+    indexOf = tag.substring(start).indexOf('/');
+  }
+  list.push([buildSearchFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
+  return list;
 }
 
 function createBar(flags: IFlags) {

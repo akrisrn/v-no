@@ -1,7 +1,17 @@
-import { config, shortPaths } from '@/ts/config';
+import { config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
+
+export function checkLinkPath(path: string) {
+  if (path.endsWith('.md')) {
+    return path;
+  }
+  if (path.endsWith('/')) {
+    return path + 'index.md';
+  }
+  return '';
+}
 
 export function shortenPath(path: string, ext = 'md') {
   const indexFile = `index.${ext}`;
@@ -14,10 +24,18 @@ export function shortenPath(path: string, ext = 'md') {
   return path;
 }
 
+export const shortPaths = {
+  index: shortenPath(config.paths.index),
+  readme: shortenPath(config.paths.readme),
+  archive: shortenPath(config.paths.archive),
+  category: shortenPath(config.paths.category),
+  search: shortenPath(config.paths.search),
+};
+
 export const baseUrl: string = process.env.BASE_URL;
-const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
-const indexPath: string = process.env.VUE_APP_INDEX_PATH;
-const hasCdnUrl = !!process.env.VUE_APP_CDN_URL;
+export const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
+export const indexPath: string = process.env.VUE_APP_INDEX_PATH;
+export const cdnUrl: string = process.env.VUE_APP_CDN_URL;
 
 export const homePath = publicPath + shortenPath(indexPath, 'html');
 
@@ -28,7 +46,7 @@ export function addBaseUrl(path: string) {
   if (path === '/') {
     return homePath;
   }
-  if (!hasCdnUrl && config.cdn) {
+  if (!cdnUrl && config.cdn) {
     return config.cdn + path.substr(1);
   }
   if (baseUrl !== '/') {
@@ -71,32 +89,8 @@ export function buildSearchContent(content: string, isFull = false) {
   }) : query;
 }
 
-function buildSearchFlagUrl(flag: EFlag, text: string) {
+export function buildSearchFlagUrl(flag: EFlag, text: string) {
   return buildSearchContent(`@${flag}: ${text}`, true);
-}
-
-export function getSearchTagLinks(tag: string) {
-  const list: string[][] = [];
-  let start = 0;
-  let indexOf = tag.indexOf('/');
-  while (indexOf >= 0) {
-    indexOf += start;
-    list.push([buildSearchFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
-    start = indexOf + 1;
-    indexOf = tag.substring(start).indexOf('/');
-  }
-  list.push([buildSearchFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
-  return list;
-}
-
-export function checkLinkPath(path: string) {
-  if (path.endsWith('.md')) {
-    return path;
-  }
-  if (path.endsWith('/')) {
-    return path + 'index.md';
-  }
-  return '';
 }
 
 export function parseHash(hash: string, isShort = false): THashPath {
@@ -125,6 +119,11 @@ export function parseHash(hash: string, isShort = false): THashPath {
     path = shortenPath(path);
   }
   return { path, anchor, query };
+}
+
+export function changeHash(anchor: string) {
+  const { path, query } = parseHash(location.hash, true);
+  location.hash = buildHash({ path, anchor, query });
 }
 
 export function parseRoute(route: Route) {
