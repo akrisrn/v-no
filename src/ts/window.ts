@@ -3,7 +3,7 @@ import * as element from '@/ts/element';
 import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
 import * as utils from '@/ts/utils';
-import { addInputBind, addInputBinds, destructors } from '@/ts/utils';
+import { addInputBinds, destructors } from '@/ts/utils';
 import { importFileTs, importMarkdownTs } from '@/ts/async';
 
 export function getFromWindow(name: string) {
@@ -43,7 +43,6 @@ export function exposeToWindow(vars: Dict<any>, merge = false) {
 export function smallBang() {
   exposeToWindow({
     version: process.env.VUE_APP_VERSION,
-    addInputBind,
     addInputBinds,
     addEventListener: (element: Element, type: string, listener: EventListenerOrEventListenerObject) => {
       element.addEventListener(type, listener);

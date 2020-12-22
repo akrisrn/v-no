@@ -4,12 +4,10 @@ export const destructors: (() => void)[] = [];
 
 export const inputBinds: Dict<() => void> = {};
 
-export function addInputBind(input: string, bind: () => void) {
-  inputBinds[input] = bind;
-}
-
 export function addInputBinds(binds: Dict<() => void>) {
-  Object.keys(binds).forEach(key => addInputBind(key, binds[key]));
+  Object.keys(binds).forEach(key => {
+    inputBinds[key] = binds[key];
+  });
 }
 
 export function chopStr(str: string, sep: string, trim = true): { key: string; value: string | null } {
