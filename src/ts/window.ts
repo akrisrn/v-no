@@ -8,13 +8,26 @@ function setToWindow(name: string, value: any) {
   window[name] = value;
 }
 
-export function exposeToWindow(vars: Dict<any>) {
+export function exposeToWindow(vars: Dict<any>, merge = false) {
   let vno = getFromWindow('vno');
   if (!vno) {
     vno = {};
     setToWindow('vno', vno);
   }
-  Object.keys(vars).forEach(key => {
-    vno[key] = vars[key];
-  });
+  for (const key of Object.keys(vars)) {
+    const value = vars[key];
+    if (!merge) {
+      vno[key] = value;
+      continue;
+    }
+    let existValue = vno[key];
+    if (existValue === undefined) {
+      existValue = {};
+      vno[key] = existValue;
+    } else if (typeof existValue !== 'object') {
+      existValue = { [key]: existValue };
+      vno[key] = existValue;
+    }
+    Object.assign(existValue, value);
+  }
 }
