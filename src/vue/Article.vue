@@ -25,6 +25,7 @@
     startTime = 0;
     isRendering = true;
     html = '';
+    renderData = '';
 
     get sourceData() {
       return this.data ? this.markdown.utils.replaceInlineScript(this.filePath, this.data) : '';
@@ -49,13 +50,10 @@
     renderMD() {
       this.startTime = new Date().getTime();
       this.isRendering = true;
-      if (!this.sourceData) {
-        this.html = '';
-        this.renderComplete();
+      if (this.updateHtml(this.sourceData)) {
         return;
       }
-      const { renderMD, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdown;
-      this.html = renderMD(this.sourceData);
+      const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdown;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(this.sourceData),
@@ -80,18 +78,26 @@
         this.renderComplete();
         return;
       }
-      if (!data) {
-        this.html = '';
-        this.renderComplete();
+      if (this.updateHtml(data)) {
         return;
       }
-      const { renderMD, updateDom } = this.markdown;
-      this.html = renderMD(data);
       this.$nextTick(() => {
-        updateDom().then(() => {
+        this.markdown.updateDom().then(() => {
           this.renderComplete();
         });
       });
+    }
+
+    updateHtml(data: string) {
+      if (!data) {
+        this.html = '';
+        this.renderData = '';
+        this.renderComplete();
+        return true;
+      }
+      this.html = this.markdown.renderMD(data);
+      this.renderData = data;
+      return false;
     }
 
     renderComplete() {
