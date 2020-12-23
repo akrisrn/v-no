@@ -415,44 +415,50 @@ function updateLinkPath() {
   });
 }
 
-function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
+function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
   for (const a of links) {
-    if (!/\$+/.test(a.innerText)) {
+    if (!new RegExp(`${isScript ? '\\$' : '\\*'}+`).test(a.innerText)) {
       continue;
     }
-    const persist = a.innerText.length > 1;
-    const href = addCacheKey(a.getAttribute('href')!);
-    if (!document.querySelector(`script[src="${href}"]`)) {
-      const script = document.createElement('script');
-      script.src = href;
-      if (!persist) {
-        script.classList.add('custom');
-      }
-      document.body.appendChild(script);
+    let href = a.getAttribute('href')!;
+    let element;
+    if (isScript) {
+      element = document.querySelector<HTMLScriptElement>(`script[src^="${href}"]`);
+    } else {
+      element = document.querySelector<HTMLLinkElement>(`link[href^="${href}"]`);
     }
+    if (element) {
+      const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
+      if (!nextChar || nextChar === '?') {
+        a.parentElement!.remove();
+        return;
+      }
+    }
+    href = addCacheKey(href);
+    if (isScript) {
+      element = document.createElement('script');
+      element.charset = 'utf-8';
+      element.src = href;
+    } else {
+      element = document.createElement('link');
+      element.rel = 'stylesheet';
+      element.type = 'text/css';
+      element.href = href;
+    }
+    if (a.innerText.length === 1) {
+      element.classList.add('custom');
+    }
+    document.head.appendChild(element);
     a.parentElement!.remove();
   }
 }
 
 function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
-  for (const a of links) {
-    if (!/\*+/.test(a.innerText)) {
-      continue;
-    }
-    const persist = a.innerText.length > 1;
-    const href = addCacheKey(a.getAttribute('href')!);
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = href;
-      if (!persist) {
-        link.classList.add('custom');
-      }
-      document.head.appendChild(link);
-    }
-    a.parentElement!.remove();
-  }
+  updateCustom(links, false);
+}
+
+function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
+  updateCustom(links, true);
 }
 
 async function updateHighlight() {
@@ -652,10 +658,10 @@ export async function updateDom() {
   const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
   updateLinkPath();
-  const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
-  updateCustomScript(scripts);
+  const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
   updateCustomStyle(styles);
+  updateCustomScript(scripts);
   await updateHighlight();
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
