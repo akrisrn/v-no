@@ -95,7 +95,7 @@
         this.renderComplete();
         return true;
       }
-      this.html = this.markdownTs.renderMD(data);
+      this.html = this.markdownTs.renderMD(data) + '<!-- ' + this.showTime + ' -->';
       this.renderData = data;
       return false;
     }
