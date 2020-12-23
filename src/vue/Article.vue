@@ -6,9 +6,9 @@
   import { config } from '@/ts/config';
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
-  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-  import { importMarkdownTs } from '@/ts/async';
   import { exposeToWindow } from '@/ts/window';
+  import { importMarkdownTs } from '@/ts/async';
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component
   export default class Article extends Vue {
@@ -21,14 +21,14 @@
     $refs!: {
       article: HTMLElement;
     };
-    markdown!: TMarkdownTs;
+    markdownTs!: TMarkdownTs;
     startTime = 0;
     isRendering = true;
     html = '';
     renderData = '';
 
     get sourceData() {
-      return this.data ? this.markdown.utils.replaceInlineScript(this.filePath, this.data) : '';
+      return this.data ? this.markdownTs.utils.replaceInlineScript(this.filePath, this.data) : '';
     }
 
     get isCategoryFile() {
@@ -42,7 +42,7 @@
     // noinspection JSUnusedGlobalSymbols
     async created() {
       exposeToWindow({ articleSelf: this });
-      this.markdown = await importMarkdownTs();
+      this.markdownTs = await importMarkdownTs();
       this.renderMD();
     }
 
@@ -53,7 +53,7 @@
       if (this.updateHtml(this.sourceData)) {
         return;
       }
-      const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdown;
+      const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(this.sourceData),
@@ -82,7 +82,7 @@
         return;
       }
       this.$nextTick(() => {
-        this.markdown.updateDom().then(() => {
+        this.markdownTs.updateDom().then(() => {
           this.renderComplete();
         });
       });
@@ -95,7 +95,7 @@
         this.renderComplete();
         return true;
       }
-      this.html = this.markdown.renderMD(data);
+      this.html = this.markdownTs.renderMD(data);
       this.renderData = data;
       return false;
     }
@@ -104,7 +104,7 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$refs.article);
-        const anchorRegExp = this.markdown.utils.getAnchorRegExp();
+        const anchorRegExp = this.markdownTs.utils.getAnchorRegExp();
         if (!anchorRegExp.test(this.anchor)) {
           return;
         }

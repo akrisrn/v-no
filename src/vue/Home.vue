@@ -97,8 +97,7 @@
       toggleZen: HTMLSpanElement;
       toTop: HTMLSpanElement;
     };
-
-    file: TFileTs | null = null;
+    fileTs: TFileTs | null = null;
 
     data = '';
     title = '';
@@ -143,12 +142,12 @@
 
     selectConf = getSelectConf();
 
-    get config() {
-      return config;
-    }
-
     get shortBaseFiles() {
       return shortBaseFiles;
+    }
+
+    get config() {
+      return config;
     }
 
     get confList() {
@@ -223,7 +222,7 @@
         const conf = this.query.conf;
         if (conf && this.confList![0].includes(conf) && this.selectConf !== conf) {
           localStorage.setItem('conf', conf);
-          this.$router.go(0);
+          location.reload();
           this.isCancel = true;
           return;
         }
@@ -292,10 +291,10 @@
       this.isShow = false;
       next();
       exposeToWindow({ filePath: this.filePath });
-      this.reload();
+      this.reload(true);
     }
 
-    reload(toTop = true) {
+    reload(toTop = false) {
       cleanEventListenerDict();
       this.getData().then(({ data, flags }) => {
         document.querySelectorAll('.custom').forEach(element => element.remove());
@@ -314,10 +313,10 @@
     }
 
     async getData() {
-      if (!this.file) {
-        this.file = await importFileTs();
+      if (!this.fileTs) {
+        this.fileTs = await importFileTs();
       }
-      const { createErrorFile, getFile } = this.file;
+      const { createErrorFile, getFile } = this.fileTs;
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
@@ -406,13 +405,15 @@
 
     async getBacklinks() {
       this.isLoadingBacklinks = true;
-      if (!this.file) {
-        this.file = await importFileTs();
+      if (!this.fileTs) {
+        this.fileTs = await importFileTs();
       }
-      const { getFiles, sortFiles } = this.file;
+      const { getFiles, sortFiles } = this.fileTs;
       const { files, backlinks } = await getFiles();
       const paths = backlinks[this.filePath];
-      this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => files[path]).sort(sortFiles) : [];
+      this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
+        return JSON.parse(JSON.stringify(files[path])) as TFile;
+      }).sort(sortFiles) : [];
       this.isLoadingBacklinks = false;
       if (!this.hasLoadedBacklinks) {
         this.hasLoadedBacklinks = true;
