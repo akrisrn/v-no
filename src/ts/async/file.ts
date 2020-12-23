@@ -114,6 +114,10 @@ function parseData(path: string, data: string): TFile {
 
 let noCache = false;
 
+export function isCached() {
+  return !noCache;
+}
+
 // noinspection JSUnusedGlobalSymbols
 export function disableCache() {
   noCache = true;
