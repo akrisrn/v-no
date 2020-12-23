@@ -1,5 +1,6 @@
 import { config } from '@/ts/config';
 import { cleanBaseUrl } from '@/ts/path';
+import { isCached } from '@/ts/async/file';
 
 export function getWrapRegExp(left: string, right = left, flags?: string) {
   return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
@@ -85,11 +86,14 @@ export function trimList(list: string[], distinct = true) {
 }
 
 export function addCacheKey(path: string, needClean = true) {
-  let cacheKey = config.cacheKey;
-  if (typeof cacheKey === 'object') {
-    cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
+  if (isCached()) {
+    let cacheKey = config.cacheKey;
+    if (typeof cacheKey === 'object') {
+      cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
+    }
+    return cacheKey ? `${path}?${cacheKey}` : path;
   }
-  return cacheKey ? `${path}?${cacheKey}` : path;
+  return `${path}?t=${new Date().getTime()}`;
 }
 
 export function isExternalLink(href: string) {
