@@ -113,6 +113,9 @@
     anchor = '';
     queryStr = '';
 
+    links: string[] = [];
+    backlinks: string[] = [];
+
     backlinkFiles: TFile[] = [];
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
@@ -234,7 +237,7 @@
         filePath: this.filePath,
       });
       smallBang();
-      this.getData().then(({ data, flags }) => this.setData(data, flags));
+      this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
       this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
@@ -296,7 +299,7 @@
 
     reload(toTop = false) {
       cleanEventListenerDict();
-      this.getData().then(({ data, flags }) => {
+      this.getData().then(({ data, flags, links }) => {
         document.querySelectorAll('.custom').forEach(element => element.remove());
         let destructor = destructors.shift();
         while (destructor) {
@@ -305,7 +308,7 @@
           }
           destructor = destructors.shift();
         }
-        this.setData(data, flags);
+        this.setData(data, flags, links);
         if (toTop) {
           scroll(0, false);
         }
@@ -320,8 +323,8 @@
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
-        const { data, flags } = createErrorFile(filePath);
-        return { data, flags };
+        const { data, flags, links } = createErrorFile(filePath);
+        return { data, flags, links };
       }
       const promises = [];
       promises.push(getFile(filePath));
@@ -333,16 +336,17 @@
       const file = files[0];
       let data = file.data;
       const flags = file.flags;
+      const links = file.links;
       if (file.isError) {
         this.isError = true;
-        return { data, flags };
+        return { data, flags, links };
       }
       this.isError = false;
       if (this.hasLoadedBacklinks) {
         this.getBacklinks().then();
       }
       if (files.length < 2 || files[1].isError) {
-        return { data, flags };
+        return { data, flags, links };
       }
       const commonData = files[1].data;
       let headerData = '';
@@ -358,12 +362,13 @@
       if (footerData) {
         data += '\n\n\n' + footerData;
       }
-      return { data, flags };
+      return { data, flags, links };
     }
 
-    setData(data: string, flags: IFlags) {
+    setData(data: string, flags: IFlags, links: string[]) {
       this.setFlags(flags);
       this.data = data;
+      this.links = [...links];
       this.isShow = true;
       this.showTime = new Date().getTime();
     }
@@ -411,9 +416,15 @@
       const { getFiles, sortFiles } = this.fileTs;
       const { files, backlinks } = await getFiles();
       const paths = backlinks[this.filePath];
-      this.backlinkFiles = paths && paths.length > 0 ? paths.map(path => {
-        return JSON.parse(JSON.stringify(files[path])) as TFile;
-      }).sort(sortFiles) : [];
+      if (paths && paths.length > 0) {
+        this.backlinks = [...paths];
+        this.backlinkFiles = paths.map(path => {
+          return JSON.parse(JSON.stringify(files[path])) as TFile;
+        }).sort(sortFiles);
+      } else {
+        this.backlinks = [];
+        this.backlinkFiles = [];
+      }
       this.isLoadingBacklinks = false;
       if (!this.hasLoadedBacklinks) {
         this.hasLoadedBacklinks = true;
