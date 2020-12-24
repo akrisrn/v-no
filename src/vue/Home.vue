@@ -60,9 +60,7 @@
         </footer>
       </main>
     </transition>
-    <span id="toggle-dark" @click="toggleDark">{{ darkMarks[isDark ? 1 : 0] }}</span>
-    <span id="toggle-zen" ref="toggleZen" :class="isZen ? 'spin' : null" @click="toggleZen">{{ zenMark }}</span>
-    <span id="to-top" ref="toTop" :class="isToTop ? 'spin' : null" @click="toTop()">{{ toTopMark }}</span>
+    <Gadget :addToKeyInput="key => this.keyInput += key"></Gadget>
   </div>
 </template>
 
@@ -71,14 +69,12 @@
   import {
     cleanEventListenerDict,
     createList,
-    dispatchEvent,
     getIcon,
     getSearchTagLinks,
-    removeClass,
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/element';
-  import { EEvent, EFlag, EIcon } from '@/ts/enums';
+  import { EFlag, EIcon } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
   import { addInputBinds, destructors, inputBinds } from '@/ts/utils';
   import { exposeToWindow, smallBang } from '@/ts/window';
@@ -87,16 +83,14 @@
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
 
+  const Gadget = () => import(/* webpackChunkName: "gadget" */ '@/vue/Gadget.vue');
+
   Component.registerHooks([
     'beforeRouteUpdate',
   ]);
 
-  @Component({ components: { Article } })
+  @Component({ components: { Article, Gadget } })
   export default class Home extends Vue {
-    $refs!: {
-      toggleZen: HTMLSpanElement;
-      toTop: HTMLSpanElement;
-    };
     fileTs: TFileTs | null = null;
 
     data = '';
@@ -125,14 +119,6 @@
 
     isError = false;
     isCancel = false;
-
-    metaTheme!: HTMLMetaElement;
-    isDark = false;
-    isZen = false;
-    isToTop = false;
-    darkMarks = ['★', '☆'];
-    zenMark = '▣';
-    toTopMark = 'と';
 
     favicon = this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     iconSync = getIcon(EIcon.sync);
@@ -194,10 +180,6 @@
       return ` | ${this.config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
     }
 
-    get metaThemeColor() {
-      return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
-    }
-
     // noinspection JSUnusedGlobalSymbols
     created() {
       const homePath = this.homePath;
@@ -238,9 +220,6 @@
       });
       smallBang();
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
-      this.isDark = !!localStorage.getItem('dark');
-      this.isZen = !!localStorage.getItem('zen');
-      this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
@@ -249,13 +228,6 @@
       }
       addInputBinds({
         home: () => this.returnHome(),
-        gg: () => {
-          this.toTop(true);
-          this.keyInput += '_';
-        },
-        G: () => this.toTop(),
-        dark: () => this.toggleDark(),
-        zen: () => this.toggleZen(),
         Backspace: () => {
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
@@ -420,46 +392,6 @@
 
     getListHtml(file: TFile) {
       return createList(file).innerHTML;
-    }
-
-    toggleDark() {
-      this.isDark = !this.isDark;
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isDark) {
-        document.body.classList.add('dark');
-        localStorage.setItem('dark', String(true));
-      } else {
-        removeClass(document.body, 'dark');
-        localStorage.removeItem('dark');
-      }
-      dispatchEvent(EEvent.toggleDark, this.isDark);
-    }
-
-    toggleZen() {
-      this.isZen = !this.isZen;
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isZen) {
-        document.body.classList.add('zen');
-        localStorage.setItem('zen', String(true));
-      } else {
-        this.$nextTick(() => removeClass(this.$refs.toggleZen));
-        removeClass(document.body, 'zen');
-        localStorage.removeItem('zen');
-      }
-      dispatchEvent(EEvent.toggleZen, this.isZen);
-    }
-
-    toTop(toBottom = false) {
-      if (this.isToTop) {
-        return;
-      }
-      this.isToTop = true;
-      scroll(toBottom ? document.body.offsetHeight : 0);
-      setTimeout(() => {
-        this.isToTop = false;
-        this.$nextTick(() => removeClass(this.$refs.toTop));
-      }, 500);
-      dispatchEvent(EEvent.toTop, !toBottom);
     }
   }
 </script>
