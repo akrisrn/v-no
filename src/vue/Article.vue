@@ -43,6 +43,7 @@
     async created() {
       exposeToWindow({ articleSelf: this });
       this.markdownTs = await importMarkdownTs();
+      dispatchEvent(EEvent.articleCreated, new Date().getTime()).then();
       this.renderMD();
     }
 

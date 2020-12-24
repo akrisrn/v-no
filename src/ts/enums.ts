@@ -18,6 +18,7 @@ export enum EIcon {
 }
 
 export enum EEvent {
+  articleCreated = 'articleCreated',
   htmlChanged = 'htmlChanged',
   rendered = 'rendered',
   searchCompleted = 'searchCompleted',
