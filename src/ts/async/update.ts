@@ -431,7 +431,7 @@ function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
       const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
       if (!nextChar || nextChar === '?') {
         a.parentElement!.remove();
-        return;
+        continue;
       }
     }
     href = addCacheKey(href);
