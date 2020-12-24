@@ -115,6 +115,11 @@
       });
       dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
     }
+
+    @Watch('html')
+    onHTMLChanged() {
+      dispatchEvent(EEvent.htmlChanged, new Date().getTime());
+    }
   }
 </script>
 

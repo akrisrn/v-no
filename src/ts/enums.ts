@@ -18,6 +18,7 @@ export enum EIcon {
 }
 
 export enum EEvent {
+  htmlChanged = 'htmlChanged',
   rendered = 'rendered',
   searchCompleted = 'searchCompleted',
   toggleDark = 'toggleDark',
