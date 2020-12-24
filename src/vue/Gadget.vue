@@ -11,7 +11,7 @@
   import { EEvent } from '@/ts/enums';
   import { addInputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component
   export default class Gadget extends Vue {
@@ -59,6 +59,10 @@
 
     toggleDark() {
       this.isDark = !this.isDark;
+    }
+
+    @Watch('isDark')
+    onIsDarkChanged() {
       this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isDark) {
         document.body.classList.add('dark');
@@ -72,6 +76,10 @@
 
     toggleZen() {
       this.isZen = !this.isZen;
+    }
+
+    @Watch('isZen')
+    onIsZenChanged() {
       this.metaTheme.setAttribute('content', this.metaThemeColor);
       if (this.isZen) {
         document.body.classList.add('zen');
