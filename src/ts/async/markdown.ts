@@ -2,8 +2,8 @@ import { config } from '@/ts/config';
 import { getIcon } from '@/ts/element';
 import { EIcon } from '@/ts/enums';
 import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
-import { chopStr, snippetMark } from '@/ts/utils';
-import { getAnchorRegExp, isExternalLink, replaceByRegExp, trimList } from '@/ts/async/utils';
+import { chopStr } from '@/ts/utils';
+import { getAnchorRegExp, isExternalLink, replaceByRegExp, snippetMark, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 

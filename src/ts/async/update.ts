@@ -2,7 +2,7 @@ import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
 import { EEvent, EFlag } from '@/ts/enums';
 import { buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
-import { chopStr, snippetMark } from '@/ts/utils';
+import { chopStr } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { getFile, getFiles } from '@/ts/async/file';
@@ -16,6 +16,7 @@ import {
   getWrapRegExp,
   replaceByRegExp,
   replaceInlineScript,
+  snippetMark,
   trimList,
 } from '@/ts/async/utils';
 

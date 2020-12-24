@@ -1,5 +1,3 @@
-export const snippetMark = '--8<--';
-
 export const destructors: (() => void)[] = [];
 
 export const inputBinds: Dict<() => void> = {};

@@ -2,6 +2,8 @@ import { config } from '@/ts/config';
 import { cleanBaseUrl } from '@/ts/path';
 import { isCached } from '@/ts/async/file';
 
+export const snippetMark = '--8<--';
+
 export function getWrapRegExp(left: string, right = left, flags?: string) {
   return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
 }

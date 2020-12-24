@@ -1,7 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
-import { chopStr, snippetMark } from '@/ts/utils';
+import { chopStr } from '@/ts/utils';
 import { formatDate } from '@/ts/async/date';
 import {
   addCacheKey,
@@ -9,6 +9,7 @@ import {
   getLinkRegExp,
   getWrapRegExp,
   isExternalLink,
+  snippetMark,
   trimList,
 } from '@/ts/async/utils';
 import axios from 'axios';
