@@ -47,9 +47,9 @@
       this.isDark = !!localStorage.getItem('dark');
       this.isZen = !!localStorage.getItem('zen');
       addInputBinds({
-        dark: () => this.toggleDark(),
-        zen: () => this.toggleZen(),
-        G: () => this.toTop(),
+        dark: this.toggleDark,
+        zen: this.toggleZen,
+        G: this.toTop,
         gg: () => {
           this.toTop(true);
           this.addToKeyInput('_');
