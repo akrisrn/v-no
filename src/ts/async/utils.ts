@@ -106,4 +106,21 @@ export function isExternalLink(href: string) {
   }
 }
 
+export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
+  return await (async () => {
+    let count = 0;
+    for (; ;) {
+      try {
+        callback();
+        return true;
+      } catch {
+        if (++count > maxCount) {
+          return false;
+        }
+        await new Promise(_ => setTimeout(_, timeout));
+      }
+    }
+  })();
+}
+
 export * from '@/ts/async/date';

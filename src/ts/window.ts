@@ -60,6 +60,7 @@ export function smallBang() {
   importMarkdownTs().then(markdown => {
     exposeToWindow({
       markdown,
+      waitFor: markdown.utils.waitFor,
       dayjs: markdown.utils.dayjs,
       parseDate: markdown.utils.parseDate,
       formatDate: markdown.utils.formatDate,
