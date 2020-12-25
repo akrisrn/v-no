@@ -1,3 +1,5 @@
+import { exposeToWindow } from '@/ts/window';
+
 let file: TFileTs;
 
 export async function importFileTs() {
@@ -23,4 +25,38 @@ export async function importPrismjsTs() {
     prismjs = await import(/* webpackChunkName: "prismjs" */ '@/ts/async/prismjs');
   }
   return prismjs;
+}
+
+export function bang() {
+  importFileTs().then(file => {
+    exposeToWindow({
+      file,
+      axios: file.axios,
+    });
+  });
+  importMarkdownTs().then(markdown => {
+    exposeToWindow({
+      markdown,
+      waitFor: markdown.utils.waitFor,
+      dayjs: markdown.utils.dayjs,
+      parseDate: markdown.utils.parseDate,
+      formatDate: markdown.utils.formatDate,
+      renderMD: async (path: string, data: string) => {
+        data = data.trim();
+        if (!data) {
+          return '';
+        }
+        data = markdown.utils.replaceInlineScript(path, data);
+        if (!data) {
+          return '';
+        }
+        data = await markdown.updateSnippet(data);
+        return data ? markdown.renderMD(data) : '';
+      },
+      updateDom: markdown.updateDom,
+    });
+    exposeToWindow({
+      utils: markdown.utils,
+    }, true);
+  });
 }

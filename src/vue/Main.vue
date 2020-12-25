@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts">
+  import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf } from '@/ts/config';
   import {
     cleanEventListenerDict,
@@ -61,7 +62,7 @@
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import store from '@/ts/store';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
-  import { exposeToWindow, smallBang } from '@/ts/window';
+  import { exposeToWindow } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
   import { RawLocation, Route } from 'vue-router';
@@ -179,7 +180,7 @@
         reload: this.reload,
         filePath: this.filePath,
       });
-      smallBang();
+      bang();
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
     }
 

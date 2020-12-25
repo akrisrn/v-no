@@ -24,7 +24,8 @@
   import { addBaseUrl, returnHome } from '@/ts/path';
   import store from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
-  import { exposeToWindow, smallBangAsync } from '@/ts/window';
+  import { exposeToWindow } from '@/ts/window';
+  import { bang } from '@/ts/async';
   import Gadget from '@/vue/Gadget.vue';
   import { Component, Vue } from 'vue-property-decorator';
 
@@ -56,7 +57,7 @@
     // noinspection JSUnusedGlobalSymbols
     created() {
       exposeToWindow({ Vue });
-      smallBangAsync();
+      bang();
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
