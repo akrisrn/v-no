@@ -4,7 +4,7 @@ main {
   max-width: $max-width;
   margin: 40px auto;
   padding: 40px 56px;
-  transition: margin 0.5s, padding, 0.5s, background-color 0.5s, box-shadow 0.5s;
+  transition: margin 0.5s, padding 0.5s, background-color 0.5s, box-shadow 0.5s;
   background-color: $main-background-color;
   box-shadow: $box-shadow;
 
