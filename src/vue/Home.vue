@@ -80,10 +80,9 @@
   import { exposeToWindow, smallBang } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
+  import Gadget from '@/vue/Gadget.vue';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
-
-  const Gadget = () => import(/* webpackChunkName: "gadget" */ '@/vue/Gadget.vue');
 
   Component.registerHooks([
     'beforeRouteUpdate',
