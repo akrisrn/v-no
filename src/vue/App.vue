@@ -54,7 +54,6 @@
       return shortBaseFiles;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     created() {
       exposeToWindow({ Vue });
       bang();
@@ -72,7 +71,6 @@
       });
     }
 
-    // noinspection JSUnusedGlobalSymbols
     mounted() {
       document.addEventListener('keydown', e => {
         if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {

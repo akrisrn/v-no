@@ -143,7 +143,6 @@
       return ` | ${this.config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     created() {
       const homePath = this.homePath;
       const shortFilePath = this.shortFilePath;
@@ -184,7 +183,6 @@
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
     }
 
-    // noinspection JSUnusedGlobalSymbols
     mounted() {
       if (this.isCancel) {
         return;

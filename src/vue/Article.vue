@@ -39,7 +39,6 @@
       return this.filePath === config.paths.search;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     async created() {
       exposeToWindow({ articleSelf: this });
       this.markdownTs = await importMarkdownTs();

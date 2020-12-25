@@ -35,7 +35,6 @@
       return this.isDark ? (this.isZen ? '#2b2b2b' : '#3b3b3b') : (this.isZen ? '#efefef' : '#ffffff');
     }
 
-    // noinspection JSUnusedGlobalSymbols
     created() {
       exposeToWindow({
         gadgetSelf: this,
