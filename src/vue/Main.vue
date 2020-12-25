@@ -100,9 +100,6 @@
     isError = false;
     isCancel = false;
 
-    iconSync = getIcon(EIcon.sync);
-    iconBacklink = getIcon(EIcon.backlink, 18);
-
     store = store;
 
     get homePath() {
@@ -138,6 +135,14 @@
 
     get lastUpdatedMessage() {
       return ` | ${this.config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
+    }
+
+    get iconSync() {
+      return getIcon(EIcon.sync);
+    }
+
+    get iconBacklink() {
+      return getIcon(EIcon.backlink, 18);
     }
 
     created() {
