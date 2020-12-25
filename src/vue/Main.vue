@@ -8,7 +8,7 @@
         <code v-if="!isIndexFile" class="item-home">
           <a :href="homePath" @click.prevent="returnHome">«</a>
         </code>
-        <code v-if="date" class="item-date">{{ isIndexFile ? updated : date }}</code>
+        <code v-if="startDate" class="item-date">{{ isIndexFile ? endDate : startDate }}</code>
         <code v-if="creator" class="item-creator">{{ creator }}</code>
         <code v-for="tag in tags" :key="tag" class="item-tag">
           <template v-for="link in getSearchTagLinks(tag)">
@@ -38,9 +38,9 @@
       </div>
       <footer v-if="!isIndexFile">
         <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
-        <template v-if="!isError && date">
+        <template v-if="!isError && startDate">
           <span class="filler"></span>
-          <span class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
+          <span class="date">{{ endDate !== startDate ? endDate + lastUpdatedMessage : startDate }}</span>
         </template>
       </footer>
     </main>
@@ -79,8 +79,8 @@
     fileData = '';
     title = '';
     tags: string[] = [];
-    date = '';
-    updated = '';
+    startDate = '';
+    endDate = '';
     cover = '';
     creator = '';
     updater = '';
@@ -287,8 +287,8 @@
         document.title += ` - ${this.config.siteName}`;
       }
       this.tags = flags.tags ? [...flags.tags] : [];
-      this.date = flags.startDate || '';
-      this.updated = flags.endDate || '';
+      this.startDate = flags.startDate || '';
+      this.endDate = flags.endDate || '';
       this.cover = flags.cover || '';
       this.creator = flags.creator || '';
       this.updater = flags.updater || '';
