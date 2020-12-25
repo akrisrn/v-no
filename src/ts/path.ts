@@ -1,4 +1,4 @@
-import { config, shortBaseFiles } from '@/ts/config';
+import { config, homeHash, shortBaseFiles } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
@@ -167,4 +167,10 @@ export function formatQuery(query: TQuery) {
     }
   }
   return list.join('&');
+}
+
+export function returnHome() {
+  if (location.hash) {
+    location.hash = homeHash;
+  }
 }
