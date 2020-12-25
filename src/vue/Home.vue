@@ -1,71 +1,54 @@
 <template>
-  <div id="app">
-    <div id="top">
-      <div>
-        <img v-if="favicon" :src="favicon" alt="favicon"/>
-        <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
-        <span class="filler"></span>
-        <a :href="`#${shortBaseFiles.readme}`"></a>
-        <a :href="`#${shortBaseFiles.archive}`"></a>
-        <a :href="`#${shortBaseFiles.category}`"></a>
-        <a :href="`#${shortBaseFiles.search}`"></a>
-        <select v-if="enableMultiConf" v-model="selectConf" @change="confChanged">
-          <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
-        </select>
+  <transition name="slide-fade">
+    <main v-if="isShow" :class="isError ? 'error' : null">
+      <div v-if="cover" id="cover" class="center">
+        <img :src="cover" alt="cover"/>
       </div>
-    </div>
-    <transition name="slide-fade">
-      <main v-if="isShow" :class="isError ? 'error' : null">
-        <div v-if="cover" id="cover" class="center">
-          <img :src="cover" alt="cover"/>
-        </div>
-        <div v-if="!isError" id="bar" class="bar">
-          <code v-if="!isIndexFile" class="item-home">
-            <a :href="homePath" @click.prevent="returnHome">«</a>
-          </code>
-          <code v-if="date" class="item-date">{{ isIndexFile ? updated : date }}</code>
-          <code v-if="creator" class="item-creator">{{ creator }}</code>
-          <code v-for="tag in tags" :key="tag" class="item-tag">
-            <template v-for="link in getSearchTagLinks(tag)">
-              <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
-            </template>
-          </code>
-          <code v-for="key in Object.keys(otherFlags).sort()" :key="key" :class="`item-${key}`">{{
-              otherFlags[key]
-            }}</code>
-          <code class="item-raw">
-            <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
-          </code>
-        </div>
-        <header>{{ title }}</header>
-        <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query" :showTime="showTime"></Article>
-        <div v-if="!isError" id="backlinks">
-          <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
-               v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
-          <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
-          <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
-          <template v-else>
-            <ul v-if="backlinkFiles.length > 0">
-              <li v-for="file in backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
-            </ul>
-            <span v-else>{{ config.messages.noBacklinks }}</span>
+      <div v-if="!isError" id="bar" class="bar">
+        <code v-if="!isIndexFile" class="item-home">
+          <a :href="homePath" @click.prevent="returnHome">«</a>
+        </code>
+        <code v-if="date" class="item-date">{{ isIndexFile ? updated : date }}</code>
+        <code v-if="creator" class="item-creator">{{ creator }}</code>
+        <code v-for="tag in tags" :key="tag" class="item-tag">
+          <template v-for="link in getSearchTagLinks(tag)">
+            <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
           </template>
-        </div>
-        <footer v-if="!isIndexFile">
-          <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
-          <template v-if="!isError && date">
-            <span class="filler"></span>
-            <span class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
-          </template>
-        </footer>
-      </main>
-    </transition>
-    <Gadget :addToKeyInput="key => this.keyInput += key"></Gadget>
-  </div>
+        </code>
+        <code v-for="key in Object.keys(otherFlags).sort()" :key="key" :class="`item-${key}`">{{
+            otherFlags[key]
+          }}</code>
+        <code class="item-raw">
+          <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
+        </code>
+      </div>
+      <header>{{ title }}</header>
+      <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query" :showTime="showTime"></Article>
+      <div v-if="!isError" id="backlinks">
+        <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
+             v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
+        <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
+        <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
+        <template v-else>
+          <ul v-if="backlinkFiles.length > 0">
+            <li v-for="file in backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
+          </ul>
+          <span v-else>{{ config.messages.noBacklinks }}</span>
+        </template>
+      </div>
+      <footer v-if="!isIndexFile">
+        <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
+        <template v-if="!isError && date">
+          <span class="filler"></span>
+          <span class="date">{{ updated !== date ? updated + lastUpdatedMessage : date }}</span>
+        </template>
+      </footer>
+    </main>
+  </transition>
 </template>
 
 <script lang="ts">
-  import { config, getSelectConf, shortBaseFiles } from '@/ts/config';
+  import { config, confList, enableMultiConf, getSelectConf } from '@/ts/config';
   import {
     cleanEventListenerDict,
     createList,
@@ -75,12 +58,12 @@
     simpleUpdateLinkPath,
   } from '@/ts/element';
   import { EFlag, EIcon } from '@/ts/enums';
-  import { addBaseUrl, buildHash, formatQuery, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
-  import { addInputBinds, chopStr, destructors, inputBinds, snippetMark } from '@/ts/utils';
+  import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
+  import store from '@/ts/store';
+  import { chopStr, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow, smallBang } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
-  import Gadget from '@/vue/Gadget.vue';
   import { RawLocation, Route } from 'vue-router';
   import { Component, Vue } from 'vue-property-decorator';
 
@@ -88,7 +71,7 @@
     'beforeRouteUpdate',
   ]);
 
-  @Component({ components: { Article, Gadget } })
+  @Component({ components: { Article } })
   export default class Home extends Vue {
     fileTs: TFileTs | null = null;
 
@@ -119,37 +102,17 @@
     isError = false;
     isCancel = false;
 
-    favicon = this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     iconSync = getIcon(EIcon.sync);
     iconBacklink = getIcon(EIcon.backlink, 18);
 
-    keyInput = '';
+    store = store;
 
-    homePath = homePath;
-    homeHash = buildHash({ path: this.shortBaseFiles.index, anchor: '', query: '' });
-
-    selectConf = getSelectConf();
-
-    get shortBaseFiles() {
-      return shortBaseFiles;
+    get homePath() {
+      return this.store.state.homePath;
     }
 
     get config() {
       return config;
-    }
-
-    get confList() {
-      const multiConf = this.config.multiConf;
-      if (!multiConf) {
-        return null;
-      }
-      const keys = Object.keys(multiConf).sort();
-      const alias = keys.map(key => multiConf[key].alias || key);
-      return [keys, alias];
-    }
-
-    get enableMultiConf() {
-      return this.selectConf && this.confList && this.confList[0].length > 1;
     }
 
     get filePath() {
@@ -202,9 +165,9 @@
         this.isCancel = true;
         return;
       }
-      if (this.enableMultiConf) {
+      if (enableMultiConf) {
         const conf = this.query.conf;
-        if (conf && this.confList![0].includes(conf) && this.selectConf !== conf) {
+        if (conf && confList![0].includes(conf) && getSelectConf() !== conf) {
           localStorage.setItem('conf', conf);
           location.reload();
           this.isCancel = true;
@@ -212,25 +175,12 @@
         }
       }
       exposeToWindow({
-        Vue,
         homeSelf: this,
         reload: this.reload,
         filePath: this.filePath,
       });
       smallBang();
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
-      const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
-      if (this.favicon) {
-        icon.href = this.favicon;
-      } else if (icon) {
-        icon.remove();
-      }
-      addInputBinds({
-        home: () => this.returnHome(),
-        Backspace: () => {
-          this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
-        },
-      });
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -239,21 +189,6 @@
         return;
       }
       simpleUpdateLinkPath();
-      document.addEventListener('keydown', e => {
-        if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-          return;
-        }
-        this.keyInput += e.key;
-        if (this.keyInput.length > 20) {
-          this.keyInput = this.keyInput.substr(10);
-        }
-        for (const key of Object.keys(inputBinds)) {
-          if (this.keyInput.endsWith(key)) {
-            inputBinds[key]();
-            break;
-          }
-        }
-      });
     }
 
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {
@@ -364,21 +299,6 @@
       });
     }
 
-    returnHome() {
-      if (location.hash) {
-        location.hash = this.homeHash;
-      }
-    }
-
-    confChanged() {
-      localStorage.setItem('conf', this.selectConf);
-      location.href = this.homePath;
-    }
-
-    getSearchTagLinks(tag: string) {
-      return getSearchTagLinks(tag);
-    }
-
     async getBacklinks() {
       this.isLoadingBacklinks = true;
       if (!this.fileTs) {
@@ -404,6 +324,14 @@
 
     getListHtml(file: TFile) {
       return createList(file).innerHTML;
+    }
+
+    getSearchTagLinks(tag: string) {
+      return getSearchTagLinks(tag);
+    }
+
+    returnHome() {
+      returnHome();
     }
   }
 </script>
