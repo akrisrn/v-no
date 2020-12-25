@@ -51,6 +51,9 @@ export function smallBang() {
     destructors,
   });
   exposeToWindow({ config, element, enums, path, utils });
+}
+
+export function smallBangAsync() {
   importFileTs().then(file => {
     exposeToWindow({
       file,
