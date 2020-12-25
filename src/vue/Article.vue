@@ -21,11 +21,14 @@
     markdownTs!: TMarkdownTs;
     startTime = 0;
     isRendering = true;
-    html = '';
     renderData = '';
 
     get sourceData() {
       return this.fileData ? this.markdownTs.utils.replaceInlineScript(this.filePath, this.fileData) : '';
+    }
+
+    get html() {
+      return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
     }
 
     get isCategoryFile() {
@@ -47,7 +50,7 @@
     renderMD() {
       this.startTime = new Date().getTime();
       this.isRendering = true;
-      if (this.updateHtml(this.sourceData)) {
+      if (this.updateRenderData(this.sourceData)) {
         return;
       }
       const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
@@ -75,7 +78,7 @@
         this.renderComplete();
         return;
       }
-      if (this.updateHtml(data)) {
+      if (this.updateRenderData(data)) {
         return;
       }
       this.$nextTick(() => {
@@ -85,16 +88,14 @@
       });
     }
 
-    updateHtml(data: string) {
-      if (!data) {
-        this.html = '';
-        this.renderData = '';
-        this.renderComplete();
-        return true;
+    updateRenderData(data: string) {
+      if (data) {
+        this.renderData = data;
+        return false;
       }
-      this.html = this.markdownTs.renderMD(data) + '<!-- ' + this.showTime + ' -->';
-      this.renderData = data;
-      return false;
+      this.renderData = '';
+      this.renderComplete();
+      return true;
     }
 
     renderComplete() {
