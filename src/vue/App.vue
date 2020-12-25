@@ -10,7 +10,7 @@
         <a :href="`#${shortBaseFiles.category}`"></a>
         <a :href="`#${shortBaseFiles.search}`"></a>
         <select v-if="enableMultiConf" v-model="selectConf">
-          <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
+          <option v-for="(conf, i) of confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
       </div>
     </div>
@@ -31,8 +31,8 @@
 
   @Component({ components: { Gadget } })
   export default class App extends Vue {
-    selectConf = getSelectConf();
     keyInput = '';
+    selectConf = getSelectConf();
 
     store = store;
 

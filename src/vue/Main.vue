@@ -10,12 +10,12 @@
         </code>
         <code v-if="startDate" class="item-date">{{ isIndexFile ? endDate : startDate }}</code>
         <code v-if="creator" class="item-creator">{{ creator }}</code>
-        <code v-for="tag in tags" :key="tag" class="item-tag">
-          <template v-for="link in getSearchTagLinks(tag)">
+        <code v-for="tag of tags" :key="tag" class="item-tag">
+          <template v-for="link of getSearchTagLinks(tag)">
             <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
           </template>
         </code>
-        <code v-for="(flag, i) in otherFlags" :key="i" :class="`item-${flag[0]}`">{{ flag[1] }}</code>
+        <code v-for="(flag, i) of otherFlags" :key="i" :class="`item-${flag[0]}`">{{ flag[1] }}</code>
         <code class="item-raw">
           <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
         </code>
@@ -29,7 +29,7 @@
         <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
         <template v-else>
           <ul v-if="backlinkFiles.length > 0">
-            <li v-for="file in backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
+            <li v-for="file of backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
           </ul>
           <span v-else>{{ config.messages.noBacklinks }}</span>
         </template>
