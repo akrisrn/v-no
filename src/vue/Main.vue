@@ -56,7 +56,7 @@
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/element';
-  import { EFlag, EIcon } from '@/ts/enums';
+  import { definedFlags, EFlag, EIcon } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import store from '@/ts/store';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
@@ -83,7 +83,6 @@
     creator = '';
     updater = '';
     otherFlags: [string, string][] = [];
-    flagNames = Object.values(EFlag);
 
     anchor = '';
     queryStr = '';
@@ -290,7 +289,7 @@
       this.updater = flags.updater || '';
       this.otherFlags = [];
       Object.keys(flags).sort().forEach(key => {
-        if (!this.flagNames.includes(key as EFlag)) {
+        if (!definedFlags.includes(key as EFlag)) {
           this.addFlag(key, flags[key] as string, false);
         }
       });
