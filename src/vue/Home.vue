@@ -76,7 +76,7 @@
   } from '@/ts/element';
   import { EFlag, EIcon } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, homePath, parseQuery, parseRoute, shortenPath } from '@/ts/path';
-  import { addInputBinds, destructors, inputBinds } from '@/ts/utils';
+  import { addInputBinds, chopStr, destructors, inputBinds, snippetMark } from '@/ts/utils';
   import { exposeToWindow, smallBang } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
@@ -291,7 +291,7 @@
       if (!this.fileTs) {
         this.fileTs = await importFileTs();
       }
-      const { createErrorFile, getFile, mergeCommonData } = this.fileTs;
+      const { createErrorFile, getFile } = this.fileTs;
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
@@ -320,7 +320,20 @@
       if (files.length < 2 || files[1].isError) {
         return { data, flags, links };
       }
-      data = mergeCommonData(data, files[1].data);
+      const commonData = files[1].data;
+      let headerData = '';
+      let footerData = commonData;
+      const { key, value } = chopStr(commonData, snippetMark);
+      if (value !== null) {
+        headerData = key;
+        footerData = value;
+      }
+      if (headerData) {
+        data = headerData + '\n\n\n' + data;
+      }
+      if (footerData) {
+        data += '\n\n\n' + footerData;
+      }
       return { data, flags, links };
     }
 

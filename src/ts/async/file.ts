@@ -1,7 +1,6 @@
 import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
-import { chopStr, snippetMark } from '@/ts/utils';
 import { formatDate } from '@/ts/async/date';
 import {
   addCacheKey,
@@ -182,23 +181,6 @@ export async function getFiles() {
     isCacheCompleted = true;
   }
   return { files: cachedFiles, backlinks: cachedBacklinks };
-}
-
-export function mergeCommonData(data: string, commonData: string) {
-  let headerData = '';
-  let footerData = commonData;
-  const { key, value } = chopStr(commonData, snippetMark);
-  if (value !== null) {
-    headerData = key;
-    footerData = value;
-  }
-  if (headerData) {
-    data = headerData + '\n\n\n' + data;
-  }
-  if (footerData) {
-    data += '\n\n\n' + footerData;
-  }
-  return data;
 }
 
 export { axios };
