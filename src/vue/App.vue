@@ -31,8 +31,6 @@
 
   @Component({ components: { Gadget } })
   export default class App extends Vue {
-    favicon = this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
-    enableMultiConf = enableMultiConf;
     selectConf = getSelectConf();
     keyInput = '';
 
@@ -48,6 +46,14 @@
 
     get confList() {
       return confList;
+    }
+
+    get enableMultiConf() {
+      return enableMultiConf;
+    }
+
+    get favicon() {
+      return this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     }
 
     get shortBaseFiles() {
