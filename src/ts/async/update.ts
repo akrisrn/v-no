@@ -448,7 +448,7 @@ function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
     if (a.innerText.length === 1) {
       element.classList.add('custom');
     }
-    document.head.appendChild(element);
+    document.head.append(element);
     a.parentElement!.remove();
   }
 }

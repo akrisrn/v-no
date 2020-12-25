@@ -1,5 +1,5 @@
 <template>
-  <article ref="article" :class="isRendering ? 'rendering' : null" v-html="html"/>
+  <article :class="isRendering ? 'rendering' : null" v-html="html"/>
 </template>
 
 <script lang="ts">
@@ -18,9 +18,6 @@
     @Prop() query!: TQuery;
     @Prop() showTime!: number;
 
-    $refs!: {
-      article: HTMLElement;
-    };
     markdownTs!: TMarkdownTs;
     startTime = 0;
     isRendering = true;
@@ -103,7 +100,7 @@
     renderComplete() {
       this.isRendering = false;
       this.$nextTick(() => {
-        removeClass(this.$refs.article);
+        removeClass(this.$el);
         const anchorRegExp = this.markdownTs.utils.getAnchorRegExp();
         if (!anchorRegExp.test(this.anchor)) {
           return;
