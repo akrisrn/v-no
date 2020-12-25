@@ -41,6 +41,7 @@
         toggleDark: this.toggleDark,
         toggleZen: this.toggleZen,
         toTop: this.toTop,
+        toBottom: this.toBottom,
       });
       this.metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')!;
       this.isDark = !!localStorage.getItem('dark');
@@ -50,7 +51,7 @@
         zen: this.toggleZen,
         G: this.toTop,
         gg: () => {
-          this.scroll(true);
+          this.toBottom();
           this.addToKeyInput('_');
         },
       });
@@ -96,6 +97,13 @@
         return;
       }
       this.scroll();
+    }
+
+    toBottom() {
+      if (this.isScrolling) {
+        return;
+      }
+      this.scroll(true);
     }
 
     scroll(toBottom = false) {
