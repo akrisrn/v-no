@@ -42,7 +42,6 @@
       this.renderMD();
     }
 
-    @Watch('showTime')
     renderMD(data = this.fileData) {
       this.startTime = new Date().getTime();
       this.isRendering = true;
@@ -105,6 +104,11 @@
           scroll(element.offsetTop - 6);
         }
       });
+    }
+
+    @Watch('showTime')
+    onShowTimeChanged() {
+      this.renderMD();
     }
 
     @Watch('html')
