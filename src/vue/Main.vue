@@ -15,9 +15,7 @@
             <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
           </template>
         </code>
-        <code v-for="key in Object.keys(otherFlags).sort()" :key="key" :class="`item-${key}`">{{
-            otherFlags[key]
-          }}</code>
+        <code v-for="(flag, i) in otherFlags" :key="i" :class="`item-${flag[0]}`">{{ flag[1] }}</code>
         <code class="item-raw">
           <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
         </code>
@@ -84,7 +82,7 @@
     cover = '';
     creator = '';
     updater = '';
-    otherFlags: Dict<string> = {};
+    otherFlags: [string, string][] = [];
     flagNames = Object.values(EFlag);
 
     anchor = '';
@@ -290,12 +288,19 @@
       this.cover = flags.cover || '';
       this.creator = flags.creator || '';
       this.updater = flags.updater || '';
-      this.otherFlags = {};
-      Object.keys(flags).forEach(key => {
+      this.otherFlags = [];
+      Object.keys(flags).sort().forEach(key => {
         if (!this.flagNames.includes(key as EFlag)) {
-          this.otherFlags[key] = flags[key] as string;
+          this.addFlag(key, flags[key] as string, false);
         }
       });
+    }
+
+    addFlag(key: string, value: string, sort = true) {
+      this.otherFlags.push([key, value]);
+      if (sort) {
+        this.otherFlags = this.otherFlags.sort((a, b) => a[0].localeCompare(b[0]));
+      }
     }
 
     async getBacklinks() {
