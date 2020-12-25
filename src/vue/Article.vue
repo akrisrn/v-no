@@ -13,7 +13,7 @@
   @Component
   export default class Article extends Vue {
     @Prop() filePath!: string;
-    @Prop() data!: string;
+    @Prop() fileData!: string;
     @Prop() anchor!: string;
     @Prop() query!: TQuery;
     @Prop() showTime!: number;
@@ -28,7 +28,7 @@
     renderData = '';
 
     get sourceData() {
-      return this.data ? this.markdownTs.utils.replaceInlineScript(this.filePath, this.data) : '';
+      return this.fileData ? this.markdownTs.utils.replaceInlineScript(this.filePath, this.fileData) : '';
     }
 
     get isCategoryFile() {

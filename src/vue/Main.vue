@@ -23,7 +23,7 @@
         </code>
       </div>
       <header>{{ title }}</header>
-      <Article :anchor="anchor" :data="data" :filePath="filePath" :query="query" :showTime="showTime"></Article>
+      <Article :anchor="anchor" :fileData="fileData" :filePath="filePath" :query="query" :showTime="showTime"></Article>
       <div v-if="!isError" id="backlinks">
         <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
              v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -76,7 +76,7 @@
   export default class Main extends Vue {
     fileTs: TFileTs | null = null;
 
-    data = '';
+    fileData = '';
     title = '';
     tags: string[] = [];
     date = '';
@@ -274,7 +274,7 @@
 
     setData(data: string, flags: IFlags, links: string[]) {
       this.setFlags(flags);
-      this.data = data;
+      this.fileData = data;
       this.links = [...links];
       this.isShow = true;
       this.showTime = new Date().getTime();
