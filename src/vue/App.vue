@@ -9,7 +9,7 @@
         <a :href="`#${shortBaseFiles.archive}`"></a>
         <a :href="`#${shortBaseFiles.category}`"></a>
         <a :href="`#${shortBaseFiles.search}`"></a>
-        <select v-if="enableMultiConf" v-model="selectConf" @change="confChanged">
+        <select v-if="enableMultiConf" v-model="selectConf">
           <option v-for="(conf, i) in confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
       </div>
@@ -94,7 +94,8 @@
       }
     }
 
-    confChanged() {
+    @Watch('selectConf')
+    onSelectConfChanged() {
       localStorage.setItem('conf', this.selectConf);
       location.href = this.homePath;
     }
