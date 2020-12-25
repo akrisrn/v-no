@@ -2,7 +2,7 @@
   <div>
     <span id="toggle-dark" @click="toggleDark">{{ darkMarks[isDark ? 1 : 0] }}</span>
     <span id="toggle-zen" ref="toggleZen" :class="isZen ? 'spin' : null" @click="toggleZen">{{ zenMark }}</span>
-    <span id="to-top" ref="toTop" :class="isToTop ? 'spin' : null" @click="toTop">{{ toTopMark }}</span>
+    <span id="to-top" ref="toTop" :class="isScrolling ? 'spin' : null" @click="toTop">{{ toTopMark }}</span>
   </div>
 </template>
 
@@ -25,7 +25,7 @@
 
     isDark = false;
     isZen = false;
-    isToTop = false;
+    isScrolling = false;
 
     darkMarks = ['★', '☆'];
     zenMark = '▣';
@@ -92,17 +92,17 @@
     }
 
     toTop() {
-      if (this.isToTop) {
+      if (this.isScrolling) {
         return;
       }
       this.scroll();
     }
 
     scroll(toBottom = false) {
-      this.isToTop = true;
+      this.isScrolling = true;
       scroll(toBottom ? document.body.offsetHeight : 0);
       setTimeout(() => {
-        this.isToTop = false;
+        this.isScrolling = false;
         this.$nextTick(() => removeClass(this.$refs.toTop));
       }, 500);
       this.$nextTick(() => dispatchEvent(EEvent.toTop, !toBottom));
