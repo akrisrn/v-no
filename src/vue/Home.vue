@@ -407,5 +407,3 @@
     }
   }
 </script>
-
-<style lang="scss">@import "../scss/home";</style>
