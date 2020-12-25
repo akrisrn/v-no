@@ -1,4 +1,4 @@
-import { shortenPath } from '@/ts/path';
+import { buildHash, shortenPath } from '@/ts/path';
 import { getFromWindow } from '@/ts/window';
 
 function merge(target: IConfig, source: IConfig) {
@@ -13,7 +13,11 @@ function merge(target: IConfig, source: IConfig) {
 
 let selectConf = '';
 
-function getConfig() {
+export function getSelectConf() {
+  return selectConf;
+}
+
+export const config = (() => {
   const config: IConfig = JSON.parse(JSON.stringify(getFromWindow('vnoConfig')));
   if (!config.defaultConf || !config.multiConf) {
     return config;
@@ -35,13 +39,19 @@ function getConfig() {
   selectConf = config.defaultConf;
   merge(config, JSON.parse(JSON.stringify(defaultConfig)));
   return config;
-}
+})();
 
-export function getSelectConf() {
-  return selectConf;
-}
+export const confList = (() => {
+  const multiConf = config.multiConf;
+  if (!multiConf) {
+    return null;
+  }
+  const keys = Object.keys(multiConf).sort();
+  const alias = keys.map(key => multiConf[key].alias || key);
+  return [keys, alias];
+})();
 
-export const config = getConfig();
+export const enableMultiConf = !!(selectConf && confList && confList[0].length > 1);
 
 export const baseFiles = [
   config.paths.index,
@@ -62,3 +72,9 @@ export const shortBaseFiles = {
   category: shortenPath(config.paths.category),
   search: shortenPath(config.paths.search),
 };
+
+export const homeHash = buildHash({
+  path: shortBaseFiles.index,
+  anchor: '',
+  query: '',
+});
