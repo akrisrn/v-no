@@ -23,10 +23,6 @@
     isRendering = true;
     renderData = '';
 
-    get sourceData() {
-      return this.fileData ? this.markdownTs.utils.replaceInlineScript(this.filePath, this.fileData) : '';
-    }
-
     get html() {
       return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
     }
@@ -47,38 +43,41 @@
     }
 
     @Watch('showTime')
-    renderMD() {
+    renderMD(data = this.fileData) {
       this.startTime = new Date().getTime();
       this.isRendering = true;
-      if (this.updateRenderData(this.sourceData)) {
+      if (data) {
+        data = this.markdownTs.utils.replaceInlineScript(this.filePath, data);
+      }
+      if (this.updateRenderData(data)) {
         return;
       }
       const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
-          updateSnippet(this.sourceData),
+          updateSnippet(data),
           updateDom(),
-        ]).then(([data]) => {
+        ]).then(([newData]) => {
           if (!this.isCategoryFile) {
-            this.updateData(data);
+            this.updateData(data, newData);
             if (this.isSearchFile) {
               this.$nextTick(() => updateSearchPage(this.query.content || ''));
             }
-          } else if (data) {
-            updateCategoryPage(data).then(data => this.updateData(data));
+          } else if (newData) {
+            updateCategoryPage(newData).then(newData => this.updateData(data, newData));
           } else {
-            this.updateData(data);
+            this.updateData(data, newData);
           }
         });
       });
     }
 
-    updateData(data: string) {
-      if (data === this.sourceData) {
+    updateData(data: string, newData: string) {
+      if (newData === data) {
         this.renderComplete();
         return;
       }
-      if (this.updateRenderData(data)) {
+      if (this.updateRenderData(newData)) {
         return;
       }
       this.$nextTick(() => {
