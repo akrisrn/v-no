@@ -2,7 +2,7 @@
   <div>
     <span id="toggle-dark" @click="toggleDark">{{ darkMarks[isDark ? 1 : 0] }}</span>
     <span id="toggle-zen" ref="toggleZen" :class="isZen ? 'spin' : null" @click="toggleZen">{{ zenMark }}</span>
-    <span id="to-top" ref="toTop" :class="isToTop ? 'spin' : null" @click="toTop()">{{ toTopMark }}</span>
+    <span id="to-top" ref="toTop" :class="isToTop ? 'spin' : null" @click="toTop">{{ toTopMark }}</span>
   </div>
 </template>
 
@@ -50,7 +50,7 @@
         zen: this.toggleZen,
         G: this.toTop,
         gg: () => {
-          this.toTop(true);
+          this.scroll(true);
           this.addToKeyInput('_');
         },
       });
@@ -91,10 +91,14 @@
       this.$nextTick(() => dispatchEvent(EEvent.toggleZen, this.isZen));
     }
 
-    toTop(toBottom = false) {
+    toTop() {
       if (this.isToTop) {
         return;
       }
+      this.scroll();
+    }
+
+    scroll(toBottom = false) {
       this.isToTop = true;
       scroll(toBottom ? document.body.offsetHeight : 0);
       setTimeout(() => {
