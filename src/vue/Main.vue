@@ -72,7 +72,7 @@
   ]);
 
   @Component({ components: { Article } })
-  export default class Home extends Vue {
+  export default class Main extends Vue {
     fileTs: TFileTs | null = null;
 
     data = '';
@@ -175,7 +175,7 @@
         }
       }
       exposeToWindow({
-        homeSelf: this,
+        mainSelf: this,
         reload: this.reload,
         filePath: this.filePath,
       });
