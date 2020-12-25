@@ -27,7 +27,7 @@
   import { exposeToWindow } from '@/ts/window';
   import { bang } from '@/ts/async';
   import Gadget from '@/vue/Gadget.vue';
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Vue, Watch } from 'vue-property-decorator';
 
   @Component({ components: { Gadget } })
   export default class App extends Vue {
@@ -76,17 +76,22 @@
         if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           return;
         }
-        this.keyInput += e.key;
-        if (this.keyInput.length > 20) {
-          this.keyInput = this.keyInput.substr(10);
+        let value = this.keyInput + e.key;
+        if (value.length > 20) {
+          value = value.substr(10);
         }
-        for (const key of Object.keys(inputBinds)) {
-          if (this.keyInput.endsWith(key)) {
-            inputBinds[key]();
-            break;
-          }
-        }
+        this.keyInput = value;
       });
+    }
+
+    @Watch('keyInput')
+    onKeyInputChanged() {
+      for (const key of Object.keys(inputBinds)) {
+        if (this.keyInput.endsWith(key)) {
+          inputBinds[key]();
+          break;
+        }
+      }
     }
 
     confChanged() {
