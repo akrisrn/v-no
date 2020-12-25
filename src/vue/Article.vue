@@ -49,24 +49,30 @@
       if (data) {
         data = this.markdownTs.utils.replaceInlineScript(this.filePath, data);
       }
-      if (this.updateRenderData(data)) {
+      if (!data) {
+        this.renderData = '';
+        this.renderComplete();
         return;
       }
+      this.renderData = data;
       const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(data),
           updateDom(),
         ]).then(([newData]) => {
-          if (!this.isCategoryFile) {
-            this.updateData(data, newData);
-            if (this.isSearchFile) {
-              this.$nextTick(() => updateSearchPage(this.query.content || ''));
-            }
-          } else if (newData) {
+          if (!newData) {
+            this.renderData = '';
+            this.renderComplete();
+            return;
+          }
+          if (this.isCategoryFile) {
             updateCategoryPage(newData).then(newData => this.updateData(data, newData));
-          } else {
-            this.updateData(data, newData);
+            return;
+          }
+          this.updateData(data, newData);
+          if (this.isSearchFile) {
+            this.$nextTick(() => updateSearchPage(this.query.content || ''));
           }
         });
       });
@@ -77,24 +83,12 @@
         this.renderComplete();
         return;
       }
-      if (this.updateRenderData(newData)) {
-        return;
-      }
+      this.renderData = newData;
       this.$nextTick(() => {
         this.markdownTs.updateDom().then(() => {
           this.renderComplete();
         });
       });
-    }
-
-    updateRenderData(data: string) {
-      if (data) {
-        this.renderData = data;
-        return false;
-      }
-      this.renderData = '';
-      this.renderComplete();
-      return true;
     }
 
     renderComplete() {
