@@ -70,7 +70,7 @@
         removeClass(document.body, 'dark');
         localStorage.removeItem('dark');
       }
-      dispatchEvent(EEvent.toggleDark, this.isDark);
+      this.$nextTick(() => dispatchEvent(EEvent.toggleDark, this.isDark));
     }
 
     toggleZen() {
@@ -88,7 +88,7 @@
         removeClass(document.body, 'zen');
         localStorage.removeItem('zen');
       }
-      dispatchEvent(EEvent.toggleZen, this.isZen);
+      this.$nextTick(() => dispatchEvent(EEvent.toggleZen, this.isZen));
     }
 
     toTop(toBottom = false) {
@@ -101,7 +101,7 @@
         this.isToTop = false;
         this.$nextTick(() => removeClass(this.$refs.toTop));
       }, 500);
-      dispatchEvent(EEvent.toTop, !toBottom);
+      this.$nextTick(() => dispatchEvent(EEvent.toTop, !toBottom));
     }
   }
 </script>

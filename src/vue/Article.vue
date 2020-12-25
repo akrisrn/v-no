@@ -102,6 +102,7 @@
       this.isRendering = false;
       this.$nextTick(() => {
         removeClass(this.$el);
+        dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
         const anchorRegExp = this.markdownTs.utils.getAnchorRegExp();
         if (!anchorRegExp.test(this.anchor)) {
           return;
@@ -111,12 +112,11 @@
           scroll(element.offsetTop - 6);
         }
       });
-      dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
     }
 
     @Watch('html')
     onHTMLChanged() {
-      dispatchEvent(EEvent.htmlChanged, new Date().getTime());
+      this.$nextTick(() => dispatchEvent(EEvent.htmlChanged, new Date().getTime()));
     }
   }
 </script>
