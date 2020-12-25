@@ -61,7 +61,10 @@
     }
 
     created() {
-      exposeToWindow({ Vue });
+      exposeToWindow({
+        Vue,
+        appSelf: this,
+      });
       bang();
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
