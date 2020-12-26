@@ -64,7 +64,7 @@
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
   import { RawLocation, Route } from 'vue-router';
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Vue, Watch } from 'vue-property-decorator';
 
   Component.registerHooks([
     'beforeRouteUpdate',
@@ -280,10 +280,6 @@
 
     setFlags(flags: IFlags) {
       this.title = flags.title;
-      document.title = `${this.title}`;
-      if (this.config.siteName && this.config.siteName !== this.title) {
-        document.title += ` - ${this.config.siteName}`;
-      }
       this.tags = flags.tags ? [...flags.tags] : [];
       this.startDate = flags.startDate || '';
       this.endDate = flags.endDate || '';
@@ -325,6 +321,14 @@
       this.isLoadingBacklinks = false;
       if (!this.hasLoadedBacklinks) {
         this.hasLoadedBacklinks = true;
+      }
+    }
+
+    @Watch('title')
+    onTitleChanged() {
+      document.title = this.title;
+      if (this.config.siteName && this.config.siteName !== this.title) {
+        document.title += ` - ${this.config.siteName}`;
       }
     }
 
