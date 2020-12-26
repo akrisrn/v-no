@@ -6,10 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-modern": "yarn run build --modern",
-    "lint": "vue-cli-service lint",
     "clean-template": "rimraf dist/assets/config.js dist/uploads/ dist/**/*.md",
     "build+clean": "yarn run build && yarn run clean-template",
-    "build-modern+clean": "yarn run build-modern && yarn run clean-template"
+    "build-modern+clean": "yarn run build-modern && yarn run clean-template",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -47,6 +47,6 @@
     "sass-loader": "^10.1.0",
     "typescript": "^4.1.3",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^5.11.0"
+    "webpack": "^4.0.0"
   }
 }
