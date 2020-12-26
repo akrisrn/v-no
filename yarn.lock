@@ -1092,11 +1092,6 @@
   resolved "https://registry.npm.taobao.org/@types/prismjs/download/@types/prismjs-1.16.2.tgz#c130c977191c988cb35e97585da5d580948cc2d2"
   integrity sha1-wTDJdxkcmIyzXpdYXaXVgJSMwtI=
 
-"@types/punycode@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.npm.taobao.org/@types/punycode/download/@types/punycode-2.1.0.tgz#89e4f3d09b3f92e87a80505af19be7e0c31d4e83"
-  integrity sha1-ieTz0Js/kuh6gFBa8Zvn4MMdToM=
-
 "@types/q@^1.5.1":
   version "1.5.4"
   resolved "https://registry.npm.taobao.org/@types/q/download/@types/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
