@@ -171,13 +171,13 @@ article {
     overflow: auto;
     margin: 0 0 16px;
     padding: 24px;
+    color: $dark-font-color;
     background-color: $dark-background-color;
 
     code {
       font-size: 1em;
       line-height: 1.8;
       padding: 0;
-      color: $dark-font-color;
       background-color: transparent;
     }
   }
