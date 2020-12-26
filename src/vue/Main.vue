@@ -301,6 +301,16 @@
       }
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    removeFlag(key: string) {
+      for (let i = 0; i < this.otherFlags.length; i++) {
+        if (this.otherFlags[i][0] === key) {
+          this.otherFlags.splice(i, 1);
+          break;
+        }
+      }
+    }
+
     async getBacklinks() {
       this.isLoadingBacklinks = true;
       if (!this.fileTs) {
