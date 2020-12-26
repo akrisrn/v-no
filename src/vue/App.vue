@@ -22,7 +22,7 @@
 <script lang="ts">
   import { config, confList, enableMultiConf, getSelectConf, shortBaseFiles } from '@/ts/config';
   import { addBaseUrl, returnHome } from '@/ts/path';
-  import store from '@/ts/store';
+  import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { bang } from '@/ts/async';
@@ -34,10 +34,8 @@
     keyInput = '';
     selectConf = getSelectConf();
 
-    store = store;
-
     get homePath() {
-      return this.store.state.homePath;
+      return state.homePath;
     }
 
     get config() {

@@ -58,7 +58,7 @@
   } from '@/ts/element';
   import { definedFlags, EFlag, EIcon } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
-  import store from '@/ts/store';
+  import { state } from '@/ts/store';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
@@ -100,10 +100,8 @@
     isError = false;
     isCancel = false;
 
-    store = store;
-
     get homePath() {
-      return this.store.state.homePath;
+      return state.homePath;
     }
 
     get config() {

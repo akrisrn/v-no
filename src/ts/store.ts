@@ -1,9 +1,6 @@
 import { homePath } from '@/ts/path';
+import Vue from 'vue';
 
-const store = {
-  state: {
-    homePath,
-  },
-};
-
-export default store;
+export const state = Vue.observable({
+  homePath,
+});
