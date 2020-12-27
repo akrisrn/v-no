@@ -89,7 +89,7 @@ body {
 
 #app a.error, main.error header {
   font-weight: bold;
-  color: $danger-color-s !important;
+  color: rgb($danger-color) !important;
 }
 
 @import "top";

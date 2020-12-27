@@ -271,6 +271,10 @@ article {
     &.empty > {
       :last-child {
         margin-bottom: 0;
+
+        > pre {
+          margin-bottom: 0;
+        }
       }
 
       summary {
@@ -438,33 +442,27 @@ article {
     }
   }
 
-  div.code-toolbar {
-    &:last-child pre {
-      margin-bottom: 0;
+  div.code-toolbar > .toolbar {
+    top: 0;
+    opacity: 1;
+
+    button {
+      cursor: pointer;
+      outline: none;
     }
 
-    > .toolbar {
-      top: 0;
-      opacity: 1;
+    button, span {
+      font-family: $mono-font-family;
+      font-size: $font-size-s;
+      font-weight: bold;
+      padding: 0 8px 0 0;
+      transition: color 0.5s;
+      color: $gray-font-color;
+      background: none;
+      box-shadow: none;
 
-      button {
-        cursor: pointer;
-        outline: none;
-      }
-
-      button, span {
-        font-family: $mono-font-family;
-        font-size: $font-size-s;
-        font-weight: bold;
-        padding: 0 8px 0 0;
-        transition: color 0.5s;
-        color: $gray-font-color;
-        background: none;
-        box-shadow: none;
-
-        &:hover {
-          color: $dark-font-color;
-        }
+      &:hover {
+        color: $dark-font-color;
       }
     }
   }
