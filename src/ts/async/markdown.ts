@@ -126,7 +126,7 @@ markdownIt.renderer.rules.fence = (tokens, idx, options, env, self) => {
   }
   let dataLine = '';
   let lang = token.info.trim();
-  const { key, value } = chopStr(lang, '|');
+  const [key, value] = chopStr(lang, '|');
   if (value !== null) {
     lang = key;
     dataLine = value;

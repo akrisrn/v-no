@@ -280,7 +280,7 @@
       const commonData = files[1].data;
       let headerData = '';
       let footerData = commonData;
-      const { key, value } = chopStr(commonData, snippetMark);
+      const [key, value] = chopStr(commonData, snippetMark);
       if (value !== null) {
         headerData = key;
         footerData = value;

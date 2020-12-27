@@ -10,10 +10,10 @@ export function addInputBinds(binds: Dict<() => void>) {
   });
 }
 
-export function chopStr(str: string, sep: string, trim = true): { key: string; value: string | null } {
+export function chopStr(str: string, sep: string, trim = true): [string, string | null] {
   const indexOf = str.indexOf(sep);
   if (indexOf < 0) {
-    return { key: str, value: null };
+    return [str, null];
   }
   let key = str.substring(0, indexOf);
   let value = str.substring(indexOf + sep.length);
@@ -21,5 +21,5 @@ export function chopStr(str: string, sep: string, trim = true): { key: string; v
     key = key.trimEnd();
     value = value.trimStart();
   }
-  return { key, value };
+  return [key, value];
 }

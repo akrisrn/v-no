@@ -94,14 +94,14 @@ export function parseHash(hash: string, isShort = false): THashPath {
   }
   path = hash.substr(1);
   let chop = chopStr(path, '?', false);
-  if (chop.value !== null) {
-    path = chop.key;
-    query = chop.value;
+  if (chop[1] !== null) {
+    path = chop[0];
+    query = chop[1];
   }
   chop = chopStr(path, '#', false);
-  if (chop.value !== null) {
-    path = chop.key;
-    anchor = chop.value;
+  if (chop[1] !== null) {
+    path = chop[0];
+    anchor = chop[1];
   }
   if (path.endsWith('/')) {
     if (!isShort) {
@@ -136,10 +136,10 @@ export function parseQuery(queryStr: string) {
   const query: TQuery = {};
   queryStr.split('&').forEach(value => {
     const chop = chopStr(value, '=', false);
-    if (chop.value !== null) {
-      const key = decodeURIComponent(chop.key).trim();
+    if (chop[1] !== null) {
+      const key = decodeURIComponent(chop[0]).trim();
       if (key) {
-        query[key] = decodeURIComponent(chop.value).trim();
+        query[key] = decodeURIComponent(chop[1]).trim();
       }
     } else {
       value = decodeURIComponent(value).trim();

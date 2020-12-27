@@ -142,7 +142,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     const heading = match[1] ? match[1].length : 0;
     const params: Dict<string> = {};
     match[2]?.substr(1).split('|').forEach((seg, i) => {
-      const { key, value } = chopStr(seg.trim(), '=');
+      const [key, value] = chopStr(seg.trim(), '=');
       let param = key;
       if (value !== null) {
         param = value;
@@ -175,7 +175,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       if (snippetData) {
         snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
           let defaultValue: string | undefined = undefined;
-          const { key, value } = chopStr(match, '|');
+          const [key, value] = chopStr(match, '|');
           if (value !== null) {
             match = key;
             defaultValue = value;
