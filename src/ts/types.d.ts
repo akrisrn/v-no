@@ -27,6 +27,7 @@ interface IConfig {
     showBacklinks: string;
     noBacklinks: string;
     loading: string;
+    redirectFrom: string;
   };
   defaultConf?: string;
   multiConf?: Dict<IConfig>;

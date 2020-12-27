@@ -20,6 +20,9 @@
           <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
         </code>
       </div>
+      <div v-if="!isRedirectPage && redirectFrom[0].length > 0" id="redirect-from">{{ config.messages.redirectFrom }}
+        <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
+      </div>
       <header>{{ title }}</header>
       <Article :anchor="anchor" :fileData="fileData" :filePath="filePath" :query="query" :showTime="showTime"></Article>
       <div v-if="!isError" id="backlinks">
@@ -99,6 +102,9 @@
 
     isError = false;
     isCancel = false;
+
+    isRedirectPage = false;
+    redirectFrom: [string[], string[]] = [[], []];
 
     get homePath() {
       return state.homePath;
@@ -199,6 +205,11 @@
       this.isShow = false;
       next();
       exposeToWindow({ filePath: this.filePath });
+      if (!this.isRedirectPage) {
+        this.redirectFrom = [[], []];
+      } else {
+        this.isRedirectPage = false;
+      }
       this.reload(true);
     }
 
@@ -247,6 +258,19 @@
         return { data, flags, links };
       }
       this.isError = false;
+      const match = data.match(/^\[redirect\s+(\/\S+\.md)(?:#(\S+))?(?:\?(\S+))?]$/);
+      if (match && !this.redirectFrom[0].includes(filePath)) {
+        this.isRedirectPage = true;
+        this.redirectFrom[0].push(filePath);
+        this.redirectFrom[1].push(flags.title);
+        const [, path, anchor, query] = match;
+        location.hash = buildHash({
+          path: shortenPath(path),
+          anchor: anchor || this.anchor,
+          query: query || this.queryStr,
+        });
+        return { data, flags, links };
+      }
       if (this.hasLoadedBacklinks) {
         this.getBacklinks().then();
       }

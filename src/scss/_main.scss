@@ -38,6 +38,29 @@ main {
     opacity: 1;
   }
 
+  #redirect-from {
+    font-size: $font-size-s;
+    margin-top: 8px;
+    color: $gray-font-color;
+
+    &:before {
+      font-family: $arial-font-family;
+      margin-right: 4px;
+      content: "#";
+    }
+
+    a {
+      &:first-of-type {
+        margin-left: 4px;
+      }
+
+      &:not(:last-of-type):after {
+        margin: 0 4px;
+        content: "/";
+      }
+    }
+  }
+
   header {
     font-size: 2em;
     font-weight: bold;
