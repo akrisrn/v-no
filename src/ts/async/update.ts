@@ -167,7 +167,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   for (const file of files) {
     const isError = file.isError;
     const path = file.path;
-    const fileData = file.data ? replaceInlineScript(path, file.data) : '';
+    const fileData = file.data;
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
       const [heading, params] = snippetDict[match];
@@ -205,6 +205,9 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
             }
             snippetData = slips[num].trim();
           }
+        }
+        if (snippetData) {
+          snippetData = replaceInlineScript(path, snippetData);
         }
       }
       let dataWithHeading = snippetData;
