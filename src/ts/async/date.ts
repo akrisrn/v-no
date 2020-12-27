@@ -1,17 +1,26 @@
 import { config } from '@/ts/config';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs, isDayjs } from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 dayjs.extend(advancedFormat);
 dayjs.extend(localizedFormat);
 
-export function parseDate(dateStr: string) {
-  return config.dateFormat ? dayjs(dateStr, config.dateFormat).toDate() : new Date(dateStr);
+export function parseDate(date: string | number) {
+  if (typeof date === 'string' && config.dateFormat) {
+    return dayjs(date, config.dateFormat).toDate();
+  }
+  return new Date(date);
 }
 
-export function formatDate(date: Date) {
-  return config.dateFormat ? dayjs(date).format(config.dateFormat) : date.toDateString();
+export function formatDate(date: string | number | Date | Dayjs) {
+  if (config.dateFormat) {
+    return dayjs(date).format(config.dateFormat);
+  }
+  if (isDayjs(date)) {
+    date = date.toDate();
+  }
+  return new Date(date).toDateString();
 }
 
 export { dayjs };
