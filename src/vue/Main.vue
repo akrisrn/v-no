@@ -24,7 +24,7 @@
         <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
-      <Article :anchor="anchor" :fileData="fileData" :filePath="filePath" :query="query" :showTime="showTime"></Article>
+      <Article :fileData="fileData" :query="query" :showTime="showTime"></Article>
       <div v-if="!isError" id="backlinks">
         <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
              v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
@@ -87,9 +87,6 @@
     updater = '';
     otherFlags: [string, string][] = [];
 
-    anchor = '';
-    queryStr = '';
-
     links: string[] = [];
     backlinks: string[] = [];
 
@@ -106,19 +103,28 @@
     isRedirectPage = false;
     redirectFrom: [string[], string[]] = [[], []];
 
-    get homePath() {
-      return state.homePath;
-    }
-
     get config() {
       return config;
     }
 
+    get homePath() {
+      return state.homePath;
+    }
+
     get filePath() {
       const { path, anchor, query } = parseRoute(this.$route);
-      this.anchor = anchor;
-      this.queryStr = query;
-      return path;
+      state.filePath = path;
+      state.anchor = anchor;
+      state.queryStr = query;
+      return state.filePath;
+    }
+
+    get anchor() {
+      return state.anchor;
+    }
+
+    get queryStr() {
+      return state.queryStr;
     }
 
     get shortFilePath() {

@@ -6,15 +6,14 @@
   import { config } from '@/ts/config';
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
+  import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importMarkdownTs } from '@/ts/async';
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component
   export default class Article extends Vue {
-    @Prop() filePath!: string;
     @Prop() fileData!: string;
-    @Prop() anchor!: string;
     @Prop() query!: TQuery;
     @Prop() showTime!: number;
 
@@ -22,6 +21,14 @@
     startTime = 0;
     isRendering = true;
     renderData = '';
+
+    get filePath() {
+      return state.filePath;
+    }
+
+    get anchor() {
+      return state.anchor;
+    }
 
     get html() {
       return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
