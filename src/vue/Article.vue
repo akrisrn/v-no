@@ -6,6 +6,7 @@
   import { config } from '@/ts/config';
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
+  import { changeAnchor } from '@/ts/path';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importMarkdownTs } from '@/ts/async';
@@ -102,15 +103,21 @@
       this.$nextTick(() => {
         removeClass(this.$el);
         dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
-        const anchorRegExp = this.markdownTs.utils.getAnchorRegExp();
-        if (!anchorRegExp.test(this.anchor)) {
-          return;
-        }
-        const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);
-        if (element && element.offsetTop > 0) {
-          scroll(element.offsetTop - 6);
-        }
+        this.scrollToAnchor();
       });
+    }
+
+    @Watch('anchor')
+    scrollToAnchor() {
+      const anchorRegExp = this.markdownTs.utils.getAnchorRegExp();
+      if (!anchorRegExp.test(this.anchor)) {
+        return;
+      }
+      const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);
+      if (element && element.offsetTop > 0) {
+        scroll(element.offsetTop - 6);
+        changeAnchor(this.anchor);
+      }
     }
 
     @Watch('showTime')
