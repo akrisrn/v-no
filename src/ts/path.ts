@@ -118,6 +118,12 @@ export function changeHash(anchor: string) {
   location.hash = buildHash({ path, anchor, query });
 }
 
+export function changeQueryContent(content: string) {
+  const query = content ? buildSearchContent(content) : '';
+  const { path, anchor } = parseHash(location.hash, true);
+  location.hash = buildHash({ path, anchor, query });
+}
+
 export function parseRoute(route: Route) {
   let path = route.path;
   if (path.endsWith('/')) {

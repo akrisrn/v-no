@@ -1,7 +1,7 @@
 import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
 import { EEvent, EFlag } from '@/ts/enums';
-import { buildHash, buildSearchContent, changeHash, checkLinkPath, parseHash } from '@/ts/path';
+import { changeHash, changeQueryContent, checkLinkPath } from '@/ts/path';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
@@ -674,9 +674,7 @@ export async function updateSearchPage(content: string) {
       }
       const searchValue = searchInput.value.trim();
       searchInput.value = searchValue;
-      const query = searchValue ? buildSearchContent(searchValue) : '';
-      const { path, anchor } = parseHash(location.hash, true);
-      location.hash = buildHash({ path, anchor, query });
+      changeQueryContent(searchValue);
     });
   }
   const resultUl = document.querySelector<HTMLUListElement>('#result');
