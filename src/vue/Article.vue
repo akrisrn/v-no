@@ -6,7 +6,7 @@
   import { config } from '@/ts/config';
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
-  import { changeAnchor } from '@/ts/path';
+  import { changeAnchor, changeQueryContent } from '@/ts/path';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importMarkdownTs } from '@/ts/async';
@@ -29,6 +29,10 @@
 
     get anchor() {
       return state.anchor;
+    }
+
+    get queryContent() {
+      return this.query.content || '';
     }
 
     get html() {
@@ -79,7 +83,7 @@
           }
           this.updateData(data, newData);
           if (this.isSearchFile) {
-            this.$nextTick(() => updateSearchPage(this.query.content || ''));
+            this.$nextTick(() => updateSearchPage(this.queryContent));
           }
         });
       });
@@ -118,6 +122,11 @@
         scroll(element.offsetTop - 6);
         changeAnchor(this.anchor);
       }
+    }
+
+    @Watch('queryContent')
+    onQueryContentChanged() {
+      changeQueryContent(this.queryContent);
     }
 
     @Watch('showTime')
