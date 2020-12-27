@@ -54,6 +54,10 @@ body {
       }
     }
 
+    &.self {
+      color: rgb($success-color) !important;
+    }
+
     svg {
       margin: 0 4px;
     }

@@ -1,5 +1,6 @@
 import { EEvent, EFlag, EIcon } from '@/ts/enums';
 import { buildQueryFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
+import { state } from '@/ts/store';
 import { importFileTs } from '@/ts/async';
 
 let eventListenerDict: Dict<[Element[], EventListenerOrEventListenerObject[]]> = {};
@@ -123,14 +124,19 @@ export function createList(file: TFile, li?: HTMLLIElement) {
 export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAnchorElement) => void) {
   const dict: Dict<HTMLAnchorElement[]> = {};
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-    if (a.innerText !== '') {
-      continue;
-    }
-    a.innerText = '#';
     const path = checkLinkPath(a.getAttribute('href')!.substr(1));
     if (!path) {
       continue;
     }
+    if (path === state.filePath) {
+      a.classList.add('self');
+    } else {
+      removeClass(a, 'self');
+    }
+    if (a.innerText !== '') {
+      continue;
+    }
+    a.innerText = '#';
     a.classList.add('rendering');
     const links = dict[path];
     if (links !== undefined) {
