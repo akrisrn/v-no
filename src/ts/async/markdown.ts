@@ -46,9 +46,7 @@ markdownIt.use(require('markdown-it-container'), 'details', {
     if (!match) {
       classList.push('empty');
     } else {
-      const openMatch = match[1];
-      const classMatch = match[2];
-      const summaryMatch = match[3];
+      const [, openMatch, classMatch, summaryMatch] = match;
       if (classMatch) {
         classList = trimList(classMatch.split('.'));
       }
@@ -252,9 +250,9 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
       const regexp = new RegExp(`#(${getAnchorRegExp(false).source})?$`);
       const match = title.match(regexp);
       if (match) {
-        const anchor = match[1];
+        const [match0, anchor] = match;
         href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;
-        title = title.substr(0, title.length - match[0].length);
+        title = title.substr(0, title.length - match0.length);
         if (title) {
           token.attrSet('title', title);
         } else {

@@ -42,8 +42,9 @@ export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: 
   let start = 0;
   let match = regexp.exec(data);
   while (match) {
-    newData += data.substring(start, match.index) + callback(match[1]);
-    start = match.index + match[0].length;
+    const [match0, value] = match;
+    newData += data.substring(start, match.index) + callback(value);
+    start = match.index + match0.length;
     match = regexp.exec(data);
   }
   if (start === 0) {

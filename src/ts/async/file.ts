@@ -41,8 +41,7 @@ function parseData(path: string, data: string): TFile {
     line = line.trimEnd();
     const flagMatch = line.match(flagRegExp);
     if (flagMatch) {
-      const flagMark = flagMatch[1];
-      const flagText = flagMatch[2];
+      const [, flagMark, flagText] = flagMatch;
       if ([EFlag.tags, EFlag.updated].includes(flagMark as EFlag)) {
         flags[flagMark] = trimList(flagText.split(/[,，、]/)).sort();
       } else {

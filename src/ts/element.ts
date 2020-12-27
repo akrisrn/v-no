@@ -2,7 +2,7 @@ import { EEvent, EFlag, EIcon } from '@/ts/enums';
 import { buildSearchFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
 import { importFileTs } from '@/ts/async';
 
-let eventListenerDict: Dict<{ elements: Element[]; listeners: EventListenerOrEventListenerObject[] }> = {};
+let eventListenerDict: Dict<[Element[], EventListenerOrEventListenerObject[]]> = {};
 
 export function cleanEventListenerDict() {
   eventListenerDict = {};
@@ -11,18 +11,18 @@ export function cleanEventListenerDict() {
 export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
   let eventListeners = eventListenerDict[type];
   if (eventListeners === undefined) {
-    eventListeners = { elements: [element], listeners: [listener] };
+    eventListeners = [[element], [listener]];
     eventListenerDict[type] = eventListeners;
     element.addEventListener(type, listener);
     return;
   }
-  const indexOf = eventListeners.elements.indexOf(element);
+  const indexOf = eventListeners[0].indexOf(element);
   if (indexOf >= 0) {
-    element.removeEventListener(type, eventListeners.listeners[indexOf]);
-    eventListeners.listeners.splice(indexOf, 1, listener);
+    element.removeEventListener(type, eventListeners[1][indexOf]);
+    eventListeners[1].splice(indexOf, 1, listener);
   } else {
-    eventListeners.elements.push(element);
-    eventListeners.listeners.push(listener);
+    eventListeners[0].push(element);
+    eventListeners[1].push(listener);
   }
   element.addEventListener(type, listener);
 }

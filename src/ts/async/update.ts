@@ -103,8 +103,7 @@ function degradeHeading(data: string, level: number) {
     if (!headingMatch) {
       return line;
     }
-    const headingLevel = headingMatch[1];
-    const headingText = headingMatch[2];
+    const [, headingLevel, headingText] = headingMatch;
     let newLine = headingLevel + '#'.repeat(level);
     if (newLine.length >= 7) {
       newLine = newLine.substr(0, 6);
@@ -117,14 +116,15 @@ function degradeHeading(data: string, level: number) {
 }
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
-  const dict: Dict<Dict<{ heading: number; params: Dict<string> }>> = {};
+  const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const linkRegExp = new RegExp(`^(?:${getHeadingPattern(2, 6)} )?\\s*\\[\\+(#.+)?]${getLinkPathPattern(true)}$`);
   data = data.split('\n').map(line => {
     const match = line.match(linkRegExp);
     if (!match) {
       return line;
     }
-    const path = checkLinkPath(match[3]);
+    const [match0, level, text, href] = match;
+    const path = checkLinkPath(href);
     if (!path) {
       return line;
     }
@@ -136,12 +136,12 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       snippetDict = {};
       dict[path] = snippetDict;
     }
-    if (snippetDict[match[0]] !== undefined) {
+    if (snippetDict[match0] !== undefined) {
       return line;
     }
-    const heading = match[1] ? match[1].length : 0;
+    const heading = level?.length ?? 0;
     const params: Dict<string> = {};
-    match[2]?.substr(1).split('|').forEach((seg, i) => {
+    text?.substr(1).split('|').forEach((seg, i) => {
       const [key, value] = chopStr(seg.trim(), '=');
       let param = key;
       if (value !== null) {
@@ -152,7 +152,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
       }
       params[i + 1] = param;
     });
-    snippetDict[match[0]] = { heading, params };
+    snippetDict[match0] = [heading, params];
     return line;
   }).join('\n');
   const paths = Object.keys(dict);
@@ -170,7 +170,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     const fileData = file.data ? replaceInlineScript(path, file.data) : '';
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
-      const { heading, params } = snippetDict[match];
+      const [heading, params] = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
         snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
@@ -271,7 +271,7 @@ function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, l
 function updateAnchor() {
   const anchorRegExp = getAnchorRegExp();
   const anchorDict: Dict<HTMLElement> = {};
-  const anchorsDictByHref: Dict<{ elements: HTMLElement[]; links: HTMLAnchorElement[] }> = {};
+  const anchorsDictByHref: Dict<[HTMLElement[], HTMLAnchorElement[]]> = {};
   for (const element of document.querySelectorAll<HTMLElement>('article > *[id^="h"]')) {
     const anchor = element.id;
     if (!anchorRegExp.test(anchor)) {
@@ -282,23 +282,20 @@ function updateAnchor() {
       const href = a.getAttribute('href')!;
       const anchors = anchorsDictByHref[href];
       if (anchors !== undefined) {
-        anchors.elements.push(element);
-        anchors.links.push(a);
+        anchors[0].push(element);
+        anchors[1].push(a);
         continue;
       }
-      anchorsDictByHref[href] = {
-        elements: [element],
-        links: [a],
-      };
+      anchorsDictByHref[href] = [[element], [a]];
     }
   }
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll<HTMLAnchorElement>(`article a[href^="#h"]`));
   for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#/"]')) {
     const anchors = anchorsDictByHref[a.getAttribute('href')!];
-    if (anchors === undefined || anchors.links.includes(a)) {
+    if (anchors === undefined || anchors[1].includes(a)) {
       continue;
     }
-    const elements = anchors.elements;
+    const elements = anchors[0];
     let nearestElement = elements[0];
     let minDistance = Math.abs(nearestElement.offsetTop - a.offsetTop);
     if (elements.length > 1) {
@@ -379,7 +376,7 @@ function updateImagePath() {
   }
 }
 
-let waitingList: { heading: HTMLHeadingElement; a: HTMLAnchorElement }[] = [];
+let waitingList: [HTMLHeadingElement, HTMLAnchorElement][] = [];
 
 function getHeadingText(heading: HTMLHeadingElement) {
   return heading.innerText.substr(2).trim() || `[${null}]`;
@@ -409,7 +406,7 @@ function updateLinkPath() {
     }
     createList(file, parent as HTMLLIElement);
   }).then(() => {
-    waitingList.forEach(({ heading, a }) => {
+    waitingList.forEach(([heading, a]) => {
       a.innerText = getHeadingText(heading);
     });
   });
@@ -515,7 +512,7 @@ function transHeading(heading: THeading) {
   a.innerText = getHeadingText(headingElement);
   li.append(a);
   if (headingElement.querySelector<HTMLAnchorElement>('a.rendering')) {
-    waitingList.push({ heading: headingElement, a });
+    waitingList.push([headingElement, a]);
   }
   let count = 1;
   if (heading.children.length === 0) {
@@ -691,8 +688,7 @@ export async function updateSearchPage(content: string) {
   let queryParam = '';
   const match = content.match(/^@(\S+?):\s*(.*)$/);
   if (match) {
-    queryFlag = match[1];
-    queryParam = match[2];
+    [, queryFlag, queryParam] = match;
   }
   resultUl.innerText = config.messages.searching;
   const startTime = new Date().getTime();
