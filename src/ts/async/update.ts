@@ -1,7 +1,7 @@
 import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
 import { EEvent, EFlag } from '@/ts/enums';
-import { changeHash, changeQueryContent, checkLinkPath } from '@/ts/path';
+import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
@@ -262,7 +262,7 @@ function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, l
       e.preventDefault();
       if (element && element.offsetTop > 0) {
         scroll(element.offsetTop - 6);
-        changeHash(anchor);
+        changeAnchor(anchor);
       }
     });
   }
@@ -313,7 +313,7 @@ function updateAnchor() {
       if (nearestElement.offsetTop > 0) {
         e.preventDefault();
         scroll(nearestElement.offsetTop - 6);
-        changeHash(nearestElement.id);
+        changeAnchor(nearestElement.id);
       }
     });
   }
@@ -321,7 +321,7 @@ function updateAnchor() {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
       scroll(heading.offsetTop - 6);
-      changeHash(heading.id);
+      changeAnchor(heading.id);
     });
   });
   document.querySelectorAll<HTMLAnchorElement>('article .footnote-backref').forEach(backref => {

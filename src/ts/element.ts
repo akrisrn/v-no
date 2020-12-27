@@ -1,5 +1,5 @@
 import { EEvent, EFlag, EIcon } from '@/ts/enums';
-import { buildSearchFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
+import { buildQueryFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
 import { importFileTs } from '@/ts/async';
 
 let eventListenerDict: Dict<[Element[], EventListenerOrEventListenerObject[]]> = {};
@@ -56,17 +56,17 @@ export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
 }
 
-export function getSearchTagLinks(tag: string) {
+export function getQueryTagLinks(tag: string) {
   const list: string[][] = [];
   let start = 0;
   let indexOf = tag.indexOf('/');
   while (indexOf >= 0) {
     indexOf += start;
-    list.push([buildSearchFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
+    list.push([buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
     start = indexOf + 1;
     indexOf = tag.substring(start).indexOf('/');
   }
-  list.push([buildSearchFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
+  list.push([buildQueryFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
   return list;
 }
 
@@ -76,7 +76,7 @@ function createBar(flags: IFlags) {
   flags.tags && flags.tags.forEach(tag => {
     const itemTag = document.createElement('code');
     itemTag.classList.add('item-tag');
-    getSearchTagLinks(tag).forEach(link => {
+    getQueryTagLinks(tag).forEach(link => {
       const a = document.createElement('a');
       a.href = link[0];
       a.innerText = link[1];

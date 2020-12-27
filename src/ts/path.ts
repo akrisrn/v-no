@@ -72,7 +72,7 @@ export function buildHash(hashPath: THashPath) {
   return hash;
 }
 
-export function buildSearchContent(content: string, isFull = false) {
+export function buildQueryContent(content: string, isFull = false) {
   const query = `content=${encodeURIComponent(content)}`;
   return isFull ? buildHash({
     path: shortBaseFiles.search,
@@ -81,8 +81,8 @@ export function buildSearchContent(content: string, isFull = false) {
   }) : query;
 }
 
-export function buildSearchFlagUrl(flag: EFlag, text: string) {
-  return buildSearchContent(`@${flag}: ${text}`, true);
+export function buildQueryFlagUrl(flag: EFlag, text: string) {
+  return buildQueryContent(`@${flag}: ${text}`, true);
 }
 
 export function parseHash(hash: string, isShort = false): THashPath {
@@ -113,13 +113,13 @@ export function parseHash(hash: string, isShort = false): THashPath {
   return { path, anchor, query };
 }
 
-export function changeHash(anchor: string) {
+export function changeAnchor(anchor: string) {
   const { path, query } = parseHash(location.hash, true);
   location.hash = buildHash({ path, anchor, query });
 }
 
 export function changeQueryContent(content: string) {
-  const query = content ? buildSearchContent(content) : '';
+  const query = content ? buildQueryContent(content) : '';
   const { path, anchor } = parseHash(location.hash, true);
   location.hash = buildHash({ path, anchor, query });
 }

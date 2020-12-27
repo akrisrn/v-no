@@ -11,7 +11,7 @@
         <code v-if="startDate" class="item-date">{{ isIndexFile ? endDate : startDate }}</code>
         <code v-if="creator" class="item-creator">{{ creator }}</code>
         <code v-for="tag of tags" :key="tag" class="item-tag">
-          <template v-for="link of getSearchTagLinks(tag)">
+          <template v-for="link of getQueryTagLinks(tag)">
             <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
           </template>
         </code>
@@ -55,7 +55,7 @@
     cleanEventListenerDict,
     createList,
     getIcon,
-    getSearchTagLinks,
+    getQueryTagLinks,
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/element';
@@ -370,8 +370,8 @@
       return createList(file).innerHTML;
     }
 
-    getSearchTagLinks(tag: string) {
-      return getSearchTagLinks(tag);
+    getQueryTagLinks(tag: string) {
+      return getQueryTagLinks(tag);
     }
 
     returnHome() {
