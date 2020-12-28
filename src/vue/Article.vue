@@ -129,6 +129,7 @@
       changeQueryContent(this.queryContent);
     }
 
+    @Watch('fileData')
     @Watch('showTime')
     onShowTimeChanged() {
       this.renderMD();
