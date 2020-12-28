@@ -372,6 +372,17 @@
       }
     }
 
+    @Watch('cover')
+    onCoverChanged() {
+      if (this.cover) {
+        return;
+      }
+      const firstElement = this.$el.firstElementChild!;
+      if (firstElement.classList.contains('lds-ellipsis')) {
+        firstElement.remove();
+      }
+    }
+
     getListHtml(file: TFile) {
       return createList(file).innerHTML;
     }
