@@ -61,8 +61,7 @@
         data = this.markdownTs.utils.replaceInlineScript(this.filePath, data);
       }
       if (!data) {
-        this.renderData = '';
-        this.renderComplete();
+        this.updateData('');
         return;
       }
       this.renderData = data;
@@ -73,15 +72,14 @@
           updateDom(),
         ]).then(([newData]) => {
           if (!newData) {
-            this.renderData = '';
-            this.renderComplete();
+            this.updateData('');
             return;
           }
           if (this.isCategoryFile) {
-            updateCategoryPage(newData).then(newData => this.updateData(data, newData));
+            updateCategoryPage(newData).then(newData => this.updateData(newData, data));
             return;
           }
-          this.updateData(data, newData);
+          this.updateData(newData, data);
           if (this.isSearchFile) {
             this.$nextTick(() => updateSearchPage(this.queryContent));
           }
@@ -89,16 +87,14 @@
       });
     }
 
-    updateData(data: string, newData: string) {
-      if (newData === data) {
+    updateData(newData: string, data?: string) {
+      if (data !== undefined && newData === data) {
         this.renderComplete();
         return;
       }
       this.renderData = newData;
       this.$nextTick(() => {
-        this.markdownTs.updateDom().then(() => {
-          this.renderComplete();
-        });
+        this.markdownTs.updateDom().then(() => this.renderComplete());
       });
     }
 
