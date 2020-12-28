@@ -4,17 +4,14 @@ import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
 import * as store from '@/ts/store';
 import * as utils from '@/ts/utils';
-import { addInputBinds, destructors } from '@/ts/utils';
+import { addEventListener, addInputBinds, destructors } from '@/ts/utils';
 import { exposeToWindow } from '@/ts/window';
 
 export function bang() {
   exposeToWindow({
     version: process.env.VUE_APP_VERSION,
+    addEventListener,
     addInputBinds,
-    addEventListener: (element: Element, type: string, listener: EventListenerOrEventListenerObject) => {
-      element.addEventListener(type, listener);
-      destructors.push(() => element.removeEventListener(type, listener));
-    },
     destructors,
   });
   exposeToWindow({ config, element, enums, path, store, utils });

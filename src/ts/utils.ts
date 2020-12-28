@@ -2,6 +2,11 @@ export const snippetMark = '--8<--';
 
 export const destructors: (() => void)[] = [];
 
+export function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject) {
+  element.addEventListener(type, listener);
+  destructors.push(() => element.removeEventListener(type, listener));
+}
+
 export const inputBinds: Dict<() => void> = {};
 
 export function addInputBinds(binds: Dict<() => void>) {
