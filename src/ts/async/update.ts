@@ -461,7 +461,7 @@ function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
   updateCustom(links, true);
 }
 
-async function updateHighlight() {
+export async function updateHighlight() {
   const codes = document.querySelectorAll('article pre > code');
   if (codes.length === 0) {
     return;
