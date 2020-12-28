@@ -38,6 +38,7 @@ export function bang() {
     exposeToWindow({
       markdown,
       waitFor: markdown.utils.waitFor,
+      callAndListen: markdown.utils.callAndListen,
       dayjs: markdown.utils.dayjs,
       parseDate: markdown.utils.parseDate,
       formatDate: markdown.utils.formatDate,

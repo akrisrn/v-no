@@ -1,5 +1,7 @@
 import { config } from '@/ts/config';
+import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
+import { addEventListener } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 
 export function getWrapRegExp(left: string, right = left, flags?: string) {
@@ -120,6 +122,15 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
       }
     }
   })();
+}
+
+export function callAndListen(callback: () => void, event: EEvent, element = document, reside = true) {
+  callback();
+  if (reside) {
+    element.addEventListener(event, callback);
+  } else {
+    addEventListener(element, event, callback);
+  }
 }
 
 export * from '@/ts/async/date';
