@@ -20,6 +20,7 @@ export enum EIcon {
 }
 
 export enum EEvent {
+  mainShown = 'mainShown',
   articleCreated = 'articleCreated',
   htmlChanged = 'htmlChanged',
   rendered = 'rendered',

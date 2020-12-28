@@ -54,12 +54,13 @@
   import {
     cleanEventListenerDict,
     createList,
+    dispatchEvent,
     getIcon,
     getQueryTagLinks,
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/element';
-  import { definedFlags, EFlag, EIcon } from '@/ts/enums';
+  import { definedFlags, EEvent, EFlag, EIcon } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import { state } from '@/ts/store';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
@@ -306,6 +307,7 @@
       this.links = [...links];
       this.isShow = true;
       this.showTime = new Date().getTime();
+      this.$nextTick(() => dispatchEvent(EEvent.mainShown, this.showTime));
     }
 
     setFlags(flags: IFlags) {
