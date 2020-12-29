@@ -379,8 +379,8 @@
       if (this.cover) {
         return;
       }
-      const firstElement = this.$el.firstElementChild!;
-      if (firstElement.classList.contains('lds-ellipsis')) {
+      const firstElement = this.$el.firstElementChild;
+      if (firstElement && firstElement.classList.contains('lds-ellipsis')) {
         firstElement.remove();
       }
     }

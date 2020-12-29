@@ -183,4 +183,4 @@ export async function getFiles() {
 }
 
 export { axios };
-export * from '@/ts/async/compare';
+export { sortFiles } from '@/ts/async/compare';
