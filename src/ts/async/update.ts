@@ -7,17 +7,14 @@ import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { getFile, getFiles } from '@/ts/async/file';
 import {
-  addCacheKey,
-  escapeHTML,
   getAnchorRegExp,
   getHeadingPattern,
   getHeadingRegExp,
   getLinkPathPattern,
   getWrapRegExp,
   replaceByRegExp,
-  replaceInlineScript,
-  trimList,
-} from '@/ts/async/utils';
+} from '@/ts/async/regexp';
+import { addCacheKey, escapeHTML, replaceInlineScript, trimList } from '@/ts/async/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {

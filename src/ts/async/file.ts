@@ -2,14 +2,8 @@ import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
 import { formatDate } from '@/ts/async/date';
-import {
-  addCacheKey,
-  getHeadingRegExp,
-  getLinkRegExp,
-  getWrapRegExp,
-  isExternalLink,
-  trimList,
-} from '@/ts/async/utils';
+import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/async/regexp';
+import { addCacheKey, isExternalLink, trimList } from '@/ts/async/utils';
 import axios from 'axios';
 
 function createFlags(title: string): IFlags {
