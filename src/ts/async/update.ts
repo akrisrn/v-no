@@ -174,34 +174,36 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   return data.trim();
 }
 
-function getQueryFlag(content: string) {
+function getQueryParams(content: string) {
+  content = content.toLowerCase();
   const match = content.match(/^@(\S+?):\s*(.*)$/);
-  return match ? [match[1], match[2]] : ['', ''];
+  return match ? [content, match[1], match[2]] : [content, '', ''];
 }
 
-function find({ data, flags: { tags, title } }: TFile, content: string, queryFlag?: string, queryParam?: string) {
-  let isFind = false;
+function findIn({ data, flags }: TFile, queryParams: string[]) {
+  let found = false;
   let inData = false;
-  if (!queryFlag) {
-    if (title.toLowerCase().indexOf(content) >= 0) {
-      isFind = true;
-    } else if (data.toLowerCase().indexOf(content) >= 0) {
-      isFind = true;
+  const [keyword, flag, value] = queryParams;
+  if (!flag) {
+    if (flags.title.toLowerCase().indexOf(keyword) >= 0) {
+      found = true;
+    } else if (data.toLowerCase().indexOf(keyword) >= 0) {
+      found = true;
       inData = true;
     }
-  } else if (queryParam) {
-    if (queryFlag === EFlag.tags && tags) {
-      for (const tag of tags) {
+  } else if (value) {
+    if (flag === EFlag.tags) {
+      for (const tag of flags.tags || []) {
         const a = tag.toLowerCase();
-        const b = trimList(queryParam.split('/'), false).join('/');
+        const b = trimList(value.split('/'), false).join('/');
         if (a === b || a.startsWith(`${b}/`)) {
-          isFind = true;
+          found = true;
           break;
         }
       }
     }
   }
-  return [isFind, inData];
+  return [found, inData];
 }
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[], taggedDict: Dict<TFile[]>) {
@@ -251,11 +253,10 @@ export async function updateList(data: string) {
   if (!isAll) {
     const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
     return replaceByRegExp(listRegExpG, data, content => {
-      content = content.toLowerCase();
-      const [queryFlag, queryParam] = getQueryFlag(content);
+      const queryParams = getQueryParams(content);
       const resultFiles: TFile[] = [];
       for (const file of fileList) {
-        if (find(file, content, queryFlag, queryParam)[0]) {
+        if (findIn(file, queryParams)[0]) {
           resultFiles.push(file);
         }
       }
@@ -327,8 +328,7 @@ export async function updateSearchPage(content: string) {
   if (!content || !resultUl) {
     return;
   }
-  content = content.toLowerCase();
-  const [queryFlag, queryParam] = getQueryFlag(content);
+  const queryParams = getQueryParams(content);
   resultUl.innerText = config.messages.searching;
   const startTime = new Date().getTime();
   const { files } = await getFiles();
@@ -342,17 +342,17 @@ export async function updateSearchPage(content: string) {
     count++;
     const data = file.data;
     const path = file.path;
-    const [isFind, hasQuote] = find(file, content, queryFlag, queryParam);
-    if (!isFind) {
+    const [found, inData] = findIn(file, queryParams);
+    if (!found) {
       continue;
     }
     resultFiles.push(file);
-    if (!hasQuote) {
+    if (!inData) {
       continue;
     }
     const results = [];
     let prevEndIndex = 0;
-    const regexp = new RegExp(content, 'ig');
+    const regexp = new RegExp(queryParams[0], 'ig');
     let match = regexp.exec(data);
     while (match) {
       const offset = 10;
