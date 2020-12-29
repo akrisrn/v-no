@@ -1,7 +1,7 @@
 import { config } from '@/ts/config';
 import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
-import { addEventListener } from '@/ts/utils';
+import { destructors } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 
 const htmlSymbolDict: Dict<string> = {
@@ -55,6 +55,11 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
       }
     }
   })();
+}
+
+export function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject) {
+  element.addEventListener(type, listener);
+  destructors.push(() => element.removeEventListener(type, listener));
 }
 
 // noinspection JSUnusedGlobalSymbols

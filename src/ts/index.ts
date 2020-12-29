@@ -4,13 +4,12 @@ import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
 import * as store from '@/ts/store';
 import * as utils from '@/ts/utils';
-import { addEventListener, addInputBinds, destructors } from '@/ts/utils';
+import { addInputBinds, destructors } from '@/ts/utils';
 import { exposeToWindow } from '@/ts/window';
 
 export function bang() {
   exposeToWindow({
     version: process.env.VUE_APP_VERSION,
-    addEventListener,
     addInputBinds,
     destructors,
   });

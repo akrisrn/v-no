@@ -63,6 +63,7 @@ export function bang() {
       parseDate: utils.parseDate,
       formatDate: utils.formatDate,
       waitFor: utils.waitFor,
+      addEventListener: utils.addEventListener,
       callAndListen: utils.callAndListen,
     });
     exposeToWindow({ utils }, true);
