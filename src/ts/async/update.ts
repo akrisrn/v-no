@@ -687,7 +687,7 @@ export async function updateDom() {
 }
 
 export async function updateSearchPage(content: string) {
-  const searchInput = document.querySelector<HTMLInputElement>('#search-input');
+  const searchInput = document.querySelector<HTMLInputElement>(`input#search-${EMark.input}`);
   if (searchInput) {
     searchInput.value = content;
     searchInput.addEventListener('keyup', e => {
@@ -699,7 +699,7 @@ export async function updateSearchPage(content: string) {
       changeQueryContent(searchValue);
     });
   }
-  const resultUl = document.querySelector<HTMLUListElement>('#result');
+  const resultUl = document.querySelector<HTMLUListElement>(`ul#search-${EMark.result}`);
   if (!content || !resultUl) {
     return;
   }
@@ -808,15 +808,20 @@ export async function updateSearchPage(content: string) {
       }
     });
   }
+  const number = resultFiles.length;
+  const searchNumber = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.number}`);
+  searchNumber.forEach(element => {
+    element.innerText = `${number}`;
+  });
+  const searchCount = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.count}`);
+  searchCount.forEach(element => {
+    element.innerText = `${count}`;
+  });
   const time = new Date().getTime() - startTime;
-  const searchTime = document.querySelector<HTMLSpanElement>('#search-time');
-  if (searchTime) {
-    searchTime.innerText = `${time / 1000}`;
-  }
-  const result = resultFiles.length;
-  const searchCount = document.querySelector<HTMLSpanElement>('#search-count');
-  if (searchCount) {
-    searchCount.innerText = `${result}/${count}`;
-  }
-  dispatchEvent(EEvent.searchCompleted, { time, result, count }, 100).then();
+  const timeSecond = time / 1000;
+  const searchTime = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.time}`);
+  searchTime.forEach(element => {
+    element.innerText = `${timeSecond}`;
+  });
+  dispatchEvent(EEvent.searchCompleted, { number, count, time }, 100).then();
 }
