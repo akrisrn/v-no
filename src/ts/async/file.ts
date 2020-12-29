@@ -89,16 +89,17 @@ function parseData(path: string, data: string): TFile {
     dateList.push(dateMatch[1]);
   }
   if (dateList.length > 0) {
-    const timeList = Array.from(new Set(dateList.map(date => {
+    const times = Array.from(new Set(dateList.map(date => {
       return date.match(/^[0-9]+$/) ? parseInt(date) : new Date(date).getTime();
     }).filter(time => !isNaN(time)))).sort();
-    const length = timeList.length;
+    const length = times.length;
     if (length > 0) {
+      flags.times = times;
       if (length === 1) {
-        flags.startDate = flags.endDate = formatDate(new Date(timeList[0]));
+        flags.startDate = flags.endDate = formatDate(new Date(times[0]));
       } else {
-        flags.startDate = formatDate(new Date(timeList[0]));
-        flags.endDate = formatDate(new Date(timeList[length - 1]));
+        flags.startDate = formatDate(new Date(times[0]));
+        flags.endDate = formatDate(new Date(times[length - 1]));
       }
     }
   }

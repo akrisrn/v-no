@@ -41,6 +41,7 @@ interface IFlags {
   tags?: string[];
   updated?: string[];
   cover?: string;
+  times?: number[];
   startDate?: string;
   endDate?: string;
   creator?: string;

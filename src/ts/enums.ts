@@ -4,6 +4,7 @@ export enum EFlag {
   tags = 'tags',
   updated = 'updated',
   cover = 'cover',
+  times = 'times',
   startDate = 'startDate',
   endDate = 'endDate',
   creator = 'creator',
