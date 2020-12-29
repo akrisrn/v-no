@@ -2,12 +2,12 @@ import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
 import { EEvent, EFlag } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
+import { getAnchorRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { getFile, getFiles } from '@/ts/async/file';
 import {
-  getAnchorRegExp,
   getHeadingPattern,
   getHeadingRegExp,
   getLinkPathPattern,

@@ -7,9 +7,10 @@
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
   import { changeAnchor, changeQueryContent } from '@/ts/path';
+  import { getAnchorRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
-  import { importMarkdownTs, importUtilsTs } from '@/ts/async';
+  import { importMarkdownTs } from '@/ts/async';
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component
@@ -19,7 +20,6 @@
     @Prop() showTime!: number;
 
     markdownTs!: TMarkdownTs;
-    utilsTs!: TUtilsTs;
     startTime = 0;
     isRendering = true;
     renderData = '';
@@ -51,7 +51,6 @@
     async created() {
       exposeToWindow({ articleSelf: this });
       this.markdownTs = await importMarkdownTs();
-      this.utilsTs = await importUtilsTs();
       dispatchEvent(EEvent.articleCreated, new Date().getTime()).then();
       this.renderMD();
     }
@@ -111,7 +110,7 @@
 
     @Watch('anchor')
     scrollToAnchor() {
-      const anchorRegExp = this.utilsTs.getAnchorRegExp();
+      const anchorRegExp = getAnchorRegExp();
       if (!anchorRegExp.test(this.anchor)) {
         return;
       }

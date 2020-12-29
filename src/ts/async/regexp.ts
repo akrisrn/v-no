@@ -2,14 +2,6 @@ export function getWrapRegExp(left: string, right = left, flags?: string) {
   return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
 }
 
-export function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string) {
-  let pattern = `h[${min}-${max}]-\\d+`;
-  if (isLine) {
-    pattern = `^${pattern}$`;
-  }
-  return new RegExp(pattern, flags);
-}
-
 export function getHeadingPattern(min: number, max: number) {
   return ` {0,3}(#{${min},${max}})`;
 }
