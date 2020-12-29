@@ -71,13 +71,40 @@ function getCategories(level: number, parentTag: string, tagTree: TTagTree, sort
   return { data: category.join('\n\n'), count };
 }
 
-export async function updateCategoryPage(data: string) {
+export async function updateList(data: string) {
   const listRegExp = getMarkRegExp(EMark.list);
   const listRegExpG = getMarkRegExp(EMark.list, true, 'img');
-  if (!listRegExp.test(data)) {
+  let hasList = false;
+  let isAll = false;
+  let match = listRegExpG.exec(data);
+  while (match) {
+    if (!hasList) {
+      hasList = true;
+    }
+    if (!match[1]) {
+      isAll = true;
+      break;
+    }
+    match = listRegExpG.exec(data);
+  }
+  if (!hasList) {
     return data;
   }
   const { files } = await getFiles();
+  if (!isAll) {
+    const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
+    return replaceByRegExp(listRegExpG, data, content => {
+      content = content.toLowerCase();
+      const [queryFlag, queryParam] = getQueryFlag(content);
+      const resultFiles: TFile[] = [];
+      for (const file of fileList) {
+        if (find(file, content, queryFlag, queryParam)[0]) {
+          resultFiles.push(file);
+        }
+      }
+      return resultFiles.map(file => `- [](${file.path} "#")`).join('\n');
+    }).trim();
+  }
   const tagTree: TTagTree = {};
   const taggedDict: Dict<TFile[]> = {};
   const untaggedFiles: TFile[] = [];

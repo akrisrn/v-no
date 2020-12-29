@@ -40,10 +40,6 @@
       return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
     }
 
-    get isCategoryFile() {
-      return this.filePath === config.paths.category;
-    }
-
     get isSearchFile() {
       return this.filePath === config.paths.search;
     }
@@ -66,7 +62,7 @@
         return;
       }
       this.renderData = data;
-      const { preprocessSearchPage, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
+      const { preprocessSearchPage, updateList, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(data),
@@ -76,16 +72,14 @@
             this.updateData('');
             return;
           }
-          if (this.isCategoryFile) {
-            updateCategoryPage(newData).then(newData => this.updateData(newData, data));
-            return;
-          }
-          if (!this.isSearchFile) {
-            this.updateData(newData, data);
-            return;
-          }
-          this.updateData(preprocessSearchPage(newData), data);
-          this.$nextTick(() => updateSearchPage(this.queryContent));
+          updateList(newData).then(newData => {
+            if (!this.isSearchFile) {
+              this.updateData(newData, data);
+              return;
+            }
+            this.updateData(preprocessSearchPage(newData), data);
+            this.$nextTick(() => updateSearchPage(this.queryContent));
+          });
         });
       });
     }
