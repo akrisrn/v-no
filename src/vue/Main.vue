@@ -60,8 +60,9 @@
     scroll,
     simpleUpdateLinkPath,
   } from '@/ts/element';
-  import { definedFlags, EEvent, EFlag, EIcon } from '@/ts/enums';
+  import { definedFlags, EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
+  import { getMarkRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
   import { chopStr, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
@@ -265,18 +266,21 @@
         return { data, flags, links };
       }
       this.isError = false;
-      const match = data.match(/^\[redirect\s+(\/\S+\.md)(?:#(\S+))?(?:\?(\S+))?]$/);
-      if (match && !this.redirectFrom[0].includes(filePath)) {
-        this.isRedirectPage = true;
-        this.redirectFrom[0].push(filePath);
-        this.redirectFrom[1].push(flags.title);
-        const [, path, anchor, query] = match;
-        location.hash = buildHash({
-          path: shortenPath(path),
-          anchor: anchor || this.anchor,
-          query: query || this.queryStr,
-        });
-        return { data, flags, links };
+      let match = data.match(getMarkRegExp(EMark.redirect));
+      if (match) {
+        match = match[1].match(/^(\/\S+\.md)(?:#(\S+))?(?:\?(\S+))?$/);
+        if (match && !this.redirectFrom[0].includes(filePath)) {
+          this.isRedirectPage = true;
+          this.redirectFrom[0].push(filePath);
+          this.redirectFrom[1].push(flags.title);
+          const [, path, anchor, query] = match;
+          location.hash = buildHash({
+            path: shortenPath(path),
+            anchor: anchor || this.anchor,
+            query: query || this.queryStr,
+          });
+          return { data, flags, links };
+        }
       }
       if (this.hasLoadedBacklinks) {
         this.getBacklinks().then();

@@ -1,8 +1,8 @@
 import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
-import { EEvent, EFlag } from '@/ts/enums';
+import { EEvent, EFlag, EMark } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
-import { getAnchorRegExp } from '@/ts/regexp';
+import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
@@ -42,9 +42,8 @@ function getCategories(level: number, parentTag: string, tagTree: TTagTree, sort
 }
 
 export async function updateCategoryPage(data: string) {
-  const listRegExpStr = '^\\[list]$';
-  const listRegExp = new RegExp(listRegExpStr, 'im');
-  const listRegExpG = new RegExp(listRegExpStr, 'img');
+  const listRegExp = getMarkRegExp(EMark.list);
+  const listRegExpG = getMarkRegExp(EMark.list, true, 'img');
   if (!listRegExp.test(data)) {
     return data;
   }

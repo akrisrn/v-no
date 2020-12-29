@@ -1,8 +1,8 @@
 import { config } from '@/ts/config';
 import { getIcon } from '@/ts/element';
-import { EIcon } from '@/ts/enums';
+import { EIcon, EMark } from '@/ts/enums';
 import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
-import { getAnchorRegExp } from '@/ts/regexp';
+import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { replaceByRegExp } from '@/ts/async/regexp';
 import { isExternalLink, trimList } from '@/ts/async/utils';
@@ -279,9 +279,8 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 
 export function renderMD(data: string) {
   data = data.replaceAll(snippetMark, '');
-  const tocRegExpStr = '^\\[toc]$';
-  const tocRegExp = new RegExp(tocRegExpStr, 'im');
-  const tocRegExpG = new RegExp(tocRegExpStr, 'img');
+  const tocRegExp = getMarkRegExp(EMark.toc);
+  const tocRegExpG = getMarkRegExp(EMark.toc, true, 'img');
   if (tocRegExp.test(data)) {
     const tocDiv = document.createElement('div');
     tocDiv.id = 'toc';
