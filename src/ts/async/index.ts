@@ -50,7 +50,7 @@ export function bang() {
         if (!data) {
           return '';
         }
-        data = utils.replaceInlineScript(path, data);
+        data = markdown.replaceInlineScript(path, data);
         if (!data) {
           return '';
         }

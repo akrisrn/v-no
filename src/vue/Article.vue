@@ -60,7 +60,7 @@
       this.startTime = new Date().getTime();
       this.isRendering = true;
       if (data) {
-        data = this.utilsTs.replaceInlineScript(this.filePath, data);
+        data = this.markdownTs.replaceInlineScript(this.filePath, data);
       }
       if (!data) {
         this.updateData('');

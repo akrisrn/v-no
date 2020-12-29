@@ -14,7 +14,7 @@ import {
   getWrapRegExp,
   replaceByRegExp,
 } from '@/ts/async/regexp';
-import { addCacheKey, escapeHTML, replaceInlineScript, trimList } from '@/ts/async/utils';
+import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
@@ -88,6 +88,22 @@ export async function updateCategoryPage(data: string) {
   }
   const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
+}
+
+function evalFunction(evalStr: string, params: Dict<any>) {
+  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
+}
+
+export function replaceInlineScript(path: string, data: string) {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
+    let result: string;
+    try {
+      result = evalFunction(evalStr, { path, data });
+    } catch (e) {
+      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
+    }
+    return result;
+  }).trim();
 }
 
 function degradeHeading(data: string, level: number) {

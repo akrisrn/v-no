@@ -3,23 +3,6 @@ import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
 import { addEventListener } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
-import { getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
-
-function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
-}
-
-export function replaceInlineScript(path: string, data: string) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
-    let result: string;
-    try {
-      result = evalFunction(evalStr, { path, data });
-    } catch (e) {
-      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
-    }
-    return result;
-  }).trim();
-}
 
 const htmlSymbolDict: Dict<string> = {
   '&': '&amp;',
