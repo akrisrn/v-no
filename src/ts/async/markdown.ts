@@ -290,4 +290,3 @@ export function renderMD(data: string) {
 }
 
 export * from '@/ts/async/update';
-export * as utils from '@/ts/async/utils';

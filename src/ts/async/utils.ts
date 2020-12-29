@@ -107,6 +107,7 @@ export function isExternalLink(href: string) {
   }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
   return await (async () => {
     let count = 0;
@@ -124,6 +125,7 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
   })();
 }
 
+// noinspection JSUnusedGlobalSymbols
 export function callAndListen(callback: () => void, event: EEvent, element = document, reside = true) {
   callback();
   if (reside) {
@@ -133,4 +135,5 @@ export function callAndListen(callback: () => void, event: EEvent, element = doc
   }
 }
 
+export * as axios from 'axios';
 export * from '@/ts/async/date';

@@ -18,6 +18,15 @@ export async function importMarkdownTs() {
   return markdown;
 }
 
+let utils: TUtilsTs;
+
+export async function importUtilsTs() {
+  if (!utils) {
+    utils = await import(/* webpackChunkName: "utils" */ '@/ts/async/utils');
+  }
+  return utils;
+}
+
 let prismjs: TPrismjsTs;
 
 export async function importPrismjsTs() {
@@ -28,26 +37,20 @@ export async function importPrismjsTs() {
 }
 
 export function bang() {
-  importFileTs().then(file => {
+  Promise.all([
+    importFileTs(),
+    importMarkdownTs(),
+    importUtilsTs(),
+  ]).then(([file, markdown, utils]) => {
     exposeToWindow({
       file,
-      axios: file.axios,
-    });
-  });
-  importMarkdownTs().then(markdown => {
-    exposeToWindow({
       markdown,
-      waitFor: markdown.utils.waitFor,
-      callAndListen: markdown.utils.callAndListen,
-      dayjs: markdown.utils.dayjs,
-      parseDate: markdown.utils.parseDate,
-      formatDate: markdown.utils.formatDate,
       renderMD: async (path: string, data: string) => {
         data = data.trim();
         if (!data) {
           return '';
         }
-        data = markdown.utils.replaceInlineScript(path, data);
+        data = utils.replaceInlineScript(path, data);
         if (!data) {
           return '';
         }
@@ -55,9 +58,13 @@ export function bang() {
         return data ? markdown.renderMD(data) : '';
       },
       updateDom: markdown.updateDom,
+      axios: utils.axios,
+      dayjs: utils.dayjs,
+      parseDate: utils.parseDate,
+      formatDate: utils.formatDate,
+      waitFor: utils.waitFor,
+      callAndListen: utils.callAndListen,
     });
-    exposeToWindow({
-      utils: markdown.utils,
-    }, true);
+    exposeToWindow({ utils }, true);
   });
 }

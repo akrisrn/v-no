@@ -81,4 +81,5 @@ type THashPath = {
 
 type TFileTs = typeof import('@/ts/async/file');
 type TMarkdownTs = typeof import('@/ts/async/markdown');
+type TUtilsTs = typeof import('@/ts/async/utils');
 type TPrismjsTs = typeof import('@/ts/async/prismjs');
