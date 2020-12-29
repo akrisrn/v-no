@@ -16,6 +16,36 @@ import {
 } from '@/ts/async/regexp';
 import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
 
+function getQueryFlag(content: string) {
+  const match = content.match(/^@(\S+?):\s*(.*)$/);
+  return match ? [match[1], match[2]] : ['', ''];
+}
+
+function find({ data, flags: { tags, title } }: TFile, content: string, queryFlag?: string, queryParam?: string) {
+  let isFind = false;
+  let inData = false;
+  if (!queryFlag) {
+    if (title.toLowerCase().indexOf(content) >= 0) {
+      isFind = true;
+    } else if (data.toLowerCase().indexOf(content) >= 0) {
+      isFind = true;
+      inData = true;
+    }
+  } else if (queryParam) {
+    if (queryFlag === EFlag.tags && tags) {
+      for (const tag of tags) {
+        const a = tag.toLowerCase();
+        const b = trimList(queryParam.split('/'), false).join('/');
+        if (a === b || a.startsWith(`${b}/`)) {
+          isFind = true;
+          break;
+        }
+      }
+    }
+  }
+  return [isFind, inData];
+}
+
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
                        taggedDict: Dict<TFile[]>) {
   const category: string[] = [];
@@ -704,12 +734,7 @@ export async function updateSearchPage(content: string) {
     return;
   }
   content = content.toLowerCase();
-  let queryFlag = '';
-  let queryParam = '';
-  const match = content.match(/^@(\S+?):\s*(.*)$/);
-  if (match) {
-    [, queryFlag, queryParam] = match;
-  }
+  const [queryFlag, queryParam] = getQueryFlag(content);
   resultUl.innerText = config.messages.searching;
   const startTime = new Date().getTime();
   const { files } = await getFiles();
@@ -721,28 +746,9 @@ export async function updateSearchPage(content: string) {
       continue;
     }
     count++;
-    const { data, flags } = file;
-    let isFind = false;
-    let hasQuote = false;
-    if (!queryFlag) {
-      if (flags.title.toLowerCase().indexOf(content) >= 0) {
-        isFind = true;
-      } else if (data.toLowerCase().indexOf(content) >= 0) {
-        isFind = true;
-        hasQuote = true;
-      }
-    } else if (queryParam) {
-      if (queryFlag === EFlag.tags && flags.tags) {
-        for (const tag of flags.tags) {
-          const a = tag.toLowerCase();
-          const b = trimList(queryParam.split('/'), false).join('/');
-          if (a === b || a.startsWith(`${b}/`)) {
-            isFind = true;
-            break;
-          }
-        }
-      }
-    }
+    const data = file.data;
+    const path = file.path;
+    const [isFind, hasQuote] = find(file, content, queryFlag, queryParam);
     if (!isFind) {
       continue;
     }
@@ -794,7 +800,7 @@ export async function updateSearchPage(content: string) {
     const p = document.createElement('p');
     p.innerHTML = results.join('<span class="ellipsis">...</span>');
     blockquote.append(p);
-    quoteDict[file.path] = blockquote;
+    quoteDict[path] = blockquote;
   }
   if (resultFiles.length === 0) {
     resultUl.innerText = config.messages.searchNothing;
