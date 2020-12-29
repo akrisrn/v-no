@@ -2,8 +2,8 @@
 
 @tags: root
 
-<input id="search-input" placeholder="Something..."/>
+[input#Something...]
 
-<ul id="result">Input something, and press Enter.</ul>
+[result#Input something, and press Enter.]
 
-: **<span id="search-count">0/0</span> results (<span id="search-time">0</span> seconds)**
+: **[number#0]/[count#0] results ([time#0] seconds)**
