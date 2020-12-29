@@ -6,6 +6,7 @@ import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
+import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import {
   getHeadingPattern,
@@ -180,30 +181,38 @@ function getQueryParams(content: string) {
   return match ? [content, match[1], match[2]] : [content, '', ''];
 }
 
-function findIn({ data, flags }: TFile, queryParams: string[]) {
-  let found = false;
-  let inData = false;
-  const [keyword, flag, value] = queryParams;
+function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [boolean, boolean?] {
   if (!flag) {
     if (flags.title.toLowerCase().indexOf(keyword) >= 0) {
-      found = true;
-    } else if (data.toLowerCase().indexOf(keyword) >= 0) {
-      found = true;
-      inData = true;
+      return [true];
     }
-  } else if (value) {
-    if (flag === EFlag.tags) {
-      for (const tag of flags.tags || []) {
-        const a = tag.toLowerCase();
-        const b = trimList(value.split('/'), false).join('/');
-        if (a === b || a.startsWith(`${b}/`)) {
-          found = true;
-          break;
-        }
-      }
+    if (data.toLowerCase().indexOf(keyword) >= 0) {
+      return [true, true];
     }
   }
-  return [found, inData];
+  if (!value) {
+    return [false];
+  }
+  if (![EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
+    return [Object.keys(flags).includes(flag) && flags[flag]!.indexOf(value) >= 0];
+  }
+  const trimValue = trimList(value.split('/'), false).join('/');
+  if (flag === EFlag.tags) {
+    for (let tag of flags.tags || []) {
+      tag = tag.toLowerCase();
+      if (tag === trimValue || tag.startsWith(`${trimValue}/`)) {
+        return [true];
+      }
+    }
+    return [false];
+  }
+  for (const time of flags.times || []) {
+    const date = formatDate(time, 'YYYY/MM/DD');
+    if (date === trimValue || date.startsWith(`${trimValue}/`)) {
+      return [true];
+    }
+  }
+  return [false];
 }
 
 function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[], taggedDict: Dict<TFile[]>) {
