@@ -16,143 +16,6 @@ import {
 } from '@/ts/async/regexp';
 import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
 
-function getQueryFlag(content: string) {
-  const match = content.match(/^@(\S+?):\s*(.*)$/);
-  return match ? [match[1], match[2]] : ['', ''];
-}
-
-function find({ data, flags: { tags, title } }: TFile, content: string, queryFlag?: string, queryParam?: string) {
-  let isFind = false;
-  let inData = false;
-  if (!queryFlag) {
-    if (title.toLowerCase().indexOf(content) >= 0) {
-      isFind = true;
-    } else if (data.toLowerCase().indexOf(content) >= 0) {
-      isFind = true;
-      inData = true;
-    }
-  } else if (queryParam) {
-    if (queryFlag === EFlag.tags && tags) {
-      for (const tag of tags) {
-        const a = tag.toLowerCase();
-        const b = trimList(queryParam.split('/'), false).join('/');
-        if (a === b || a.startsWith(`${b}/`)) {
-          isFind = true;
-          break;
-        }
-      }
-    }
-  }
-  return [isFind, inData];
-}
-
-function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[],
-                       taggedDict: Dict<TFile[]>) {
-  const category: string[] = [];
-  let count = 0;
-  for (const tag of sortedTags) {
-    const nestedTag = parentTag ? `${parentTag}/${tag}` : tag;
-    let list = '';
-    let fileCount = 0;
-    const taggedFiles = taggedDict[nestedTag];
-    if (taggedFiles) {
-      list = taggedFiles.sort(sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
-      fileCount = taggedFiles.length;
-      count += fileCount;
-    }
-    const subTree = tagTree[tag];
-    const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
-    category.push(`${'#'.repeat(level)} ${tag} - ( ${fileCount + categories.count} )${list ? `\n\n${list}` : ''}`);
-    if (categories.data) {
-      category.push(categories.data);
-    }
-    count += categories.count;
-  }
-  return { data: category.join('\n\n'), count };
-}
-
-export async function updateList(data: string) {
-  const listRegExp = getMarkRegExp(EMark.list);
-  const listRegExpG = getMarkRegExp(EMark.list, true, 'img');
-  let hasList = false;
-  let isAll = false;
-  let match = listRegExpG.exec(data);
-  while (match) {
-    if (!hasList) {
-      hasList = true;
-    }
-    if (!match[1]) {
-      isAll = true;
-      break;
-    }
-    match = listRegExpG.exec(data);
-  }
-  if (!hasList) {
-    return data;
-  }
-  const { files } = await getFiles();
-  if (!isAll) {
-    const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
-    return replaceByRegExp(listRegExpG, data, content => {
-      content = content.toLowerCase();
-      const [queryFlag, queryParam] = getQueryFlag(content);
-      const resultFiles: TFile[] = [];
-      for (const file of fileList) {
-        if (find(file, content, queryFlag, queryParam)[0]) {
-          resultFiles.push(file);
-        }
-      }
-      return resultFiles.map(file => `- [](${file.path} "#")`).join('\n');
-    }).trim();
-  }
-  const tagTree: TTagTree = {};
-  const taggedDict: Dict<TFile[]> = {};
-  const untaggedFiles: TFile[] = [];
-  for (const file of Object.values(files)) {
-    if (file.isError) {
-      continue;
-    }
-    const tags = file.flags.tags;
-    if (!tags || tags.length === 0) {
-      untaggedFiles.push(file);
-      continue;
-    }
-    for (const tag of tags) {
-      let cursor = tagTree;
-      tag.split('/').forEach(seg => {
-        let subTree = cursor[seg];
-        if (subTree === undefined) {
-          subTree = {};
-          cursor[seg] = subTree;
-        }
-        cursor = subTree;
-      });
-      const taggedFiles = taggedDict[tag];
-      if (taggedFiles !== undefined) {
-        taggedFiles.push(file);
-        continue;
-      }
-      taggedDict[tag] = [file];
-    }
-  }
-  const sortedTags = Object.keys(tagTree).sort();
-  if (untaggedFiles.length > 0) {
-    const untagged = config.messages.untagged;
-    tagTree[untagged] = {};
-    sortedTags.push(untagged);
-    taggedDict[untagged] = untaggedFiles;
-  }
-  const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
-  return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
-}
-
-export function preprocessSearchPage(data: string) {
-  return data.replace(getMarkRegExp(`(${EMark.input})`), '<input id="search-$1" placeholder="$2"/>')
-    .replace(getMarkRegExp(`(${EMark.result})`), '<ul id="search-$1">$2</ul>')
-    .replace(getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img'), '')
-    .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), '<span class="search-$1">$2</span>');
-}
-
 function evalFunction(evalStr: string, params: Dict<any>) {
   return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
 }
@@ -309,6 +172,258 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
     }
   }
   return data.trim();
+}
+
+function getQueryFlag(content: string) {
+  const match = content.match(/^@(\S+?):\s*(.*)$/);
+  return match ? [match[1], match[2]] : ['', ''];
+}
+
+function find({ data, flags: { tags, title } }: TFile, content: string, queryFlag?: string, queryParam?: string) {
+  let isFind = false;
+  let inData = false;
+  if (!queryFlag) {
+    if (title.toLowerCase().indexOf(content) >= 0) {
+      isFind = true;
+    } else if (data.toLowerCase().indexOf(content) >= 0) {
+      isFind = true;
+      inData = true;
+    }
+  } else if (queryParam) {
+    if (queryFlag === EFlag.tags && tags) {
+      for (const tag of tags) {
+        const a = tag.toLowerCase();
+        const b = trimList(queryParam.split('/'), false).join('/');
+        if (a === b || a.startsWith(`${b}/`)) {
+          isFind = true;
+          break;
+        }
+      }
+    }
+  }
+  return [isFind, inData];
+}
+
+function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[], taggedDict: Dict<TFile[]>) {
+  const category: string[] = [];
+  let count = 0;
+  for (const tag of sortedTags) {
+    const nestedTag = parentTag ? `${parentTag}/${tag}` : tag;
+    let list = '';
+    let fileCount = 0;
+    const taggedFiles = taggedDict[nestedTag];
+    if (taggedFiles) {
+      list = taggedFiles.sort(sortFiles).map(file => `- [](${file.path} "#")`).join('\n');
+      fileCount = taggedFiles.length;
+      count += fileCount;
+    }
+    const subTree = tagTree[tag];
+    const categories = getCategories(level + 1, nestedTag, subTree, Object.keys(subTree).sort(), taggedDict);
+    category.push(`${'#'.repeat(level)} ${tag} - ( ${fileCount + categories.count} )${list ? `\n\n${list}` : ''}`);
+    if (categories.data) {
+      category.push(categories.data);
+    }
+    count += categories.count;
+  }
+  return { data: category.join('\n\n'), count };
+}
+
+export async function updateList(data: string) {
+  const listRegExp = getMarkRegExp(EMark.list);
+  const listRegExpG = getMarkRegExp(EMark.list, true, 'img');
+  let hasList = false;
+  let isAll = false;
+  let match = listRegExpG.exec(data);
+  while (match) {
+    if (!hasList) {
+      hasList = true;
+    }
+    if (!match[1]) {
+      isAll = true;
+      break;
+    }
+    match = listRegExpG.exec(data);
+  }
+  if (!hasList) {
+    return data;
+  }
+  const { files } = await getFiles();
+  if (!isAll) {
+    const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
+    return replaceByRegExp(listRegExpG, data, content => {
+      content = content.toLowerCase();
+      const [queryFlag, queryParam] = getQueryFlag(content);
+      const resultFiles: TFile[] = [];
+      for (const file of fileList) {
+        if (find(file, content, queryFlag, queryParam)[0]) {
+          resultFiles.push(file);
+        }
+      }
+      return resultFiles.map(file => `- [](${file.path} "#")`).join('\n');
+    }).trim();
+  }
+  const tagTree: TTagTree = {};
+  const taggedDict: Dict<TFile[]> = {};
+  const untaggedFiles: TFile[] = [];
+  for (const file of Object.values(files)) {
+    if (file.isError) {
+      continue;
+    }
+    const tags = file.flags.tags;
+    if (!tags || tags.length === 0) {
+      untaggedFiles.push(file);
+      continue;
+    }
+    for (const tag of tags) {
+      let cursor = tagTree;
+      tag.split('/').forEach(seg => {
+        let subTree = cursor[seg];
+        if (subTree === undefined) {
+          subTree = {};
+          cursor[seg] = subTree;
+        }
+        cursor = subTree;
+      });
+      const taggedFiles = taggedDict[tag];
+      if (taggedFiles !== undefined) {
+        taggedFiles.push(file);
+        continue;
+      }
+      taggedDict[tag] = [file];
+    }
+  }
+  const sortedTags = Object.keys(tagTree).sort();
+  if (untaggedFiles.length > 0) {
+    const untagged = config.messages.untagged;
+    tagTree[untagged] = {};
+    sortedTags.push(untagged);
+    taggedDict[untagged] = untaggedFiles;
+  }
+  const categories = getCategories(2, '', tagTree, sortedTags, taggedDict);
+  return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
+}
+
+export function preprocessSearchPage(data: string) {
+  return data.replace(getMarkRegExp(`(${EMark.input})`), '<input id="search-$1" placeholder="$2"/>')
+    .replace(getMarkRegExp(`(${EMark.result})`), '<ul id="search-$1">$2</ul>')
+    .replace(getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img'), '')
+    .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), '<span class="search-$1">$2</span>');
+}
+
+export async function updateSearchPage(content: string) {
+  const searchInput = document.querySelector<HTMLInputElement>(`input#search-${EMark.input}`);
+  if (searchInput) {
+    searchInput.value = content;
+    searchInput.addEventListener('keyup', e => {
+      if (e.key !== 'Enter') {
+        return;
+      }
+      const searchValue = searchInput.value.trim();
+      searchInput.value = searchValue;
+      changeQueryContent(searchValue);
+    });
+  }
+  const resultUl = document.querySelector<HTMLUListElement>(`ul#search-${EMark.result}`);
+  if (!content || !resultUl) {
+    return;
+  }
+  content = content.toLowerCase();
+  const [queryFlag, queryParam] = getQueryFlag(content);
+  resultUl.innerText = config.messages.searching;
+  const startTime = new Date().getTime();
+  const { files } = await getFiles();
+  const resultFiles: TFile[] = [];
+  const quoteDict: Dict<HTMLQuoteElement> = {};
+  let count = 0;
+  for (const file of Object.values(files)) {
+    if (file.isError) {
+      continue;
+    }
+    count++;
+    const data = file.data;
+    const path = file.path;
+    const [isFind, hasQuote] = find(file, content, queryFlag, queryParam);
+    if (!isFind) {
+      continue;
+    }
+    resultFiles.push(file);
+    if (!hasQuote) {
+      continue;
+    }
+    const results = [];
+    let prevEndIndex = 0;
+    const regexp = new RegExp(content, 'ig');
+    let match = regexp.exec(data);
+    while (match) {
+      const offset = 10;
+      let startIndex = match.index - offset;
+      if (prevEndIndex === 0 && startIndex > 0) {
+        results.push('');
+      }
+      const endIndex = regexp.lastIndex + offset;
+      const lastIndex = results.length - 1 as number;
+      let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
+        escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+      if (startIndex > prevEndIndex) {
+        results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
+        prevEndIndex = endIndex;
+        match = regexp.exec(data);
+        continue;
+      }
+      startIndex = prevEndIndex;
+      if (startIndex > match.index) {
+        if (lastIndex >= 0) {
+          const lastResult = results[lastIndex] as string;
+          results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
+        }
+      } else if (startIndex < match.index) {
+        result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
+      }
+      if (lastIndex >= 0) {
+        results[lastIndex] += result;
+      } else {
+        results.push(result);
+      }
+      prevEndIndex = endIndex;
+      match = regexp.exec(data);
+    }
+    if (prevEndIndex < data.length) {
+      results.push('');
+    }
+    const blockquote = document.createElement('blockquote');
+    const p = document.createElement('p');
+    p.innerHTML = results.join('<span class="ellipsis">...</span>');
+    blockquote.append(p);
+    quoteDict[path] = blockquote;
+  }
+  if (resultFiles.length === 0) {
+    resultUl.innerText = config.messages.searchNothing;
+  } else {
+    resultUl.innerText = '';
+    resultFiles.sort(sortFiles).forEach(file => {
+      resultUl.append(createList(file));
+      const blockquote = quoteDict[file.path];
+      if (blockquote) {
+        resultUl.append(blockquote);
+      }
+    });
+  }
+  const number = resultFiles.length;
+  const searchNumber = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.number}`);
+  searchNumber.forEach(element => {
+    element.innerText = `${number}`;
+  });
+  const searchCount = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.count}`);
+  searchCount.forEach(element => {
+    element.innerText = `${count}`;
+  });
+  const time = new Date().getTime() - startTime;
+  const timeSecond = time / 1000;
+  const searchTime = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.time}`);
+  searchTime.forEach(element => {
+    element.innerText = `${timeSecond}`;
+  });
+  dispatchEvent(EEvent.searchCompleted, { number, count, time }, 100).then();
 }
 
 function updateDD() {
@@ -741,120 +856,4 @@ export async function updateDom() {
   await updateHighlight();
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
-}
-
-export async function updateSearchPage(content: string) {
-  const searchInput = document.querySelector<HTMLInputElement>(`input#search-${EMark.input}`);
-  if (searchInput) {
-    searchInput.value = content;
-    searchInput.addEventListener('keyup', e => {
-      if (e.key !== 'Enter') {
-        return;
-      }
-      const searchValue = searchInput.value.trim();
-      searchInput.value = searchValue;
-      changeQueryContent(searchValue);
-    });
-  }
-  const resultUl = document.querySelector<HTMLUListElement>(`ul#search-${EMark.result}`);
-  if (!content || !resultUl) {
-    return;
-  }
-  content = content.toLowerCase();
-  const [queryFlag, queryParam] = getQueryFlag(content);
-  resultUl.innerText = config.messages.searching;
-  const startTime = new Date().getTime();
-  const { files } = await getFiles();
-  const resultFiles: TFile[] = [];
-  const quoteDict: Dict<HTMLQuoteElement> = {};
-  let count = 0;
-  for (const file of Object.values(files)) {
-    if (file.isError) {
-      continue;
-    }
-    count++;
-    const data = file.data;
-    const path = file.path;
-    const [isFind, hasQuote] = find(file, content, queryFlag, queryParam);
-    if (!isFind) {
-      continue;
-    }
-    resultFiles.push(file);
-    if (!hasQuote) {
-      continue;
-    }
-    const results = [];
-    let prevEndIndex = 0;
-    const regexp = new RegExp(content, 'ig');
-    let match = regexp.exec(data);
-    while (match) {
-      const offset = 10;
-      let startIndex = match.index - offset;
-      if (prevEndIndex === 0 && startIndex > 0) {
-        results.push('');
-      }
-      const endIndex = regexp.lastIndex + offset;
-      const lastIndex = results.length - 1 as number;
-      let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
-        escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
-      if (startIndex > prevEndIndex) {
-        results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
-        prevEndIndex = endIndex;
-        match = regexp.exec(data);
-        continue;
-      }
-      startIndex = prevEndIndex;
-      if (startIndex > match.index) {
-        if (lastIndex >= 0) {
-          const lastResult = results[lastIndex] as string;
-          results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
-        }
-      } else if (startIndex < match.index) {
-        result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
-      }
-      if (lastIndex >= 0) {
-        results[lastIndex] += result;
-      } else {
-        results.push(result);
-      }
-      prevEndIndex = endIndex;
-      match = regexp.exec(data);
-    }
-    if (prevEndIndex < data.length) {
-      results.push('');
-    }
-    const blockquote = document.createElement('blockquote');
-    const p = document.createElement('p');
-    p.innerHTML = results.join('<span class="ellipsis">...</span>');
-    blockquote.append(p);
-    quoteDict[path] = blockquote;
-  }
-  if (resultFiles.length === 0) {
-    resultUl.innerText = config.messages.searchNothing;
-  } else {
-    resultUl.innerText = '';
-    resultFiles.sort(sortFiles).forEach(file => {
-      resultUl.append(createList(file));
-      const blockquote = quoteDict[file.path];
-      if (blockquote) {
-        resultUl.append(blockquote);
-      }
-    });
-  }
-  const number = resultFiles.length;
-  const searchNumber = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.number}`);
-  searchNumber.forEach(element => {
-    element.innerText = `${number}`;
-  });
-  const searchCount = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.count}`);
-  searchCount.forEach(element => {
-    element.innerText = `${count}`;
-  });
-  const time = new Date().getTime() - startTime;
-  const timeSecond = time / 1000;
-  const searchTime = document.querySelectorAll<HTMLSpanElement>(`span.search-${EMark.time}`);
-  searchTime.forEach(element => {
-    element.innerText = `${timeSecond}`;
-  });
-  dispatchEvent(EEvent.searchCompleted, { number, count, time }, 100).then();
 }

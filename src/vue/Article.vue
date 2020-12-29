@@ -62,7 +62,7 @@
         return;
       }
       this.renderData = data;
-      const { preprocessSearchPage, updateList, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
+      const { updateSnippet, updateList, preprocessSearchPage, updateSearchPage, updateDom } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(data),
