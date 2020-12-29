@@ -66,7 +66,7 @@
         return;
       }
       this.renderData = data;
-      const { updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
+      const { preprocessSearchPage, updateCategoryPage, updateDom, updateSearchPage, updateSnippet } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
           updateSnippet(data),
@@ -80,10 +80,12 @@
             updateCategoryPage(newData).then(newData => this.updateData(newData, data));
             return;
           }
-          this.updateData(newData, data);
-          if (this.isSearchFile) {
-            this.$nextTick(() => updateSearchPage(this.queryContent));
+          if (!this.isSearchFile) {
+            this.updateData(newData, data);
+            return;
           }
+          this.updateData(preprocessSearchPage(newData), data);
+          this.$nextTick(() => updateSearchPage(this.queryContent));
         });
       });
     }

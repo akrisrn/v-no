@@ -89,6 +89,13 @@ export async function updateCategoryPage(data: string) {
   return data.replace(listRegExp, categories.data).replace(listRegExpG, '').trim();
 }
 
+export function preprocessSearchPage(data: string) {
+  return data.replace(getMarkRegExp(`(${EMark.input})`), '<input id="search-$1" placeholder="$2"/>')
+    .replace(getMarkRegExp(`(${EMark.result})`), '<ul id="search-$1">$2</ul>')
+    .replace(getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img'), '')
+    .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), '<span class="search-$1">$2</span>');
+}
+
 function evalFunction(evalStr: string, params: Dict<any>) {
   return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
 }

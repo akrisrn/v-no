@@ -15,7 +15,12 @@ export const definedFlags = Object.values(EFlag);
 export enum EMark {
   redirect = 'redirect',
   toc = 'toc',
-  list = 'list'
+  list = 'list',
+  input = 'input',
+  result = 'result',
+  number = 'number',
+  count = 'count',
+  time = 'time',
 }
 
 export enum EIcon {
