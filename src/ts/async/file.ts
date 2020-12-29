@@ -6,15 +6,13 @@ import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/async/regex
 import { addCacheKey, isExternalLink, trimList } from '@/ts/async/utils';
 import axios from 'axios';
 
-function createFlags(title: string): IFlags {
-  return { title };
-}
-
 export function createErrorFile(path: string): TFile {
   return {
     path,
     data: config.messages.pageError,
-    flags: createFlags(shortenPath(path)),
+    flags: {
+      title: shortenPath(path),
+    },
     links: [],
     isError: true,
   };
@@ -23,7 +21,9 @@ export function createErrorFile(path: string): TFile {
 const cachedBacklinks: Dict<string[]> = {};
 
 function parseData(path: string, data: string): TFile {
-  const flags = createFlags(shortenPath(path));
+  const flags: IFlags = {
+    title: shortenPath(path),
+  };
   const links: string[] = [];
   if (!data) {
     return { path, data, flags, links };

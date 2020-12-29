@@ -100,17 +100,16 @@ function createBar(flags: IFlags) {
   }
 }
 
-export function createList(file: TFile, li?: HTMLLIElement) {
-  const flags = file.flags;
+export function createList({ path, flags, isError }: TFile, li?: HTMLLIElement) {
   if (!li) {
     li = document.createElement('li');
     const a = document.createElement('a');
-    a.href = `#${shortenPath(file.path)}`;
+    a.href = `#${shortenPath(path)}`;
     a.innerText = flags.title;
     li.append(a);
   }
   li.classList.add('article');
-  if (file.isError) {
+  if (isError) {
     return li;
   }
   const bar = createBar(flags);

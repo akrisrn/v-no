@@ -78,7 +78,7 @@
               return;
             }
             this.updateData(preprocessSearchPage(newData), data);
-            this.$nextTick(() => updateSearchPage(this.queryContent));
+            this.$nextTick(() => updateSearchPage(this.queryContent).then(() => updateDom()));
           });
         });
       });

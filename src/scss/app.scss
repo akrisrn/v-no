@@ -63,11 +63,6 @@ body {
     }
   }
 
-  svg {
-    transition: fill 0.5s;
-    fill: $font-color;
-  }
-
   img {
     transition: filter 0.5s;
 
@@ -75,6 +70,11 @@ body {
       height: 18px;
       vertical-align: -3px;
     }
+  }
+
+  svg {
+    transition: fill 0.5s;
+    fill: $font-color;
   }
 
   .filler {

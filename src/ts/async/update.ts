@@ -438,18 +438,12 @@ export async function updateSearchPage(content: string) {
 function updateDD() {
   document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
     if (p.innerHTML.startsWith(': ')) {
-      const dl = document.createElement('dl');
-      const dd = document.createElement('dd');
-      dl.append(dd);
-      dd.innerHTML = p.innerHTML.substr(2).trimStart();
-      p.outerHTML = dl.outerHTML;
+      p.outerHTML = `<dl><dd>${p.innerHTML.substr(2).trimStart()}</dd></dl>`;
     }
   });
   document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
     if (dt.innerHTML.startsWith(': ')) {
-      const dd = document.createElement('dd');
-      dd.innerHTML = dt.innerHTML.substr(2).trimStart();
-      dt.outerHTML = dd.outerHTML;
+      dt.outerHTML = `<dd>${dt.innerHTML.substr(2).trimStart()}</dd>`;
     }
   });
 }

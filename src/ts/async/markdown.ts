@@ -180,13 +180,8 @@ markdownIt.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
   count = count === undefined ? 1 : (count + 1);
   headingCount[tag] = count;
   token.attrSet('id', `${tag}-${count}`);
-  const span = document.createElement('span');
-  span.classList.add('heading-tag');
-  span.innerText = 'H';
-  const small = document.createElement('small');
-  small.innerText = tag.substr(1);
-  span.append(small);
-  return defaultHeadingRenderRule(tokens, idx, options, env, self) + span.outerHTML;
+  const html = `<span class="heading-tag">H<small>${tag.substr(1)}</small></span>`;
+  return defaultHeadingRenderRule(tokens, idx, options, env, self) + html;
 };
 
 const defaultHeadingCloseRenderRule = getDefaultRenderRule('heading_close');
@@ -195,10 +190,8 @@ markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
   if (isRenderingSummary || token.level !== 0) {
     return defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
   }
-  const span = document.createElement('span');
-  span.classList.add('heading-link');
-  span.innerHTML = getIcon(EIcon.link, 14);
-  return span.outerHTML + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
+  const html = `<span class="heading-link">${getIcon(EIcon.link, 14)}</span>`;
+  return html + defaultHeadingCloseRenderRule(tokens, idx, options, env, self);
 };
 
 const defaultImageRenderRule = getDefaultRenderRule('image');
@@ -282,9 +275,7 @@ export function renderMD(data: string) {
   const tocRegExp = getMarkRegExp(EMark.toc);
   const tocRegExpG = getMarkRegExp(EMark.toc, true, 'img');
   if (tocRegExp.test(data)) {
-    const tocDiv = document.createElement('div');
-    tocDiv.id = 'toc';
-    data = data.replace(tocRegExp, tocDiv.outerHTML).replace(tocRegExpG, '');
+    data = data.replace(tocRegExp, '<div id="toc"></div>').replace(tocRegExpG, '');
   }
   headingCount = {};
   return markdownIt.render(data).trim();
