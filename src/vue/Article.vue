@@ -4,10 +4,10 @@
 
 <script lang="ts">
   import { config } from '@/ts/config';
-  import { dispatchEvent, removeClass, scroll } from '@/ts/element';
-  import { EEvent } from '@/ts/enums';
+  import { dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
+  import { EEvent, EMark } from '@/ts/enums';
   import { changeAnchor, changeQueryContent } from '@/ts/path';
-  import { getAnchorRegExp } from '@/ts/regexp';
+  import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importMarkdownTs } from '@/ts/async';
@@ -61,7 +61,10 @@
         this.updateData('');
         return;
       }
-      this.renderData = data;
+      const span = getSyncSpan();
+      this.renderData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
+          .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
+          .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
       const { updateSnippet, updateList, preprocessSearchPage, updateSearchPage, updateDom } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([

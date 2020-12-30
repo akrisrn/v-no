@@ -26,8 +26,8 @@
       <header>{{ title }}</header>
       <Article :fileData="fileData" :query="query" :showTime="showTime"></Article>
       <div v-if="!isError" id="backlinks">
-        <div v-if="!hasLoadedBacklinks" :class="['icon', { loading: isLoadingBacklinks }]"
-             v-html="isLoadingBacklinks ? iconSync : iconBacklink"></div>
+        <span v-if="!hasLoadedBacklinks" :class="['icon', { sync: isLoadingBacklinks }]"
+              v-html="isLoadingBacklinks ? iconSync : iconBacklink"></span>
         <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
         <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
         <template v-else>

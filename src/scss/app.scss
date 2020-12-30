@@ -77,6 +77,20 @@ body {
     fill: $font-color;
   }
 
+  .sync svg {
+    animation: svg-spin 1s linear infinite;
+    vertical-align: -3px;
+
+    @keyframes svg-spin {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
   .filler {
     margin-left: auto;
   }

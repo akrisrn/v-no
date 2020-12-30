@@ -57,6 +57,10 @@ export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
 }
 
+export function getSyncSpan() {
+  return `<span class="sync">${getIcon(EIcon.sync)}</span>`;
+}
+
 export function getQueryTagLinks(tag: string) {
   const list: string[][] = [];
   let start = 0;
@@ -132,10 +136,10 @@ export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAncho
     } else {
       removeClass(a, 'self');
     }
-    if (a.innerText !== '') {
+    if (a.innerHTML !== '') {
       continue;
     }
-    a.innerText = '#';
+    a.innerHTML = getSyncSpan();
     a.classList.add('rendering');
     const links = dict[path];
     if (links !== undefined) {
@@ -154,7 +158,7 @@ export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAncho
       if (file.isError) {
         a.classList.add('error');
       }
-      a.innerText = file.flags.title;
+      a.innerHTML = file.flags.title;
       if (callback) {
         callback(file, a);
       }

@@ -1,5 +1,13 @@
 import { config } from '@/ts/config';
-import { addEventListener, createList, dispatchEvent, removeClass, scroll, simpleUpdateLinkPath } from '@/ts/element';
+import {
+  addEventListener,
+  createList,
+  dispatchEvent,
+  getSyncSpan,
+  removeClass,
+  scroll,
+  simpleUpdateLinkPath,
+} from '@/ts/element';
 import { EEvent, EFlag, EMark } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
 import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
@@ -332,7 +340,7 @@ export async function updateSearchPage(content: string) {
     return;
   }
   const queryParams = getQueryParams(content);
-  resultUl.innerText = config.messages.searching;
+  resultUl.innerHTML = getSyncSpan() + config.messages.searching;
   const startTime = new Date().getTime();
   const { files } = await getFiles();
   const resultFiles: TFile[] = [];
@@ -400,9 +408,9 @@ export async function updateSearchPage(content: string) {
     quoteDict[path] = blockquote;
   }
   if (resultFiles.length === 0) {
-    resultUl.innerText = config.messages.searchNothing;
+    resultUl.innerHTML = config.messages.searchNothing;
   } else {
-    resultUl.innerText = '';
+    resultUl.innerHTML = '';
     resultFiles.sort(sortFiles).forEach(file => {
       resultUl.append(createList(file));
       const blockquote = quoteDict[file.path];
@@ -598,7 +606,7 @@ function updateLinkPath() {
     createList(file, parent as HTMLLIElement);
   }).then(() => {
     waitingList.forEach(([heading, a]) => {
-      a.innerText = getHeadingText(heading);
+      a.innerHTML = getHeadingText(heading);
     });
   });
 }
@@ -700,11 +708,13 @@ function transHeading(heading: THeading) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = `#${headingElement.id}`;
-  a.innerText = getHeadingText(headingElement);
-  li.append(a);
   if (headingElement.querySelector<HTMLAnchorElement>('a.rendering')) {
+    a.innerHTML = getSyncSpan();
     waitingList.push([headingElement, a]);
+  } else {
+    a.innerHTML = getHeadingText(headingElement);
   }
+  li.append(a);
   let count = 1;
   if (heading.children.length === 0) {
     return { li, count };
@@ -854,3 +864,5 @@ export async function updateDom() {
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
 }
+
+export { getSnippetRegExp };
