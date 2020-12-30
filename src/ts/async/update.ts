@@ -8,13 +8,7 @@ import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
-import {
-  getHeadingPattern,
-  getHeadingRegExp,
-  getLinkPathPattern,
-  getWrapRegExp,
-  replaceByRegExp,
-} from '@/ts/async/regexp';
+import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
 import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
 
 function evalFunction(evalStr: string, params: Dict<any>) {
@@ -57,9 +51,9 @@ function degradeHeading(data: string, level: number) {
 
 export async function updateSnippet(data: string, updatedPaths: string[] = []) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
-  const linkRegExp = new RegExp(`^(?:${getHeadingPattern(2, 6)} )?\\s*\\[\\+(#.+)?]${getLinkPathPattern(true)}$`);
+  const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {
-    const match = line.match(linkRegExp);
+    const match = line.match(snippetRegExp);
     if (!match) {
       return line;
     }
