@@ -243,18 +243,17 @@
       if (!this.fileTs) {
         this.fileTs = await importFileTs();
       }
-      const { createErrorFile, getFile } = this.fileTs;
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
-        const { data, flags, links } = createErrorFile(filePath);
+        const { data, flags, links } = this.fileTs.createErrorFile(filePath);
         return { data, flags, links };
       }
       const promises = [];
-      promises.push(getFile(filePath));
+      promises.push(this.fileTs.getFile(filePath));
       const commonPath = this.config.paths.common;
       if (commonPath && filePath !== commonPath) {
-        promises.push(getFile(commonPath));
+        promises.push(this.fileTs.getFile(commonPath));
       }
       const files = await Promise.all(promises);
       const file = files[0];
@@ -352,14 +351,13 @@
       if (!this.fileTs) {
         this.fileTs = await importFileTs();
       }
-      const { getFiles, sortFiles } = this.fileTs;
-      const { files, backlinks } = await getFiles();
+      const { files, backlinks } = await this.fileTs.getFiles();
       const paths = backlinks[this.filePath];
       if (paths && paths.length > 0) {
         this.backlinks = [...paths];
         this.backlinkFiles = paths.map(path => {
           return JSON.parse(JSON.stringify(files[path])) as TFile;
-        }).sort(sortFiles);
+        }).sort(this.fileTs.sortFiles);
       } else {
         this.backlinks = [];
         this.backlinkFiles = [];

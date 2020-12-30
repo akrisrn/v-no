@@ -67,23 +67,24 @@
       this.renderData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
           .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
-      const { updateSnippet, updateList, preprocessSearchPage, updateSearchPage, updateDom } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
-          updateSnippet(data, this.asyncResults),
-          updateDom(),
+          this.markdownTs.updateSnippet(data, this.asyncResults),
+          this.markdownTs.updateDom(),
         ]).then(([newData]) => {
           if (!newData) {
             this.updateData('');
             return;
           }
-          updateList(newData).then(newData => {
+          this.markdownTs.updateList(newData).then(newData => {
             if (!this.isSearchFile) {
               this.updateData(newData, data);
               return;
             }
-            this.updateData(preprocessSearchPage(newData), data);
-            this.$nextTick(() => updateSearchPage(this.queryContent).then(() => updateDom()));
+            this.updateData(this.markdownTs.preprocessSearchPage(newData), data);
+            this.$nextTick(() => {
+              this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
+            });
           });
         });
       });

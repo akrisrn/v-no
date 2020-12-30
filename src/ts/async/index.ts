@@ -37,13 +37,9 @@ export async function importPrismjsTs() {
 }
 
 export function bang() {
-  Promise.all([
-    importFileTs(),
-    importMarkdownTs(),
-    importUtilsTs(),
-  ]).then(([file, markdown, utils]) => {
+  importFileTs().then(file => exposeToWindow({ file }));
+  importMarkdownTs().then(markdown => {
     exposeToWindow({
-      file,
       markdown,
       renderMD: async (path: string, data: string, asyncResults?: [string, string][]) => {
         data = data.trim();
@@ -55,9 +51,18 @@ export function bang() {
           return '';
         }
         data = await markdown.updateSnippet(data, asyncResults);
+        if (!data) {
+          return '';
+        }
+        data = await markdown.updateList(data);
         return data ? markdown.renderMD(data) : '';
       },
       updateDom: markdown.updateDom,
+    });
+  });
+  importUtilsTs().then(utils => {
+    exposeToWindow({ utils }, true);
+    exposeToWindow({
       axios: utils.axios,
       dayjs: utils.dayjs,
       parseDate: utils.parseDate,
@@ -66,6 +71,5 @@ export function bang() {
       addEventListener: utils.addEventListener,
       callAndListen: utils.callAndListen,
     });
-    exposeToWindow({ utils }, true);
   });
 }
