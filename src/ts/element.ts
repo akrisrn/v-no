@@ -1,7 +1,5 @@
 import { EEvent, EFlag, EIcon } from '@/ts/enums';
-import { buildQueryFlagUrl, checkLinkPath, shortenPath } from '@/ts/path';
-import { state } from '@/ts/store';
-import { importFileTs } from '@/ts/async';
+import { buildQueryFlagUrl, shortenPath } from '@/ts/path';
 
 let eventListenerDict: Dict<[Element[], EventListenerOrEventListenerObject[]]> = {};
 
@@ -122,47 +120,4 @@ export function createList({ path, flags, isError }: TFile, li?: HTMLLIElement) 
     li.append(bar[1]);
   }
   return li;
-}
-
-export async function simpleUpdateLinkPath(callback?: (file: TFile, a: HTMLAnchorElement) => void) {
-  const dict: Dict<HTMLAnchorElement[]> = {};
-  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
-    if (!path) {
-      continue;
-    }
-    if (path === state.filePath) {
-      a.classList.add('self');
-    } else {
-      removeClass(a, 'self');
-    }
-    if (a.innerHTML !== '') {
-      continue;
-    }
-    a.innerHTML = getSyncSpan();
-    a.classList.add('rendering');
-    const links = dict[path];
-    if (links !== undefined) {
-      links.push(a);
-      continue;
-    }
-    dict[path] = [a];
-  }
-  const paths = Object.keys(dict);
-  if (paths.length === 0) {
-    return;
-  }
-  const files = await Promise.all(paths.map(async path => (await importFileTs()).getFile(path)));
-  files.forEach(file => {
-    for (const a of dict[file.path]) {
-      if (file.isError) {
-        a.classList.add('error');
-      }
-      a.innerHTML = file.flags.title;
-      if (callback) {
-        callback(file, a);
-      }
-      removeClass(a, 'rendering');
-    }
-  });
 }

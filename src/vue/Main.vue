@@ -51,15 +51,7 @@
 <script lang="ts">
   import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf } from '@/ts/config';
-  import {
-    cleanEventListenerDict,
-    createList,
-    dispatchEvent,
-    getIcon,
-    getQueryTagLinks,
-    scroll,
-    simpleUpdateLinkPath,
-  } from '@/ts/element';
+  import { cleanEventListenerDict, createList, dispatchEvent, getIcon, getQueryTagLinks, scroll } from '@/ts/element';
   import { definedFlags, EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import { getMarkRegExp } from '@/ts/regexp';
@@ -100,7 +92,6 @@
     showTime = 0;
 
     isError = false;
-    isCancel = false;
 
     isRedirectPage = false;
     redirectFrom: [string[], string[]] = [[], []];
@@ -166,7 +157,6 @@
           path += `#${shortFilePath}`;
         }
         location.href = path + location.search;
-        this.isCancel = true;
         return;
       }
       if (location.search) {
@@ -176,7 +166,6 @@
           anchor: this.anchor,
           query: formatQuery(parseQuery(query)),
         });
-        this.isCancel = true;
         return;
       }
       if (enableMultiConf) {
@@ -184,7 +173,6 @@
         if (conf && confList![0].includes(conf) && getSelectConf() !== conf) {
           localStorage.setItem('conf', conf);
           location.reload();
-          this.isCancel = true;
           return;
         }
       }
@@ -195,13 +183,6 @@
       });
       bang();
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
-    }
-
-    mounted() {
-      if (this.isCancel) {
-        return;
-      }
-      simpleUpdateLinkPath();
     }
 
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {

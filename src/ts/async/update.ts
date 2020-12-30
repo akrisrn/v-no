@@ -1,16 +1,9 @@
 import { config } from '@/ts/config';
-import {
-  addEventListener,
-  createList,
-  dispatchEvent,
-  getSyncSpan,
-  removeClass,
-  scroll,
-  simpleUpdateLinkPath,
-} from '@/ts/element';
+import { addEventListener, createList, dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
 import { EEvent, EFlag, EMark } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
 import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
+import { state } from '@/ts/store';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
@@ -593,40 +586,63 @@ function updateImagePath() {
   }
 }
 
-let waitingList: [HTMLHeadingElement, HTMLAnchorElement][] = [];
+let waitingList: [HTMLAnchorElement[], [HTMLAnchorElement, HTMLHeadingElement][]] = [[], []];
 
 function getHeadingText(heading: HTMLHeadingElement) {
   return heading.innerText.substr(2).trim() || `[${null}]`;
 }
 
 function updateLinkPath() {
-  simpleUpdateLinkPath((file, a) => {
-    const parent = a.parentElement!;
-    if (parent.tagName !== 'LI') {
-      return;
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
+    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
+    if (!path) {
+      continue;
     }
-    let isPass = true;
-    let hasQuote = false;
-    if (parent.childNodes[0].nodeType === 1) {
-      if (parent.childElementCount === 1) {
-        isPass = false;
-      } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-        isPass = false;
-        hasQuote = true;
+    if (path === state.filePath) {
+      a.classList.add('self');
+    } else {
+      removeClass(a, 'self');
+    }
+    if (a.innerHTML !== '') {
+      continue;
+    }
+    a.innerHTML = getSyncSpan();
+    a.classList.add('rendering');
+    getFile(path).then(file => {
+      if (file.isError) {
+        a.classList.add('error');
       }
-    }
-    if (isPass) {
-      return;
-    }
-    if (hasQuote) {
-      parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
-    }
-    createList(file, parent as HTMLLIElement);
-  }).then(() => {
-    waitingList.forEach(([heading, a]) => {
-      a.innerHTML = getHeadingText(heading);
+      a.innerHTML = file.flags.title;
+      const parent = a.parentElement!;
+      if (parent.tagName !== 'LI') {
+        return;
+      }
+      let isPass = true;
+      let hasQuote = false;
+      if (parent.childNodes[0].nodeType === 1) {
+        if (parent.childElementCount === 1) {
+          isPass = false;
+        } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+          isPass = false;
+          hasQuote = true;
+        }
+      }
+      if (isPass) {
+        return;
+      }
+      if (hasQuote) {
+        parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
+      }
+      createList(file, parent as HTMLLIElement);
+    }).finally(() => {
+      removeClass(a, 'rendering');
+      const indexOf = waitingList[0].indexOf(a);
+      if (indexOf >= 0) {
+        const waitingItem = waitingList[1][indexOf];
+        waitingItem[0].innerHTML = getHeadingText(waitingItem[1]);
+      }
     });
-  });
+  }
 }
 
 function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
@@ -726,9 +742,11 @@ function transHeading(heading: THeading) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.href = `#${headingElement.id}`;
-  if (headingElement.querySelector<HTMLAnchorElement>('a.rendering')) {
+  const renderingA = headingElement.querySelector<HTMLAnchorElement>('a.rendering');
+  if (renderingA) {
     a.innerHTML = getSyncSpan();
-    waitingList.push([headingElement, a]);
+    waitingList[0].push(renderingA);
+    waitingList[1].push([a, headingElement]);
   } else {
     a.innerHTML = getHeadingText(headingElement);
   }
@@ -869,7 +887,7 @@ function updateHeading() {
 }
 
 export async function updateDom() {
-  waitingList = [];
+  waitingList = [[], []];
   updateDD();
   const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
