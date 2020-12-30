@@ -39,6 +39,21 @@ export function isExternalLink(href: string) {
   }
 }
 
+export function stringifyAnyValue(value: any) {
+  switch (typeof value) {
+    case 'object':
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return `[${typeof value}]`;
+      }
+    case 'function':
+    case 'symbol':
+      return `[${typeof value}]`;
+  }
+  return `${value}`;
+}
+
 // noinspection JSUnusedGlobalSymbols
 export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
   return await (async () => {

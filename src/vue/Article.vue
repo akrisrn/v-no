@@ -23,8 +23,8 @@
     startTime = 0;
     isRendering = true;
     renderData = '';
-    asyncResults: [string, any][] = [];
-    resultsBeforeRendered: [string, any][] = [];
+    asyncResults: [string, string][] = [];
+    resultsBeforeRendered: [string, string][] = [];
 
     get filePath() {
       return state.filePath;

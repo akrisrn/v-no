@@ -17,24 +17,24 @@ import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
-import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
+import { addCacheKey, escapeHTML, stringifyAnyValue, trimList } from '@/ts/async/utils';
 
 let asyncScriptCount = 0;
 
-function evalFunction(evalStr: string, params: Dict<any>, asyncResults: [string, any][] = []) {
+function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = []) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
     const id = `async-script-${++asyncScriptCount}`;
     eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
-      asyncResults.push([id, result]);
+      asyncResults.push([id, stringifyAnyValue(result)]);
     });
     return getSyncSpan(id);
   }
-  return eval(`(function(${paras}) {${evalStr}})`)(...args);
+  return stringifyAnyValue(eval(`(function(${paras}) {${evalStr}})`)(...args));
 }
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: [string, any][]) {
+export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
     let result: string;
     try {
@@ -46,7 +46,7 @@ export function replaceInlineScript(path: string, data: string, asyncResults?: [
   }).trim();
 }
 
-export function updateAsyncScript([id, result]: [string, any]) {
+export function updateAsyncScript([id, result]: [string, string]) {
   const span = document.querySelector(`span#${id}`);
   if (span) {
     span.outerHTML = result;
@@ -75,7 +75,7 @@ function degradeHeading(data: string, level: number) {
   }).join('\n');
 }
 
-export async function updateSnippet(data: string, asyncResults?: [string, any][], updatedPaths: string[] = []) {
+export async function updateSnippet(data: string, asyncResults?: [string, string][], updatedPaths: string[] = []) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {

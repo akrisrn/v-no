@@ -45,7 +45,7 @@ export function bang() {
     exposeToWindow({
       file,
       markdown,
-      renderMD: async (path: string, data: string, asyncResults?: [string, any][]) => {
+      renderMD: async (path: string, data: string, asyncResults?: [string, string][]) => {
         data = data.trim();
         if (!data) {
           return '';
