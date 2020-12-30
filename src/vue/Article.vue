@@ -60,59 +60,53 @@
         data = this.markdownTs.replaceInlineScript(this.filePath, data, this.asyncResults);
       }
       if (!data) {
-        this.updateData('');
+        this.updateRenderData().then(() => this.renderComplete());
         return;
       }
       const span = getSyncSpan();
-      this.renderData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
+      const loadingData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
           .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
-      this.$nextTick(() => {
-        Promise.all([
-          this.markdownTs.updateSnippet(data, this.asyncResults),
-          this.markdownTs.updateDom(),
-        ]).then(([newData]) => {
-          if (!newData) {
-            this.updateData('');
+      this.updateRenderData(loadingData).then(() => Promise.all([
+        this.markdownTs.updateSnippet(data, this.asyncResults),
+        this.markdownTs.updateDom(),
+      ]).then(([data]) => {
+        if (!data) {
+          this.updateRenderData().then(() => this.renderComplete());
+          return;
+        }
+        this.markdownTs.updateList(data).then(data => {
+          if (!data || !this.isSearchFile) {
+            this.updateRenderData(data).then(() => this.renderComplete());
             return;
           }
-          this.markdownTs.updateList(newData).then(newData => {
-            if (!this.isSearchFile) {
-              this.updateData(newData, data);
-              return;
-            }
-            this.updateData(this.markdownTs.preprocessSearchPage(newData), data);
-            this.$nextTick(() => {
-              this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
-            });
+          this.updateRenderData(this.markdownTs.preprocessSearchPage(data)).then(() => {
+            this.renderComplete();
+            this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
           });
         });
-      });
+      }));
     }
 
-    updateData(newData: string, data?: string) {
-      if (data !== undefined && newData === data) {
-        this.renderComplete();
-        return;
-      }
-      this.renderData = newData;
-      this.$nextTick(() => {
-        this.markdownTs.updateDom().then(() => this.renderComplete());
-      });
+    async updateRenderData(data = '') {
+      this.renderData = data;
+      await this.$nextTick();
     }
 
     renderComplete() {
-      this.isRendering = false;
-      this.$nextTick(() => {
-        removeClass(this.$el);
-        dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
-        this.scrollToAnchor();
+      this.markdownTs.updateDom().then(() => {
+        this.isRendering = false;
+        this.$nextTick(() => {
+          removeClass(this.$el);
+          dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
+          this.scrollToAnchor();
+        });
+        let result = this.resultsBeforeRendered.shift();
+        while (result) {
+          this.markdownTs.updateAsyncScript(result);
+          result = this.resultsBeforeRendered.shift();
+        }
       });
-      let result = this.resultsBeforeRendered.shift();
-      while (result) {
-        this.markdownTs.updateAsyncScript(result);
-        result = this.resultsBeforeRendered.shift();
-      }
     }
 
     @Watch('anchor')
