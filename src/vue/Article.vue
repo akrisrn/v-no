@@ -23,6 +23,8 @@
     startTime = 0;
     isRendering = true;
     renderData = '';
+    asyncResults: [string, any][] = [];
+    resultsBeforeRendered: [string, any][] = [];
 
     get filePath() {
       return state.filePath;
@@ -55,7 +57,7 @@
       this.startTime = new Date().getTime();
       this.isRendering = true;
       if (data) {
-        data = this.markdownTs.replaceInlineScript(this.filePath, data);
+        data = this.markdownTs.replaceInlineScript(this.filePath, data, this.asyncResults);
       }
       if (!data) {
         this.updateData('');
@@ -68,7 +70,7 @@
       const { updateSnippet, updateList, preprocessSearchPage, updateSearchPage, updateDom } = this.markdownTs;
       this.$nextTick(() => {
         Promise.all([
-          updateSnippet(data),
+          updateSnippet(data, this.asyncResults),
           updateDom(),
         ]).then(([newData]) => {
           if (!newData) {
@@ -105,6 +107,11 @@
         dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
         this.scrollToAnchor();
       });
+      let result = this.resultsBeforeRendered.shift();
+      while (result) {
+        this.markdownTs.updateAsyncScript(result);
+        result = this.resultsBeforeRendered.shift();
+      }
     }
 
     @Watch('anchor')
@@ -118,6 +125,15 @@
         scroll(element.offsetTop - 6);
         changeAnchor(this.anchor);
       }
+    }
+
+    @Watch('asyncResults')
+    onAsyncResultsChanged() {
+      const result = this.asyncResults[this.asyncResults.length - 1];
+      if (this.isRendering) {
+        this.resultsBeforeRendered.push(result);
+      }
+      this.markdownTs.updateAsyncScript(result);
     }
 
     @Watch('queryContent')

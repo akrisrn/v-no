@@ -19,20 +19,38 @@ import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
 import { addCacheKey, escapeHTML, trimList } from '@/ts/async/utils';
 
-function evalFunction(evalStr: string, params: Dict<any>) {
-  return eval(`(function(${Object.keys(params).join()}) {${evalStr}})`)(...Object.values(params));
+let asyncScriptCount = 0;
+
+function evalFunction(evalStr: string, params: Dict<any>, asyncResults: [string, any][] = []) {
+  const paras = Object.keys(params).join();
+  const args = Object.values(params);
+  if (evalStr.indexOf('await ') >= 0) {
+    const id = `async-script-${++asyncScriptCount}`;
+    eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
+      asyncResults.push([id, result]);
+    });
+    return getSyncSpan(id);
+  }
+  return eval(`(function(${paras}) {${evalStr}})`)(...args);
 }
 
-export function replaceInlineScript(path: string, data: string) {
+export function replaceInlineScript(path: string, data: string, asyncResults?: [string, any][]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
     let result: string;
     try {
-      result = evalFunction(evalStr, { path, data });
+      result = evalFunction(evalStr, { path, data }, asyncResults);
     } catch (e) {
       result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
     return result;
   }).trim();
+}
+
+export function updateAsyncScript([id, result]: [string, any]) {
+  const span = document.querySelector(`span#${id}`);
+  if (span) {
+    span.outerHTML = result;
+  }
 }
 
 function degradeHeading(data: string, level: number) {
@@ -57,7 +75,7 @@ function degradeHeading(data: string, level: number) {
   }).join('\n');
 }
 
-export async function updateSnippet(data: string, updatedPaths: string[] = []) {
+export async function updateSnippet(data: string, asyncResults?: [string, any][], updatedPaths: string[] = []) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {
@@ -149,7 +167,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
           }
         }
         if (snippetData) {
-          snippetData = replaceInlineScript(path, snippetData);
+          snippetData = replaceInlineScript(path, snippetData, asyncResults);
         }
       }
       let dataWithHeading = snippetData;
@@ -162,7 +180,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = []) {
         }
       }
       if (snippetData) {
-        snippetData = await updateSnippet(dataWithHeading, [...updatedPaths]);
+        snippetData = await updateSnippet(dataWithHeading, asyncResults, [...updatedPaths]);
       } else if (dataWithHeading) {
         snippetData = dataWithHeading;
       }

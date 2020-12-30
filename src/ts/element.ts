@@ -57,8 +57,8 @@ export function getIcon(type: EIcon, width = 16, height = width) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${width}" height="${height}"><path fill-rule="evenodd" d="${type}"></path></svg>`;
 }
 
-export function getSyncSpan() {
-  return `<span class="sync">${getIcon(EIcon.sync)}</span>`;
+export function getSyncSpan(id?: string) {
+  return `<span${id ? ` id="${id}"` : ''} class="sync">${getIcon(EIcon.sync)}</span>`;
 }
 
 export function getQueryTagLinks(tag: string) {

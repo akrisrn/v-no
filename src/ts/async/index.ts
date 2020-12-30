@@ -45,16 +45,16 @@ export function bang() {
     exposeToWindow({
       file,
       markdown,
-      renderMD: async (path: string, data: string) => {
+      renderMD: async (path: string, data: string, asyncResults?: [string, any][]) => {
         data = data.trim();
         if (!data) {
           return '';
         }
-        data = markdown.replaceInlineScript(path, data);
+        data = markdown.replaceInlineScript(path, data, asyncResults);
         if (!data) {
           return '';
         }
-        data = await markdown.updateSnippet(data);
+        data = await markdown.updateSnippet(data, asyncResults);
         return data ? markdown.renderMD(data) : '';
       },
       updateDom: markdown.updateDom,
