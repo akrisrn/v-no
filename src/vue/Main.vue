@@ -49,7 +49,6 @@
 </template>
 
 <script lang="ts">
-  import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf } from '@/ts/config';
   import { cleanEventListenerDict, createList, dispatchEvent, getIcon, getQueryTagLinks, scroll } from '@/ts/element';
   import { definedFlags, EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
@@ -181,7 +180,6 @@
         reload: this.reload,
         filePath: this.filePath,
       });
-      bang();
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
     }
 

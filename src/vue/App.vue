@@ -20,12 +20,12 @@
 </template>
 
 <script lang="ts">
+  import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf, shortBaseFiles } from '@/ts/config';
   import { addBaseUrl, returnHome } from '@/ts/path';
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import { bang } from '@/ts/async';
   import Gadget from '@/vue/Gadget.vue';
   import { Component, Vue, Watch } from 'vue-property-decorator';
 
@@ -59,11 +59,8 @@
     }
 
     created() {
-      exposeToWindow({
-        Vue,
-        appSelf: this,
-      });
       bang();
+      exposeToWindow({ appSelf: this });
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
