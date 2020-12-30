@@ -11,6 +11,7 @@ import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
 import { addCacheKey, escapeHTML, stringifyAnyValue, trimList } from '@/ts/async/utils';
+import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
 let asyncScriptCount = 0;
 
@@ -41,9 +42,29 @@ export function replaceInlineScript(path: string, data: string, asyncResults?: [
 
 export function updateAsyncScript([id, result]: [string, string]) {
   const span = document.querySelector(`span#${id}`);
-  if (span) {
+  if (!span) {
+    return false;
+  }
+  const parent = span.parentElement!;
+  if (parent.tagName !== 'P' || parent.childNodes.length > 1) {
+    span.outerHTML = result;
+    return true;
+  }
+  const trimResult = result.trim();
+  if (!trimResult.startsWith('<')) {
+    span.outerHTML = result;
+    return true;
+  }
+  let tagName = trimResult.substring(1, trimResult.indexOf('>'));
+  if (tagName.endsWith('/')) {
+    tagName = tagName.substr(0, tagName.length - 1);
+  }
+  if (htmlBlocks.includes(tagName)) {
+    parent.outerHTML = trimResult;
+  } else {
     span.outerHTML = result;
   }
+  return true;
 }
 
 function degradeHeading(data: string, level: number) {

@@ -101,12 +101,20 @@
           dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
           this.scrollToAnchor();
         });
+        if (this.resultsBeforeRendered.length === 0) {
+          return;
+        }
+        let needUpdate = false;
         let result = this.resultsBeforeRendered.shift();
         while (result) {
-          this.markdownTs.updateAsyncScript(result);
+          if (this.markdownTs.updateAsyncScript(result) && !needUpdate) {
+            needUpdate = true;
+          }
           result = this.resultsBeforeRendered.shift();
         }
-        this.markdownTs.updateDom();
+        if (needUpdate) {
+          this.markdownTs.updateDom();
+        }
       });
     }
 
@@ -126,7 +134,9 @@
     @Watch('asyncResults')
     onAsyncResultsChanged() {
       const result = this.asyncResults[this.asyncResults.length - 1];
-      this.markdownTs.updateAsyncScript(result);
+      if (!this.markdownTs.updateAsyncScript(result)) {
+        return;
+      }
       this.markdownTs.updateDom();
       if (this.isRendering) {
         this.resultsBeforeRendered.push(result);
