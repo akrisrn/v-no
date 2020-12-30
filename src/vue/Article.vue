@@ -106,6 +106,7 @@
           this.markdownTs.updateAsyncScript(result);
           result = this.resultsBeforeRendered.shift();
         }
+        this.markdownTs.updateDom();
       });
     }
 
@@ -125,10 +126,11 @@
     @Watch('asyncResults')
     onAsyncResultsChanged() {
       const result = this.asyncResults[this.asyncResults.length - 1];
+      this.markdownTs.updateAsyncScript(result);
+      this.markdownTs.updateDom();
       if (this.isRendering) {
         this.resultsBeforeRendered.push(result);
       }
-      this.markdownTs.updateAsyncScript(result);
     }
 
     @Watch('queryContent')
