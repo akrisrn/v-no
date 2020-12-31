@@ -11,7 +11,7 @@ import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
 import { addCacheKey, stringifyAnyValue, trimList } from '@/ts/async/utils';
-import { escapeHtml } from 'markdown-it/lib/common/utils';
+import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
 let asyncScriptCount = 0;
@@ -396,7 +396,7 @@ export async function updateSearchPage(content: string) {
     }
     const results = [];
     let prevEndIndex = 0;
-    const regexp = new RegExp(queryParams[0], 'ig');
+    const regexp = new RegExp(escapeRE(queryParams[0]), 'ig');
     let match = regexp.exec(data);
     while (match) {
       const offset = 10;

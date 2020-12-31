@@ -3,6 +3,7 @@ import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
 import { destructors } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
+import axios from 'axios';
 
 export function trimList(list: string[], distinct = true) {
   list = list.map(item => item.trim()).filter(item => item);
@@ -34,11 +35,11 @@ export function stringifyAnyValue(value: any) {
       try {
         return JSON.stringify(value);
       } catch {
-        return `[${typeof value}]`;
+        return Object.prototype.toString.call(value);
       }
     case 'function':
     case 'symbol':
-      return `[${typeof value}]`;
+      return Object.prototype.toString.call(value);
   }
   return `${value}`;
 }
@@ -76,6 +77,6 @@ export function callAndListen(callback: () => void, event: EEvent, element = doc
   }
 }
 
-export * as axios from 'axios';
+export { axios };
 export * from '@/ts/async/date';
 export * from '@/ts/async/regexp';

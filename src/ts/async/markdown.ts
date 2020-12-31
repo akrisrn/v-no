@@ -8,6 +8,7 @@ import { replaceByRegExp } from '@/ts/async/regexp';
 import { isExternalLink, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
+import { fromCodePoint } from 'markdown-it/lib/common/utils';
 
 const quotes = config.smartQuotes;
 
@@ -100,12 +101,8 @@ markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let content = token.content;
   content = replaceByRegExp(/(\\u[0-9a-f]{4}|u\+[0-9a-f]{4,6})/ig, content, match => {
-    let code = parseInt(match.substr(2), 16);
-    if (match.startsWith('\\') || code < 0x10000) {
-      return String.fromCharCode(code);
-    }
-    code -= 0x10000;
-    return String.fromCharCode(0xD800 + (code >> 10), 0xDC00 + (code & 0x3FF));
+    const code = parseInt(match.substr(2), 16);
+    return match.startsWith('\\') ? String.fromCharCode(code) : fromCodePoint(code);
   });
   if (replacerList.length === 0) {
     token.content = content;
