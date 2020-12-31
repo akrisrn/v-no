@@ -225,8 +225,8 @@
       const filePath = this.filePath;
       if (!filePath.endsWith('.md')) {
         this.isError = true;
-        const { data, flags, links } = this.fileTs.createErrorFile(filePath);
-        return { data, flags, links };
+        const { data, flags } = this.fileTs.createErrorFile(filePath);
+        return { data, flags, links: [] };
       }
       const promises = [];
       promises.push(this.fileTs.getFile(filePath));
@@ -238,7 +238,7 @@
       const file = files[0];
       let data = file.data;
       const flags = file.flags;
-      const links = file.links;
+      const links = Object.values(file.links).filter(link => link.isMarkdown).map(link => link.href);
       if (file.isError) {
         this.isError = true;
         return { data, flags, links };

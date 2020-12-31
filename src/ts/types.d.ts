@@ -52,11 +52,18 @@ interface IFlags {
 
 type Dict<T> = { [index: string]: T }
 
+type TLink = {
+  href: string;
+  isExternal: boolean;
+  isMarkdown: boolean;
+  isImage: boolean;
+}
+
 type TFile = {
   path: string;
   data: string;
   flags: IFlags;
-  links: string[];
+  links: Dict<TLink>;
   isError?: boolean;
 }
 

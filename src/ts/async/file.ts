@@ -1,6 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
+import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/async/regexp';
 import { addCacheKey, isExternalLink, trimList } from '@/ts/async/utils';
@@ -13,24 +14,78 @@ export function createErrorFile(path: string): TFile {
     flags: {
       title: shortenPath(path),
     },
-    links: [],
+    links: {},
     isError: true,
   };
 }
 
 const cachedBacklinks: Dict<string[]> = {};
 
-function parseData(path: string, data: string): TFile {
+let markdownTs: TMarkdownTs | null = null;
+
+async function getLinks(path: string, data: string) {
+  if (!markdownTs) {
+    markdownTs = await importMarkdownTs();
+  }
+  const links: Dict<TLink> = {};
+  for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data))) {
+    if (token.type !== 'inline') {
+      continue;
+    }
+    for (const child of token.children || []) {
+      if (!['link_open', 'image'].includes(child.type)) {
+        continue;
+      }
+      let href = '';
+      let mdHref = '';
+      let isImage = false;
+      if (child.type === 'link_open') {
+        href = child.attrGet('href') || '';
+        if (href.startsWith('/')) {
+          mdHref = checkLinkPath(href);
+        }
+      } else {
+        href = child.attrGet('src') || '';
+        isImage = true;
+      }
+      if (!href || mdHref && mdHref === path) {
+        continue;
+      }
+      const key = mdHref || href;
+      if (links[key] !== undefined) {
+        continue;
+      }
+      const isMarkdown = !!mdHref;
+      links[key] = {
+        href: key,
+        isExternal: isMarkdown ? false : isExternalLink(href),
+        isMarkdown,
+        isImage,
+      };
+      if (!isMarkdown) {
+        continue;
+      }
+      let backlinks = cachedBacklinks[mdHref];
+      if (backlinks === undefined) {
+        backlinks = [path];
+        cachedBacklinks[mdHref] = backlinks;
+      } else if (!backlinks.includes(path)) {
+        backlinks.push(path);
+      }
+    }
+  }
+  return links;
+}
+
+async function parseData(path: string, data: string): Promise<TFile> {
   const flags: IFlags = {
     title: shortenPath(path),
   };
-  const links: string[] = [];
   if (!data) {
-    return { path, data, flags, links };
+    return { path, data, flags, links: {} };
   }
   const flagRegExp = getWrapRegExp(`^@(\\S+?):`, '$');
   const titleRegExp = getHeadingRegExp(1, 1);
-  const linkRegExp = getLinkRegExp(true, false, false, 'g');
   data = data.split('\n').map(line => {
     line = line.trimEnd();
     const flagMatch = line.match(flagRegExp);
@@ -49,23 +104,6 @@ function parseData(path: string, data: string): TFile {
         flags.title = titleMatch[2];
       }
       return '';
-    }
-    let linkMatch = linkRegExp.exec(line);
-    while (linkMatch) {
-      const linkPath = checkLinkPath(linkMatch[2]);
-      if (!linkPath || linkPath === path || links.includes(linkPath)) {
-        linkMatch = linkRegExp.exec(line);
-        continue;
-      }
-      links.push(linkPath);
-      let backlinks = cachedBacklinks[linkPath];
-      if (backlinks === undefined) {
-        backlinks = [path];
-        cachedBacklinks[linkPath] = backlinks;
-      } else if (!backlinks.includes(path)) {
-        backlinks.push(path);
-      }
-      linkMatch = linkRegExp.exec(line);
     }
     return line;
   }).join('\n').trim();
@@ -103,7 +141,7 @@ function parseData(path: string, data: string): TFile {
       }
     }
   }
-  return { path, data, flags, links };
+  return { path, data, flags, links: await getLinks(path, data) };
 }
 
 let noCache = false;
@@ -135,8 +173,8 @@ export async function getFile(path: string) {
     return cachedFiles[path];
   }
   return new Promise<TFile>(resolve => {
-    axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(response => {
-      cachedFiles[path] = parseData(path, response.data.trim());
+    axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(async response => {
+      cachedFiles[path] = await parseData(path, response.data.trim());
     }).catch(() => {
       cachedFiles[path] = createErrorFile(path);
     }).finally(() => {
@@ -154,7 +192,11 @@ async function walkFiles(files: TFile[]) {
     if (file.isError) {
       continue;
     }
-    for (const path of file.links) {
+    for (const link of Object.values(file.links)) {
+      if (!link.isMarkdown) {
+        continue;
+      }
+      const path = link.href;
       if (paths.includes(path) || cachedFiles[path] !== undefined && walkedPaths.includes(path)) {
         continue;
       }

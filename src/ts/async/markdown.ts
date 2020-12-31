@@ -267,6 +267,10 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
   return icon + defaultLinkCloseRenderRule(tokens, idx, options, env, self);
 };
 
+export function parseMD(data: string) {
+  return markdownIt.parse(data, {});
+}
+
 export function renderMD(data: string) {
   data = data.replaceAll(snippetMark, '');
   const tocRegExp = getMarkRegExp(EMark.toc);
