@@ -10,7 +10,8 @@ import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
-import { addCacheKey, escapeHTML, stringifyAnyValue, trimList } from '@/ts/async/utils';
+import { addCacheKey, stringifyAnyValue, trimList } from '@/ts/async/utils';
+import { escapeHtml } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
 let asyncScriptCount = 0;
@@ -405,10 +406,10 @@ export async function updateSearchPage(content: string) {
       }
       const endIndex = regexp.lastIndex + offset;
       const lastIndex = results.length - 1 as number;
-      let result = `<span class="highlight">${escapeHTML(match[0])}</span>` +
-        escapeHTML(data.substring(match.index + match[0].length, endIndex).trimEnd());
+      let result = `<span class="highlight">${escapeHtml(match[0])}</span>` +
+        escapeHtml(data.substring(match.index + match[0].length, endIndex).trimEnd());
       if (startIndex > prevEndIndex) {
-        results.push(escapeHTML(data.substring(startIndex, match.index).trimStart()) + result);
+        results.push(escapeHtml(data.substring(startIndex, match.index).trimStart()) + result);
         prevEndIndex = endIndex;
         match = regexp.exec(data);
         continue;
@@ -420,7 +421,7 @@ export async function updateSearchPage(content: string) {
           results[lastIndex] = lastResult.substring(0, lastResult.length - (startIndex - match.index));
         }
       } else if (startIndex < match.index) {
-        result = escapeHTML(data.substring(startIndex, match.index).trimStart()) + result;
+        result = escapeHtml(data.substring(startIndex, match.index).trimStart()) + result;
       }
       if (lastIndex >= 0) {
         results[lastIndex] += result;

@@ -4,17 +4,6 @@ import { cleanBaseUrl } from '@/ts/path';
 import { destructors } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 
-const htmlSymbolDict: Dict<string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-};
-const htmlSymbolRegExp = new RegExp(`[${Object.keys(htmlSymbolDict).join('')}]`, 'g');
-
-export function escapeHTML(html: string) {
-  return html.replace(htmlSymbolRegExp, key => htmlSymbolDict[key]);
-}
-
 export function trimList(list: string[], distinct = true) {
   list = list.map(item => item.trim()).filter(item => item);
   return distinct ? Array.from(new Set(list)) : list;
