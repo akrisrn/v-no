@@ -1,4 +1,5 @@
 import { config } from '@/ts/config';
+import { getSyncSpan } from '@/ts/element';
 import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
 import { destructors } from '@/ts/utils';
@@ -42,6 +43,21 @@ export function stringifyAnyValue(value: any) {
       return Object.prototype.toString.call(value);
   }
   return `${value}`;
+}
+
+let asyncScriptCount = 0;
+
+export function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = []) {
+  const paras = Object.keys(params).join();
+  const args = Object.values(params);
+  if (evalStr.indexOf('await ') >= 0) {
+    const id = `async-script-${++asyncScriptCount}`;
+    eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
+      asyncResults.push([id, stringifyAnyValue(result)]);
+    });
+    return getSyncSpan(id);
+  }
+  return stringifyAnyValue(eval(`(function(${paras}) {${evalStr}})`)(...args));
 }
 
 // noinspection JSUnusedGlobalSymbols

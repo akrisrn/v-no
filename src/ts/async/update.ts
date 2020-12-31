@@ -10,24 +10,9 @@ import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
 import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
-import { addCacheKey, stringifyAnyValue, trimList } from '@/ts/async/utils';
+import { addCacheKey, evalFunction, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
-
-let asyncScriptCount = 0;
-
-function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = []) {
-  const paras = Object.keys(params).join();
-  const args = Object.values(params);
-  if (evalStr.indexOf('await ') >= 0) {
-    const id = `async-script-${++asyncScriptCount}`;
-    eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
-      asyncResults.push([id, stringifyAnyValue(result)]);
-    });
-    return getSyncSpan(id);
-  }
-  return stringifyAnyValue(eval(`(function(${paras}) {${evalStr}})`)(...args));
-}
 
 export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
