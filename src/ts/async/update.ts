@@ -14,18 +14,6 @@ import { addCacheKey, evalFunction, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync = false) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
-    let result: string;
-    try {
-      result = evalFunction(evalStr, { path, data }, asyncResults, ignoreAsync);
-    } catch (e) {
-      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
-    }
-    return result;
-  }).trim();
-}
-
 export function updateAsyncScript([id, result]: [string, string]) {
   const span = document.querySelector(`span#${id}`);
   if (!span) {
@@ -51,6 +39,18 @@ export function updateAsyncScript([id, result]: [string, string]) {
     span.outerHTML = result;
   }
   return true;
+}
+
+export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync = false) {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
+    let result: string;
+    try {
+      result = evalFunction(evalStr, { path, data }, asyncResults, ignoreAsync);
+    } catch (e) {
+      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
+    }
+    return result;
+  }).trim();
 }
 
 function degradeHeading(data: string, level: number) {
@@ -455,17 +455,109 @@ export async function updateSearchPage(content: string) {
   dispatchEvent(EEvent.searchCompleted, { number, count, time }, 100).then();
 }
 
-function updateDD() {
-  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
-    if (p.innerHTML.startsWith(': ')) {
-      p.outerHTML = `<dl><dd>${p.innerHTML.substr(2).trimStart()}</dd></dl>`;
+let waitingList: [HTMLAnchorElement[], [HTMLAnchorElement, HTMLHeadingElement][]] = [[], []];
+
+function getHeadingText(heading: HTMLHeadingElement) {
+  return heading.innerText.substr(2).trim() || `[${null}]`;
+}
+
+function updateLinkPath() {
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
+    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
+    if (!path) {
+      continue;
     }
-  });
-  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
-    if (dt.innerHTML.startsWith(': ')) {
-      dt.outerHTML = `<dd>${dt.innerHTML.substr(2).trimStart()}</dd>`;
+    if (path === state.filePath) {
+      a.classList.add('self');
+    } else {
+      removeClass(a, 'self');
     }
-  });
+    if (a.innerHTML !== '') {
+      continue;
+    }
+    a.innerHTML = getSyncSpan();
+    a.classList.add('rendering');
+    getFile(path).then(file => {
+      if (file.isError) {
+        a.classList.add('error');
+      }
+      a.innerHTML = file.flags.title;
+      const parent = a.parentElement!;
+      if (parent.tagName !== 'LI') {
+        return;
+      }
+      let isPass = true;
+      let hasQuote = false;
+      if (parent.childNodes[0].nodeType === 1) {
+        if (parent.childElementCount === 1) {
+          isPass = false;
+        } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
+          isPass = false;
+          hasQuote = true;
+        }
+      }
+      if (isPass) {
+        return;
+      }
+      if (hasQuote) {
+        parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
+      }
+      createList(file, parent as HTMLLIElement);
+    }).finally(() => {
+      removeClass(a, 'rendering');
+      const indexOf = waitingList[0].indexOf(a);
+      if (indexOf >= 0) {
+        const waitingItem = waitingList[1][indexOf];
+        waitingItem[0].innerHTML = getHeadingText(waitingItem[1]);
+      }
+    });
+  }
+}
+
+function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
+  for (const a of links) {
+    if (!new RegExp(`${isScript ? '\\$' : '\\*'}+`).test(a.innerText)) {
+      continue;
+    }
+    let href = a.getAttribute('href')!;
+    let element;
+    if (isScript) {
+      element = document.querySelector<HTMLScriptElement>(`script[src^="${href}"]`);
+    } else {
+      element = document.querySelector<HTMLLinkElement>(`link[href^="${href}"]`);
+    }
+    if (element) {
+      const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
+      if (!nextChar || nextChar === '?') {
+        a.parentElement!.remove();
+        continue;
+      }
+    }
+    href = addCacheKey(href);
+    if (isScript) {
+      element = document.createElement('script');
+      element.charset = 'utf-8';
+      element.src = href;
+    } else {
+      element = document.createElement('link');
+      element.rel = 'stylesheet';
+      element.type = 'text/css';
+      element.href = href;
+    }
+    if (a.innerText.length === 1) {
+      element.classList.add('custom');
+    }
+    document.head.append(element);
+    a.parentElement!.remove();
+  }
+}
+
+function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
+  updateCustom(links, false);
+}
+
+function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
+  updateCustom(links, true);
 }
 
 function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, links: NodeListOf<HTMLAnchorElement>) {
@@ -593,109 +685,17 @@ function updateImagePath() {
   }
 }
 
-let waitingList: [HTMLAnchorElement[], [HTMLAnchorElement, HTMLHeadingElement][]] = [[], []];
-
-function getHeadingText(heading: HTMLHeadingElement) {
-  return heading.innerText.substr(2).trim() || `[${null}]`;
-}
-
-function updateLinkPath() {
-  for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
-    if (!path) {
-      continue;
+function updateDD() {
+  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
+    if (p.innerHTML.startsWith(': ')) {
+      p.outerHTML = `<dl><dd>${p.innerHTML.substr(2).trimStart()}</dd></dl>`;
     }
-    if (path === state.filePath) {
-      a.classList.add('self');
-    } else {
-      removeClass(a, 'self');
+  });
+  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
+    if (dt.innerHTML.startsWith(': ')) {
+      dt.outerHTML = `<dd>${dt.innerHTML.substr(2).trimStart()}</dd>`;
     }
-    if (a.innerHTML !== '') {
-      continue;
-    }
-    a.innerHTML = getSyncSpan();
-    a.classList.add('rendering');
-    getFile(path).then(file => {
-      if (file.isError) {
-        a.classList.add('error');
-      }
-      a.innerHTML = file.flags.title;
-      const parent = a.parentElement!;
-      if (parent.tagName !== 'LI') {
-        return;
-      }
-      let isPass = true;
-      let hasQuote = false;
-      if (parent.childNodes[0].nodeType === 1) {
-        if (parent.childElementCount === 1) {
-          isPass = false;
-        } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
-          isPass = false;
-          hasQuote = true;
-        }
-      }
-      if (isPass) {
-        return;
-      }
-      if (hasQuote) {
-        parent.parentElement!.insertBefore(parent.lastElementChild!, parent.nextElementSibling);
-      }
-      createList(file, parent as HTMLLIElement);
-    }).finally(() => {
-      removeClass(a, 'rendering');
-      const indexOf = waitingList[0].indexOf(a);
-      if (indexOf >= 0) {
-        const waitingItem = waitingList[1][indexOf];
-        waitingItem[0].innerHTML = getHeadingText(waitingItem[1]);
-      }
-    });
-  }
-}
-
-function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
-  for (const a of links) {
-    if (!new RegExp(`${isScript ? '\\$' : '\\*'}+`).test(a.innerText)) {
-      continue;
-    }
-    let href = a.getAttribute('href')!;
-    let element;
-    if (isScript) {
-      element = document.querySelector<HTMLScriptElement>(`script[src^="${href}"]`);
-    } else {
-      element = document.querySelector<HTMLLinkElement>(`link[href^="${href}"]`);
-    }
-    if (element) {
-      const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
-      if (!nextChar || nextChar === '?') {
-        a.parentElement!.remove();
-        continue;
-      }
-    }
-    href = addCacheKey(href);
-    if (isScript) {
-      element = document.createElement('script');
-      element.charset = 'utf-8';
-      element.src = href;
-    } else {
-      element = document.createElement('link');
-      element.rel = 'stylesheet';
-      element.type = 'text/css';
-      element.href = href;
-    }
-    if (a.innerText.length === 1) {
-      element.classList.add('custom');
-    }
-    document.head.append(element);
-    a.parentElement!.remove();
-  }
-}
-
-function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
-  updateCustom(links, false);
-}
-
-function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
-  updateCustom(links, true);
+  });
 }
 
 let prismjsTs: TPrismjsTs | null = null;
@@ -903,14 +903,14 @@ function updateHeading() {
 
 export async function updateDom() {
   waitingList = [[], []];
-  updateDD();
-  const [anchorRegExp, anchorDict] = updateAnchor();
-  updateImagePath();
   updateLinkPath();
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
   const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
   updateCustomStyle(styles);
   updateCustomScript(scripts);
+  const [anchorRegExp, anchorDict] = updateAnchor();
+  updateImagePath();
+  updateDD();
   await updateHighlight();
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
