@@ -2,14 +2,14 @@ import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
 import { EEvent, EFlag, EMark } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
-import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
+import { getAnchorRegExp, getMarkRegExp, getSnippetRegExp } from '@/ts/regexp';
 import { state } from '@/ts/store';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
-import { getHeadingRegExp, getSnippetRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
+import { getHeadingRegExp, getWrapRegExp, replaceByRegExp } from '@/ts/async/regexp';
 import { addCacheKey, evalFunction, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
@@ -915,5 +915,3 @@ export async function updateDom() {
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
 }
-
-export { getSnippetRegExp };

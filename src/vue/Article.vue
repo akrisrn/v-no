@@ -7,7 +7,7 @@
   import { dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
   import { EEvent, EMark } from '@/ts/enums';
   import { changeAnchor, changeQueryContent } from '@/ts/path';
-  import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
+  import { getAnchorRegExp, getMarkRegExp, getSnippetRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importMarkdownTs } from '@/ts/async';
@@ -64,7 +64,7 @@
         return;
       }
       const span = getSyncSpan();
-      const loadingData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
+      const loadingData = data.replace(getSnippetRegExp('gm'), span)
           .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
       this.updateRenderData(loadingData).then(() => {
