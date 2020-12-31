@@ -850,9 +850,15 @@ function updateHeading() {
     return;
   }
   const headingList: THeading[] = [];
-  (header.children as THeading[]).forEach(heading => {
+  for (const heading of (header.children as THeading[])) {
+    if (!heading.parent) {
+      headingList.push(heading);
+    }
     const headingElement = heading.element;
-    const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag')!;
+    const headingTag = headingElement.querySelector<HTMLSpanElement>('.heading-tag');
+    if (!headingTag) {
+      continue;
+    }
     const toggleFold = () => {
       heading.isFolded = !heading.isFolded;
       if (heading.isFolded) {
@@ -866,10 +872,7 @@ function updateHeading() {
       toggleFold();
     }
     addEventListener(headingTag, 'click', toggleFold);
-    if (!heading.parent) {
-      headingList.push(heading);
-    }
-  });
+  }
   if (!tocDiv) {
     return;
   }
