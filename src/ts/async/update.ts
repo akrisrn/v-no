@@ -569,7 +569,7 @@ function updateImagePath() {
         removeClass(img, cls);
       }
     });
-    if (parent.childNodes.length === 1) {
+    if (parent.childNodes.length === 1 && !img.classList.contains('emoji')) {
       if (['DT', 'DD'].includes(parent.tagName)) {
         parent.parentElement!.classList.add('center');
       } else if (parent.tagName === 'P') {
@@ -698,6 +698,8 @@ function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
   updateCustom(links, true);
 }
 
+let prismjsTs: TPrismjsTs | null = null;
+
 export async function updateHighlight() {
   const codes = document.querySelectorAll('article pre > code');
   if (codes.length === 0) {
@@ -721,7 +723,10 @@ export async function updateHighlight() {
     }
   }
   if (needHighlight) {
-    (await importPrismjsTs()).highlightAll();
+    if (!prismjsTs) {
+      prismjsTs = await importPrismjsTs();
+    }
+    prismjsTs.highlightAll();
   }
 }
 

@@ -78,9 +78,7 @@ async function getLinks(path: string, data: string) {
 }
 
 async function parseData(path: string, data: string): Promise<TFile> {
-  const flags: IFlags = {
-    title: shortenPath(path),
-  };
+  const flags: IFlags = { title: shortenPath(path) };
   if (!data) {
     return { path, data, flags, links: {} };
   }

@@ -67,25 +67,25 @@
       const loadingData = data.replace(this.markdownTs.getSnippetRegExp('gm'), span)
           .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
-      this.updateRenderData(loadingData).then(() => Promise.all([
-        this.markdownTs.updateSnippet(data, this.asyncResults),
-        this.markdownTs.updateDom(),
-      ]).then(([data]) => {
-        if (!data) {
-          this.updateRenderData().then(() => this.renderComplete());
-          return;
-        }
-        this.markdownTs.updateList(data).then(data => {
-          if (!data || !this.isSearchFile) {
-            this.updateRenderData(data).then(() => this.renderComplete());
+      this.updateRenderData(loadingData).then(() => {
+        this.markdownTs.updateDom();
+        this.markdownTs.updateSnippet(data, this.asyncResults).then(data => {
+          if (!data) {
+            this.updateRenderData().then(() => this.renderComplete());
             return;
           }
-          this.updateRenderData(this.markdownTs.preprocessSearchPage(data)).then(() => {
-            this.renderComplete();
-            this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
+          this.markdownTs.updateList(data).then(data => {
+            if (!data || !this.isSearchFile) {
+              this.updateRenderData(data).then(() => this.renderComplete());
+              return;
+            }
+            this.updateRenderData(this.markdownTs.preprocessSearchPage(data)).then(() => {
+              this.renderComplete();
+              this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
+            });
           });
         });
-      }));
+      });
     }
 
     async updateRenderData(data = '') {
@@ -133,13 +133,15 @@
 
     @Watch('asyncResults')
     onAsyncResultsChanged() {
-      const result = this.asyncResults[this.asyncResults.length - 1];
-      if (!this.markdownTs.updateAsyncScript(result)) {
+      if (this.asyncResults.length === 0) {
         return;
       }
-      this.markdownTs.updateDom();
+      const result = this.asyncResults[this.asyncResults.length - 1];
       if (this.isRendering) {
         this.resultsBeforeRendered.push(result);
+      }
+      if (this.markdownTs.updateAsyncScript(result)) {
+        this.markdownTs.updateDom();
       }
     }
 
@@ -151,7 +153,9 @@
     @Watch('fileData')
     @Watch('showTime')
     onShowTimeChanged() {
-      this.renderMD();
+      if (!this.isRendering) {
+        this.renderMD();
+      }
     }
 
     @Watch('html')
