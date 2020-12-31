@@ -54,8 +54,8 @@
     }
 
     renderMD(data = this.fileData) {
-      this.startTime = new Date().getTime();
       this.isRendering = true;
+      this.startTime = new Date().getTime();
       if (data) {
         data = this.markdownTs.replaceInlineScript(this.filePath, data, this.asyncResults);
       }
@@ -120,8 +120,7 @@
 
     @Watch('anchor')
     scrollToAnchor() {
-      const anchorRegExp = getAnchorRegExp();
-      if (!anchorRegExp.test(this.anchor)) {
+      if (!getAnchorRegExp().test(this.anchor)) {
         return;
       }
       const element = document.querySelector<HTMLElement>(`article > *[id="${this.anchor}"]`);

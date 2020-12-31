@@ -13,8 +13,8 @@ export function bang() {
   exposeToWindow({
     Vue,
     version: process.env.VUE_APP_VERSION,
-    addInputBinds,
     destructors,
+    addInputBinds,
     config, element, enums, path, store, utils,
   });
   importFileTs().then(file => exposeToWindow({ file }));

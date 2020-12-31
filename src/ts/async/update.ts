@@ -369,8 +369,6 @@ export async function updateSearchPage(content: string) {
       continue;
     }
     count++;
-    const data = file.data;
-    const path = file.path;
     const [found, inData] = findIn(file, queryParams);
     if (!found) {
       continue;
@@ -379,6 +377,8 @@ export async function updateSearchPage(content: string) {
     if (!inData) {
       continue;
     }
+    const path = file.path;
+    const data = file.data;
     const results = [];
     let prevEndIndex = 0;
     const regexp = new RegExp(escapeRE(queryParams[0]), 'ig');

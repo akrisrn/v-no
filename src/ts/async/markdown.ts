@@ -85,9 +85,8 @@ const getDefaultRenderRule = (name: string) => {
   };
 };
 
-const replacer = config.replacer;
 const replacerList: [RegExp, string][] = [];
-replacer?.forEach(item => {
+config.replacer?.forEach(item => {
   try {
     replacerList.push([new RegExp(item[0], 'g'), item[1]]);
   } catch (e) {

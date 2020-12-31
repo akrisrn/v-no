@@ -87,9 +87,8 @@
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 
-    isShow = false;
     showTime = 0;
-
+    isShow = false;
     isError = false;
 
     isRedirectPage = false;
@@ -286,7 +285,7 @@
     setData(data: string, flags: IFlags, links: string[]) {
       this.setFlags(flags);
       this.fileData = data;
-      this.links = [...links];
+      this.links = links;
       this.isShow = true;
       this.showTime = new Date().getTime();
       this.$nextTick(() => dispatchEvent(EEvent.mainShown, this.showTime));
@@ -335,7 +334,11 @@
       if (paths && paths.length > 0) {
         this.backlinks = [...paths];
         this.backlinkFiles = paths.map(path => {
-          return JSON.parse(JSON.stringify(files[path])) as TFile;
+          const file = files[path];
+          return {
+            path: file.path,
+            flags: JSON.parse(JSON.stringify(file.flags)),
+          } as TFile;
         }).sort(this.fileTs.sortFiles);
       } else {
         this.backlinks = [];
@@ -349,10 +352,12 @@
 
     @Watch('title')
     onTitleChanged() {
-      document.title = this.title;
-      if (this.config.siteName && this.config.siteName !== this.title) {
-        document.title += ` - ${this.config.siteName}`;
+      let title = this.title;
+      const siteName = this.config.siteName;
+      if (siteName && siteName !== this.title) {
+        title += ` - ${siteName}`;
       }
+      document.title = title;
     }
 
     @Watch('cover')
