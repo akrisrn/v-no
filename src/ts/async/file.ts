@@ -28,7 +28,7 @@ async function getLinks(path: string, data: string) {
     markdownTs = await importMarkdownTs();
   }
   const links: Dict<TLink> = {};
-  for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data))) {
+  for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data, [], true))) {
     if (token.type !== 'inline') {
       continue;
     }

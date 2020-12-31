@@ -47,10 +47,10 @@ export function stringifyAnyValue(value: any) {
 
 let asyncScriptCount = 0;
 
-export function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = []) {
+export function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = [], ignoreAsync = false) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
-  if (evalStr.indexOf('await ') >= 0) {
+  if (!ignoreAsync && evalStr.indexOf('await ') >= 0) {
     const id = `async-script-${++asyncScriptCount}`;
     eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
       asyncResults.push([id, stringifyAnyValue(result)]);

@@ -14,11 +14,11 @@ import { addCacheKey, evalFunction, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][]) {
+export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync = false) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
     let result: string;
     try {
-      result = evalFunction(evalStr, { path, data }, asyncResults);
+      result = evalFunction(evalStr, { path, data }, asyncResults, ignoreAsync);
     } catch (e) {
       result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
