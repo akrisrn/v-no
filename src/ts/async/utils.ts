@@ -50,9 +50,13 @@ let asyncScriptCount = 0;
 export function evalFunction(evalStr: string, params: Dict<string>, asyncResults: [string, string][] = [], ignoreAsync = false) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
-  if (!ignoreAsync && evalStr.indexOf('await ') >= 0) {
+  if (evalStr.indexOf('await ') >= 0) {
+    const func = eval(`(async function(${paras}) {${evalStr}})`);
+    if (ignoreAsync) {
+      return stringifyAnyValue(func);
+    }
     const id = `async-script-${++asyncScriptCount}`;
-    eval(`(async function(${paras}) {${evalStr}})`)(...args).then((result: any) => {
+    func(...args).then((result: any) => {
       asyncResults.push([id, stringifyAnyValue(result)]);
     });
     return getSyncSpan(id);
