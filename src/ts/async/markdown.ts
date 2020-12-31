@@ -278,4 +278,5 @@ export function renderMD(data: string) {
   return markdownIt.render(data).trim();
 }
 
+export { markdownIt };
 export * from '@/ts/async/update';

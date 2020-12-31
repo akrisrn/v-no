@@ -21,6 +21,7 @@ export function bang() {
   importMarkdownTs().then(markdown => {
     exposeToWindow({
       markdown,
+      markdownIt: markdown.markdownIt,
       renderMD: async (path: string, data: string, asyncResults?: [string, string][]) => {
         data = data.trim();
         if (!data) {
