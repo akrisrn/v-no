@@ -209,12 +209,25 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
     if (data.toLowerCase().indexOf(keyword) >= 0) {
       return [true, true];
     }
+    return [false];
   }
   if (!value) {
     return [false];
   }
   if (![EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
-    return [Object.keys(flags).includes(flag) && flags[flag]!.indexOf(value) >= 0];
+    if (!Object.keys(flags).includes(flag)) {
+      return [false];
+    }
+    const flagValue = flags[flag];
+    if (typeof flagValue === 'string') {
+      return [flagValue.toLowerCase().indexOf(value) >= 0];
+    }
+    for (const item of flagValue) {
+      if (`${item}`.toLowerCase().indexOf(value) >= 0) {
+        return [true];
+      }
+    }
+    return [false];
   }
   const trimValue = trimList(value.split('/'), false).join('/');
   if (flag === EFlag.tags) {

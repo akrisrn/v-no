@@ -47,7 +47,7 @@ interface IFlags {
   creator?: string;
   updater?: string;
 
-  [index: string]: string[] | string | undefined;
+  [index: string]: string | string[] | number[];
 }
 
 type Dict<T> = { [index: string]: T }
