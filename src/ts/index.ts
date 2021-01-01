@@ -31,7 +31,7 @@ export function bang() {
         if (!data) {
           return '';
         }
-        data = await markdown.updateSnippet(data, asyncResults);
+        data = await markdown.updateSnippet(data, [path], asyncResults);
         if (!data) {
           return '';
         }

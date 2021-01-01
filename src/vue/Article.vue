@@ -69,7 +69,7 @@
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
       this.updateRenderData(loadingData).then(() => {
         this.markdownTs.updateDom();
-        this.markdownTs.updateSnippet(data, this.asyncResults).then(data => {
+        this.markdownTs.updateSnippet(data, [this.filePath], this.asyncResults).then(data => {
           if (!data) {
             this.updateRenderData().then(() => this.renderComplete());
             return;

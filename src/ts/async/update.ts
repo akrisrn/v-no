@@ -75,7 +75,7 @@ function degradeHeading(data: string, level: number) {
   }).join('\n');
 }
 
-export async function updateSnippet(data: string, asyncResults?: [string, string][], updatedPaths: string[] = []) {
+export async function updateSnippet(data: string, updatedPaths: string[] = [], asyncResults?: [string, string][]) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {
@@ -120,11 +120,7 @@ export async function updateSnippet(data: string, asyncResults?: [string, string
     return data;
   }
   const paramRegExp = getWrapRegExp('{{', '}}', 'g');
-  const files = await Promise.all(paths.map(path => {
-    updatedPaths.push(path);
-    return getFile(path);
-  }));
-  for (const file of files) {
+  for (const file of await Promise.all(paths.map(path => getFile(path)))) {
     const isError = file.isError;
     const path = file.path;
     const fileData = file.data;
@@ -180,7 +176,7 @@ export async function updateSnippet(data: string, asyncResults?: [string, string
         }
       }
       if (snippetData) {
-        snippetData = await updateSnippet(dataWithHeading, asyncResults, [...updatedPaths]);
+        snippetData = await updateSnippet(dataWithHeading, [path, ...updatedPaths], asyncResults);
       } else if (dataWithHeading) {
         snippetData = dataWithHeading;
       }
