@@ -182,9 +182,7 @@ export async function getFile(path: string) {
   });
 }
 
-const walkedPaths = [...baseFiles];
-
-async function walkFiles(files: TFile[]) {
+async function walkFiles(files: TFile[], walkedPaths: string[]) {
   const paths: string[] = [];
   for (const file of files) {
     if (file.isError) {
@@ -203,7 +201,7 @@ async function walkFiles(files: TFile[]) {
     }
   }
   if (paths.length > 0) {
-    await walkFiles(await Promise.all(paths.map(path => getFile(path))));
+    await walkFiles(await Promise.all(paths.map(path => getFile(path))), walkedPaths);
   }
 }
 
@@ -211,7 +209,7 @@ let isCacheCompleted = false;
 
 export async function getFiles() {
   if (noCache || !isCacheCompleted) {
-    await walkFiles(await Promise.all(baseFiles.map(path => getFile(path))));
+    await walkFiles(await Promise.all(baseFiles.map(path => getFile(path))), [...baseFiles]);
     isCacheCompleted = true;
   }
   return { files: cachedFiles, backlinks: cachedBacklinks };
