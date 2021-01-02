@@ -26,8 +26,9 @@
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import Gadget from '@/vue/Gadget.vue';
   import { Component, Vue, Watch } from 'vue-property-decorator';
+
+  const Gadget = () => import(/* webpackChunkName: "main" */ '@/vue/Gadget.vue');
 
   @Component({ components: { Gadget } })
   export default class App extends Vue {
