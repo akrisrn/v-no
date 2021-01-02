@@ -42,7 +42,7 @@ export function updateAsyncScript([id, result]: [string, string]) {
 }
 
 export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync = false) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, evalStr => {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
     let result: string;
     try {
       result = evalFunction(evalStr, { path, data }, asyncResults, ignoreAsync);
@@ -129,7 +129,7 @@ export async function updateSnippet(data: string, updatedPaths: string[] = [], a
       const [heading, params] = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
-        snippetData = replaceByRegExp(paramRegExp, snippetData, match => {
+        snippetData = replaceByRegExp(paramRegExp, snippetData, ([match]) => {
           let defaultValue: string | undefined = undefined;
           const [key, value] = chopStr(match, '|');
           if (value !== null) {
@@ -290,7 +290,7 @@ export async function updateList(data: string) {
   const { files } = await getFiles();
   if (!isAll) {
     const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
-    return replaceByRegExp(listRegExpG, data, content => {
+    return replaceByRegExp(listRegExpG, data, ([content]) => {
       const queryParams = getQueryParams(content);
       const resultFiles: TFile[] = [];
       for (const file of fileList) {

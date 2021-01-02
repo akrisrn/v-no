@@ -99,7 +99,7 @@ const defaultTextRenderRule = getDefaultRenderRule('text');
 markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
   let content = token.content;
-  content = replaceByRegExp(/(\\u[0-9a-f]{4}|u\+[0-9a-f]{4,6})/ig, content, match => {
+  content = replaceByRegExp(/(\\u[0-9a-f]{4}|u\+[0-9a-f]{4,6})/ig, content, ([match]) => {
     const code = parseInt(match.substr(2), 16);
     return match.startsWith('\\') ? String.fromCharCode(code) : fromCodePoint(code);
   });

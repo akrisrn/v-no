@@ -19,13 +19,13 @@ export function getLinkRegExp(startWithSlash = false, isImg = false, isLine = fa
   return new RegExp(pattern, flags);
 }
 
-export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string) => string) {
+export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string) {
   let newData = '';
   let start = 0;
   let match = regexp.exec(data);
   while (match) {
-    const [match0, value] = match;
-    newData += data.substring(start, match.index) + callback(value);
+    const [match0, ...matches] = match;
+    newData += data.substring(start, match.index) + callback(matches);
     start = match.index + match0.length;
     match = regexp.exec(data);
   }
