@@ -12,14 +12,14 @@ export function trimList(list: string[], distinct = true) {
 }
 
 export function addCacheKey(path: string, needClean = true) {
-  if (isCached()) {
-    let cacheKey = config.cacheKey;
-    if (typeof cacheKey === 'object') {
-      cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
-    }
-    return cacheKey ? `${path}?${cacheKey}` : path;
+  if (!isCached()) {
+    return `${path}?t=${new Date().getTime()}`;
   }
-  return `${path}?t=${new Date().getTime()}`;
+  let cacheKey = config.cacheKey;
+  if (typeof cacheKey === 'object') {
+    cacheKey = cacheKey[needClean ? cleanBaseUrl(path) : path];
+  }
+  return cacheKey ? `${path}?${cacheKey}` : path;
 }
 
 export function isExternalLink(href: string) {

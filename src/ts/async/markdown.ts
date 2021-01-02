@@ -103,10 +103,6 @@ markdownIt.renderer.rules.text = (tokens, idx, options, env, self) => {
     const code = parseInt(match.substr(2), 16);
     return match.startsWith('\\') ? String.fromCharCode(code) : fromCodePoint(code);
   });
-  if (replacerList.length === 0) {
-    token.content = content;
-    return defaultTextRenderRule(tokens, idx, options, env, self);
-  }
   replacerList.forEach(item => {
     content = content.replace(item[0], item[1]);
   });
@@ -193,7 +189,10 @@ markdownIt.renderer.rules.heading_close = (tokens, idx, options, env, self) => {
 const defaultImageRenderRule = getDefaultRenderRule('image');
 markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  const src = token.attrGet('src')!;
+  const src = token.attrGet('src');
+  if (!src) {
+    return defaultImageRenderRule(tokens, idx, options, env, self);
+  }
   if (!isExternalLink(src)) {
     token.attrSet('src', addBaseUrl(src));
   }
@@ -227,7 +226,10 @@ let isExternal = false;
 const defaultLinkRenderRule = getDefaultRenderRule('link_open');
 markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   const token = tokens[idx];
-  let href = token.attrGet('href')!;
+  let href = token.attrGet('href');
+  if (!href) {
+    return defaultLinkRenderRule(tokens, idx, options, env, self);
+  }
   if (isExternalLink(href)) {
     token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
@@ -272,11 +274,14 @@ export function parseMD(data: string) {
 
 export function renderMD(data: string) {
   data = data.replaceAll(snippetMark, '');
-  const tocRegExp = getMarkRegExp(EMark.toc);
-  const tocRegExpG = getMarkRegExp(EMark.toc, true, 'img');
-  if (tocRegExp.test(data)) {
-    data = data.replace(tocRegExp, '<div id="toc"></div>').replace(tocRegExpG, '');
-  }
+  let replaced = false;
+  data = replaceByRegExp(getMarkRegExp(EMark.toc, true, 'img'), data, () => {
+    if (!replaced) {
+      replaced = true;
+      return '<div id="toc"></div>';
+    }
+    return '';
+  });
   headingCount = {};
   return markdownIt.render(data).trim();
 }

@@ -343,10 +343,24 @@ export async function updateList(data: string) {
 }
 
 export function preprocessSearchPage(data: string) {
-  return data.replace(getMarkRegExp(`(${EMark.input})`), '<input id="search-$1" placeholder="$2"/>')
-    .replace(getMarkRegExp(`(${EMark.result})`), '<ul id="search-$1">$2</ul>')
-    .replace(getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img'), '')
-    .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), '<span class="search-$1">$2</span>');
+  const replaced = [false, false];
+  let markRegExp = getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img');
+  data = replaceByRegExp(markRegExp, data, ([mark, content]) => {
+    if (mark === EMark.input) {
+      if (!replaced[0]) {
+        replaced[0] = true;
+        return `<input id="search-${mark}" placeholder="${content}"/>`;
+      }
+      return '';
+    }
+    if (!replaced[1]) {
+      replaced[1] = true;
+      return `<ul id="search-${mark}">${content}</ul>`;
+    }
+    return '';
+  });
+  markRegExp = getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig');
+  return data.replace(markRegExp, '<span class="search-$1">$2</span>');
 }
 
 export async function updateSearchPage(content: string) {
@@ -569,6 +583,8 @@ function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
   updateCustom(links, true);
 }
 
+const scrollOffset = 6;
+
 function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, links: NodeListOf<HTMLAnchorElement>) {
   for (const a of links) {
     const anchor = a.getAttribute('href')!.substr(1);
@@ -579,7 +595,7 @@ function updateLinkAnchor(anchorRegExp: RegExp, anchorDict: Dict<HTMLElement>, l
     addEventListener(a, 'click', e => {
       e.preventDefault();
       if (element && element.offsetTop > 0) {
-        scroll(element.offsetTop - 6);
+        scroll(element.offsetTop - scrollOffset);
         changeAnchor(anchor);
       }
     });
@@ -630,7 +646,7 @@ function updateAnchor() {
     addEventListener(a, 'click', e => {
       if (nearestElement.offsetTop > 0) {
         e.preventDefault();
-        scroll(nearestElement.offsetTop - 6);
+        scroll(nearestElement.offsetTop - scrollOffset);
         changeAnchor(nearestElement.id);
       }
     });
@@ -638,7 +654,7 @@ function updateAnchor() {
   document.querySelectorAll<HTMLSpanElement>('article .heading-link').forEach(headingLink => {
     const heading = headingLink.parentElement!;
     addEventListener(headingLink, 'click', () => {
-      scroll(heading.offsetTop - 6);
+      scroll(heading.offsetTop - scrollOffset);
       changeAnchor(heading.id);
     });
   });
@@ -646,12 +662,12 @@ function updateAnchor() {
     const fnref = document.getElementById(backref.getAttribute('href')!.substr(1))!;
     addEventListener(fnref, 'click', e => {
       e.preventDefault();
-      scroll(backref.offsetTop - 6);
+      scroll(backref.offsetTop - scrollOffset);
     });
     addEventListener(backref, 'click', e => {
       e.preventDefault();
       if (fnref.offsetTop > 0) {
-        scroll(fnref.offsetTop - 6);
+        scroll(fnref.offsetTop - scrollOffset);
       }
     });
   });

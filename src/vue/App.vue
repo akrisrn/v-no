@@ -71,7 +71,7 @@
         icon.remove();
       }
       addInputBinds({
-        home: () => this.returnHome(),
+        home: this.returnHome,
         Backspace: () => {
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },

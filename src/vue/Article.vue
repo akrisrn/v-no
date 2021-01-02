@@ -63,7 +63,7 @@
         this.updateRenderData().then(() => this.renderComplete());
         return;
       }
-      if (getMarkRegExp(EMark.list).test(data) || this.isSearchFile && this.queryContent) {
+      if (this.isSearchFile && this.queryContent || getMarkRegExp(EMark.list).test(data)) {
         importFileTs().then(file => file.getFiles());
       }
       const span = getSyncSpan();

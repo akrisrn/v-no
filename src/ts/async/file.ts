@@ -12,9 +12,7 @@ export function createErrorFile(path: string): TFile {
   return {
     path,
     data: config.messages.pageError,
-    flags: {
-      title: shortenPath(path),
-    },
+    flags: { title: shortenPath(path) },
     links: {},
     isError: true,
   };
@@ -188,7 +186,7 @@ async function parseData(path: string, data: string): Promise<TFile> {
   return { path, data, flags, links: await getLinks(path, data) };
 }
 
-let noCache = false;
+let noCache = !!localStorage.getItem('noCache');
 
 export function isCached() {
   return !noCache;
@@ -197,11 +195,13 @@ export function isCached() {
 // noinspection JSUnusedGlobalSymbols
 export function disableCache() {
   noCache = true;
+  localStorage.setItem('noCache', String(true));
 }
 
 // noinspection JSUnusedGlobalSymbols
 export function enableCache() {
   noCache = false;
+  localStorage.removeItem('noCache');
 }
 
 const isRequesting: Dict<boolean> = {};
