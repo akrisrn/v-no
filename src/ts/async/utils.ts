@@ -30,7 +30,7 @@ export function isExternalLink(href: string) {
   }
 }
 
-export function stringifyAnyValue(value: any) {
+export function stringifyAny(value: any) {
   switch (typeof value) {
     case 'object':
       try {
@@ -53,15 +53,15 @@ export function evalFunction(evalStr: string, params: Dict<string>, asyncResults
   if (evalStr.indexOf('await ') >= 0) {
     const func = eval(`(async function(${paras}) {${evalStr}})`);
     if (ignoreAsync) {
-      return stringifyAnyValue(func);
+      return stringifyAny(func);
     }
     const id = `async-script-${++asyncScriptCount}`;
     func(...args).then((result: any) => {
-      asyncResults.push([id, stringifyAnyValue(result)]);
+      asyncResults.push([id, stringifyAny(result)]);
     });
     return getSyncSpan(id);
   }
-  return stringifyAnyValue(eval(`(function(${paras}) {${evalStr}})`)(...args));
+  return stringifyAny(eval(`(function(${paras}) {${evalStr}})`)(...args));
 }
 
 // noinspection JSUnusedGlobalSymbols
