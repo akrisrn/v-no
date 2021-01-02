@@ -22,6 +22,8 @@
 <script lang="ts">
   import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf, shortBaseFiles } from '@/ts/config';
+  import { dispatchEvent } from '@/ts/element';
+  import { EEvent } from '@/ts/enums';
   import { addBaseUrl, returnHome } from '@/ts/path';
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
@@ -74,6 +76,7 @@
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
       });
+      dispatchEvent(EEvent.appCreated, new Date().getTime());
     }
 
     mounted() {

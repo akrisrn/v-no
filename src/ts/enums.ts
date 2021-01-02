@@ -32,6 +32,8 @@ export enum EIcon {
 }
 
 export enum EEvent {
+  appCreated = 'appCreated',
+  mainCreated = 'mainCreated',
   mainShown = 'mainShown',
   articleCreated = 'articleCreated',
   htmlChanged = 'htmlChanged',

@@ -179,6 +179,7 @@
         reload: this.reload,
         filePath: this.filePath,
       });
+      dispatchEvent(EEvent.mainCreated, new Date().getTime());
       this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
     }
 
