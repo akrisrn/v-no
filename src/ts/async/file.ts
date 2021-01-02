@@ -163,7 +163,7 @@ const cachedFiles: Dict<TFile> = {};
 
 export async function getFile(path: string) {
   while (isRequesting[path]) {
-    await new Promise(_ => setTimeout(_, 100));
+    await new Promise(_ => setTimeout(_, 10));
   }
   isRequesting[path] = true;
   if (!noCache && cachedFiles[path] !== undefined) {

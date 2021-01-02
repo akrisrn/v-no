@@ -10,7 +10,7 @@
   import { getAnchorRegExp, getMarkRegExp, getSnippetRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
-  import { importMarkdownTs } from '@/ts/async';
+  import { importFileTs, importMarkdownTs } from '@/ts/async';
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component
@@ -62,6 +62,9 @@
       if (!data) {
         this.updateRenderData().then(() => this.renderComplete());
         return;
+      }
+      if (getMarkRegExp(EMark.list).test(data) || this.isSearchFile && this.queryContent) {
+        importFileTs().then(file => file.getFiles());
       }
       const span = getSyncSpan();
       const loadingData = data.replace(getSnippetRegExp('gm'), span)
