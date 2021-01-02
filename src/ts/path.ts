@@ -31,12 +31,29 @@ export const cdnUrl: string = process.env.VUE_APP_CDN_URL;
 
 export const homePath = publicPath + shortenPath(indexPath, 'html');
 
+let noCDN = !!localStorage.getItem('noCDN');
+
+// noinspection JSUnusedGlobalSymbols
+export function disableCDN() {
+  noCDN = true;
+  localStorage.setItem('noCDN', String(true));
+}
+
+// noinspection JSUnusedGlobalSymbols
+export function enableCDN() {
+  noCDN = false;
+  localStorage.removeItem('noCDN');
+}
+
 export function addBaseUrl(path: string) {
   if (!path.startsWith('/')) {
     return path;
   }
   if (path === '/') {
     return homePath;
+  }
+  if (noCDN) {
+    return publicPath !== '/' ? publicPath + path.substr(1) : path;
   }
   if (!cdnUrl && config.cdn) {
     return config.cdn + path.substr(1);
@@ -53,6 +70,9 @@ export function cleanBaseUrl(path: string) {
   }
   if (config.cdn && path.startsWith(config.cdn)) {
     return path.substr(config.cdn.length - 1);
+  }
+  if (publicPath !== '/' && path.startsWith(publicPath)) {
+    return path.substr(publicPath.length - 1);
   }
   if (path === homePath) {
     return '/';
