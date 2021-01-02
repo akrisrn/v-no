@@ -238,7 +238,7 @@
       const file = files[0];
       let data = file.data;
       const flags = file.flags;
-      const links = Object.values(file.links).filter(link => link.isMarkdown).map(link => link.href);
+      const links = Object.values(file.links).filter(link => link.isMarkdown && !link.isError).map(link => link.href);
       if (file.isError) {
         this.isError = true;
         return { data, flags, links };

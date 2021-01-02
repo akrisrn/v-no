@@ -54,9 +54,12 @@ type Dict<T> = { [index: string]: T }
 
 type TLink = {
   href: string;
-  isExternal: boolean;
-  isMarkdown: boolean;
-  isImage: boolean;
+  texts: string[];
+  isMarkdown?: boolean;
+  isImage?: boolean;
+  isAnchor?: boolean;
+  isExternal?: boolean;
+  isError?: boolean;
 }
 
 type TFile = {

@@ -1,6 +1,7 @@
 import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
+import { getAnchorRegExp } from '@/ts/regexp';
 import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/async/regexp';
@@ -27,42 +28,87 @@ async function getLinks(path: string, data: string) {
   if (!markdownTs) {
     markdownTs = await importMarkdownTs();
   }
+  const anchorRegExp = getAnchorRegExp();
   const links: Dict<TLink> = {};
   for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data, [], true))) {
-    if (token.type !== 'inline') {
+    if (token.type !== 'inline' || !token.children) {
       continue;
     }
-    for (const child of token.children || []) {
+    for (let i = 0; i < token.children.length; i++) {
+      const child = token.children[i];
       if (!['link_open', 'image'].includes(child.type)) {
         continue;
       }
       let href = '';
       let mdHref = '';
-      let isImage = false;
+      let text = '';
+      let link: TLink = { href, texts: [] };
       if (child.type === 'link_open') {
-        href = child.attrGet('href') || '';
+        const hrefAttr = child.attrGet('href');
+        if (!hrefAttr) {
+          continue;
+        }
+        href = hrefAttr;
+        if (href.startsWith('#')) {
+          href = href.substr(1);
+          if (!href) {
+            continue;
+          }
+        }
         if (href.startsWith('/')) {
           mdHref = checkLinkPath(href);
+          if (mdHref) {
+            if (mdHref === path) {
+              continue;
+            }
+            href = mdHref;
+            link.isMarkdown = true;
+          }
+        } else if (anchorRegExp.test(href)) {
+          link.isAnchor = true;
+        }
+        let index = i + 1;
+        let nextToken = token.children[index];
+        while (nextToken.type !== 'link_close') {
+          text += nextToken.content;
+          nextToken = token.children[++index];
         }
       } else {
-        href = child.attrGet('src') || '';
-        isImage = true;
+        const srcAttr = child.attrGet('src');
+        if (!srcAttr) {
+          continue;
+        }
+        href = srcAttr;
+        link.isImage = true;
+        if (child.children) {
+          text = child.children.map(child => child.content).join('');
+        }
       }
-      if (!href || mdHref && mdHref === path) {
+      const existLink = links[href];
+      if (existLink !== undefined) {
+        link = existLink;
+      }
+      if (text) {
+        link.texts.push(text);
+      } else if (link.isMarkdown) {
+        getFile(href).then(file => {
+          link.texts.push(file.flags.title);
+          if (file.isError && !link.isError) {
+            link.isError = true;
+          }
+        });
+      } else {
+        link.texts.push(text);
+      }
+      if (existLink !== undefined) {
         continue;
       }
-      const key = mdHref || href;
-      if (links[key] !== undefined) {
-        continue;
+      if (isExternalLink(href)) {
+        link.isExternal = true;
       }
-      const isMarkdown = !!mdHref;
-      links[key] = {
-        href: key,
-        isExternal: isMarkdown ? false : isExternalLink(href),
-        isMarkdown,
-        isImage,
-      };
-      if (!isMarkdown) {
+      link.href = href;
+      links[href] = link;
+      if (!mdHref) {
         continue;
       }
       let backlinks = cachedBacklinks[mdHref];
@@ -189,7 +235,7 @@ async function walkFiles(files: TFile[], walkedPaths: string[]) {
       continue;
     }
     for (const link of Object.values(file.links)) {
-      if (!link.isMarkdown) {
+      if (!link.isMarkdown || link.isError) {
         continue;
       }
       const path = link.href;
