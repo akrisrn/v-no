@@ -1,9 +1,13 @@
+import { state } from '@/ts/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-const Main = () => import(/* webpackChunkName: "main" */ '@/vue/Main.vue');
+const Main = () => import(/* webpackChunkName: "main" */ '@/vue/Main.vue').then(main => {
+  state.initing = false;
+  return main;
+});
 
 const router = new VueRouter({
   mode: 'history',

@@ -183,6 +183,7 @@ declare namespace vno {
 
   namespace store {
     const state: {
+      initing: boolean;
       filePath: string;
       anchor: string;
       queryStr: string;
@@ -229,6 +230,8 @@ declare namespace vno {
 declare class App {
   keyInput: string;
   selectConf: string;
+
+  get initing(): typeof vno.store.state.initing
 
   get homePath(): typeof vno.store.state.homePath
 
@@ -387,6 +390,8 @@ declare class Main {
 
   isRedirectPage: boolean;
   redirectFrom: TRedirectList;
+
+  initing: boolean;
 
   get config(): typeof vno.config.config
 

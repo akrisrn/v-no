@@ -45,6 +45,9 @@
         </template>
       </footer>
     </main>
+    <div v-else-if="initing" class="lds-ellipsis initing">
+      <div :key="i" v-for="i in 4"></div>
+    </div>
   </transition>
 </template>
 
@@ -93,6 +96,8 @@
 
     isRedirectPage = false;
     redirectFrom: TRedirectList = [[], []];
+
+    initing = true;
 
     get config() {
       return config;
@@ -180,7 +185,10 @@
         filePath: this.filePath,
       });
       dispatchEvent(EEvent.mainCreated, new Date().getTime());
-      this.getData().then(({ data, flags, links }) => this.setData(data, flags, links));
+      this.getData().then(({ data, flags, links }) => {
+        this.setData(data, flags, links);
+        this.initing = false;
+      });
     }
 
     beforeRouteUpdate(to: Route, from: Route, next: (to?: RawLocation | false | ((vm: Vue) => void)) => void) {

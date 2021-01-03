@@ -14,7 +14,10 @@
         </select>
       </div>
     </div>
-    <router-view/>
+    <div v-if="initing" class="lds-ellipsis initing">
+      <div :key="i" v-for="i in 4"></div>
+    </div>
+    <router-view v-else/>
     <Gadget :addToKeyInput="key => this.keyInput += key"></Gadget>
   </div>
 </template>
@@ -36,6 +39,10 @@
   export default class App extends Vue {
     keyInput = '';
     selectConf = getSelectConf();
+
+    get initing() {
+      return state.initing;
+    }
 
     get homePath() {
       return state.homePath;
