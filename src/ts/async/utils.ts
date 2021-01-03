@@ -99,4 +99,3 @@ export function callAndListen(callback: () => void, event: EEvent, element: Docu
 
 export { axios };
 export * from '@/ts/async/date';
-export * from '@/ts/async/regexp';

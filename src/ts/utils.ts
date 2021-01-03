@@ -23,5 +23,3 @@ export function chopStr(str: string, sep: string, trim = true): [string, string 
   }
   return [key, value];
 }
-
-export * from '@/ts/regexp';

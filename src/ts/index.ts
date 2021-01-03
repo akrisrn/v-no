@@ -2,6 +2,7 @@ import * as config from '@/ts/config';
 import * as element from '@/ts/element';
 import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
+import * as regexp from '@/ts/regexp';
 import * as store from '@/ts/store';
 import * as utils from '@/ts/utils';
 import { addInputBinds, destructors } from '@/ts/utils';
@@ -15,7 +16,7 @@ export function bang() {
     version: process.env.VUE_APP_VERSION,
     destructors,
     addInputBinds,
-    config, element, enums, path, store, utils,
+    config, element, enums, path, regexp, store, utils,
   });
   importFileTs().then(file => exposeToWindow({ file }));
   importMarkdownTs().then(markdown => {
