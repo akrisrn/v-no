@@ -11,8 +11,6 @@ export enum EFlag {
   updater = 'updater',
 }
 
-export const definedFlags = Object.values(EFlag);
-
 export enum EMark {
   redirect = 'redirect',
   toc = 'toc',

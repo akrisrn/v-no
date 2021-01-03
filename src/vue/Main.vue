@@ -51,11 +51,11 @@
 <script lang="ts">
   import { config, confList, enableMultiConf, getSelectConf } from '@/ts/config';
   import { cleanEventListenerDict, createList, dispatchEvent, getIcon, getQueryTagLinks, scroll } from '@/ts/element';
-  import { definedFlags, EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
+  import { EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import { getMarkRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
-  import { chopStr, destructors, snippetMark } from '@/ts/utils';
+  import { chopStr, definedFlags, destructors, snippetMark } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';

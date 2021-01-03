@@ -1,3 +1,7 @@
+import { EFlag } from '@/ts/enums';
+
+export const definedFlags = Object.values(EFlag);
+
 export const snippetMark = '--8<--';
 
 export const destructors: (() => void)[] = [];
