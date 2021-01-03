@@ -299,7 +299,7 @@ declare class Article {
   /**
    * @Watch('anchor')
    */
-  scrollToAnchor(): void;
+  onAnchorChanged(): void;
 
   /**
    * @Watch('asyncResults')
