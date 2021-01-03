@@ -99,10 +99,6 @@
 
     initing = true;
 
-    get config() {
-      return config;
-    }
-
     get homePath() {
       return state.homePath;
     }
@@ -133,6 +129,10 @@
 
     get query() {
       return parseQuery(this.queryStr);
+    }
+
+    get config() {
+      return config;
     }
 
     get isIndexFile() {

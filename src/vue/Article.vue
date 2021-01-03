@@ -38,12 +38,12 @@
       return this.query.content || '';
     }
 
-    get html() {
-      return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
-    }
-
     get isSearchFile() {
       return this.filePath === config.paths.search;
+    }
+
+    get html() {
+      return this.renderData ? this.markdownTs.renderMD(this.renderData) + '<!-- ' + this.showTime + ' -->' : '';
     }
 
     async created() {

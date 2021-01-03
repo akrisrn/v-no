@@ -60,12 +60,12 @@
       return enableMultiConf;
     }
 
-    get favicon() {
-      return this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
-    }
-
     get shortBaseFiles() {
       return shortBaseFiles;
+    }
+
+    get favicon() {
+      return this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
     }
 
     created() {

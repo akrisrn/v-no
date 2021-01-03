@@ -241,9 +241,9 @@ declare class App {
 
   get enableMultiConf(): typeof vno.config.enableMultiConf
 
-  get favicon(): string
-
   get shortBaseFiles(): typeof vno.config.shortBaseFiles
+
+  get favicon(): string
 
   /**
    * @Watch('keyInput')
@@ -286,9 +286,9 @@ declare class Article {
 
   get queryContent(): string
 
-  get html(): string
-
   get isSearchFile(): boolean
+
+  get html(): string
 
   renderMD(data?: string): void
 
@@ -393,8 +393,6 @@ declare class Main {
 
   initing: boolean;
 
-  get config(): typeof vno.config.config
-
   get homePath(): typeof vno.store.state.homePath
 
   get filePath(): typeof vno.store.state.filePath
@@ -408,6 +406,8 @@ declare class Main {
   get rawFilePath(): string
 
   get query(): TQuery
+
+  get config(): typeof vno.config.config
 
   get isIndexFile(): boolean
 
