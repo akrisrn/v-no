@@ -1,3 +1,5 @@
+declare let vnoConfig: IConfig;
+
 declare namespace vno {
   const Vue: Vue;
   const axios: typeof utils.axios;

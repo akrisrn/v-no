@@ -1,4 +1,4 @@
-export function getFromWindow(name: string) {
+function getFromWindow(name: string) {
   // @ts-ignore
   return window[name];
 }

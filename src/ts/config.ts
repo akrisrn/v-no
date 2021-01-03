@@ -1,5 +1,4 @@
 import { buildHash, shortenPath } from '@/ts/path';
-import { getFromWindow } from '@/ts/window';
 
 function merge(target: IConfig, source: IConfig) {
   for (const key of Object.keys(source)) {
@@ -18,7 +17,7 @@ export function getSelectConf() {
 }
 
 export const config = (() => {
-  const config: IConfig = JSON.parse(JSON.stringify(getFromWindow('vnoConfig')));
+  const config: IConfig = JSON.parse(JSON.stringify(vnoConfig));
   if (!config.defaultConf || !config.multiConf) {
     return config;
   }
