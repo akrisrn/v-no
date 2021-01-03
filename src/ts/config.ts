@@ -48,7 +48,7 @@ export const confList = (() => {
   }
   const keys = Object.keys(multiConf).sort();
   const alias = keys.map(key => multiConf[key].alias || key);
-  return [keys, alias] as [string[], string[]];
+  return [keys, alias] as TConfList;
 })();
 
 export const enableMultiConf = !!(selectConf && confList && confList[0].length > 1);

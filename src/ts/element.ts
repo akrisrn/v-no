@@ -60,17 +60,17 @@ export function getSyncSpan(id?: string) {
 }
 
 export function getQueryTagLinks(tag: string) {
-  const list: [string, string][] = [];
+  const links: TAnchor[] = [];
   let start = 0;
   let indexOf = tag.indexOf('/');
   while (indexOf >= 0) {
     indexOf += start;
-    list.push([buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
+    links.push([buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
     start = indexOf + 1;
     indexOf = tag.substring(start).indexOf('/');
   }
-  list.push([buildQueryFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
-  return list;
+  links.push([buildQueryFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
+  return links;
 }
 
 function createBar(flags: IFlags) {

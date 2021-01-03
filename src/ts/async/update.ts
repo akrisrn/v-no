@@ -13,7 +13,7 @@ import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
-export function updateAsyncScript(result: [string, string]) {
+export function updateAsyncScript(result: TAsyncResult) {
   const span = document.querySelector(`span#${result[0]}`);
   if (!span) {
     return false;
@@ -40,7 +40,7 @@ export function updateAsyncScript(result: [string, string]) {
   return true;
 }
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync = false) {
+export function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], ignoreAsync = false) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
     let result: string;
     try {
@@ -74,7 +74,7 @@ function degradeHeading(data: string, level: number) {
   }).join('\n');
 }
 
-export async function updateSnippet(data: string, updatedPaths: string[] = [], asyncResults?: [string, string][]) {
+export async function updateSnippet(data: string, updatedPaths: string[] = [], asyncResults?: TAsyncResult[]) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {

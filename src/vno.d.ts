@@ -6,7 +6,7 @@ declare namespace vno {
 
   const version: string;
 
-  const renderMD: (path: string, data: string, asyncResults?: [string, string][]) => Promise<string>;
+  const renderMD: (path: string, data: string, asyncResults?: TAsyncResult[]) => Promise<string>;
   const updateDom: typeof markdown.updateDom;
 
   const destructors: typeof utils.destructors;
@@ -56,11 +56,11 @@ declare namespace vno {
 
     function renderMD(data: string): string
 
-    function updateAsyncScript(result: [string, string]): boolean
+    function updateAsyncScript(result: TAsyncResult): boolean
 
-    function replaceInlineScript(path: string, data: string, asyncResults?: [string, string][], ignoreAsync?: boolean): string
+    function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], ignoreAsync?: boolean): string
 
-    function updateSnippet(data: string, updatedPaths?: string[], asyncResults?: [string, string][]): Promise<string>
+    function updateSnippet(data: string, updatedPaths?: string[], asyncResults?: TAsyncResult[]): Promise<string>
 
     function updateList(data: string): Promise<string>
 
@@ -77,7 +77,7 @@ declare namespace vno {
     function getSelectConf(): string
 
     const config: IConfig;
-    const confList: [string[], string[]] | null;
+    const confList: TConfList | null;
     const enableMultiConf: boolean;
 
     const baseFiles: string[];
@@ -107,7 +107,7 @@ declare namespace vno {
 
     function getSyncSpan(id?: string): string
 
-    function getQueryTagLinks(tag: string): [string, string][]
+    function getQueryTagLinks(tag: string): TAnchor[]
 
     function createList(file: TFile, li?: HTMLLIElement): HTMLLIElement
   }
@@ -207,7 +207,7 @@ declare namespace vno {
 
     function stringifyAny(value: any): string
 
-    function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: [string, string][], ignoreAsync?: boolean): string
+    function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[], ignoreAsync?: boolean): string
 
     function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
 
@@ -272,8 +272,8 @@ declare class Article {
   startTime: number;
   isRendering: boolean;
   renderData: string;
-  asyncResults: [string, string][];
-  resultsBeforeRendered: [string, string][];
+  asyncResults: TAsyncResult[];
+  resultsBeforeRendered: TAsyncResult[];
 
   get filePath(): typeof vno.store.state.filePath
 
@@ -370,7 +370,7 @@ declare class Main {
   cover: string;
   creator: string;
   updater: string;
-  otherFlags: [string, string][];
+  otherFlags: TFlag[];
 
   links: string[];
   backlinks: string[];
@@ -384,7 +384,7 @@ declare class Main {
   isError: boolean;
 
   isRedirectPage: boolean;
-  redirectFrom: [string[], string[]];
+  redirectFrom: TRedirectList;
 
   get config(): typeof vno.config.config
 
@@ -440,7 +440,7 @@ declare class Main {
 
   getListHtml(file: TFile): string
 
-  getQueryTagLinks(tag: string): [string, string][]
+  getQueryTagLinks(tag: string): TAnchor[]
 
   returnHome(): void
 }
@@ -524,6 +524,16 @@ type THashPath = {
   anchor: string;
   query: string;
 }
+
+type TConfList = [string[], string[]]
+
+type TRedirectList = [string[], string[]]
+
+type TFlag = [string, string]
+
+type TAnchor = [string, string]
+
+type TAsyncResult = [string, string]
 
 /**
  * vue/types/vue.d.ts

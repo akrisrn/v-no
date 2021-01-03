@@ -23,7 +23,7 @@ export function bang() {
     exposeToWindow({
       markdown,
       markdownIt: markdown.markdownIt,
-      renderMD: async (path: string, data: string, asyncResults?: [string, string][]) => {
+      renderMD: async (path: string, data: string, asyncResults?: TAsyncResult[]) => {
         data = data.trim();
         if (!data) {
           return '';

@@ -78,7 +78,7 @@
     cover = '';
     creator = '';
     updater = '';
-    otherFlags: [string, string][] = [];
+    otherFlags: TFlag[] = [];
 
     links: string[] = [];
     backlinks: string[] = [];
@@ -92,7 +92,7 @@
     isError = false;
 
     isRedirectPage = false;
-    redirectFrom: [string[], string[]] = [[], []];
+    redirectFrom: TRedirectList = [[], []];
 
     get config() {
       return config;
