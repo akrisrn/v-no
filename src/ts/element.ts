@@ -1,13 +1,13 @@
 import { EEvent, EFlag, EIcon } from '@/ts/enums';
 import { buildQueryFlagUrl, shortenPath } from '@/ts/path';
 
-let eventListenerDict: Dict<[Element[], EventListenerOrEventListenerObject[]]> = {};
+let eventListenerDict: Dict<[(Document | Element)[], EventListenerOrEventListenerObject[]]> = {};
 
 export function cleanEventListenerDict() {
   eventListenerDict = {};
 }
 
-export function addEventListener(element: Element, type: string, listener: EventListenerOrEventListenerObject) {
+export function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject) {
   let eventListeners = eventListenerDict[type];
   if (eventListeners === undefined) {
     eventListeners = [[element], [listener]];
@@ -60,7 +60,7 @@ export function getSyncSpan(id?: string) {
 }
 
 export function getQueryTagLinks(tag: string) {
-  const list: string[][] = [];
+  const list: [string, string][] = [];
   let start = 0;
   let indexOf = tag.indexOf('/');
   while (indexOf >= 0) {
@@ -102,19 +102,19 @@ function createBar(flags: IFlags) {
   }
 }
 
-export function createList({ path, flags, isError }: TFile, li?: HTMLLIElement) {
+export function createList(file: TFile, li?: HTMLLIElement) {
   if (!li) {
     li = document.createElement('li');
     const a = document.createElement('a');
-    a.href = `#${shortenPath(path)}`;
-    a.innerText = flags.title;
+    a.href = `#${shortenPath(file.path)}`;
+    a.innerText = file.flags.title;
     li.append(a);
   }
   li.classList.add('article');
-  if (isError) {
+  if (file.isError) {
     return li;
   }
-  const bar = createBar(flags);
+  const bar = createBar(file.flags);
   if (bar) {
     li.append(bar[0]);
     li.append(bar[1]);

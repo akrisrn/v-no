@@ -14,19 +14,19 @@ import { addCacheKey, evalFunction, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
-export function updateAsyncScript([id, result]: [string, string]) {
-  const span = document.querySelector(`span#${id}`);
+export function updateAsyncScript(result: [string, string]) {
+  const span = document.querySelector(`span#${result[0]}`);
   if (!span) {
     return false;
   }
   const parent = span.parentElement!;
   if (parent.tagName !== 'P' || parent.childNodes.length > 1) {
-    span.outerHTML = result;
+    span.outerHTML = result[1];
     return true;
   }
-  const trimResult = result.trim();
+  const trimResult = result[1].trim();
   if (!trimResult.startsWith('<')) {
-    span.outerHTML = result;
+    span.outerHTML = result[1];
     return true;
   }
   let tagName = trimResult.substring(1, trimResult.indexOf('>'));
@@ -36,7 +36,7 @@ export function updateAsyncScript([id, result]: [string, string]) {
   if (htmlBlocks.includes(tagName)) {
     parent.outerHTML = trimResult;
   } else {
-    span.outerHTML = result;
+    span.outerHTML = result[1];
   }
   return true;
 }
@@ -214,7 +214,7 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
     if (!Object.keys(flags).includes(flag)) {
       return [false];
     }
-    const flagValue = flags[flag];
+    const flagValue = flags[flag]!;
     if (typeof flagValue === 'string') {
       return [flagValue.toLowerCase().indexOf(value) >= 0];
     }

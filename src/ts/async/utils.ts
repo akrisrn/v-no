@@ -88,7 +88,7 @@ export function addEventListener(element: Document | Element, type: string, list
 }
 
 // noinspection JSUnusedGlobalSymbols
-export function callAndListen(callback: () => void, event: EEvent, element = document, reside = true) {
+export function callAndListen(callback: () => void, event: EEvent, element: Document | Element = document, reside = true) {
   callback();
   if (reside) {
     element.addEventListener(event, callback);
