@@ -3,6 +3,14 @@ import { EFlag } from '@/ts/enums';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
 
+export function isExternalLink(href: string) {
+  try {
+    return !!new URL(href).host;
+  } catch (e) {
+    return false;
+  }
+}
+
 export function checkLinkPath(path: string) {
   if (path.endsWith('.md')) {
     return path;

@@ -1,10 +1,10 @@
 import { config } from '@/ts/config';
 import { getIcon } from '@/ts/element';
 import { EIcon, EMark } from '@/ts/enums';
-import { addBaseUrl, homePath, shortenPath } from '@/ts/path';
+import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
-import { isExternalLink, replaceByRegExp, trimList } from '@/ts/async/utils';
+import { replaceByRegExp, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 import { fromCodePoint } from 'markdown-it/lib/common/utils';

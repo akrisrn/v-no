@@ -22,14 +22,6 @@ export function addCacheKey(path: string, needClean = true) {
   return cacheKey ? `${path}?${cacheKey}` : path;
 }
 
-export function isExternalLink(href: string) {
-  try {
-    return !!new URL(href).host;
-  } catch (e) {
-    return false;
-  }
-}
-
 export function stringifyAny(value: any) {
   switch (typeof value) {
     case 'object':

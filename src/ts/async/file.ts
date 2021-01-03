@@ -1,10 +1,10 @@
 import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
-import { addBaseUrl, checkLinkPath, shortenPath } from '@/ts/path';
+import { addBaseUrl, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp, getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
 import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
-import { addCacheKey, isExternalLink, trimList } from '@/ts/async/utils';
+import { addCacheKey, trimList } from '@/ts/async/utils';
 import axios from 'axios';
 
 export function createErrorFile(path: string): TFile {
