@@ -47,11 +47,11 @@ export function bang() {
     exposeToWindow({
       axios: utils.axios,
       dayjs: utils.dayjs,
-      parseDate: utils.parseDate,
-      formatDate: utils.formatDate,
       waitFor: utils.waitFor,
       addEventListener: utils.addEventListener,
       callAndListen: utils.callAndListen,
+      parseDate: utils.parseDate,
+      formatDate: utils.formatDate,
     });
   });
 }
