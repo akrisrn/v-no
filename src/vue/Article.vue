@@ -166,3 +166,5 @@
     }
   }
 </script>
+
+<style lang="scss">@import "../scss/article";</style>

@@ -6,7 +6,11 @@
   height: 50px;
   margin: 24px auto;
 
-  div {
+  &.initing {
+    margin: 104px auto;
+  }
+
+  > div {
     position: absolute;
     top: 20px;
     width: 10px;
@@ -60,8 +64,4 @@
       }
     }
   }
-}
-
-.initing {
-  margin: 104px auto;
 }

@@ -1,5 +1,5 @@
 import { config } from '@/ts/config';
-import dayjs, { Dayjs, isDayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 
@@ -13,14 +13,14 @@ export function parseDate(date: string | number) {
   return new Date(date);
 }
 
-export function formatDate(date: string | number | Date | Dayjs, format?: string) {
+export function formatDate(date: string | number | Date | dayjs.Dayjs, format?: string) {
   if (format) {
     return dayjs(date).format(format);
   }
   if (config.dateFormat) {
     return dayjs(date).format(config.dateFormat);
   }
-  if (isDayjs(date)) {
+  if (dayjs.isDayjs(date)) {
     date = date.toDate();
   }
   return new Date(date).toDateString();

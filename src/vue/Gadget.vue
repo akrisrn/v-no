@@ -117,3 +117,5 @@
     }
   }
 </script>
+
+<style lang="scss">@import "../scss/gadget";</style>
