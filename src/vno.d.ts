@@ -419,13 +419,9 @@ declare class Main {
 
   reload(toTop?: boolean): void
 
-  getData(): Promise<{
-    data: string;
-    flags: IFlags;
-    links: string[];
-  }>
+  getData(): Promise<TFileData | undefined>
 
-  setData(data: string, flags: IFlags, links: string[]): void
+  setData(fileData?: TFileData): void
 
   setFlags(flags: IFlags): void
 
@@ -525,6 +521,12 @@ type TLink = {
   isAnchor?: boolean;
   isExternal?: boolean;
   isError?: boolean;
+}
+
+type TFileData = {
+  data: string;
+  flags: IFlags;
+  links: string[];
 }
 
 type TQuery = Dict<string | null>

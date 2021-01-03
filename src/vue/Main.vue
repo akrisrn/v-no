@@ -185,8 +185,8 @@
         filePath: this.filePath,
       });
       dispatchEvent(EEvent.mainCreated, new Date().getTime());
-      this.getData().then(({ data, flags, links }) => {
-        this.setData(data, flags, links);
+      this.getData().then(fileData => {
+        this.setData(fileData);
         this.initing = false;
       });
     }
@@ -210,7 +210,7 @@
 
     reload(toTop = false) {
       cleanEventListenerDict();
-      this.getData().then(({ data, flags, links }) => {
+      this.getData().then(fileData => {
         document.querySelectorAll('.custom').forEach(element => element.remove());
         let destructor = destructors.shift();
         while (destructor) {
@@ -219,14 +219,14 @@
           }
           destructor = destructors.shift();
         }
-        this.setData(data, flags, links);
+        this.setData(fileData);
         if (toTop) {
           scroll(0, false);
         }
       });
     }
 
-    async getData() {
+    async getData(): Promise<TFileData | undefined> {
       if (!this.fileTs) {
         this.fileTs = await importFileTs();
       }
@@ -265,7 +265,7 @@
             anchor: anchor || this.anchor,
             query: query || this.queryStr,
           });
-          return { data, flags, links };
+          return undefined;
         }
       }
       if (this.hasLoadedBacklinks) {
@@ -291,10 +291,13 @@
       return { data, flags, links };
     }
 
-    setData(data: string, flags: IFlags, links: string[]) {
-      this.setFlags(flags);
-      this.fileData = data;
-      this.links = links;
+    setData(fileData?: TFileData) {
+      if (!fileData) {
+        return;
+      }
+      this.setFlags(fileData.flags);
+      this.fileData = fileData.data;
+      this.links = fileData.links;
       this.isShow = true;
       this.showTime = new Date().getTime();
       this.$nextTick(() => dispatchEvent(EEvent.mainShown, this.showTime));
