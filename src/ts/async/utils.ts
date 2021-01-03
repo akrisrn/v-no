@@ -64,6 +64,23 @@ export function evalFunction(evalStr: string, params: Dict<string>, asyncResults
   return stringifyAny(eval(`(function(${paras}) {${evalStr}})`)(...args));
 }
 
+export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string) {
+  let newData = '';
+  let start = 0;
+  let match = regexp.exec(data);
+  while (match) {
+    const [match0, ...matches] = match;
+    newData += data.substring(start, match.index) + callback(matches);
+    start = match.index + match0.length;
+    match = regexp.exec(data);
+  }
+  if (start === 0) {
+    return data;
+  }
+  newData += data.substring(start);
+  return newData;
+}
+
 // noinspection JSUnusedGlobalSymbols
 export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
   return await (async () => {
