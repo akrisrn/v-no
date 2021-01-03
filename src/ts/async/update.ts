@@ -196,12 +196,12 @@ function getQueryParams(content: string) {
   return match ? [content, match[1], match[2]] : [content, '', ''];
 }
 
-function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [boolean, boolean?] {
+function findIn(file: IFile, [keyword, flag, value]: string[]): [boolean, boolean?] {
   if (!flag) {
-    if (flags.title.toLowerCase().indexOf(keyword) >= 0) {
+    if (file.flags.title.toLowerCase().indexOf(keyword) >= 0) {
       return [true];
     }
-    if (data.toLowerCase().indexOf(keyword) >= 0) {
+    if (file.data.toLowerCase().indexOf(keyword) >= 0) {
       return [true, true];
     }
     return [false];
@@ -210,10 +210,10 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
     return [false];
   }
   if (![EFlag.tags, EFlag.updated].includes(flag as EFlag)) {
-    if (!Object.keys(flags).includes(flag)) {
+    if (!Object.keys(file.flags).includes(flag)) {
       return [false];
     }
-    const flagValue = flags[flag]!;
+    const flagValue = (file.flags)[flag]!;
     if (typeof flagValue === 'string') {
       return [flagValue.toLowerCase().indexOf(value) >= 0];
     }
@@ -226,7 +226,7 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
   }
   const trimValue = trimList(value.split('/'), false).join('/');
   if (flag === EFlag.tags) {
-    for (let tag of flags.tags || []) {
+    for (let tag of file.flags.tags || []) {
       tag = tag.toLowerCase();
       if (tag === trimValue || tag.startsWith(`${trimValue}/`)) {
         return [true];
@@ -234,7 +234,7 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
     }
     return [false];
   }
-  for (const time of flags.times || []) {
+  for (const time of file.flags.times || []) {
     const date = formatDate(time, 'YYYY/MM/DD');
     if (date === trimValue || date.startsWith(`${trimValue}/`)) {
       return [true];
@@ -243,7 +243,7 @@ function findIn({ data, flags }: TFile, [keyword, flag, value]: string[]): [bool
   return [false];
 }
 
-function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[], taggedDict: Dict<TFile[]>) {
+function getCategories(level: number, parentTag: string, tagTree: TTagTree, sortedTags: string[], taggedDict: Dict<IFile[]>) {
   const category: string[] = [];
   let count = 0;
   for (const tag of sortedTags) {
@@ -291,7 +291,7 @@ export async function updateList(data: string) {
     const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
     return replaceByRegExp(listRegExpG, data, ([content]) => {
       const queryParams = getQueryParams(content);
-      const resultFiles: TFile[] = [];
+      const resultFiles: IFile[] = [];
       for (const file of fileList) {
         if (findIn(file, queryParams)[0]) {
           resultFiles.push(file);
@@ -301,8 +301,8 @@ export async function updateList(data: string) {
     }).trim();
   }
   const tagTree: TTagTree = {};
-  const taggedDict: Dict<TFile[]> = {};
-  const untaggedFiles: TFile[] = [];
+  const taggedDict: Dict<IFile[]> = {};
+  const untaggedFiles: IFile[] = [];
   for (const file of Object.values(files)) {
     if (file.isError) {
       continue;
@@ -383,7 +383,7 @@ export async function updateSearchPage(content: string) {
   resultUl.innerHTML = getSyncSpan() + config.messages.searching;
   const startTime = new Date().getTime();
   const { files } = await getFiles();
-  const resultFiles: TFile[] = [];
+  const resultFiles: IFile[] = [];
   const quoteDict: Dict<HTMLQuoteElement> = {};
   let count = 0;
   for (const file of Object.values(files)) {

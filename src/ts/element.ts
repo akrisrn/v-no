@@ -102,7 +102,7 @@ function createBar(flags: IFlags) {
   }
 }
 
-export function createList(file: TFile, li?: HTMLLIElement) {
+export function createList(file: ISimpleFile, li?: HTMLLIElement) {
   if (!li) {
     li = document.createElement('li');
     const a = document.createElement('a');

@@ -7,7 +7,7 @@ import { formatDate } from '@/ts/async/date';
 import { addCacheKey, trimList } from '@/ts/async/utils';
 import axios from 'axios';
 
-export function createErrorFile(path: string): TFile {
+export function createErrorFile(path: string): IFile {
   return {
     path,
     data: config.messages.pageError,
@@ -120,7 +120,7 @@ async function getLinks(path: string, data: string) {
   return links;
 }
 
-async function parseData(path: string, data: string): Promise<TFile> {
+async function parseData(path: string, data: string): Promise<IFile> {
   const flags: IFlags = { title: shortenPath(path) };
   if (!data) {
     return { path, data, flags, links: {} };
@@ -204,7 +204,7 @@ export function enableCache() {
 }
 
 const isRequesting: Dict<boolean> = {};
-const cachedFiles: Dict<TFile> = {};
+const cachedFiles: Dict<IFile> = {};
 
 export async function getFile(path: string) {
   while (isRequesting[path]) {
@@ -215,7 +215,7 @@ export async function getFile(path: string) {
     isRequesting[path] = false;
     return cachedFiles[path];
   }
-  return new Promise<TFile>(resolve => {
+  return new Promise<IFile>(resolve => {
     axios.get<string>(addBaseUrl(addCacheKey(path, false))).then(async response => {
       cachedFiles[path] = await parseData(path, response.data.trim());
     }).catch(() => {
@@ -227,7 +227,7 @@ export async function getFile(path: string) {
   });
 }
 
-async function walkFiles(files: TFile[], walkedPaths: string[]) {
+async function walkFiles(files: IFile[], walkedPaths: string[]) {
   const paths: string[] = [];
   for (const file of files) {
     if (file.isError) {

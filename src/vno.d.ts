@@ -33,7 +33,7 @@ declare namespace vno {
   const filePath: typeof mainSelf.filePath;
 
   namespace file {
-    function createErrorFile(path: string): TFile
+    function createErrorFile(path: string): IFile
 
     function isCached(): boolean
 
@@ -41,14 +41,14 @@ declare namespace vno {
 
     function enableCache(): void
 
-    function getFile(path: string): Promise<TFile>
+    function getFile(path: string): Promise<IFile>
 
     function getFiles(): Promise<{
-      files: Dict<TFile>;
+      files: Dict<IFile>;
       backlinks: Dict<string[]>;
     }>
 
-    function sortFiles(fileA: TFile, fileB: TFile): number
+    function sortFiles(fileA: ISimpleFile, fileB: ISimpleFile): number
   }
 
   namespace markdown {
@@ -111,7 +111,7 @@ declare namespace vno {
 
     function getQueryTagLinks(tag: string): TAnchor[]
 
-    function createList(file: TFile, li?: HTMLLIElement): HTMLLIElement
+    function createList(file: ISimpleFile, li?: HTMLLIElement): HTMLLIElement
   }
 
   namespace enums {
@@ -380,7 +380,7 @@ declare class Main {
   links: string[];
   backlinks: string[];
 
-  backlinkFiles: TFile[];
+  backlinkFiles: ISimpleFile[];
   isLoadingBacklinks: boolean;
   hasLoadedBacklinks: boolean;
 
@@ -445,7 +445,7 @@ declare class Main {
    */
   onCoverChanged(): void
 
-  getListHtml(file: TFile): string
+  getListHtml(file: ISimpleFile): string
 
   getQueryTagLinks(tag: string): TAnchor[]
 
@@ -504,6 +504,17 @@ interface IFlags {
   [index: string]: string | string[] | number[] | undefined;
 }
 
+interface ISimpleFile {
+  path: string;
+  flags: IFlags;
+  isError?: boolean;
+}
+
+interface IFile extends ISimpleFile {
+  data: string;
+  links: Dict<TLink>;
+}
+
 type Dict<T> = { [index: string]: T }
 
 type TLink = {
@@ -513,14 +524,6 @@ type TLink = {
   isImage?: boolean;
   isAnchor?: boolean;
   isExternal?: boolean;
-  isError?: boolean;
-}
-
-type TFile = {
-  path: string;
-  data: string;
-  flags: IFlags;
-  links: Dict<TLink>;
   isError?: boolean;
 }
 

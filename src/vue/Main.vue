@@ -86,7 +86,7 @@
     links: string[] = [];
     backlinks: string[] = [];
 
-    backlinkFiles: TFile[] = [];
+    backlinkFiles: ISimpleFile[] = [];
     isLoadingBacklinks = false;
     hasLoadedBacklinks = false;
 
@@ -347,7 +347,7 @@
           return {
             path: file.path,
             flags: JSON.parse(JSON.stringify(file.flags)),
-          } as TFile;
+          } as ISimpleFile;
         }).sort(this.fileTs.sortFiles);
       } else {
         this.backlinks = [];
@@ -380,7 +380,7 @@
       }
     }
 
-    getListHtml(file: TFile) {
+    getListHtml(file: ISimpleFile) {
       return createList(file).innerHTML;
     }
 

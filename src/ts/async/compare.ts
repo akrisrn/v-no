@@ -34,7 +34,7 @@ function comparePath(pathA: string, pathB: string) {
   return pathA.localeCompare(pathB);
 }
 
-export function sortFiles(fileA: TFile, fileB: TFile) {
+export function sortFiles(fileA: ISimpleFile, fileB: ISimpleFile) {
   const flagsA = fileA.flags;
   const flagsB = fileB.flags;
   let x = compareDate(flagsA.startDate, flagsB.startDate);
