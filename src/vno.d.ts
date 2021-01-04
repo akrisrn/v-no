@@ -60,9 +60,9 @@ declare namespace vno {
 
     function updateAsyncScript(result: TAsyncResult): boolean
 
-    function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], ignoreAsync?: boolean): string
+    function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]): string
 
-    function updateSnippet(data: string, updatedPaths?: string[], asyncResults?: TAsyncResult[]): Promise<string>
+    function updateSnippet(data: string, updatedPaths: string[], asyncResults?: TAsyncResult[]): Promise<string>
 
     function updateList(data: string): Promise<string>
 
@@ -103,9 +103,10 @@ declare namespace vno {
 
     function removeClass(element: Element, cls?: string): void
 
-    function scroll(height: number, isSmooth?: boolean): void
+    function scroll(height: number, isSmooth = true): void
 
-    function getIcon(type: enums.EIcon, width?: number, height?: number): string
+    // noinspection JSSuspiciousNameCombination
+    function getIcon(type: enums.EIcon, width = 16, height = width): string
 
     function getSyncSpan(id?: string): string
 
@@ -129,7 +130,7 @@ declare namespace vno {
 
     function checkLinkPath(path: string): string
 
-    function shortenPath(path: string, ext?: string): string
+    function shortenPath(path: string, ext = 'md'): string
 
     const baseUrl: string;
     const publicPath: string;
@@ -148,11 +149,11 @@ declare namespace vno {
 
     function buildHash(hashPath: THashPath): string
 
-    function buildQueryContent(content: string, isFull?: boolean): string
+    function buildQueryContent(content: string, isFull = false): string
 
     function buildQueryFlagUrl(flag: enums.EFlag, text: string): string
 
-    function parseHash(hash: string, isShort?: boolean): THashPath
+    function parseHash(hash: string, isShort = false): THashPath
 
     function changeAnchor(anchor: string): void
 
@@ -168,17 +169,17 @@ declare namespace vno {
   }
 
   namespace regexp {
-    function getHeadingRegExp(min?: number, max?: number, flags?: string): RegExp
+    function getHeadingRegExp(min = 1, max = 6, flags?: string): RegExp
 
-    function getLinkRegExp(startWithSlash?: boolean, isImg?: boolean, isLine?: boolean, flags?: string): RegExp
+    function getLinkRegExp(startWithSlash = false, isImg = false, isLine = false, flags?: string): RegExp
 
     function getSnippetRegExp(flags?: string): RegExp
 
-    function getAnchorRegExp(isLine?: boolean, min?: number, max?: number, flags?: string): RegExp
+    function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string): RegExp
 
-    function getMarkRegExp(mark: string, isLine?: boolean, flags?: string): RegExp
+    function getMarkRegExp(mark: string, isLine = true, flags = 'im'): RegExp
 
-    function getWrapRegExp(left: string, right?: string, flags?: string): RegExp
+    function getWrapRegExp(left: string, right = left, flags?: string): RegExp
   }
 
   namespace store {
@@ -202,23 +203,23 @@ declare namespace vno {
 
     function addInputBinds(binds: Dict<() => void>): void
 
-    function chopStr(str: string, sep: string, trim?: boolean): [string, string | null]
+    function chopStr(str: string, sep: string, trim = true): [string, string | null]
 
-    function trimList(list: string[], distinct?: boolean): string[]
+    function trimList(list: string[], distinct = true): string[]
 
-    function addCacheKey(path: string, needClean?: boolean): string
+    function addCacheKey(path: string, needClean = true): string
 
     function stringifyAny(value: any): string
 
-    function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[], ignoreAsync?: boolean): string
+    function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[]): string
 
     function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
 
-    function waitFor(callback: () => void, maxCount?: number, timeout?: number): Promise<boolean>
+    function waitFor(callback: () => void, maxCount = 100, timeout = 100): Promise<boolean>
 
     function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject): void
 
-    function callAndListen(callback: () => void, event: enums.EEvent, element?: Document | Element, reside?: boolean): void
+    function callAndListen(callback: () => void, event: enums.EEvent, element: Document | Element = document, reside = true): void
 
     function parseDate(date: string | number): Date
 
@@ -280,9 +281,9 @@ declare class Article {
 
   get html(): string
 
-  renderMD(data?: string): void
+  renderMD(data = this.fileData): void
 
-  updateRenderData(data?: string): Promise<void>
+  updateRenderData(data = ''): Promise<void>
 
   renderComplete(): void;
 
@@ -316,7 +317,7 @@ declare class Gadget {
 
   toBottom(): void
 
-  scroll(toBottom?: boolean): void
+  scroll(toBottom = false): void
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -373,7 +374,7 @@ declare class Main {
 
   get iconBacklink(): string
 
-  reload(toTop?: boolean): void
+  reload(toTop = false): void
 
   getData(): Promise<TFileData | undefined>
 
@@ -381,7 +382,7 @@ declare class Main {
 
   setFlags(flags: IFlags): void
 
-  addFlag(key: string, value: string, sort?: boolean): void
+  addFlag(key: string, value: string, sort = true): void
 
   removeFlag(key: string): void
 

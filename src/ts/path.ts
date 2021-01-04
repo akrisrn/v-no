@@ -32,10 +32,10 @@ export function shortenPath(path: string, ext = 'md') {
   return path;
 }
 
-export const baseUrl: string = process.env.BASE_URL;
-export const publicPath: string = process.env.VUE_APP_PUBLIC_PATH;
-export const indexPath: string = process.env.VUE_APP_INDEX_PATH;
-export const cdnUrl: string = process.env.VUE_APP_CDN_URL;
+export const baseUrl: string = process.env.BASE_URL!;
+export const publicPath: string = process.env.VUE_APP_PUBLIC_PATH!;
+export const indexPath: string = process.env.VUE_APP_INDEX_PATH!;
+export const cdnUrl: string = process.env.VUE_APP_CDN_URL!;
 
 export const homePath = publicPath + shortenPath(indexPath, 'html');
 

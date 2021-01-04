@@ -40,11 +40,11 @@ export function updateAsyncScript(result: TAsyncResult) {
   return true;
 }
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], ignoreAsync = false) {
+export function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
     let result: string;
     try {
-      result = evalFunction(evalStr, { path, data }, asyncResults, ignoreAsync);
+      result = evalFunction(evalStr, { path, data }, asyncResults);
     } catch (e) {
       result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
@@ -74,7 +74,7 @@ function degradeHeading(data: string, level: number) {
   }).join('\n');
 }
 
-export async function updateSnippet(data: string, updatedPaths: string[] = [], asyncResults?: TAsyncResult[]) {
+export async function updateSnippet(data: string, updatedPaths: string[], asyncResults?: TAsyncResult[]) {
   const dict: Dict<Dict<[number, Dict<string>]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {

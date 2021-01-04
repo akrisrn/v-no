@@ -39,12 +39,12 @@ export function stringifyAny(value: any) {
 
 let asyncScriptCount = 0;
 
-export function evalFunction(evalStr: string, params: Dict<string>, asyncResults: TAsyncResult[] = [], ignoreAsync = false) {
+export function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[]) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
     const func = eval(`(async function(${paras}) {${evalStr}})`);
-    if (ignoreAsync) {
+    if (!asyncResults) {
       return stringifyAny(func);
     }
     const id = `async-script-${++asyncScriptCount}`;

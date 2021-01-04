@@ -27,7 +27,7 @@ async function getLinks(path: string, data: string) {
   }
   const anchorRegExp = getAnchorRegExp();
   const links: Dict<TLink> = {};
-  for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data, [], true))) {
+  for (const token of markdownTs.parseMD(markdownTs.replaceInlineScript(path, data))) {
     if (token.type !== 'inline' || !token.children) {
       continue;
     }
