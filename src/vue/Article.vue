@@ -102,7 +102,7 @@
         this.$nextTick(() => {
           removeClass(this.$el);
           dispatchEvent(EEvent.rendered, new Date().getTime() - this.startTime, 100);
-          this.onAnchorChanged();
+          this.scrollToAnchor();
         });
         if (this.resultsBeforeRendered.length === 0) {
           return;
@@ -122,7 +122,7 @@
     }
 
     @Watch('anchor')
-    onAnchorChanged() {
+    scrollToAnchor() {
       if (!getAnchorRegExp().test(this.anchor)) {
         return;
       }
