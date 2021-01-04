@@ -11,7 +11,7 @@
   import { state } from '@/ts/store';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs, importMarkdownTs } from '@/ts/async';
-  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
   export default class Article extends Vue {
@@ -49,6 +49,24 @@
     async created() {
       exposeToWindow({ articleSelf: this });
       this.markdownTs = await importMarkdownTs();
+      this.$watch(() => [this.fileData, this.showTime], () => this.renderMD());
+      this.$watch('html', () => {
+        this.$nextTick(() => dispatchEvent(EEvent.htmlChanged, new Date().getTime()));
+      });
+      this.$watch('asyncResults', () => {
+        if (this.asyncResults.length === 0) {
+          return;
+        }
+        const result = this.asyncResults[this.asyncResults.length - 1];
+        if (this.isRendering) {
+          this.resultsBeforeRendered.push(result);
+        }
+        if (this.markdownTs.updateAsyncScript(result)) {
+          this.markdownTs.updateDom();
+        }
+      });
+      this.$watch('anchor', () => this.scrollToAnchor());
+      this.$watch('queryContent', () => changeQueryContent(this.queryContent));
       dispatchEvent(EEvent.articleCreated, new Date().getTime()).then();
       this.renderMD();
     }
@@ -121,7 +139,6 @@
       });
     }
 
-    @Watch('anchor')
     scrollToAnchor() {
       if (!getAnchorRegExp().test(this.anchor)) {
         return;
@@ -131,38 +148,6 @@
         scroll(element.offsetTop - 6);
         changeAnchor(this.anchor);
       }
-    }
-
-    @Watch('asyncResults')
-    onAsyncResultsChanged() {
-      if (this.asyncResults.length === 0) {
-        return;
-      }
-      const result = this.asyncResults[this.asyncResults.length - 1];
-      if (this.isRendering) {
-        this.resultsBeforeRendered.push(result);
-      }
-      if (this.markdownTs.updateAsyncScript(result)) {
-        this.markdownTs.updateDom();
-      }
-    }
-
-    @Watch('queryContent')
-    onQueryContentChanged() {
-      changeQueryContent(this.queryContent);
-    }
-
-    @Watch('fileData')
-    @Watch('showTime')
-    onShowTimeChanged() {
-      if (!this.isRendering) {
-        this.renderMD();
-      }
-    }
-
-    @Watch('html')
-    onHTMLChanged() {
-      this.$nextTick(() => dispatchEvent(EEvent.htmlChanged, new Date().getTime()));
     }
   }
 </script>

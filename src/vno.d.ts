@@ -245,16 +245,6 @@ declare class App {
 
   get favicon(): string
 
-  /**
-   * @Watch('keyInput')
-   */
-  onKeyInputChanged(): void
-
-  /**
-   * @Watch('selectConf')
-   */
-  onSelectConfChanged(): void
-
   returnHome(): void
 }
 
@@ -296,31 +286,7 @@ declare class Article {
 
   renderComplete(): void;
 
-  /**
-   * @Watch('anchor')
-   */
   scrollToAnchor(): void;
-
-  /**
-   * @Watch('asyncResults')
-   */
-  onAsyncResultsChanged(): void;
-
-  /**
-   * @Watch('queryContent')
-   */
-  onQueryContentChanged(): void;
-
-  /**
-   * @Watch('fileData')
-   * @Watch('showTime')
-   */
-  onShowTimeChanged(): void;
-
-  /**
-   * @Watch('html')
-   */
-  onHTMLChanged(): void;
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -344,17 +310,7 @@ declare class Gadget {
 
   toggleDark(): void
 
-  /**
-   * @Watch('isDark')
-   */
-  onIsDarkChanged(): void
-
   toggleZen(): void
-
-  /**
-   * @Watch('isZen')
-   */
-  onIsZenChanged(): void
 
   toTop(): void
 
@@ -430,16 +386,6 @@ declare class Main {
   removeFlag(key: string): void
 
   getBacklinks(): Promise<void>
-
-  /**
-   * @Watch('title')
-   */
-  onTitleChanged(): void
-
-  /**
-   * @Watch('cover')
-   */
-  onCoverChanged(): void
 
   getListHtml(file: ISimpleFile): string
 

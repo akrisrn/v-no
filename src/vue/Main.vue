@@ -63,7 +63,7 @@
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
   import { RawLocation, Route } from 'vue-router';
-  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Vue } from 'vue-property-decorator';
 
   Component.registerHooks([
     'beforeRouteUpdate',
@@ -183,6 +183,23 @@
         mainSelf: this,
         reload: this.reload,
         filePath: this.filePath,
+      });
+      this.$watch('title', () => {
+        let title = this.title;
+        const siteName = this.config.siteName;
+        if (siteName && siteName !== this.title) {
+          title += ` - ${siteName}`;
+        }
+        document.title = title;
+      });
+      this.$watch('cover', () => {
+        if (this.cover) {
+          return;
+        }
+        const firstElement = this.$el.firstElementChild;
+        if (firstElement && firstElement.classList.contains('lds-ellipsis')) {
+          firstElement.remove();
+        }
       });
       dispatchEvent(EEvent.mainCreated, new Date().getTime());
       this.getData().then(fileData => {
@@ -359,27 +376,6 @@
       this.isLoadingBacklinks = false;
       if (!this.hasLoadedBacklinks) {
         this.hasLoadedBacklinks = true;
-      }
-    }
-
-    @Watch('title')
-    onTitleChanged() {
-      let title = this.title;
-      const siteName = this.config.siteName;
-      if (siteName && siteName !== this.title) {
-        title += ` - ${siteName}`;
-      }
-      document.title = title;
-    }
-
-    @Watch('cover')
-    onCoverChanged() {
-      if (this.cover) {
-        return;
-      }
-      const firstElement = this.$el.firstElementChild;
-      if (firstElement && firstElement.classList.contains('lds-ellipsis')) {
-        firstElement.remove();
       }
     }
 

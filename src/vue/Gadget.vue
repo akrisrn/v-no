@@ -11,7 +11,7 @@
   import { EEvent } from '@/ts/enums';
   import { addInputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Prop, Vue } from 'vue-property-decorator';
 
   @Component
   export default class Gadget extends Vue {
@@ -55,41 +55,37 @@
           this.addToKeyInput('_');
         },
       });
+      this.$watch('isDark', () => {
+        this.metaTheme.setAttribute('content', this.metaThemeColor);
+        if (this.isDark) {
+          document.body.classList.add('dark');
+          localStorage.setItem('dark', String(true));
+        } else {
+          removeClass(document.body, 'dark');
+          localStorage.removeItem('dark');
+        }
+        this.$nextTick(() => dispatchEvent(EEvent.toggleDark, this.isDark));
+      });
+      this.$watch('isZen', () => {
+        this.metaTheme.setAttribute('content', this.metaThemeColor);
+        if (this.isZen) {
+          document.body.classList.add('zen');
+          localStorage.setItem('zen', String(true));
+        } else {
+          this.$nextTick(() => removeClass(this.$refs.toggleZen));
+          removeClass(document.body, 'zen');
+          localStorage.removeItem('zen');
+        }
+        this.$nextTick(() => dispatchEvent(EEvent.toggleZen, this.isZen));
+      });
     }
 
     toggleDark() {
       this.isDark = !this.isDark;
     }
 
-    @Watch('isDark')
-    onIsDarkChanged() {
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isDark) {
-        document.body.classList.add('dark');
-        localStorage.setItem('dark', String(true));
-      } else {
-        removeClass(document.body, 'dark');
-        localStorage.removeItem('dark');
-      }
-      this.$nextTick(() => dispatchEvent(EEvent.toggleDark, this.isDark));
-    }
-
     toggleZen() {
       this.isZen = !this.isZen;
-    }
-
-    @Watch('isZen')
-    onIsZenChanged() {
-      this.metaTheme.setAttribute('content', this.metaThemeColor);
-      if (this.isZen) {
-        document.body.classList.add('zen');
-        localStorage.setItem('zen', String(true));
-      } else {
-        this.$nextTick(() => removeClass(this.$refs.toggleZen));
-        removeClass(document.body, 'zen');
-        localStorage.removeItem('zen');
-      }
-      this.$nextTick(() => dispatchEvent(EEvent.toggleZen, this.isZen));
     }
 
     toTop() {

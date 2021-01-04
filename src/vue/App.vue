@@ -31,7 +31,7 @@
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
-  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Vue } from 'vue-property-decorator';
 
   const Gadget = () => import(/* webpackChunkName: "main" */ '@/vue/Gadget.vue');
 
@@ -83,6 +83,18 @@
           this.keyInput = this.keyInput.replace(/.?Backspace$/, '');
         },
       });
+      this.$watch('keyInput', () => {
+        for (const key of Object.keys(inputBinds)) {
+          if (this.keyInput.endsWith(key)) {
+            inputBinds[key]();
+            break;
+          }
+        }
+      });
+      this.$watch('selectConf', () => {
+        localStorage.setItem('conf', this.selectConf);
+        location.href = this.homePath;
+      });
       dispatchEvent(EEvent.appCreated, new Date().getTime());
     }
 
@@ -97,22 +109,6 @@
         }
         this.keyInput = value;
       });
-    }
-
-    @Watch('keyInput')
-    onKeyInputChanged() {
-      for (const key of Object.keys(inputBinds)) {
-        if (this.keyInput.endsWith(key)) {
-          inputBinds[key]();
-          break;
-        }
-      }
-    }
-
-    @Watch('selectConf')
-    onSelectConfChanged() {
-      localStorage.setItem('conf', this.selectConf);
-      location.href = this.homePath;
     }
 
     returnHome() {
