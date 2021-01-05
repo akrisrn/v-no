@@ -46,7 +46,7 @@
       </footer>
     </main>
     <div v-else-if="initing" class="lds-ellipsis initing">
-      <div :key="i" v-for="i in 4"></div>
+      <div v-for="i in 4" :key="i"></div>
     </div>
   </transition>
 </template>
@@ -212,6 +212,9 @@
       const routeTo = parseRoute(to);
       const routeFrom = parseRoute(from);
       if (routeTo.path === routeFrom.path && routeTo.query === routeFrom.query) {
+        if (routeTo.anchor !== routeFrom.anchor) {
+          state.anchor = routeTo.anchor;
+        }
         return;
       }
       this.isShow = false;

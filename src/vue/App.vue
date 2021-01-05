@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-if="initing" class="lds-ellipsis initing">
-      <div :key="i" v-for="i in 4"></div>
+      <div v-for="i in 4" :key="i"></div>
     </div>
     <router-view v-else/>
     <Gadget :addToKeyInput="key => this.keyInput += key"></Gadget>
