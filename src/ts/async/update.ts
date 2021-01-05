@@ -892,36 +892,56 @@ function updateHeading() {
     return;
   }
   tocDiv.innerHTML = '';
-  let maxLength = headingLength;
-  if (headingLength > 11) {
-    maxLength = Math.ceil(headingLength / 3);
-  } else if (headingLength > 7) {
-    maxLength = Math.ceil(headingLength / 2);
+  const transHeadingList = headingList.map(transHeading);
+  const groupLength = headingLength > 11 ? 3 : (headingLength > 7 ? 2 : 1);
+  const groups: HTMLLIElement[][] = '.'.repeat(groupLength - 1).split('.').map(() => []);
+  let maxCount = Math.ceil(headingLength / groupLength);
+  let nextCount = 0;
+  let i = 0;
+  let index = 0;
+  for (; ;) {
+    let isOver = true;
+    let count = 0;
+    for (; i < transHeadingList.length; i++) {
+      let list = transHeadingList[i];
+      let group = groups[index];
+      count += list.count;
+      if (group.length === 0 || count <= maxCount) {
+        group.push(list.li);
+        if (index === 0) {
+          nextCount += list.count;
+        }
+        continue;
+      }
+      if (++index < groupLength) {
+        count = list.count;
+        groups[index].push(list.li);
+        continue;
+      }
+      for (let i = 1; i < groups.length; i++) {
+        groups[i] = [];
+      }
+      group = groups[0];
+      list = transHeadingList[group.length];
+      group.push(list.li);
+      nextCount += list.count;
+      maxCount = nextCount;
+      i = group.length;
+      index = 1;
+      isOver = false;
+      break;
+    }
+    if (isOver) {
+      break;
+    }
   }
-  let currentUl = document.createElement('ul');
-  tocDiv.append(currentUl);
-  let count = 0;
-  for (const heading of headingList) {
-    const list = transHeading(heading);
-    count += list.count;
-    if (count <= maxLength) {
-      currentUl.append(list.li);
+  for (const group of groups) {
+    if (group.length === 0) {
       continue;
     }
-    count = list.count;
-    if (currentUl.childElementCount > 0 && tocDiv.childElementCount < 3) {
-      currentUl = document.createElement('ul');
-      tocDiv.append(currentUl);
-    }
-    currentUl.append(list.li);
-  }
-  if (tocDiv.childElementCount === 3) {
-    for (let i = 0; i < tocDiv.children.length; i++) {
-      tocDiv.children[i].classList.add(`ul-${i + 1}`);
-    }
-  } else if (tocDiv.childElementCount === 2) {
-    tocDiv.firstElementChild!.classList.add('ul-a');
-    tocDiv.lastElementChild!.classList.add('ul-b');
+    const ul = document.createElement('ul');
+    group.forEach(li => ul.append(li));
+    tocDiv.append(ul);
   }
 }
 
