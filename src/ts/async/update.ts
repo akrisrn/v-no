@@ -675,6 +675,9 @@ function updateAnchor() {
 
 function updateImagePath() {
   for (const img of document.querySelectorAll<HTMLImageElement>('#cover img, article img')) {
+    if (img.classList.contains('emoji')) {
+      continue;
+    }
     let parent = img.parentElement!;
     if (parent.tagName === 'A') {
       parent = parent.parentElement!;
@@ -685,7 +688,7 @@ function updateImagePath() {
         removeClass(img, cls);
       }
     });
-    if (parent.childNodes.length === 1 && !img.classList.contains('emoji')) {
+    if (parent.childNodes.length === 1) {
       if (['DT', 'DD'].includes(parent.tagName)) {
         parent.parentElement!.classList.add('center');
       } else if (parent.tagName === 'P') {
