@@ -186,6 +186,7 @@ async function parseData(path: string, data: string): Promise<IFile> {
 }
 
 let noCache = !!localStorage.getItem('noCache');
+let isCachedDict: Dict<boolean> = {};
 
 export function isCached() {
   return !noCache;
@@ -194,6 +195,7 @@ export function isCached() {
 // noinspection JSUnusedGlobalSymbols
 export function disableCache() {
   noCache = true;
+  isCachedDict = {};
   localStorage.setItem('noCache', String(true));
 }
 
@@ -211,7 +213,12 @@ export async function getFile(path: string) {
     await new Promise(_ => setTimeout(_, 10));
   }
   isRequesting[path] = true;
-  if (!noCache && cachedFiles[path] !== undefined) {
+  if (noCache) {
+    if (isCachedDict[path]) {
+      isRequesting[path] = false;
+      return cachedFiles[path];
+    }
+  } else if (cachedFiles[path] !== undefined) {
     isRequesting[path] = false;
     return cachedFiles[path];
   }
@@ -221,6 +228,7 @@ export async function getFile(path: string) {
     }).catch(() => {
       cachedFiles[path] = createErrorFile(path);
     }).finally(() => {
+      isCachedDict[path] = true;
       isRequesting[path] = false;
       resolve(cachedFiles[path]);
     });
