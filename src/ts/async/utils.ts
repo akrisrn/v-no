@@ -39,11 +39,15 @@ export function stringifyAny(value: any) {
 
 let asyncScriptCount = 0;
 
+function isolateEval(str: string) {
+  return eval(str);
+}
+
 export function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[]) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
-    const func = eval(`(async function(${paras}) {${evalStr}})`);
+    const func = isolateEval(`(async function(${paras}){${evalStr}})`);
     if (!asyncResults) {
       return stringifyAny(func);
     }
@@ -53,7 +57,7 @@ export function evalFunction(evalStr: string, params: Dict<string>, asyncResults
     });
     return getSyncSpan(id);
   }
-  return stringifyAny(eval(`(function(${paras}) {${evalStr}})`)(...args));
+  return stringifyAny(isolateEval(`(function(${paras}){${evalStr}})`)(...args));
 }
 
 export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string) {
