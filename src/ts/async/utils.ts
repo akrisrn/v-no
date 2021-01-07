@@ -73,7 +73,6 @@ export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches
   return newData;
 }
 
-// noinspection JSUnusedGlobalSymbols
 export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
   return await (async () => {
     let count = 0;
@@ -106,7 +105,6 @@ export function addEventListener(element: Document | Element, type: string, list
   destructors.push(() => element.removeEventListener(type, listener));
 }
 
-// noinspection JSUnusedGlobalSymbols
 export function callAndListen(callback: () => void, event: EEvent, element: Document | Element = document, reside = true) {
   callback();
   if (reside) {
