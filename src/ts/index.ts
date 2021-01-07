@@ -49,6 +49,7 @@ export function bang() {
       axios: utils.axios,
       dayjs: utils.dayjs,
       waitFor: utils.waitFor,
+      waitForEvent: utils.waitForEvent,
       addEventListener: utils.addEventListener,
       callAndListen: utils.callAndListen,
       parseDate: utils.parseDate,

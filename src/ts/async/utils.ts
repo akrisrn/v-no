@@ -91,6 +91,16 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
   })();
 }
 
+export function waitForEvent(callback: () => any, event: EEvent, element: Document | Element = document) {
+  return new Promise<any>(resolve => {
+    const listener = () => {
+      resolve(callback());
+      element.removeEventListener(event, listener);
+    };
+    element.addEventListener(event, listener);
+  });
+}
+
 export function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject) {
   element.addEventListener(type, listener);
   destructors.push(() => element.removeEventListener(type, listener));

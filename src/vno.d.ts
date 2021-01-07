@@ -15,6 +15,7 @@ declare namespace vno {
   const addInputBinds: typeof utils.addInputBinds;
   const sleep: typeof utils.sleep;
   const waitFor: typeof utils.waitFor;
+  const waitForEvent: typeof utils.waitForEvent;
   const addEventListener: typeof utils.addEventListener;
   const callAndListen: typeof utils.callAndListen;
   const parseDate: typeof utils.parseDate;
@@ -254,6 +255,8 @@ declare namespace vno {
     function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
 
     function waitFor(callback: () => void, maxCount = 100, timeout = 100): Promise<boolean>
+
+    function waitForEvent(callback: () => any, event: enums.EEvent, element: Document | Element = document): Promise<any>
 
     function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject): void
 
