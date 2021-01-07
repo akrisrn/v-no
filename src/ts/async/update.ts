@@ -1,7 +1,7 @@
 import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
 import { EEvent, EFlag, EMark } from '@/ts/enums';
-import { changeAnchor, changeQueryContent, checkLinkPath } from '@/ts/path';
+import { changeAnchor, changeQueryContent, checkLinkPath, parseHash } from '@/ts/path';
 import { getAnchorRegExp, getHeadingRegExp, getMarkRegExp, getSnippetRegExp, getWrapRegExp } from '@/ts/regexp';
 import { state } from '@/ts/store';
 import { chopStr, snippetMark } from '@/ts/utils';
@@ -485,7 +485,8 @@ function getHeadingText(heading: HTMLHeadingElement) {
 
 function updateLinkPath() {
   for (const a of document.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-    const path = checkLinkPath(a.getAttribute('href')!.substr(1));
+    let { path } = parseHash(a.getAttribute('href')!);
+    path = checkLinkPath(path);
     if (!path) {
       continue;
     }
@@ -612,19 +613,20 @@ function updateAnchor() {
     }
     anchorDict[anchor] = element;
     for (const a of element.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-      const href = a.getAttribute('href')!;
-      const anchors = anchorsDictByHref[href];
+      const { path } = parseHash(a.getAttribute('href')!);
+      const anchors = anchorsDictByHref[path];
       if (anchors !== undefined) {
         anchors[0].push(element);
         anchors[1].push(a);
         continue;
       }
-      anchorsDictByHref[href] = [[element], [a]];
+      anchorsDictByHref[path] = [[element], [a]];
     }
   }
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll<HTMLAnchorElement>(`article a[href^="#h"]`));
   for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#/"]')) {
-    const anchors = anchorsDictByHref[a.getAttribute('href')!];
+    const { path } = parseHash(a.getAttribute('href')!);
+    const anchors = anchorsDictByHref[path];
     if (anchors === undefined || anchors[1].includes(a)) {
       continue;
     }
