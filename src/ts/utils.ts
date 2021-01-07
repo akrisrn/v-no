@@ -14,8 +14,8 @@ export function addInputBinds(binds: Dict<() => void>) {
   });
 }
 
-export function chopStr(str: string, sep: string, trim = true): [string, string | null] {
-  const indexOf = str.indexOf(sep);
+export function chopStr(str: string, sep: string, trim = true, last = false): [string, string | null] {
+  const indexOf = last ? str.lastIndexOf(sep) : str.indexOf(sep);
   if (indexOf < 0) {
     return [str, null];
   }

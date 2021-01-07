@@ -240,7 +240,7 @@ declare namespace vno {
 
     function addInputBinds(binds: Dict<() => void>): void
 
-    function chopStr(str: string, sep: string, trim = true): [string, string | null]
+    function chopStr(str: string, sep: string, trim = true, last = false): [string, string | null]
 
     function sleep(timeout: number): Promise<void>
 
