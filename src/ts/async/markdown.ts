@@ -2,7 +2,7 @@ import { config } from '@/ts/config';
 import { getIcon } from '@/ts/element';
 import { EIcon, EMark } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
-import { getAnchorRegExp, getMarkRegExp } from '@/ts/regexp';
+import { getMarkRegExp } from '@/ts/regexp';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { replaceByRegExp, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
@@ -195,25 +195,24 @@ markdownIt.renderer.rules.image = (tokens, idx, options, env, self) => {
   if (!isExternalLink(src)) {
     token.attrSet('src', addBaseUrl(src));
   }
-  let title = token.attrGet('title');
+  const title = token.attrGet('title');
   if (!title) {
     return defaultImageRenderRule(tokens, idx, options, env, self);
   }
-  const match = title.match(/#(.+)$/);
-  if (!match) {
+  const [key, value] = chopStr(title, '#', false, true);
+  if (value === null) {
     return defaultImageRenderRule(tokens, idx, options, env, self);
   }
-  const width = parseInt(match[1]);
+  const width = parseInt(value);
   if (!isNaN(width)) {
     token.attrSet('width', `${width}`);
-  } else if (match[1].startsWith('.')) {
-    trimList(match[1].split('.')).forEach(cls => token.attrJoin('class', cls));
+  } else if (value.startsWith('.')) {
+    trimList(value.split('.')).forEach(cls => token.attrJoin('class', cls));
   } else {
-    token.attrSet('style', match[1]);
+    token.attrSet('style', value);
   }
-  title = title.replace(/#.+$/, '');
-  if (title) {
-    token.attrSet('title', title);
+  if (key) {
+    token.attrSet('title', key);
   } else {
     token.attrs!.splice(token.attrIndex('title'), 1);
   }
@@ -237,16 +236,20 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
   }
   isExternal = false;
   if (href.startsWith('/') && (href.endsWith('.md') || href.endsWith('/'))) {
-    let title = token.attrGet('title');
+    const title = token.attrGet('title');
     if (title) {
-      const regexp = new RegExp(`#(${getAnchorRegExp(false).source})?$`);
-      const match = title.match(regexp);
-      if (match) {
-        const [match0, anchor] = match;
-        href = `#${shortenPath(href)}${anchor ? `#${anchor}` : ''}`;
-        title = title.substr(0, title.length - match0.length);
-        if (title) {
-          token.attrSet('title', title);
+      const [key, value] = chopStr(title, '#', false, true);
+      if (value !== null) {
+        href = `#${shortenPath(href)}`;
+        const [anchor, query] = chopStr(value, '?', false);
+        if (anchor) {
+          href += `#${anchor}`;
+        }
+        if (query) {
+          href += `?${query}`;
+        }
+        if (key) {
+          token.attrSet('title', key);
         } else {
           token.attrs!.splice(token.attrIndex('title'), 1);
         }
