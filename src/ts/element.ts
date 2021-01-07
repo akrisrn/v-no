@@ -1,5 +1,6 @@
 import { EEvent, EFlag, EIcon } from '@/ts/enums';
 import { buildQueryFlagUrl, shortenPath } from '@/ts/path';
+import { sleep } from '@/ts/utils';
 
 let eventListenerDict: Dict<[(Document | Element)[], EventListenerOrEventListenerObject[]]> = {};
 
@@ -28,7 +29,7 @@ export function addEventListener(element: Document | Element, type: string, list
 
 export async function dispatchEvent<T>(type: EEvent, payload?: T, timeout?: number) {
   if (timeout) {
-    await new Promise(_ => setTimeout(_, timeout));
+    await sleep(timeout);
   }
   return document.dispatchEvent(new CustomEvent<T>(type, { detail: payload }));
 }

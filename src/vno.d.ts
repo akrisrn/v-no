@@ -13,6 +13,7 @@ declare namespace vno {
 
   const destructors: typeof utils.destructors;
   const addInputBinds: typeof utils.addInputBinds;
+  const sleep: typeof utils.sleep;
   const waitFor: typeof utils.waitFor;
   const addEventListener: typeof utils.addEventListener;
   const callAndListen: typeof utils.callAndListen;
@@ -239,6 +240,8 @@ declare namespace vno {
     function addInputBinds(binds: Dict<() => void>): void
 
     function chopStr(str: string, sep: string, trim = true): [string, string | null]
+
+    function sleep(timeout: number): Promise<void>
 
     function trimList(list: string[], distinct = true): string[]
 

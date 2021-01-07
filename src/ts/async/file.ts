@@ -2,6 +2,7 @@ import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp, getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
+import { sleep } from '@/ts/utils';
 import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { addCacheKey, trimList } from '@/ts/async/utils';
@@ -210,7 +211,7 @@ const cachedFiles: Dict<IFile> = {};
 
 export async function getFile(path: string) {
   while (isRequesting[path]) {
-    await new Promise(_ => setTimeout(_, 10));
+    await sleep(10);
   }
   isRequesting[path] = true;
   if (noCache) {

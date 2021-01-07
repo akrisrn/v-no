@@ -5,7 +5,7 @@ import * as path from '@/ts/path';
 import * as regexp from '@/ts/regexp';
 import * as store from '@/ts/store';
 import * as utils from '@/ts/utils';
-import { addInputBinds, destructors } from '@/ts/utils';
+import { addInputBinds, destructors, sleep } from '@/ts/utils';
 import { exposeToWindow } from '@/ts/window';
 import { importFileTs, importMarkdownTs, importUtilsTs } from '@/ts/async';
 import Vue from 'vue';
@@ -16,6 +16,7 @@ export function bang() {
     version: process.env.VUE_APP_VERSION,
     destructors,
     addInputBinds,
+    sleep,
     config, element, enums, path, regexp, store, utils,
   });
   importFileTs().then(file => exposeToWindow({ file }));

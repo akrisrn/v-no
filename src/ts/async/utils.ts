@@ -2,7 +2,7 @@ import { config } from '@/ts/config';
 import { getSyncSpan } from '@/ts/element';
 import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
-import { destructors } from '@/ts/utils';
+import { destructors, sleep } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 import axios from 'axios';
 
@@ -85,7 +85,7 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
         if (++count > maxCount) {
           return false;
         }
-        await new Promise(_ => setTimeout(_, timeout));
+        await sleep(timeout);
       }
     }
   })();

@@ -27,3 +27,7 @@ export function chopStr(str: string, sep: string, trim = true): [string, string 
   }
   return [key, value];
 }
+
+export async function sleep(timeout: number) {
+  await new Promise(resolve => setTimeout(resolve, timeout));
+}
