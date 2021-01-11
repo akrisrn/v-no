@@ -291,6 +291,10 @@
       if (this.hasLoadedBacklinks) {
         this.getBacklinks().then();
       }
+      if (getMarkRegExp(EMark.noCommon).test(data)) {
+        data = data.replace(getMarkRegExp(EMark.noCommon, true, 'img'), '');
+        return { data, flags, links };
+      }
       if (files.length < 2 || files[1].isError) {
         return { data, flags, links };
       }

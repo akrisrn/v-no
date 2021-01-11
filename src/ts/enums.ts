@@ -13,6 +13,7 @@ export enum EFlag {
 
 export enum EMark {
   redirect = 'redirect',
+  noCommon = 'noCommon',
   toc = 'toc',
   list = 'list',
   input = 'input',

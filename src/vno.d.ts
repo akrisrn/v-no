@@ -132,6 +132,7 @@ declare namespace vno {
 
     enum EMark {
       redirect = 'redirect',
+      noCommon = 'noCommon',
       toc = 'toc',
       list = 'list',
       input = 'input',
