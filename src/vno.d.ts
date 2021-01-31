@@ -428,7 +428,7 @@ declare class Main {
 
   removeFlag(key: string): void
 
-  getBacklinks(): Promise<void>
+  loadBacklinks(): Promise<void>
 
   getListHtml(file: ISimpleFile): string
 

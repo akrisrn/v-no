@@ -29,7 +29,7 @@
         <span v-if="!hasLoadedBacklinks" :class="['icon', { sync: isLoadingBacklinks }]"
               v-html="isLoadingBacklinks ? iconSync : iconBacklink"></span>
         <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
-        <a v-else-if="!hasLoadedBacklinks" @click="getBacklinks">{{ config.messages.showBacklinks }}</a>
+        <a v-else-if="!hasLoadedBacklinks" @click="loadBacklinks">{{ config.messages.showBacklinks }}</a>
         <template v-else>
           <ul v-if="backlinkFiles.length > 0">
             <li v-for="file of backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
@@ -289,7 +289,7 @@
         }
       }
       if (this.hasLoadedBacklinks) {
-        this.getBacklinks().then();
+        this.loadBacklinks().then();
       }
       if (getMarkRegExp(EMark.noCommon).test(data)) {
         data = data.replace(getMarkRegExp(EMark.noCommon, true, 'img'), '');
@@ -360,7 +360,7 @@
       }
     }
 
-    async getBacklinks() {
+    async loadBacklinks() {
       this.isLoadingBacklinks = true;
       if (!this.fileTs) {
         this.fileTs = await importFileTs();
