@@ -29,7 +29,7 @@ export function bang() {
         if (!data) {
           return '';
         }
-        data = markdown.replaceInlineScript(path, data, asyncResults);
+        data = markdown.updateInlineScript(path, data, asyncResults);
         if (!data) {
           return '';
         }

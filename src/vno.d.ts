@@ -62,7 +62,7 @@ declare namespace vno {
 
     function updateAsyncScript(result: TAsyncResult): boolean
 
-    function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]): string
+    function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]): string
 
     function updateSnippet(data: string, updatedPaths: string[], asyncResults?: TAsyncResult[]): Promise<string>
 

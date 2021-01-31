@@ -40,7 +40,7 @@ export function updateAsyncScript(result: TAsyncResult) {
   return true;
 }
 
-export function replaceInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
+export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
     let result: string;
     try {
@@ -162,7 +162,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           }
         }
         if (snippetData) {
-          snippetData = replaceInlineScript(path, snippetData, asyncResults);
+          snippetData = updateInlineScript(path, snippetData, asyncResults);
         }
       }
       let dataWithHeading = snippetData;

@@ -75,7 +75,7 @@
       this.isRendering = true;
       this.startTime = new Date().getTime();
       if (data) {
-        data = this.markdownTs.replaceInlineScript(this.filePath, data, this.asyncResults);
+        data = this.markdownTs.updateInlineScript(this.filePath, data, this.asyncResults);
       }
       if (!data) {
         this.updateRenderData().then(() => this.renderComplete());
