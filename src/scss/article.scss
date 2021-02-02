@@ -487,7 +487,15 @@ article {
         &:hover {
           background-color: nth($colors, 2);
         }
+
+        &:active {
+          background-color: nth($colors, 1);
+        }
       }
+    }
+
+    &.bold {
+      font-weight: bold;
     }
 
     &:disabled {
