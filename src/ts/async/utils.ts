@@ -43,7 +43,7 @@ function isolateEval(str: string) {
   return eval(str);
 }
 
-export function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[]) {
+export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {

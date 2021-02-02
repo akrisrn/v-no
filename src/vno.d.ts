@@ -251,7 +251,7 @@ declare namespace vno {
 
     function stringifyAny(value: any): string
 
-    function evalFunction(evalStr: string, params: Dict<string>, asyncResults?: TAsyncResult[]): string
+    function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): string
 
     function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
 
