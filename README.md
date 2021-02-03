@@ -1,8 +1,12 @@
-![v-no](/public/uploads/logo.png)
+<p align="center"><img src="/public/uploads/logo.png" alt="logo"></p>
 
-v-no is a light-weight static site renderer/generator, and also a purely static Single-Page-Application powered by Vue.js at the same time.
+# v-no
 
-The document is still worked in process, and just have Chinese edition for now.
+![version](https://img.shields.io/github/package-json/v/akrisrn/v-no) ![Release](https://github.com/akrisrn/v-no/workflows/Release/badge.svg) ![Prerender](https://github.com/akrisrn/v-no-doc/workflows/Prerender/badge.svg)
+
+v-no is a light weight static site renderer/generator, and also a purely static single page application powered by Vue.js at the same time.
+
+[The document](https://akrisrn.github.io/v-no-doc/-/) is still worked in process, and just have Chinese edition for now.
 
 ## Project setup
 
