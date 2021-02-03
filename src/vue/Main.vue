@@ -20,7 +20,8 @@
           <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
         </code>
       </div>
-      <div v-if="!isRedirectPage && redirectFrom[0].length > 0" id="redirect-from">{{ config.messages.redirectFrom }}
+      <div v-if="!isRedirectPage && redirectFrom[0].length > 0" id="redirect-from">
+        <span>{{ config.messages.redirectFrom }}</span>
         <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
