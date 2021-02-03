@@ -24,7 +24,7 @@
         <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
-      <Article :fileData="fileData" :query="query" :showTime="showTime"></Article>
+      <Article :fileData="fileData" :query="query" :redirectTo="redirectTo" :showTime="showTime"></Article>
       <div v-if="!isError" id="backlinks">
         <span v-if="!hasLoadedBacklinks" :class="['icon', { sync: isLoadingBacklinks }]"
               v-html="isLoadingBacklinks ? iconSync : iconBacklink"></span>
@@ -272,22 +272,6 @@
         return { data, flags, links };
       }
       this.isError = false;
-      let match = data.match(getMarkRegExp(EMark.redirect));
-      if (match) {
-        match = match[1].match(/^(\/\S+\.md)(?:#(\S+))?(?:\?(\S+))?$/);
-        if (match && !this.redirectFrom[0].includes(filePath)) {
-          this.isRedirectPage = true;
-          this.redirectFrom[0].push(filePath);
-          this.redirectFrom[1].push(flags.title);
-          const [, path, anchor, query] = match;
-          location.hash = buildHash({
-            path: shortenPath(path),
-            anchor: anchor || this.anchor,
-            query: query || this.queryStr,
-          });
-          return undefined;
-        }
-      }
       if (this.hasLoadedBacklinks) {
         this.loadBacklinks().then();
       }
@@ -358,6 +342,21 @@
           break;
         }
       }
+    }
+
+    redirectTo(path: string, anchor?: string, query?: string) {
+      if (this.redirectFrom[0].includes(this.filePath)) {
+        return false;
+      }
+      this.isRedirectPage = true;
+      this.redirectFrom[0].push(this.filePath);
+      this.redirectFrom[1].push(this.title);
+      location.hash = buildHash({
+        path: shortenPath(path),
+        anchor: anchor || this.anchor,
+        query: query || this.queryStr,
+      });
+      return true;
     }
 
     async loadBacklinks() {

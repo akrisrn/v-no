@@ -305,6 +305,10 @@ declare class Article {
    * @Prop()
    */
   showTime: number;
+  /**
+   * @Prop()
+   */
+  redirectTo: (path: string, anchor?: string, query?: string) => boolean;
 
   markdownTs: typeof vno.markdown;
   startTime: number;
@@ -427,6 +431,8 @@ declare class Main {
   addFlag(key: string, value: string, sort = true): void
 
   removeFlag(key: string): void
+
+  redirectTo(path: string, anchor?: string, query?: string): boolean
 
   loadBacklinks(): Promise<void>
 

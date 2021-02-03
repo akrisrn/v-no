@@ -18,6 +18,7 @@
     @Prop() fileData!: string;
     @Prop() query!: TQuery;
     @Prop() showTime!: number;
+    @Prop() redirectTo!: (path: string, anchor?: string, query?: string) => boolean;
 
     markdownTs!: TMarkdownTs;
     startTime = 0;
@@ -80,6 +81,16 @@
       if (!data) {
         this.updateRenderData().then(() => this.renderComplete());
         return;
+      }
+      let match = data.match(getMarkRegExp(EMark.redirect));
+      if (match) {
+        match = match[1].match(/^(\/\S+\.md)(?:#(\S+))?(?:\?(\S+))?$/);
+        if (match) {
+          const [, path, anchor, query] = match;
+          if (this.redirectTo(path, anchor, query)) {
+            return;
+          }
+        }
       }
       if (this.isSearchFile && this.queryContent || getMarkRegExp(EMark.list).test(data)) {
         importFileTs().then(file => file.getFiles());
