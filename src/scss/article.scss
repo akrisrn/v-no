@@ -346,24 +346,6 @@ article {
     }
   }
 
-  #search-input {
-    font-family: $font-family;
-    font-size: 1em;
-    line-height: 1.8;
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    margin: 24px 0;
-    padding: 0 0 0 16px;
-    transition: color 0.5s;
-    color: $font-color;
-    border: none;
-    border-left: $border-width solid $info-color-s;
-    border-radius: 0;
-    outline: none;
-    background-color: transparent;
-  }
-
   #search-result {
     padding-left: 16px;
     border-left: $border-width solid $success-color-s;
@@ -507,6 +489,24 @@ article {
         background-color: transparent;
       }
     }
+  }
+
+  .ipt {
+    font-family: $font-family;
+    font-size: 1em;
+    line-height: 1.8;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 24px 0;
+    padding: 0 0 0 16px;
+    transition: color 0.5s;
+    color: $font-color;
+    border: none;
+    border-left: $border-width solid $info-color-s;
+    border-radius: 0;
+    outline: none;
+    background-color: transparent;
   }
 
   .folded {

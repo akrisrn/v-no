@@ -348,7 +348,7 @@ export function preprocessSearchPage(data: string) {
     if (mark === EMark.input) {
       if (!replaced[0]) {
         replaced[0] = true;
-        return `<input id="search-${mark}" placeholder="${content}"/>`;
+        return `<input id="search-${mark}" class="ipt" placeholder="${content}"/>`;
       }
       return '';
     }
