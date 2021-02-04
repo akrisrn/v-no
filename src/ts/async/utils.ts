@@ -26,6 +26,9 @@ export function stringifyAny(value: any) {
   switch (typeof value) {
     case 'object':
       try {
+        if (value instanceof Error) {
+          return `${value.name}: ${value.message}`;
+        }
         return JSON.stringify(value);
       } catch {
         return Object.prototype.toString.call(value);

@@ -9,7 +9,7 @@ import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
-import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
+import { addCacheKey, evalFunction, replaceByRegExp, stringifyAny, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
@@ -46,7 +46,7 @@ export function updateInlineScript(path: string, data: string, asyncResults?: TA
     try {
       result = evalFunction(evalStr, { path, data }, asyncResults);
     } catch (e) {
-      result = `\n\n::: open .danger.readonly **${e.name}: ${e.message}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
+      result = `\n\n::: open .danger.readonly **${stringifyAny(e)}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
     return result;
   }).trim();
