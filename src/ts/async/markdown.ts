@@ -274,16 +274,18 @@ export function parseMD(data: string) {
   return markdownIt.parse(data, {});
 }
 
-export function renderMD(data: string) {
-  data = data.replaceAll(snippetMark, '');
-  let replaced = false;
-  data = replaceByRegExp(getMarkRegExp(EMark.toc, true, 'img'), data, () => {
-    if (!replaced) {
-      replaced = true;
-      return '<div id="toc"></div>';
-    }
-    return '';
-  });
+export function renderMD(data: string, replaceMark = true) {
+  if (replaceMark) {
+    data = data.replaceAll(snippetMark, '');
+    let replaced = false;
+    data = replaceByRegExp(getMarkRegExp(EMark.toc, true, 'img'), data, () => {
+      if (!replaced) {
+        replaced = true;
+        return '<div id="toc"></div>';
+      }
+      return '';
+    });
+  }
   headingCount = {};
   return markdownIt.render(data).trim();
 }

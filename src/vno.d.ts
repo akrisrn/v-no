@@ -58,7 +58,7 @@ declare namespace vno {
 
     function parseMD(data: string): Token[]
 
-    function renderMD(data: string): string
+    function renderMD(data: string, replaceMark = true): string
 
     function updateAsyncScript(result: TAsyncResult): boolean
 
