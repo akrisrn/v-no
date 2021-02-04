@@ -118,7 +118,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
   if (paths.length === 0) {
     return data;
   }
-  const paramRegExp = getWrapRegExp('{{', '}}', 'g');
+  const paramRegExp = getWrapRegExp('<<', '>>', 'g');
   for (const file of await Promise.all(paths.map(path => getFile(path)))) {
     const isError = file.isError;
     const path = file.path;
