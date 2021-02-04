@@ -10,7 +10,7 @@
 
   > div {
     display: flex;
-    overflow: hidden;
+    overflow-y: hidden;
     align-items: center;
     max-width: $max-width + 56px * 2;
     height: 40px;
@@ -28,6 +28,7 @@
 
       &:first-of-type {
         margin-right: 8px;
+        white-space: nowrap;
       }
 
       &:first-of-type, &:last-child {
