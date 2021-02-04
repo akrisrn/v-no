@@ -42,7 +42,7 @@ export function stringifyAny(value: any) {
 
 let asyncScriptCount = 0;
 
-function isolateEval(str: string) {
+function isolationEval(str: string) {
   return eval(str);
 }
 
@@ -50,7 +50,7 @@ export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: 
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
-    const func = isolateEval(`(async function(${paras}){${evalStr}})`);
+    const func = isolationEval(`(async function(${paras}){${evalStr}})`);
     if (!asyncResults) {
       return stringifyAny(func);
     }
@@ -60,7 +60,7 @@ export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: 
     });
     return getSyncSpan(id);
   }
-  return stringifyAny(isolateEval(`(function(${paras}){${evalStr}})`)(...args));
+  return stringifyAny(isolationEval(`(function(${paras}){${evalStr}})`)(...args));
 }
 
 export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string) {
