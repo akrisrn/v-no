@@ -251,7 +251,7 @@ declare namespace vno {
 
     function stringifyAny(value: any): string
 
-    function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): string
+    function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean]
 
     function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
 
@@ -540,7 +540,7 @@ type TFlag = [string, string]
 
 type TAnchor = [string, string]
 
-type TAsyncResult = [string, string]
+type TAsyncResult = [string, string, boolean?]
 
 /**
  * vue/types/vue.d.ts

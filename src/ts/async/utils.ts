@@ -46,7 +46,7 @@ function isolationEval(str: string) {
   return eval(str);
 }
 
-export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]) {
+function evalIt(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]) {
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
@@ -57,10 +57,20 @@ export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: 
     const id = `async-script-${++asyncScriptCount}`;
     func(...args).then((result: any) => {
       asyncResults.push([id, stringifyAny(result)]);
+    }).catch((e: any) => {
+      asyncResults.push([id, stringifyAny(e), true]);
     });
     return getSyncSpan(id);
   }
   return stringifyAny(isolationEval(`(function(${paras}){${evalStr}})`)(...args));
+}
+
+export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean] {
+  try {
+    return [evalIt(evalStr, params, asyncResults), false];
+  } catch (e) {
+    return [stringifyAny(e), true];
+  }
 }
 
 export function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string) {

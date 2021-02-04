@@ -9,7 +9,7 @@ import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles } from '@/ts/async/file';
-import { addCacheKey, evalFunction, replaceByRegExp, stringifyAny, trimList } from '@/ts/async/utils';
+import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
@@ -42,11 +42,9 @@ export function updateAsyncScript(result: TAsyncResult) {
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
-    let result: string;
-    try {
-      result = evalFunction(evalStr, { path, data }, asyncResults);
-    } catch (e) {
-      result = `\n\n::: open .danger.readonly **${stringifyAny(e)}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
+    const [result, isError] = evalFunction(evalStr, { path, data }, asyncResults);
+    if (isError) {
+      return `\n\n::: open .danger.readonly **${result}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
     return result;
   }).trim();
