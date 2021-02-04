@@ -99,11 +99,11 @@ body {
     transition: opacity 0.5s;
     opacity: 1;
   }
-}
 
-#app a.error, main.error header {
-  font-weight: bold;
-  color: rgb($danger-color) !important;
+  a.error, span.error, div.error main.error header {
+    font-weight: bold;
+    color: rgb($danger-color) !important;
+  }
 }
 
 @import "top";
