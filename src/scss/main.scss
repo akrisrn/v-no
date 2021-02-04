@@ -49,15 +49,9 @@ main {
       content: "#";
     }
 
-    a {
-      &:first-of-type {
-        margin-left: 4px;
-      }
-
-      &:not(:last-of-type):after {
-        margin: 0 4px;
-        content: "/";
-      }
+    a:not(:last-of-type):after {
+      margin: 0 4px;
+      content: "/";
     }
   }
 
