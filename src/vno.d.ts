@@ -60,7 +60,7 @@ declare namespace vno {
 
     function renderMD(data: string, replaceMark = true): string
 
-    function updateAsyncScript(result: TAsyncResult): boolean
+    function updateAsyncScript(asyncResult: TAsyncResult): boolean
 
     function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]): string
 

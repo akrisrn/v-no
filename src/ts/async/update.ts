@@ -13,29 +13,34 @@ import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
-export function updateAsyncScript(result: TAsyncResult) {
-  const span = document.querySelector(`span#${result[0]}`);
+export function updateAsyncScript(asyncResult: TAsyncResult) {
+  const [id, result, isError] = asyncResult;
+  const span = document.querySelector(`span#${id}`);
   if (!span) {
     return false;
   }
+  let value = result;
+  if (isError) {
+    value = `<span class="error">${value}</span>`;
+  }
   const parent = span.parentElement!;
   if (parent.tagName !== 'P' || parent.childNodes.length > 1) {
-    span.outerHTML = result[1];
+    span.outerHTML = value;
     return true;
   }
-  const trimResult = result[1].trim();
-  if (!trimResult.startsWith('<')) {
-    span.outerHTML = result[1];
+  const trimValue = value.trim();
+  if (!trimValue.startsWith('<')) {
+    span.outerHTML = value;
     return true;
   }
-  let tagName = trimResult.substring(1, trimResult.indexOf('>'));
+  let tagName = trimValue.substring(1, trimValue.indexOf('>'));
   if (tagName.endsWith('/')) {
     tagName = tagName.substr(0, tagName.length - 1);
   }
   if (htmlBlocks.includes(tagName)) {
-    parent.outerHTML = trimResult;
+    parent.outerHTML = trimValue;
   } else {
-    span.outerHTML = result[1];
+    span.outerHTML = value;
   }
   return true;
 }
