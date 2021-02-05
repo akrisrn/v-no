@@ -47,6 +47,9 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
+    if (evalStr.startsWith(': ')) {
+      evalStr = `return ${evalStr.substr(2).trimStart()}`;
+    }
     const [result, isError] = evalFunction(evalStr, { path, data }, asyncResults);
     if (isError) {
       return `\n\n::: open .danger.readonly **${result}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
