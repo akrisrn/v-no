@@ -17,6 +17,7 @@ export function bang() {
     destructors,
     addInputBinds,
     sleep,
+    ...enums,
     config, element, enums, path, regexp, store, utils,
   });
   importFileTs().then(file => exposeToWindow({ file }));

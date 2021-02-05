@@ -21,6 +21,11 @@ declare namespace vno {
   const parseDate: typeof utils.parseDate;
   const formatDate: typeof utils.formatDate;
 
+  const EFlag: typeof enums.EFlag;
+  const EMark: typeof enums.EMark;
+  const EEvent: typeof enums.EEvent;
+  const EIcon: typeof enums.EIcon;
+
   const appSelf: App;
   const articleSelf: Article;
   const gadgetSelf: Gadget;
