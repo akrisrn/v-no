@@ -45,7 +45,7 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
   return true;
 }
 
-export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
+export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
     const match = evalStr.match(/^(:{1,2})\s+/);
     if (match) {
@@ -55,7 +55,7 @@ export function updateInlineScript(path: string, data: string, asyncResults?: TA
       }
       evalStr = `return ${evalStr}`;
     }
-    const [result, isError] = evalFunction(evalStr, { path, data }, asyncResults);
+    const [result, isError] = evalFunction(evalStr, { path, data, isSnippet }, asyncResults);
     if (isError) {
       return `\n\n::: open .danger.readonly **${result}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
@@ -173,7 +173,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           }
         }
         if (snippetData) {
-          snippetData = updateInlineScript(path, snippetData, asyncResults);
+          snippetData = updateInlineScript(path, snippetData, asyncResults, true);
         }
       }
       let dataWithHeading = snippetData;
