@@ -47,8 +47,13 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
-    if (evalStr.startsWith(': ')) {
-      evalStr = `return ${evalStr.substr(2).trimStart()}`;
+    const match = evalStr.match(/^(:{1,2})\s+/);
+    if (match) {
+      evalStr = evalStr.substr(match[0].length);
+      if (match[1].length === 2) {
+        evalStr = `vno.${evalStr}`;
+      }
+      evalStr = `return ${evalStr}`;
     }
     const [result, isError] = evalFunction(evalStr, { path, data }, asyncResults);
     if (isError) {
