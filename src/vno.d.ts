@@ -23,6 +23,7 @@ declare namespace vno {
   const waitForEvent: typeof utils.waitForEvent;
   const addEventListener: typeof utils.addEventListener;
   const callAndListen: typeof utils.callAndListen;
+  const encodeParam: typeof utils.encodeParam;
   const parseDate: typeof utils.parseDate;
   const formatDate: typeof utils.formatDate;
 
@@ -270,6 +271,8 @@ declare namespace vno {
     function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject): void
 
     function callAndListen(callback: () => void, event: enums.EEvent, element: Document | Element = document, reside = true): void
+
+    function encodeParam(value: string): string
 
     function parseDate(date: string | number): Date
 

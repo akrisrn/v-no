@@ -131,5 +131,9 @@ export function callAndListen(callback: () => void, event: EEvent, element: Docu
   }
 }
 
+export function encodeParam(value: string) {
+  return encodeURIComponent(value).replaceAll('\'', '\\\'');
+}
+
 export { axios };
 export * from '@/ts/async/date';
