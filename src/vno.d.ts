@@ -36,8 +36,9 @@ declare namespace vno {
   const toTop: typeof gadgetSelf.toTop;
   const toBottom: typeof gadgetSelf.toBottom;
 
-  const reload: typeof mainSelf.reload;
+  const title: typeof mainSelf.title;
   const filePath: typeof mainSelf.filePath;
+  const reload: typeof mainSelf.reload;
 
   namespace file {
     function createErrorFile(path: string): IFile

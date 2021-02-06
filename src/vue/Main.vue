@@ -183,7 +183,6 @@
       exposeToWindow({
         mainSelf: this,
         reload: this.reload,
-        filePath: this.filePath,
       });
       this.$watch('title', () => {
         let title = this.title;
@@ -220,7 +219,6 @@
       }
       this.isShow = false;
       next();
-      exposeToWindow({ filePath: this.filePath });
       if (!this.isRedirectPage) {
         this.redirectFrom = [[], []];
       } else {
@@ -325,6 +323,10 @@
         if (!definedFlags.includes(key as EFlag)) {
           this.addFlag(key, flags[key] as string, false);
         }
+      });
+      exposeToWindow({
+        title: this.title,
+        filePath: this.filePath,
       });
     }
 
