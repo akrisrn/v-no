@@ -100,7 +100,7 @@ body {
     opacity: 1;
   }
 
-  a.error, span.error, div.error main.error header {
+  a.error, span.error, div.error, main.error header {
     font-weight: bold;
     color: rgb($danger-color) !important;
   }
