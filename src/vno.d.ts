@@ -31,6 +31,8 @@ declare namespace vno {
   const gadgetSelf: Gadget;
   const mainSelf: Main;
 
+  const selectConf: typeof appSelf.selectConf;
+
   const toggleDark: typeof gadgetSelf.toggleDark;
   const toggleZen: typeof gadgetSelf.toggleZen;
   const toTop: typeof gadgetSelf.toTop;

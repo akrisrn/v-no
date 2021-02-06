@@ -70,7 +70,10 @@
 
     created() {
       bang();
-      exposeToWindow({ appSelf: this });
+      exposeToWindow({
+        appSelf: this,
+        selectConf: this.selectConf,
+      });
       const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]')!;
       if (this.favicon) {
         icon.href = this.favicon;
