@@ -11,6 +11,11 @@ declare namespace vno {
   const renderMD: (path: string, data: string, asyncResults?: TAsyncResult[]) => Promise<string>;
   const updateDom: typeof markdown.updateDom;
 
+  const EFlag: typeof enums.EFlag;
+  const EMark: typeof enums.EMark;
+  const EEvent: typeof enums.EEvent;
+  const EIcon: typeof enums.EIcon;
+
   const destructors: typeof utils.destructors;
   const addInputBinds: typeof utils.addInputBinds;
   const sleep: typeof utils.sleep;
@@ -21,26 +26,21 @@ declare namespace vno {
   const parseDate: typeof utils.parseDate;
   const formatDate: typeof utils.formatDate;
 
-  const EFlag: typeof enums.EFlag;
-  const EMark: typeof enums.EMark;
-  const EEvent: typeof enums.EEvent;
-  const EIcon: typeof enums.EIcon;
-
   const appSelf: App;
+  const mainSelf: Main;
   const articleSelf: Article;
   const gadgetSelf: Gadget;
-  const mainSelf: Main;
 
   const selectConf: typeof appSelf.selectConf;
+
+  const title: typeof mainSelf.title;
+  const filePath: typeof mainSelf.filePath;
+  const reload: typeof mainSelf.reload;
 
   const toggleDark: typeof gadgetSelf.toggleDark;
   const toggleZen: typeof gadgetSelf.toggleZen;
   const toTop: typeof gadgetSelf.toTop;
   const toBottom: typeof gadgetSelf.toBottom;
-
-  const title: typeof mainSelf.title;
-  const filePath: typeof mainSelf.filePath;
-  const reload: typeof mainSelf.reload;
 
   namespace file {
     function createErrorFile(path: string): IFile
