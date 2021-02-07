@@ -46,7 +46,7 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
 }
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([evalStr]) => {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([, evalStr]) => {
     const match = evalStr.match(/^(:{1,2})\s+/);
     if (match) {
       evalStr = evalStr.substr(match[0].length);
@@ -139,7 +139,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
       const [heading, params] = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
-        snippetData = replaceByRegExp(paramRegExp, snippetData, ([match]) => {
+        snippetData = replaceByRegExp(paramRegExp, snippetData, ([, match]) => {
           let defaultValue: string | undefined = undefined;
           const [key, value] = chopStr(match, '|');
           if (value !== null) {
@@ -300,7 +300,7 @@ export async function updateList(data: string) {
   const { files } = await getFiles();
   if (!isAll) {
     const fileList = Object.values(files).filter(file => !file.isError).sort(sortFiles);
-    return replaceByRegExp(listRegExpG, data, ([content]) => {
+    return replaceByRegExp(listRegExpG, data, ([, content]) => {
       const queryParams = getQueryParams(content);
       const resultFiles: IFile[] = [];
       for (const file of fileList) {
@@ -355,7 +355,7 @@ export async function updateList(data: string) {
 export function preprocessSearchPage(data: string) {
   const replaced = [false, false];
   let markRegExp = getMarkRegExp(`(${[EMark.input, EMark.result].join('|')})`, true, 'img');
-  data = replaceByRegExp(markRegExp, data, ([mark, content]) => {
+  data = replaceByRegExp(markRegExp, data, ([, mark, content]) => {
     if (mark === EMark.input) {
       if (!replaced[0]) {
         replaced[0] = true;

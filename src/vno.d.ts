@@ -262,7 +262,7 @@ declare namespace vno {
 
     function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean]
 
-    function replaceByRegExp(regexp: RegExp, data: string, callback: (matches: string[]) => string): string
+    function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string[]) => string): string
 
     function waitFor(callback: () => void, maxCount = 100, timeout = 100): Promise<boolean>
 
