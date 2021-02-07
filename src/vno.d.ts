@@ -460,6 +460,10 @@ declare class Main {
   returnHome(): void
 }
 
+interface IMessage {
+  [index: string]: string | IMessage
+}
+
 interface IConfig {
   siteName?: string;
   dateFormat?: string;
@@ -490,6 +494,8 @@ interface IConfig {
     noBacklinks: string;
     loading: string;
     redirectFrom: string;
+
+    [index: string]: string | IMessage;
   };
   defaultConf?: string;
   multiConf?: Dict<IConfig>;
@@ -524,8 +530,6 @@ interface IFile extends ISimpleFile {
 }
 
 type Dict<T> = { [index: string]: T }
-
-type TMessage = string | Dict<TMessage>
 
 type TLink = {
   href: string;

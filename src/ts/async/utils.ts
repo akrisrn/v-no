@@ -136,8 +136,11 @@ export function encodeParam(value: string) {
 }
 
 export function getMessage(key: string, params: string[] | Dict<string>) {
-  let message: TMessage = config.messages;
+  let message: string | IMessage = config.messages;
   for (const k of trimList(key.split('.'), false)) {
+    if (typeof message === 'string') {
+      return stringifyAny(undefined);
+    }
     try {
       message = message[k];
     } catch (e) {
