@@ -2,7 +2,14 @@ import { config } from '@/ts/config';
 import { addEventListener, createList, dispatchEvent, getSyncSpan, removeClass, scroll } from '@/ts/element';
 import { EEvent, EFlag, EMark } from '@/ts/enums';
 import { changeAnchor, changeQueryContent, checkLinkPath, parseHash } from '@/ts/path';
-import { getAnchorRegExp, getHeadingRegExp, getMarkRegExp, getSnippetRegExp, getWrapRegExp } from '@/ts/regexp';
+import {
+  getAnchorRegExp,
+  getHeadingRegExp,
+  getMarkRegExp,
+  getParamRegExp,
+  getSnippetRegExp,
+  getWrapRegExp,
+} from '@/ts/regexp';
 import { state } from '@/ts/store';
 import { chopStr, snippetMark } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
@@ -129,7 +136,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
   if (paths.length === 0) {
     return data;
   }
-  const paramRegExp = getWrapRegExp('<<', '>>', 'g');
+  const paramRegExp = getParamRegExp();
   for (const file of await Promise.all(paths.map(path => getFile(path)))) {
     const isError = file.isError;
     const path = file.path;

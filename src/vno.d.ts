@@ -227,6 +227,8 @@ declare namespace vno {
     function getMarkRegExp(mark: string, isLine = true, flags = 'im'): RegExp
 
     function getWrapRegExp(left: string, right = left, flags?: string): RegExp
+
+    function getParamRegExp(flags = 'g'): RegExp
   }
 
   namespace store {

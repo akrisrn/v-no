@@ -44,3 +44,7 @@ export function getMarkRegExp(mark: string, isLine = true, flags = 'im') {
 export function getWrapRegExp(left: string, right = left, flags?: string) {
   return new RegExp(`${left}\\s*(.+?)\\s*${right}`, flags);
 }
+
+export function getParamRegExp(flags = 'g') {
+  return getWrapRegExp('<<', '>>', flags);
+}
