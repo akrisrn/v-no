@@ -54,11 +54,16 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([, evalStr]) => {
-    const match = evalStr.match(/^(:{1,2})\s+/);
+    const match = evalStr.match(/^(:{1,3})\s+/);
     if (match) {
       evalStr = evalStr.substr(match[0].length);
-      if (match[1].length === 2) {
-        evalStr = `vno.${evalStr}`;
+      switch (match[1].length) {
+        case 3:
+          evalStr = `vno.getMessage(${evalStr})`;
+          break;
+        case 2:
+          evalStr = `vno.${evalStr}`;
+          break;
       }
       evalStr = `return ${evalStr}`;
     }
