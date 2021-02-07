@@ -1,6 +1,7 @@
 declare let vnoConfig: IConfig;
 
 declare namespace vno {
+  const VPD: VPD;
   const Vue: Vue;
   const axios: typeof utils.axios;
   const dayjs: typeof utils.dayjs;
@@ -559,6 +560,11 @@ type TFlag = [string, string]
 type TAnchor = [string, string]
 
 type TAsyncResult = [string, string, boolean?]
+
+/**
+ * vue-property-decorator/lib/index.d.ts
+ */
+type VPD = any
 
 /**
  * vue/types/vue.d.ts

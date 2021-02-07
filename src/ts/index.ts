@@ -8,11 +8,11 @@ import * as utils from '@/ts/utils';
 import { addInputBinds, destructors, sleep } from '@/ts/utils';
 import { exposeToWindow } from '@/ts/window';
 import { importFileTs, importMarkdownTs, importUtilsTs } from '@/ts/async';
-import Vue from 'vue';
+import * as VPD from 'vue-property-decorator';
 
 export function bang() {
   exposeToWindow({
-    Vue,
+    VPD, Vue: VPD.Vue,
     version: process.env.VUE_APP_VERSION,
     destructors,
     addInputBinds,
