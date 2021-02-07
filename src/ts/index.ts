@@ -54,6 +54,7 @@ export function bang() {
       addEventListener: utils.addEventListener,
       callAndListen: utils.callAndListen,
       encodeParam: utils.encodeParam,
+      getMessage: utils.getMessage,
       parseDate: utils.parseDate,
       formatDate: utils.formatDate,
     });

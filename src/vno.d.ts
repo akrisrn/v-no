@@ -24,6 +24,7 @@ declare namespace vno {
   const addEventListener: typeof utils.addEventListener;
   const callAndListen: typeof utils.callAndListen;
   const encodeParam: typeof utils.encodeParam;
+  const getMessage: typeof utils.getMessage;
   const parseDate: typeof utils.parseDate;
   const formatDate: typeof utils.formatDate;
 
@@ -276,6 +277,8 @@ declare namespace vno {
 
     function encodeParam(value: string): string
 
+    function getMessage(key: string, params: string[] | Dict<string>): string
+
     function parseDate(date: string | number): Date
 
     function formatDate(date: string | number | Date | Dayjs, format?: string): string
@@ -520,6 +523,8 @@ interface IFile extends ISimpleFile {
 }
 
 type Dict<T> = { [index: string]: T }
+
+type TMessage = string | Dict<TMessage>
 
 type TLink = {
   href: string;

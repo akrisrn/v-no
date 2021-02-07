@@ -2,6 +2,7 @@ import { config } from '@/ts/config';
 import { getSyncSpan } from '@/ts/element';
 import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
+import { getParamRegExp } from '@/ts/regexp';
 import { destructors, sleep } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 import axios from 'axios';
@@ -132,6 +133,27 @@ export function callAndListen(callback: () => void, event: EEvent, element: Docu
 
 export function encodeParam(value: string) {
   return encodeURIComponent(value).replaceAll('\'', '\\\'');
+}
+
+export function getMessage(key: string, params: string[] | Dict<string>) {
+  let message: TMessage = config.messages;
+  for (const k of trimList(key.split('.'), false)) {
+    try {
+      message = message[k];
+    } catch (e) {
+      return stringifyAny(undefined);
+    }
+  }
+  if (typeof message !== 'string') {
+    return stringifyAny(message);
+  }
+  return replaceByRegExp(getParamRegExp(), message, ([match0, match]) => {
+    if (!Array.isArray(params)) {
+      return params[match];
+    }
+    const num = parseInt(match);
+    return isNaN(num) ? match0 : params[num];
+  });
 }
 
 export { axios };
