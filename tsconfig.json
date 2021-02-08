@@ -10,17 +10,16 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
+    "types": [
+      "webpack-env",
+      "jest"
+    ],
     "lib": [
       "esnext",
       "dom",
