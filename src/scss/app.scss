@@ -68,18 +68,18 @@ body {
 
     &.emoji {
       height: 18px;
-      vertical-align: -3px;
+      vertical-align: -2px;
     }
   }
 
   svg {
     transition: fill 0.5s;
+    vertical-align: -2px;
     fill: $font-color;
   }
 
   .sync svg {
     animation: svg-spin 1s linear infinite;
-    vertical-align: -3px;
 
     @keyframes svg-spin {
       from {
