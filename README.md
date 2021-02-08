@@ -12,8 +12,10 @@ Related repos:
 
 - [v-no-script](https://github.com/akrisrn/v-no-script)
 - [v-no-doc](https://github.com/akrisrn/v-no-doc)
+- [v-no-doc-script](https://github.com/akrisrn/v-no-doc-script)
 - [v-no-template](https://github.com/akrisrn/v-no-template)
 - [v-no-hash-template](https://github.com/akrisrn/v-no-hash-template)
+- [v-no-script-template](https://github.com/akrisrn/v-no-script-template)
 
 ## Project setup
 
