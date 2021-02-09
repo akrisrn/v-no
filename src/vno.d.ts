@@ -1,3 +1,5 @@
+/* v1.2.6 */
+
 declare let vnoConfig: IConfig;
 
 declare namespace vno {
