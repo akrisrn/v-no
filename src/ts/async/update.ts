@@ -135,7 +135,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           params[key] = param;
         }
       }
-      params[i + 1] = param;
+      params[i] = param;
     });
     snippetDict[match0] = [heading, params];
     return line;
