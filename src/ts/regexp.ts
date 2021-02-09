@@ -46,5 +46,5 @@ export function getWrapRegExp(left: string, right = left, flags?: string) {
 }
 
 export function getParamRegExp(flags = 'g') {
-  return getWrapRegExp('<<', '>>', flags);
+  return getWrapRegExp('{{', '}}', flags);
 }
