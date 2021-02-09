@@ -266,7 +266,7 @@ declare namespace vno {
 
     function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean]
 
-    function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string[]) => string): string
+    function replaceByRegExp(regexp: RegExp, data: string, callback: (match: RegExpExecArray) => string): string
 
     function waitFor(callback: () => void, maxCount = 100, timeout = 100): Promise<boolean>
 
@@ -278,7 +278,7 @@ declare namespace vno {
 
     function encodeParam(value: string): string
 
-    function getMessage(key: string, params: string[] | Dict<string>): string
+    function getMessage(key: string, params: any[] | Dict<any>): string
 
     function parseDate(date: string | number): Date
 

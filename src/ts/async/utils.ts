@@ -74,7 +74,7 @@ export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: 
   }
 }
 
-export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: string[]) => string) {
+export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: RegExpExecArray) => string) {
   let newData = '';
   let start = 0;
   let match = regexp.exec(data);
@@ -135,7 +135,7 @@ export function encodeParam(value: string) {
   return encodeURIComponent(value).replaceAll('\'', '\\\'');
 }
 
-export function getMessage(key: string, params: string[] | Dict<string>) {
+export function getMessage(key: string, params: any[] | Dict<any>) {
   let message: string | IMessage = config.messages;
   for (const k of trimList(key.split('.'), false)) {
     if (typeof message === 'string') {
@@ -163,7 +163,7 @@ export function getMessage(key: string, params: string[] | Dict<string>) {
         param = params[num];
       }
     }
-    return param !== undefined ? param : match0;
+    return param !== undefined ? stringifyAny(param) : match0;
   });
 }
 
