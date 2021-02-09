@@ -151,11 +151,19 @@ export function getMessage(key: string, params: string[] | Dict<string>) {
     return stringifyAny(message);
   }
   return replaceByRegExp(getParamRegExp(), message, ([match0, match]) => {
-    if (!Array.isArray(params)) {
-      return params[match];
+    if (!match) {
+      return match0;
     }
-    const num = parseInt(match);
-    return isNaN(num) ? match0 : params[num];
+    let param = undefined;
+    if (!Array.isArray(params)) {
+      param = params[match];
+    } else {
+      const num = parseInt(match);
+      if (!isNaN(num)) {
+        param = params[num];
+      }
+    }
+    return param !== undefined ? param : match0;
   });
 }
 

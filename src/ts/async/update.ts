@@ -53,7 +53,10 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
 }
 
 export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false) {
-  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([, evalStr]) => {
+  return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([match0, evalStr]) => {
+    if (!evalStr) {
+      return match0;
+    }
     const match = evalStr.match(/^(:{1,3})\s+/);
     if (match) {
       evalStr = evalStr.substr(match[0].length);
@@ -151,7 +154,10 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
       const [heading, params] = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
-        snippetData = replaceByRegExp(paramRegExp, snippetData, ([, match]) => {
+        snippetData = replaceByRegExp(paramRegExp, snippetData, ([match0, match]) => {
+          if (!match) {
+            return match0;
+          }
           let defaultValue: string | undefined = undefined;
           const [key, value] = chopStr(match, '|');
           if (value !== null) {
@@ -165,7 +171,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           } else if (defaultValue !== undefined) {
             result = defaultValue;
           } else {
-            return 'undefined';
+            return match0;
           }
           return result.replace(/\\n/g, '\n');
         }).trim();
