@@ -226,9 +226,9 @@ declare namespace vno {
 
     function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string): RegExp
 
-    function getMarkRegExp(mark: string, isLine = true, flags = 'im'): RegExp
-
     function getWrapRegExp(left: string, right = left, flags?: string): RegExp
+
+    function getMarkRegExp(mark: string, isLine = true, flags = 'im'): RegExp
 
     function getParamRegExp(flags = 'g'): RegExp
   }

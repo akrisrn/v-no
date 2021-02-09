@@ -33,16 +33,16 @@ export function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string)
   return new RegExp(pattern, flags);
 }
 
+export function getWrapRegExp(left: string, right = left, flags?: string) {
+  return new RegExp(`${left}\\s*(.*?)\\s*${right}`, flags);
+}
+
 export function getMarkRegExp(mark: string, isLine = true, flags = 'im') {
-  let pattern = `\\[${mark}(?:#\\s*(.*?)\\s*)?]`;
+  let pattern = `\\[${mark}${getWrapRegExp('(?:#', ')?').source}]`;
   if (isLine) {
     pattern = `^${pattern}$`;
   }
   return new RegExp(pattern, flags);
-}
-
-export function getWrapRegExp(left: string, right = left, flags?: string) {
-  return new RegExp(`${left}\\s*(.*?)\\s*${right}`, flags);
 }
 
 export function getParamRegExp(flags = 'g') {
