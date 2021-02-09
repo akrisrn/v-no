@@ -541,7 +541,7 @@ function updateLinkPath() {
       let isPass = true;
       let hasQuote = false;
       if (parent.childNodes[0].nodeType === 1) {
-        if (parent.childElementCount === 1) {
+        if (parent.childNodes.length === 1) {
           isPass = false;
         } else if (parent.childElementCount === 2 && parent.lastElementChild!.tagName === 'BLOCKQUOTE') {
           isPass = false;
