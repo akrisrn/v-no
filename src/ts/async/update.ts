@@ -637,21 +637,33 @@ function updateAnchor() {
   const anchorDict: Dict<HTMLElement> = {};
   const anchorsDictByHref: Dict<[HTMLElement[], HTMLAnchorElement[]]> = {};
   for (const element of document.querySelectorAll<HTMLElement>('article > *[id^="h"]')) {
+    if (!/^H[2-6]$/.test(element.tagName)) {
+      continue;
+    }
     const anchor = element.id;
     if (!anchorRegExp.test(anchor)) {
       continue;
     }
     anchorDict[anchor] = element;
-    for (const a of element.querySelectorAll<HTMLAnchorElement>('a[href^="#/"]')) {
-      const { path } = parseHash(a.getAttribute('href')!);
-      const anchors = anchorsDictByHref[path];
-      if (anchors !== undefined) {
-        anchors[0].push(element);
-        anchors[1].push(a);
-        continue;
-      }
-      anchorsDictByHref[path] = [[element], [a]];
+    if (element.childNodes.length !== 3) {
+      continue;
     }
+    const a = element.childNodes[1] as HTMLAnchorElement;
+    if (a.nodeType !== 1 || a.tagName !== 'A') {
+      continue;
+    }
+    const href = a.getAttribute('href');
+    if (!href || !href.startsWith('#/')) {
+      continue;
+    }
+    const { path } = parseHash(href);
+    const anchors = anchorsDictByHref[path];
+    if (anchors === undefined) {
+      anchorsDictByHref[path] = [[element], [a]];
+      continue;
+    }
+    anchors[0].push(element);
+    anchors[1].push(a);
   }
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll<HTMLAnchorElement>(`article a[href^="#h"]`));
   for (const a of document.querySelectorAll<HTMLAnchorElement>('article a[href^="#/"]')) {
