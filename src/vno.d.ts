@@ -224,13 +224,13 @@ declare namespace vno {
 
     function getLinkRegExp(startWithSlash = false, isImg = false, isLine = false, flags?: string): RegExp
 
-    function getSnippetRegExp(flags?: string): RegExp
-
-    function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string): RegExp
-
     function getWrapRegExp(left: string, right = left, flags?: string): RegExp
 
     function getMarkRegExp(mark: string, isLine = true, flags = 'im'): RegExp
+
+    function getSnippetRegExp(flags?: string): RegExp
+
+    function getAnchorRegExp(isLine = true, min = 2, max = 6, flags?: string): RegExp
 
     function getParamRegExp(flags = 'g'): RegExp
   }
