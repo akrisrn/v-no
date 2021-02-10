@@ -25,12 +25,12 @@ export function bang() {
     exposeToWindow({
       markdown,
       markdownIt: markdown.markdownIt,
-      renderMD: async (path: string, data: string, asyncResults?: TAsyncResult[]) => {
+      renderMD: async (path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]) => {
         data = data.trim();
         if (!data) {
           return '';
         }
-        data = markdown.updateInlineScript(path, data, asyncResults);
+        data = markdown.updateInlineScript(path, title, data, isSnippet, asyncResults);
         if (!data) {
           return '';
         }

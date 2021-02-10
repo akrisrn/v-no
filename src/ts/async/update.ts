@@ -52,7 +52,7 @@ export function updateAsyncScript(asyncResult: TAsyncResult) {
   return true;
 }
 
-export function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false) {
+export function updateInlineScript(path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]) {
   return replaceByRegExp(getWrapRegExp('\\$\\$', '\\$\\$', 'g'), data, ([match0, evalStr]) => {
     if (!evalStr) {
       return match0;
@@ -70,7 +70,7 @@ export function updateInlineScript(path: string, data: string, asyncResults?: TA
       }
       evalStr = `return ${evalStr}`;
     }
-    const [result, isError] = evalFunction(evalStr, { path, data, isSnippet }, asyncResults);
+    const [result, isError] = evalFunction(evalStr, { path, title, data, isSnippet }, asyncResults);
     if (isError) {
       return `\n\n::: open .danger.readonly **${result}**\n\`\`\`js\n${evalStr}\n\`\`\`\n:::\n\n`;
     }
@@ -148,6 +148,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
   for (const file of await Promise.all(paths.map(path => getFile(path)))) {
     const isError = file.isError;
     const path = file.path;
+    const title = file.flags.title;
     const fileData = file.data;
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
@@ -191,7 +192,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           }
         }
         if (snippetData) {
-          snippetData = updateInlineScript(path, snippetData, asyncResults, true);
+          snippetData = updateInlineScript(path, title, snippetData, true, asyncResults);
         }
       }
       let dataWithHeading = snippetData;

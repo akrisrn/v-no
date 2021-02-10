@@ -25,7 +25,8 @@
         <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
-      <Article :fileData="fileData" :query="query" :redirectTo="redirectTo" :showTime="showTime"></Article>
+      <Article :fileData="fileData" :query="query" :redirectTo="redirectTo" :showTime="showTime"
+               :title="title"></Article>
       <div v-if="!isError" id="backlinks">
         <span v-if="!hasLoadedBacklinks" :class="['icon', { sync: isLoadingBacklinks }]"
               v-html="isLoadingBacklinks ? iconSync : iconBacklink"></span>

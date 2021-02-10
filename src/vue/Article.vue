@@ -16,6 +16,7 @@
   @Component
   export default class Article extends Vue {
     @Prop() fileData!: string;
+    @Prop() title!: string;
     @Prop() query!: TQuery;
     @Prop() showTime!: number;
     @Prop() redirectTo!: (path: string, anchor?: string, query?: string) => boolean;
@@ -76,7 +77,7 @@
       this.isRendering = true;
       this.startTime = new Date().getTime();
       if (data) {
-        data = this.markdownTs.updateInlineScript(this.filePath, data, this.asyncResults);
+        data = this.markdownTs.updateInlineScript(this.filePath, this.title, data, false, this.asyncResults);
       }
       if (!data) {
         this.updateRenderData().then(() => this.renderComplete());

@@ -22,13 +22,13 @@ const cachedBacklinks: Dict<string[]> = {};
 
 let markdownTs: TMarkdownTs | null = null;
 
-async function getLinks(path: string, data: string) {
+async function getLinks(path: string, title: string, data: string) {
   if (!markdownTs) {
     markdownTs = await importMarkdownTs();
   }
   const anchorRegExp = getAnchorRegExp();
   const links: Dict<TLink> = {};
-  for (const token of markdownTs.parseMD(markdownTs.updateInlineScript(path, data))) {
+  for (const token of markdownTs.parseMD(markdownTs.updateInlineScript(path, title, data))) {
     if (token.type !== 'inline' || !token.children) {
       continue;
     }
@@ -183,7 +183,7 @@ async function parseData(path: string, data: string): Promise<IFile> {
       }
     }
   }
-  return { path, data, flags, links: await getLinks(path, data) };
+  return { path, data, flags, links: await getLinks(path, flags.title, data) };
 }
 
 let noCache = !!localStorage.getItem('noCache');

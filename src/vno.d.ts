@@ -11,7 +11,7 @@ declare namespace vno {
 
   const version: string;
 
-  const renderMD: (path: string, data: string, asyncResults?: TAsyncResult[]) => Promise<string>;
+  const renderMD: (path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]) => Promise<string>;
   const updateDom: typeof markdown.updateDom;
 
   const EFlag: typeof enums.EFlag;
@@ -75,7 +75,7 @@ declare namespace vno {
 
     function updateAsyncScript(asyncResult: TAsyncResult): boolean
 
-    function updateInlineScript(path: string, data: string, asyncResults?: TAsyncResult[], isSnippet = false): string
+    function updateInlineScript(path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]): string
 
     function updateSnippet(data: string, updatedPaths: string[], asyncResults?: TAsyncResult[]): Promise<string>
 
@@ -316,6 +316,10 @@ declare class Article {
    * @Prop()
    */
   fileData: string;
+  /**
+   * @Prop()
+   */
+  title: string;
   /**
    * @Prop()
    */
