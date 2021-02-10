@@ -377,13 +377,13 @@ export function preprocessSearchPage(data: string) {
     if (mark === EMark.input) {
       if (!replaced[0]) {
         replaced[0] = true;
-        return `<input id="search-${mark}" class="ipt" placeholder="${content}"/>`;
+        return `<input id="search-${mark}" class="ipt" placeholder="${content || ''}"/>`;
       }
       return '';
     }
     if (!replaced[1]) {
       replaced[1] = true;
-      return `<ul id="search-${mark}">${content}</ul>`;
+      return `<ul id="search-${mark}">${content || ''}</ul>`;
     }
     return '';
   });
