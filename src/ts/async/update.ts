@@ -101,14 +101,14 @@ function degradeHeading(data: string, level: number) {
 }
 
 export async function updateSnippet(data: string, updatedPaths: string[], asyncResults?: TAsyncResult[]) {
-  const dict: Dict<Dict<[number, Dict<string>]>> = {};
+  const dict: Dict<Dict<[number, Dict<string>, string | undefined]>> = {};
   const snippetRegExp = getSnippetRegExp();
   data = data.split('\n').map(line => {
     const match = line.match(snippetRegExp);
     if (!match) {
       return line;
     }
-    const [match0, level, text, href] = match;
+    const [match0, level, foldMark, paramStr, href] = match;
     const path = checkLinkPath(href);
     if (!path) {
       return line;
@@ -124,11 +124,10 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
     if (snippetDict[match0] !== undefined) {
       return line;
     }
-    const heading = level?.length ?? 0;
     const params: Dict<string> = {};
-    text?.substr(1).split('|').forEach((seg, i) => {
-      const [key, value] = chopStr(seg.trim(), '=');
-      let param = key;
+    paramStr?.split('|').forEach((param, i) => {
+      const [key, value] = chopStr(param.trim(), '=');
+      param = key;
       if (value !== null) {
         param = value;
         if (key) {
@@ -137,7 +136,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
       }
       params[i] = param;
     });
-    snippetDict[match0] = [heading, params];
+    snippetDict[match0] = [level?.length ?? 0, params, foldMark];
     return line;
   }).join('\n');
   const paths = Object.keys(dict);
@@ -152,7 +151,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
     const fileData = file.data;
     const snippetDict = dict[path];
     for (const match of Object.keys(snippetDict)) {
-      const [heading, params] = snippetDict[match];
+      const [heading, params, foldMark] = snippetDict[match];
       let snippetData = fileData;
       if (snippetData) {
         snippetData = replaceByRegExp(paramRegExp, snippetData, ([match0, match]) => {
@@ -197,7 +196,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
       }
       let dataWithHeading = snippetData;
       if (heading > 1) {
-        const headingText = `# [](${path} "#")`;
+        const headingText = `# ${foldMark || ''}[](${path} "#")`;
         if (snippetData) {
           dataWithHeading = degradeHeading(`${headingText}\n\n${snippetData}`, heading - 1);
         } else {
