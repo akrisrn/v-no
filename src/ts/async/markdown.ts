@@ -3,7 +3,7 @@ import { getIcon } from '@/ts/element';
 import { EIcon, EMark } from '@/ts/enums';
 import { addBaseUrl, homePath, isExternalLink, shortenPath } from '@/ts/path';
 import { getMarkRegExp } from '@/ts/regexp';
-import { chopStr, snippetMark } from '@/ts/utils';
+import { chopStr } from '@/ts/utils';
 import { replaceByRegExp, trimList } from '@/ts/async/utils';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
@@ -271,12 +271,12 @@ markdownIt.renderer.rules.link_close = (tokens, idx, options, env, self) => {
 };
 
 export function parseMD(data: string) {
-  return markdownIt.parse(data, {});
+  return markdownIt.parse(data.trim(), {});
 }
 
 export function renderMD(data: string, replaceMark = true) {
   if (replaceMark) {
-    data = data.replaceAll(snippetMark, '');
+    data = data.replace(getMarkRegExp(EMark.slice, true, 'img'), '');
     let replaced = false;
     data = replaceByRegExp(getMarkRegExp(EMark.toc, true, 'img'), data, () => {
       if (!replaced) {
@@ -287,7 +287,7 @@ export function renderMD(data: string, replaceMark = true) {
     });
   }
   headingCount = {};
-  return markdownIt.render(data).trim();
+  return markdownIt.render(data.trim()).trim();
 }
 
 export { markdownIt };

@@ -148,6 +148,7 @@ declare namespace vno {
       noCommon = 'noCommon',
       toc = 'toc',
       list = 'list',
+      slice = 'slice',
       input = 'input',
       result = 'result',
       number = 'number',
@@ -250,7 +251,6 @@ declare namespace vno {
     const dayjs: Dayjs;
 
     const definedFlags: enums.EFlag[];
-    const snippetMark: string;
     const destructors: (() => void)[];
     const inputBinds: Dict<() => void>;
 

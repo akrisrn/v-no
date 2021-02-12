@@ -11,7 +11,7 @@ import {
   getWrapRegExp,
 } from '@/ts/regexp';
 import { state } from '@/ts/store';
-import { chopStr, snippetMark } from '@/ts/utils';
+import { chopStr } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
@@ -144,6 +144,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
     return data;
   }
   const paramRegExp = getParamRegExp();
+  const sliceRegExp = getMarkRegExp(EMark.slice, true, 'img');
   for (const file of await Promise.all(paths.map(path => getFile(path)))) {
     const isError = file.isError;
     const path = file.path;
@@ -175,19 +176,38 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
           }
           return result.replace(/\\n/g, '\n');
         }).trim();
-        const clip = params['clip'];
-        if (clip !== undefined) {
-          const slips = snippetData.split(snippetMark);
-          if (slips.length > 1) {
-            let num = parseInt(clip);
-            if (isNaN(num)) {
-              num = clip === 'random' ? Math.floor(Math.random() * slips.length) : 0;
-            } else if (num < 0) {
-              num = 0;
-            } else if (num >= slips.length) {
-              num = slips.length - 1;
+
+        const slice = params['slice'];
+        if (slice !== undefined) {
+          const slips: Dict<string> = {};
+          let index = 0;
+          let start = 0;
+          let match = sliceRegExp.exec(snippetData);
+          while (match) {
+            const slip = snippetData.substring(start, match.index);
+            slips[index++] = slip;
+            if (match[1]) {
+              slips[match[1]] = slip;
             }
-            snippetData = slips[num].trim();
+            start = match.index + match[0].length;
+            match = sliceRegExp.exec(snippetData);
+          }
+          if (start !== 0) {
+            const lastSlip = data.substring(start);
+            if (lastSlip.trim()) {
+              slips[index++] = lastSlip;
+            }
+
+            let sliceIndex: number | string = parseInt(slice);
+            if (isNaN(sliceIndex)) {
+              sliceIndex = slice === 'random' ? Math.floor(Math.random() * index) : slice;
+            } else if (sliceIndex < 0) {
+              sliceIndex = 0;
+            } else if (sliceIndex >= index) {
+              sliceIndex = index - 1;
+            }
+            const sliceData = slips[sliceIndex];
+            snippetData = sliceData === undefined ? '' : sliceData.trim();
           }
         }
         if (snippetData) {

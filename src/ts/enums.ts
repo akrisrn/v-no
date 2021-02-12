@@ -16,6 +16,7 @@ export enum EMark {
   noCommon = 'noCommon',
   toc = 'toc',
   list = 'list',
+  slice = 'slice',
   input = 'input',
   result = 'result',
   number = 'number',

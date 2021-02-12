@@ -60,7 +60,7 @@
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import { getMarkRegExp } from '@/ts/regexp';
   import { state } from '@/ts/store';
-  import { chopStr, definedFlags, destructors, snippetMark } from '@/ts/utils';
+  import { chopStr, definedFlags, destructors } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { importFileTs } from '@/ts/async';
   import Article from '@/vue/Article.vue';
@@ -285,7 +285,7 @@
       const commonData = files[1].data;
       let headerData = '';
       let footerData = commonData;
-      const [key, value] = chopStr(commonData, snippetMark);
+      const [key, value] = chopStr(commonData, '--8<--');
       if (value !== null) {
         headerData = key;
         footerData = value;
