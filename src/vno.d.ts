@@ -280,7 +280,7 @@ declare namespace vno {
 
     function encodeParam(value: string): string
 
-    function getMessage(key: string, params: any[] | Dict<any>): string
+    function getMessage(key: string, params?: TMessage): string
 
     function parseDate(date: string | number): Date
 
@@ -466,10 +466,6 @@ declare class Main {
   returnHome(): void
 }
 
-interface IMessage {
-  [index: string]: string | IMessage
-}
-
 interface IConfig {
   siteName?: string;
   dateFormat?: string;
@@ -501,13 +497,17 @@ interface IConfig {
     loading: string;
     redirectFrom: string;
 
-    [index: string]: string | IMessage;
+    [index: string]: TMessage;
   };
   defaultConf?: string;
   multiConf?: Dict<IConfig>;
   alias?: string;
 
   [index: string]: any;
+}
+
+interface IMessage {
+  [index: string]: TMessage
 }
 
 interface IFlags {
@@ -562,6 +562,10 @@ type THashPath = {
 }
 
 type TConfList = [string[], string[]]
+
+type TMessageData = string | number | boolean | null;
+
+type TMessage = TMessageData | TMessageData[] | IMessage
 
 type TRedirectList = [string[], string[]]
 

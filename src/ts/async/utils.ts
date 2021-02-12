@@ -135,20 +135,27 @@ export function encodeParam(value: string) {
   return encodeURIComponent(value).replaceAll('\'', '\\\'');
 }
 
-export function getMessage(key: string, params: any[] | Dict<any>) {
-  let message: string | IMessage = config.messages;
+export function getMessage(key: string, params?: TMessage) {
+  let message: TMessage | undefined = config.messages;
   for (const k of trimList(key.split('.'), false)) {
-    if (typeof message === 'string') {
+    if (message === null || typeof message !== 'object') {
       return stringifyAny(undefined);
     }
-    try {
+    if (!Array.isArray(message)) {
       message = message[k];
-    } catch (e) {
-      return stringifyAny(undefined);
+      continue;
     }
+    const num = parseInt(k);
+    message = !isNaN(num) ? message[num] : undefined;
   }
-  if (typeof message !== 'string') {
+  if (message === undefined || typeof message === 'object' || typeof message !== 'string') {
     return stringifyAny(message);
+  }
+  if (params === undefined) {
+    return message;
+  }
+  if (params === null || typeof params !== 'object') {
+    params = [params];
   }
   return replaceByRegExp(getParamRegExp(), message, ([match0, match]) => {
     if (!match) {
@@ -156,7 +163,7 @@ export function getMessage(key: string, params: any[] | Dict<any>) {
     }
     let param = undefined;
     if (!Array.isArray(params)) {
-      param = params[match];
+      param = (params as IMessage)[match];
     } else {
       const num = parseInt(match);
       if (!isNaN(num)) {
