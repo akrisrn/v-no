@@ -49,7 +49,10 @@
     }
 
     async created() {
-      exposeToWindow({ articleSelf: this });
+      exposeToWindow({
+        articleSelf: this,
+        isSearchFile: this.isSearchFile,
+      });
       this.markdownTs = await importMarkdownTs();
       this.$watch(() => [this.fileData, this.showTime], () => this.renderMD());
       this.$watch('html', () => {

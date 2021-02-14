@@ -183,6 +183,7 @@
       }
       exposeToWindow({
         mainSelf: this,
+        isIndexFile: this.isIndexFile,
         reload: this.reload,
       });
       this.$watch('title', () => {

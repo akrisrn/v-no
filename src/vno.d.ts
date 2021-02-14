@@ -40,7 +40,10 @@ declare namespace vno {
 
   const title: typeof mainSelf.title;
   const filePath: typeof mainSelf.filePath;
+  const isIndexFile: typeof mainSelf.isIndexFile;
   const reload: typeof mainSelf.reload;
+
+  const isSearchFile: typeof articleSelf.isSearchFile;
 
   const toggleDark: typeof gadgetSelf.toggleDark;
   const toggleZen: typeof gadgetSelf.toggleZen;
