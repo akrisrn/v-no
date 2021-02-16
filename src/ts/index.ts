@@ -3,6 +3,7 @@ import * as element from '@/ts/element';
 import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
 import * as regexp from '@/ts/regexp';
+import * as storage from '@/ts/storage';
 import * as store from '@/ts/store';
 import * as utils from '@/ts/utils';
 import { addInputBinds, destructors, sleep } from '@/ts/utils';
@@ -18,7 +19,7 @@ export function bang() {
     addInputBinds,
     sleep,
     ...enums,
-    config, element, enums, path, regexp, store, utils,
+    config, element, enums, path, regexp, storage, store, utils,
   });
   importFileTs().then(file => exposeToWindow({ file }));
   importMarkdownTs().then(markdown => {

@@ -239,6 +239,14 @@ declare namespace vno {
     function getParamRegExp(flags = 'g'): RegExp
   }
 
+  namespace storage {
+    function getItem(key: string): string | null
+
+    function setItem(key: string, value: string): void
+
+    function removeItem(key: string): void
+  }
+
   namespace store {
     const state: {
       initing: boolean;
