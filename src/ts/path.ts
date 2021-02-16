@@ -1,5 +1,6 @@
 import { config, homeHash, shortBaseFiles } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
+import * as localStorage from '@/ts/storage';
 import { chopStr } from '@/ts/utils';
 import { Route } from 'vue-router';
 

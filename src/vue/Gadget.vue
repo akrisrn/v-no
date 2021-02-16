@@ -9,6 +9,7 @@
 <script lang="ts">
   import { dispatchEvent, removeClass, scroll } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
+  import * as localStorage from '@/ts/storage';
   import { addInputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
   import { Component, Prop, Vue } from 'vue-property-decorator';

@@ -59,6 +59,7 @@
   import { EEvent, EFlag, EIcon, EMark } from '@/ts/enums';
   import { addBaseUrl, buildHash, formatQuery, parseQuery, parseRoute, returnHome, shortenPath } from '@/ts/path';
   import { getMarkRegExp } from '@/ts/regexp';
+  import * as localStorage from '@/ts/storage';
   import { state } from '@/ts/store';
   import { chopStr, definedFlags, destructors } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';

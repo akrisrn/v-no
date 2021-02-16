@@ -1,4 +1,5 @@
 import { buildHash, shortenPath } from '@/ts/path';
+import * as localStorage from '@/ts/storage';
 
 function merge(target: IConfig, source: IConfig) {
   for (const key of Object.keys(source)) {

@@ -2,6 +2,7 @@ import { baseFiles, config } from '@/ts/config';
 import { EFlag } from '@/ts/enums';
 import { addBaseUrl, checkLinkPath, isExternalLink, shortenPath } from '@/ts/path';
 import { getAnchorRegExp, getHeadingRegExp, getLinkRegExp, getWrapRegExp } from '@/ts/regexp';
+import * as localStorage from '@/ts/storage';
 import { sleep } from '@/ts/utils';
 import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';

@@ -28,6 +28,7 @@
   import { dispatchEvent } from '@/ts/element';
   import { EEvent } from '@/ts/enums';
   import { addBaseUrl, returnHome } from '@/ts/path';
+  import * as localStorage from '@/ts/storage';
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
   import { exposeToWindow } from '@/ts/window';
