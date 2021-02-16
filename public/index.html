@@ -7,11 +7,11 @@
   <meta content="width=device-width,initial-scale=1.0" name="viewport">
   <title></title>
   <!--@formatter:off-->
-  <!--suppress CssUnusedSymbol -->
+  <!--suppress CssUnusedSymbol-->
   <style>body{background-color:#f1f1f1}body.dark{background-color:#2b2b2b}</style>
   <!--@formatter:on-->
   <link href="" rel="icon">
-  <!--suppress HtmlUnknownTarget -->
+  <!--suppress HtmlUnknownTarget-->
   <link href="<%= BASE_URL %>assets/config.js" rel="preload" as="script">
 </head>
 <body>
@@ -22,10 +22,11 @@
 </noscript>
 <div id="app"></div>
 <!--@formatter:off-->
-<script>(function(){const isDark=localStorage.getItem('dark');const isZen=localStorage.getItem('zen');const themeColor=isDark?(isZen?'#2b2b2b':'#3b3b3b'):(isZen?'#efefef':'#ffffff');document.querySelector('meta[name=theme-color]').setAttribute('content',themeColor);const classList=document.body.classList;if(isDark){classList.add('dark')}else{classList.remove('dark')}if(isZen){classList.add('zen')}else{classList.remove('zen')}})()</script>
+<!--suppress JSUnresolvedVariable, JSUnresolvedFunction, CommaExpressionJS, ES6ConvertVarToLetConst-->
+<script>!function(){var e="v-no<%= VUE_APP_PUBLIC_PATH %>",t=localStorage.getItem(e+"dark"),n=localStorage.getItem(e+"zen"),o=t?n?"#2b2b2b":"#3b3b3b":n?"#efefef":"#ffffff";document.querySelector("meta[name=theme-color]").setAttribute("content",o);var a=document.body.classList;t?a.add("dark"):a.remove("dark"),n?a.add("zen"):a.remove("zen")}()</script>
 <!--@formatter:on-->
-<!--suppress HtmlUnknownTarget -->
+<!--suppress HtmlUnknownTarget-->
 <script src="<%= BASE_URL %>assets/config.js"></script>
-<!-- built files will be auto injected -->
+<!--built files will be auto injected-->
 </body>
 </html>
