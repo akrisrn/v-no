@@ -344,9 +344,10 @@
       for (let i = 0; i < this.otherFlags.length; i++) {
         if (this.otherFlags[i].key === key) {
           this.otherFlags.splice(i, 1);
-          break;
+          return i;
         }
       }
+      return -1;
     }
 
     redirectTo(path: string, anchor?: string, query?: string) {

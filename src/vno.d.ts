@@ -464,7 +464,7 @@ declare class Main {
 
   addFlag(key: string, value: string): TFlag
 
-  removeFlag(key: string): void
+  removeFlag(key: string): number
 
   redirectTo(path: string, anchor?: string, query?: string): boolean
 
