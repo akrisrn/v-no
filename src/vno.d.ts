@@ -318,6 +318,10 @@ declare class App {
 
   get favicon(): string
 
+  addLink(href: string, text = ''): TAnchor
+
+  removeLink(href: string): number
+
   returnHome(): void
 }
 

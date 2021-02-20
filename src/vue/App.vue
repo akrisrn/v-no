@@ -9,6 +9,7 @@
         <a :href="`#${shortBaseFiles.archive}`"></a>
         <a :href="`#${shortBaseFiles.category}`"></a>
         <a :href="`#${shortBaseFiles.search}`"></a>
+        <a v-for="(link, i) of otherLinks" :key="i" :href="`#${link.href}`">{{ link.text }}</a>
         <select v-if="enableMultiConf" v-model="selectConf">
           <option v-for="(conf, i) of confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
         </select>
@@ -40,6 +41,7 @@
   export default class App extends Vue {
     keyInput = '';
     selectConf = getSelectConf();
+    otherLinks: TAnchor[] = [];
 
     get initing() {
       return state.initing;
@@ -113,6 +115,24 @@
         }
         this.keyInput = value;
       });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    addLink(href: string, text = '') {
+      const link: TAnchor = { text, href };
+      this.otherLinks.push(link);
+      return link;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    removeLink(href: string) {
+      for (let i = 0; i < this.otherLinks.length; i++) {
+        if (this.otherLinks[i].href === href) {
+          this.otherLinks.splice(i, 1);
+          return i;
+        }
+      }
+      return -1;
     }
 
     returnHome() {
