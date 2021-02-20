@@ -18,40 +18,52 @@ jobs:
         run: |
           mkdir -p v-no-script/src/utils/ && cp src/vno.d.ts v-no-script/src/utils/
           mkdir -p v-no-doc-script/src/utils/ && cp src/vno.d.ts v-no-doc-script/src/utils/
+          mkdir -p v-no-page-component/src/utils/ && cp src/vno.d.ts v-no-page-component/src/utils/
           mkdir -p v-no-script-template/src/ && cp src/vno.d.ts v-no-script-template/src/
 
       - name: Update vno.d.ts (v-no-script)
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-script
           BRANCH: master
           FOLDER: v-no-script
-          COMMIT_MESSAGE: update vno.d.ts
           CLEAN: false
+          COMMIT_MESSAGE: update vno.d.ts
 
       - name: Update vno.d.ts (v-no-doc-script)
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-doc-script
           BRANCH: master
           FOLDER: v-no-doc-script
-          COMMIT_MESSAGE: update vno.d.ts
           CLEAN: false
+          COMMIT_MESSAGE: update vno.d.ts
+
+      - name: Update vno.d.ts (v-no-page-component)
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GIT_CONFIG_NAME: gh-actions
+          REPOSITORY_NAME: akrisrn/v-no-page-component
+          BRANCH: master
+          FOLDER: v-no-page-component
+          CLEAN: false
+          COMMIT_MESSAGE: update vno.d.ts
 
       - name: Update vno.d.ts (v-no-script-template)
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-script-template
           BRANCH: master
           FOLDER: v-no-script-template
-          COMMIT_MESSAGE: update vno.d.ts
           CLEAN: false
+          COMMIT_MESSAGE: update vno.d.ts
 
       - name: Set RELEASE_VERSION
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
@@ -63,7 +75,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-template
           BRANCH: master
           FOLDER: dist
@@ -76,7 +88,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-hash-template
           BRANCH: master
           FOLDER: dist
@@ -101,7 +113,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           ACCESS_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GIT_CONFIG_NAME: AkrISrn
+          GIT_CONFIG_NAME: gh-actions
           REPOSITORY_NAME: akrisrn/v-no-doc
           BRANCH: master
           FOLDER: v-no-doc
