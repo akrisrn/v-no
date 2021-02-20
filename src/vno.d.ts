@@ -462,7 +462,7 @@ declare class Main {
 
   setFlags(flags: IFlags): void
 
-  addFlag(key: string, value: string, sort = true): void
+  addFlag(key: string, value: string): TFlag
 
   removeFlag(key: string): void
 

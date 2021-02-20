@@ -324,7 +324,7 @@
       this.otherFlags = [];
       Object.keys(flags).sort().forEach(key => {
         if (!definedFlags.includes(key as EFlag)) {
-          this.addFlag(key, flags[key] as string, false);
+          this.addFlag(key, flags[key] as string);
         }
       });
       exposeToWindow({
@@ -333,11 +333,10 @@
       });
     }
 
-    addFlag(key: string, value: string, sort = true) {
-      this.otherFlags.push({ key, value });
-      if (sort) {
-        this.otherFlags = this.otherFlags.sort((a, b) => a.key.localeCompare(b.key));
-      }
+    addFlag(key: string, value: string) {
+      const flag: TFlag = { key, value };
+      this.otherFlags.push(flag);
+      return flag;
     }
 
     // noinspection JSUnusedGlobalSymbols
