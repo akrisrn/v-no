@@ -4,7 +4,7 @@
 
 ![version](https://img.shields.io/github/package-json/v/akrisrn/v-no) ![Release](https://github.com/akrisrn/v-no/workflows/Release/badge.svg) ![Prerender](https://github.com/akrisrn/v-no-doc/workflows/Prerender/badge.svg)
 
-v-no is a lightweight static site renderer/generator, and also a pure static single page application powered by Vue.js at the same time.
+v-no is a lightweight static site renderer / generator for Markdown, and also a pure static single page application powered by Vue.js at the same time.
 
 [The documentation](https://akrisrn.github.io/v-no-doc/-/) is still worked in process, and just have Chinese edition for now.
 
@@ -13,9 +13,11 @@ Related repos:
 - [v-no-script](https://github.com/akrisrn/v-no-script)
 - [v-no-doc](https://github.com/akrisrn/v-no-doc)
 - [v-no-doc-script](https://github.com/akrisrn/v-no-doc-script)
-- [v-no-template](https://github.com/akrisrn/v-no-template)
-- [v-no-hash-template](https://github.com/akrisrn/v-no-hash-template)
-- [v-no-script-template](https://github.com/akrisrn/v-no-script-template)
+- [v-no-page-component](https://github.com/akrisrn/v-no-page-component)
+- Templates:
+    - [v-no-template](https://github.com/akrisrn/v-no-template)
+    - [v-no-hash-template](https://github.com/akrisrn/v-no-hash-template)
+    - [v-no-script-template](https://github.com/akrisrn/v-no-script-template)
 
 ## Project setup
 
