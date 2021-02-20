@@ -13,9 +13,8 @@ import {
 import { state } from '@/ts/store';
 import { chopStr } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
-import { sortFiles } from '@/ts/async/compare';
 import { formatDate } from '@/ts/async/date';
-import { getFile, getFiles } from '@/ts/async/file';
+import { getFile, getFiles, sortFiles } from '@/ts/async/file';
 import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';

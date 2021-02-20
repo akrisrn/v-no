@@ -270,4 +270,10 @@ export async function getFiles() {
   return { files: cachedFiles, backlinks: cachedBacklinks };
 }
 
-export { sortFiles } from '@/ts/async/compare';
+export function sortFiles(fileA: ISimpleFile, fileB: ISimpleFile) {
+  let x = fileA.flags.title.localeCompare(fileB.flags.title);
+  if (x === 0) {
+    x = fileA.path.localeCompare(fileB.path);
+  }
+  return x;
+}
