@@ -66,11 +66,17 @@ export function getQueryTagLinks(tag: string) {
   let indexOf = tag.indexOf('/');
   while (indexOf >= 0) {
     indexOf += start;
-    links.push([buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)), tag.substring(start, indexOf)]);
+    links.push({
+      text: tag.substring(start, indexOf),
+      href: buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)),
+    });
     start = indexOf + 1;
     indexOf = tag.substring(start).indexOf('/');
   }
-  links.push([buildQueryFlagUrl(EFlag.tags, tag), start > 0 ? tag.substring(start) : tag]);
+  links.push({
+    text: start > 0 ? tag.substring(start) : tag,
+    href: buildQueryFlagUrl(EFlag.tags, tag),
+  });
   return links;
 }
 
@@ -80,10 +86,10 @@ function createBar(flags: IFlags) {
   flags.tags && flags.tags.forEach(tag => {
     const itemTag = document.createElement('code');
     itemTag.classList.add('item-tag');
-    getQueryTagLinks(tag).forEach(link => {
+    getQueryTagLinks(tag).forEach(({ text, href }) => {
       const a = document.createElement('a');
-      a.href = link[0];
-      a.innerText = link[1];
+      a.href = href;
+      a.innerText = text;
       itemTag.append(a);
     });
     bar.append(itemTag);

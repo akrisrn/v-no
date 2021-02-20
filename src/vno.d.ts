@@ -582,7 +582,10 @@ type TRedirectList = [string[], string[]]
 
 type TFlag = [string, string]
 
-type TAnchor = [string, string]
+type TAnchor = {
+  text: string
+  href: string
+}
 
 type TAsyncResult = [string, string, boolean?]
 
