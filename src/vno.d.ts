@@ -580,7 +580,10 @@ type TMessage = TMessageData | TMessageData[] | IMessage
 
 type TRedirectList = [string[], string[]]
 
-type TFlag = [string, string]
+type TFlag = {
+  key: string
+  value: string
+}
 
 type TAnchor = {
   text: string

@@ -15,7 +15,7 @@
             <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
           </template>
         </code>
-        <code v-for="(flag, i) of otherFlags" :key="i" :class="`item-${flag[0]}`">{{ flag[1] }}</code>
+        <code v-for="(flag, i) of otherFlags" :key="i" :class="`item-${flag.key}`">{{ flag.value }}</code>
         <code class="item-raw">
           <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
         </code>
@@ -334,16 +334,16 @@
     }
 
     addFlag(key: string, value: string, sort = true) {
-      this.otherFlags.push([key, value]);
+      this.otherFlags.push({ key, value });
       if (sort) {
-        this.otherFlags = this.otherFlags.sort((a, b) => a[0].localeCompare(b[0]));
+        this.otherFlags = this.otherFlags.sort((a, b) => a.key.localeCompare(b.key));
       }
     }
 
     // noinspection JSUnusedGlobalSymbols
     removeFlag(key: string) {
       for (let i = 0; i < this.otherFlags.length; i++) {
-        if (this.otherFlags[i][0] === key) {
+        if (this.otherFlags[i].key === key) {
           this.otherFlags.splice(i, 1);
           break;
         }
