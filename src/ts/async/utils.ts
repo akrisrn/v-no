@@ -57,9 +57,9 @@ function evalIt(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[
     }
     const id = `async-script-${++asyncScriptCount}`;
     func(...args).then((result: any) => {
-      asyncResults.push([id, stringifyAny(result)]);
+      asyncResults.push({ id, result: stringifyAny(result) });
     }).catch((e: any) => {
-      asyncResults.push([id, stringifyAny(e), true]);
+      asyncResults.push({ id, result: stringifyAny(e), isError: true });
     });
     return getSyncSpan(id);
   }

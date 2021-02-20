@@ -21,7 +21,7 @@ import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
 export function updateAsyncScript(asyncResult: TAsyncResult) {
-  const [id, result, isError] = asyncResult;
+  const { id, result, isError } = asyncResult;
   const span = document.querySelector(`span#${id}`);
   if (!span) {
     return false;

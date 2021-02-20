@@ -590,7 +590,11 @@ type TAnchor = {
   href: string
 }
 
-type TAsyncResult = [string, string, boolean?]
+type TAsyncResult = {
+  id: string
+  result: string
+  isError?: boolean
+}
 
 /**
  * vue-property-decorator/lib/index.d.ts
