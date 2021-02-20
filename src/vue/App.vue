@@ -11,7 +11,7 @@
         <a :href="`#${shortBaseFiles.search}`"></a>
         <a v-for="(link, i) of otherLinks" :key="i" :href="`#${link.href}`">{{ link.text }}</a>
         <select v-if="enableMultiConf" v-model="selectConf">
-          <option v-for="(conf, i) of confList[0]" :key="conf" :value="conf">{{ confList[1][i] }}</option>
+          <option v-for="(conf, i) of confList[0]" :key="i" :value="conf">{{ confList[1][i] }}</option>
         </select>
       </div>
     </div>

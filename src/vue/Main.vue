@@ -10,9 +10,9 @@
         </code>
         <code v-if="startDate" class="item-date">{{ isIndexFile ? endDate : startDate }}</code>
         <code v-if="creator" class="item-creator">{{ creator }}</code>
-        <code v-for="tag of tags" :key="tag" class="item-tag">
-          <template v-for="link of getQueryTagLinks(tag)">
-            <a :key="link[0]" :href="link[0]">{{ link[1] }}</a>
+        <code v-for="(tag, i) of tags" :key="i" class="item-tag">
+          <template v-for="(link, j) of getQueryTagLinks(tag)">
+            <a :key="j" :href="link.href">{{ link.text }}</a>
           </template>
         </code>
         <code v-for="(flag, i) of otherFlags" :key="i" :class="`item-${flag.key}`">{{ flag.value }}</code>
@@ -22,7 +22,7 @@
       </div>
       <div v-if="!isRedirectPage && redirectFrom[0].length > 0" id="redirect-from">
         <span>{{ config.messages.redirectFrom }}</span>
-        <a v-for="(path, i) of redirectFrom[0]" :key="path" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
+        <a v-for="(path, i) of redirectFrom[0]" :key="i" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
       <Article :fileData="fileData" :query="query" :redirectTo="redirectTo" :showTime="showTime"
@@ -34,7 +34,7 @@
         <a v-else-if="!hasLoadedBacklinks" @click="loadBacklinks">{{ config.messages.showBacklinks }}</a>
         <template v-else>
           <ul v-if="backlinkFiles.length > 0">
-            <li v-for="file of backlinkFiles" :key="file.path" class="article" v-html="getListHtml(file)"></li>
+            <li v-for="(file, i) of backlinkFiles" :key="i" class="article" v-html="getListHtml(file)"></li>
           </ul>
           <span v-else>{{ config.messages.noBacklinks }}</span>
         </template>
