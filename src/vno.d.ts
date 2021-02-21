@@ -300,9 +300,10 @@ declare namespace vno {
 }
 
 // noinspection JSUnusedGlobalSymbols
-declare class App extends Vue {
+declare class App extends vno.Vue {
   keyInput: string;
   selectConf: string;
+  otherLinks: TAnchor[];
 
   get initing(): typeof vno.store.state.initing
 
@@ -326,7 +327,7 @@ declare class App extends Vue {
 }
 
 // noinspection JSUnusedGlobalSymbols
-declare class Article extends Vue {
+declare class Article extends vno.Vue {
   /**
    * @Prop()
    */
@@ -375,7 +376,7 @@ declare class Article extends Vue {
 }
 
 // noinspection JSUnusedGlobalSymbols
-declare class Gadget extends Vue {
+declare class Gadget extends vno.Vue {
   /**
    * @Prop()
    */
@@ -405,7 +406,7 @@ declare class Gadget extends Vue {
 }
 
 // noinspection JSUnusedGlobalSymbols
-declare class Main extends Vue {
+declare class Main extends vno.Vue {
   fileTs: typeof vno.file | null;
 
   fileData: string;
