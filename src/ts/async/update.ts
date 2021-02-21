@@ -525,6 +525,19 @@ export async function updateSearchPage(content: string) {
   dispatchEvent(EEvent.searchCompleted, { number, count, time }, 100).then();
 }
 
+function updateDD() {
+  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
+    if (p.innerHTML.startsWith(': ')) {
+      p.outerHTML = `<dl><dd>${p.innerHTML.substr(2).trimStart()}</dd></dl>`;
+    }
+  });
+  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
+    if (dt.innerHTML.startsWith(': ')) {
+      dt.outerHTML = `<dd>${dt.innerHTML.substr(2).trimStart()}</dd>`;
+    }
+  });
+}
+
 let waitingList: [HTMLAnchorElement[], [HTMLAnchorElement, HTMLHeadingElement][]] = [[], []];
 
 function getHeadingText(heading: HTMLHeadingElement) {
@@ -774,19 +787,6 @@ function updateImagePath() {
   }
 }
 
-function updateDD() {
-  document.querySelectorAll<HTMLParagraphElement>('article p').forEach(p => {
-    if (p.innerHTML.startsWith(': ')) {
-      p.outerHTML = `<dl><dd>${p.innerHTML.substr(2).trimStart()}</dd></dl>`;
-    }
-  });
-  document.querySelectorAll<HTMLElement>('article dt').forEach(dt => {
-    if (dt.innerHTML.startsWith(': ')) {
-      dt.outerHTML = `<dd>${dt.innerHTML.substr(2).trimStart()}</dd>`;
-    }
-  });
-}
-
 let prismjsTs: TPrismjsTs | null = null;
 
 export async function updateHighlight() {
@@ -1011,6 +1011,7 @@ function updateHeading() {
 }
 
 export async function updateDom() {
+  updateDD();
   waitingList = [[], []];
   updateLinkPath();
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
@@ -1019,7 +1020,6 @@ export async function updateDom() {
   updateCustomScript(scripts);
   const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
-  updateDD();
   await updateHighlight();
   updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
