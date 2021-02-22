@@ -319,6 +319,8 @@ declare class App extends vno.Vue {
 
   get favicon(): string
 
+  get iconExternal(): string
+
   addLink(href: string, text = ''): TAnchor
 
   removeLink(href: string): number

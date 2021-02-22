@@ -26,8 +26,8 @@
 <script lang="ts">
   import { bang } from '@/ts';
   import { config, confList, enableMultiConf, getSelectConf, shortBaseFiles } from '@/ts/config';
-  import { dispatchEvent } from '@/ts/element';
-  import { EEvent } from '@/ts/enums';
+  import { dispatchEvent, getIcon } from '@/ts/element';
+  import { EEvent, EIcon } from '@/ts/enums';
   import { addBaseUrl, returnHome } from '@/ts/path';
   import * as localStorage from '@/ts/storage';
   import { state } from '@/ts/store';
@@ -69,6 +69,10 @@
 
     get favicon() {
       return this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
+    }
+
+    get iconExternal() {
+      return getIcon(EIcon.external, 14);
     }
 
     created() {
