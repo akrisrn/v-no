@@ -3,7 +3,7 @@ import { getSyncSpan } from '@/ts/element';
 import { EEvent } from '@/ts/enums';
 import { cleanBaseUrl } from '@/ts/path';
 import { getParamRegExp } from '@/ts/regexp';
-import { destructors, sleep } from '@/ts/utils';
+import { chopStr, destructors, sleep } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
 import axios from 'axios';
 
@@ -161,6 +161,12 @@ export function getMessage(key: string, params?: TMessage) {
     if (!match) {
       return match0;
     }
+    let defaultValue: string | undefined = undefined;
+    const [key, value] = chopStr(match, '|');
+    if (value !== null) {
+      match = key;
+      defaultValue = value;
+    }
     let param = undefined;
     if (!Array.isArray(params)) {
       param = (params as IMessage)[match];
@@ -170,7 +176,10 @@ export function getMessage(key: string, params?: TMessage) {
         param = params[num];
       }
     }
-    return param !== undefined ? stringifyAny(param) : match0;
+    if (param !== undefined) {
+      return stringifyAny(param);
+    }
+    return defaultValue !== undefined ? defaultValue : match0;
   });
 }
 
