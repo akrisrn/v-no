@@ -595,6 +595,8 @@ type TFlag = {
 type TAnchor = {
   text: string
   href: string
+  isExternal?: boolean
+  isMarkdown?: boolean
 }
 
 type TAsyncResult = {

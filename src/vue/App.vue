@@ -9,7 +9,11 @@
         <a :href="`#${shortBaseFiles.archive}`"></a>
         <a :href="`#${shortBaseFiles.category}`"></a>
         <a :href="`#${shortBaseFiles.search}`"></a>
-        <a v-for="(link, i) of otherLinks" :key="i" :href="`#${link.href}`">{{ link.text }}</a>
+        <template v-for="(link, i) of otherLinks">
+          <a v-if="link.isExternal" :key="i" :href="link.href" rel="noopener noreferrer" target="_blank"
+             v-html="link.text + iconExternal"></a>
+          <a v-else :key="i" :href="link.href" :target="!link.isMarkdown ? '_blank' : null">{{ link.text }}</a>
+        </template>
         <select v-if="enableMultiConf" v-model="selectConf">
           <option v-for="(conf, i) of confList[0]" :key="i" :value="conf">{{ confList[1][i] }}</option>
         </select>
@@ -28,7 +32,7 @@
   import { config, confList, enableMultiConf, getSelectConf, shortBaseFiles } from '@/ts/config';
   import { dispatchEvent, getIcon } from '@/ts/element';
   import { EEvent, EIcon } from '@/ts/enums';
-  import { addBaseUrl, returnHome } from '@/ts/path';
+  import { addBaseUrl, buildHash, isExternalLink, parseHash, returnHome } from '@/ts/path';
   import * as localStorage from '@/ts/storage';
   import { state } from '@/ts/store';
   import { addInputBinds, inputBinds } from '@/ts/utils';
@@ -123,7 +127,24 @@
 
     // noinspection JSUnusedGlobalSymbols
     addLink(href: string, text = '') {
+      let isExternal = false;
+      let isMarkdown = false;
+      if (isExternalLink(href)) {
+        isExternal = true;
+      } else if (href.startsWith('/')) {
+        const { path, anchor, query } = parseHash(`#${href}`, true);
+        if (path.endsWith('.md') || path.endsWith('/')) {
+          isMarkdown = true;
+          href = buildHash({ path, anchor, query });
+        }
+      }
       const link: TAnchor = { text, href };
+      if (isExternal) {
+        link.isExternal = true;
+      }
+      if (isMarkdown) {
+        link.isMarkdown = true;
+      }
       this.otherLinks.push(link);
       return link;
     }
