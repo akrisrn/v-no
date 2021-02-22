@@ -192,7 +192,7 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
             match = sliceRegExp.exec(snippetData);
           }
           if (start !== 0) {
-            const lastSlip = data.substring(start);
+            const lastSlip = snippetData.substring(start);
             if (lastSlip.trim()) {
               slips[index++] = lastSlip;
             }
