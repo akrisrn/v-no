@@ -69,6 +69,7 @@ export function getQueryTagLinks(tag: string) {
     links.push({
       text: tag.substring(start, indexOf),
       href: buildQueryFlagUrl(EFlag.tags, tag.substring(0, indexOf)),
+      isMarkdown: true,
     });
     start = indexOf + 1;
     indexOf = tag.substring(start).indexOf('/');
@@ -76,6 +77,7 @@ export function getQueryTagLinks(tag: string) {
   links.push({
     text: start > 0 ? tag.substring(start) : tag,
     href: buildQueryFlagUrl(EFlag.tags, tag),
+    isMarkdown: true,
   });
   return links;
 }

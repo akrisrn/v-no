@@ -229,8 +229,8 @@ markdownIt.renderer.rules.link_open = (tokens, idx, options, env, self) => {
     return defaultLinkRenderRule(tokens, idx, options, env, self);
   }
   if (isExternalLink(href)) {
-    token.attrSet('target', '_blank');
     token.attrSet('rel', 'noopener noreferrer');
+    token.attrSet('target', '_blank');
     isExternal = true;
     return defaultLinkRenderRule(tokens, idx, options, env, self);
   }
