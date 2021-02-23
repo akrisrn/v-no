@@ -562,7 +562,6 @@ type TLink = {
   isImage?: boolean
   isAnchor?: boolean
   isExternal?: boolean
-  isError?: boolean
 }
 
 type TFileData = {

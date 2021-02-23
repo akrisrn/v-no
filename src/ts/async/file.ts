@@ -87,18 +87,7 @@ async function getLinks(path: string, title: string, data: string) {
       if (existLink !== undefined) {
         link = existLink;
       }
-      if (text) {
-        link.texts.push(text);
-      } else if (link.isMarkdown) {
-        getFile(href).then(file => {
-          link.texts.push(file.flags.title);
-          if (file.isError && !link.isError) {
-            link.isError = true;
-          }
-        });
-      } else {
-        link.texts.push(text);
-      }
+      link.texts.push(text);
       if (existLink !== undefined) {
         continue;
       }
@@ -244,7 +233,7 @@ async function walkFiles(files: IFile[], walkedPaths: string[]) {
       continue;
     }
     for (const link of Object.values(file.links)) {
-      if (!link.isMarkdown || link.isError) {
+      if (!link.isMarkdown) {
         continue;
       }
       const path = link.href;
