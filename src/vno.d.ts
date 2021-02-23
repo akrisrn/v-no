@@ -1,4 +1,4 @@
-/* v1.2.9 */
+/* v1.2.10 */
 
 declare let vnoConfig: IConfig;
 
