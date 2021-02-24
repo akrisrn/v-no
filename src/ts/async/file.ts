@@ -115,9 +115,17 @@ async function parseData(path: string, data: string): Promise<IFile> {
     return { path, data, flags, links: {} };
   }
   const flagRegExp = getWrapRegExp(`^@(\\S+?):`, '$');
-  const titleRegExp = getHeadingRegExp(1, 1);
-  data = data.split('\n').map(line => {
+  data = data.split('\n').map((line, i) => {
     line = line.trimEnd();
+    if (i === 0) {
+      const titleMatch = line.match(getHeadingRegExp(1, 1));
+      if (titleMatch) {
+        if (titleMatch[2]) {
+          flags.title = titleMatch[2];
+        }
+        return '';
+      }
+    }
     const flagMatch = line.match(flagRegExp);
     if (flagMatch) {
       const [, flagMark, flagText] = flagMatch;
@@ -125,13 +133,6 @@ async function parseData(path: string, data: string): Promise<IFile> {
         flags[flagMark] = trimList(flagText.split(/[,，、]/)).sort();
       } else {
         flags[flagMark] = flagText;
-      }
-      return '';
-    }
-    const titleMatch = line.match(titleRegExp);
-    if (titleMatch) {
-      if (titleMatch[2]) {
-        flags.title = titleMatch[2];
       }
       return '';
     }
