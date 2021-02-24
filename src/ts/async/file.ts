@@ -8,6 +8,7 @@ import { importMarkdownTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { addCacheKey, trimList } from '@/ts/async/utils';
 import axios from 'axios';
+import Token from 'markdown-it/lib/token';
 
 export function createErrorFile(path: string): IFile {
   return {
@@ -21,15 +22,10 @@ export function createErrorFile(path: string): IFile {
 
 const cachedBacklinks: Dict<string[]> = {};
 
-let markdownTs: TMarkdownTs | null = null;
-
-async function getLinks(path: string, title: string, data: string) {
-  if (!markdownTs) {
-    markdownTs = await importMarkdownTs();
-  }
+function getLinks(path: string, tokens: Token[]) {
   const anchorRegExp = getAnchorRegExp();
   const links: Dict<TLink> = {};
-  for (const token of markdownTs.parseMD(markdownTs.updateInlineScript(path, title, data))) {
+  for (const token of tokens) {
     if (token.type !== 'inline' || !token.children) {
       continue;
     }
@@ -111,6 +107,8 @@ async function getLinks(path: string, title: string, data: string) {
   return links;
 }
 
+let markdownTs: TMarkdownTs | null = null;
+
 async function parseData(path: string, data: string): Promise<IFile> {
   const flags: IFlags = { title: shortenPath(path) };
   if (!data) {
@@ -173,7 +171,14 @@ async function parseData(path: string, data: string): Promise<IFile> {
       }
     }
   }
-  return { path, data, flags, links: await getLinks(path, flags.title, data) };
+  if (!markdownTs) {
+    markdownTs = await importMarkdownTs();
+  }
+  const tokens = markdownTs.parseMD(markdownTs.updateInlineScript(path, flags.title, data));
+  return {
+    path, data, flags,
+    links: getLinks(path, tokens),
+  };
 }
 
 let noCache = !!localStorage.getItem('noCache');
