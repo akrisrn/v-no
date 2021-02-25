@@ -74,3 +74,11 @@ yarn run build
 # 使用现代模式进行构建
 yarn run build-modern
 ```
+
+单元测试：
+
+```shell
+yarn run serve
+yarn run test:install-browser
+yarn run test:unit
+```

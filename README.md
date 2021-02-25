@@ -10,7 +10,7 @@ v-no is a lightweight static site renderer / generator for Markdown, and also a 
 
 Demo and documentation：https://akrisrn.github.io/v-no-doc/?conf=en
 
-(It is work in progress, and English edition is just an empty shell for now. I will translate it when Chinese edition has done.)
+(It is a work in progress, and English edition is just an empty shell for now. I will translate it when Chinese edition has done.)
 
 ## Main features
 
@@ -67,4 +67,12 @@ Build minimized files for production:
 yarn run build
 # build in modern mode
 yarn run build-modern
+```
+
+Unit test：
+
+```shell
+yarn run serve
+yarn run test:install-browser
+yarn run test:unit
 ```
