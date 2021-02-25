@@ -17,9 +17,8 @@ v-no 是一个为 Markdown 准备的轻量级静态网站渲染 / 生成器，�
 - 大量服务行内 / 自定义脚本的 API（200+，不过还不太稳定）。
 - Markdown 文件之间的双向链接（[可视化网状链接关系图](https://akrisrn.github.io/v-no-doc/-/#/graph.md?conf=zh)）。
 - 扩展了部分 Markdown 语法（自动填充链接文本、在图像链接中追加样式、折叠标题等）。
-- 额外增加了多种标记语法（文件元数据、自动生成列表、重定向页面等）。
-- 可嵌套的标签语法。
-- 可高亮关键词的站内搜索。
+- 额外增加了多个标记语法（文件元数据、可嵌套标签、自动生成列表、重定向页面等）。
+- 两种模式的站内搜索（关键词或元数据）。
 - 暗色 / 禅模式。
 
 ## 谁有可能对它感兴趣？
@@ -34,7 +33,7 @@ v-no 是一个为 Markdown 准备的轻量级静态网站渲染 / 生成器，�
 
 ## 子项目
 
-- [v-no-script](https://github.com/akrisrn/v-no-script)：v-no 的核心代码只运行在浏览器，一些需要在 Node.js 环境下执行的脚本位于这个仓库，它包含：
+- [v-no-script](https://github.com/akrisrn/v-no-script)：一些需要在 Node.js 环境下执行的脚本位于这个仓库，它包含：
     - 预渲染页面的脚本（使用 Puppeteer，有同步队列和递归并发两种选择）。
     - 启动支持热重载的 Web 服务（express）的脚本（它会自动植入一个 WebSocket 客户端）。
     - 根据 `git log` 更新 Markdown 文件元数据的脚本。
