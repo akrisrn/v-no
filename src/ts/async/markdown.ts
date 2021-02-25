@@ -58,7 +58,7 @@ markdownIt.use(require('markdown-it-container'), 'details', {
         }
         if (summaryMatch !== '\\') {
           isRenderingSummary = true;
-          summary = markdownIt.render(summaryMatch);
+          summary = markdownIt.renderInline(summaryMatch);
           isRenderingSummary = false;
         }
       }
