@@ -103,9 +103,7 @@ function createBar(flags: IFlags) {
     bar.append(itemDate);
   }
   if (bar.childElementCount > 0) {
-    const filler = document.createElement('span');
-    filler.classList.add('filler');
-    return [filler, bar];
+    return bar;
   } else {
     return null;
   }
@@ -125,8 +123,7 @@ export function createList(file: ISimpleFile, li?: HTMLLIElement) {
   }
   const bar = createBar(file.flags);
   if (bar) {
-    li.append(bar[0]);
-    li.append(bar[1]);
+    li.append(bar);
   }
   return li;
 }

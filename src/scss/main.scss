@@ -95,6 +95,7 @@ main {
     opacity: 1;
 
     .home {
+      flex: 1 1 auto;
       min-width: 120px;
 
       &:before {
@@ -133,8 +134,12 @@ main {
         content: "»";
       }
 
+      > a {
+        flex: 1 1 auto;
+      }
+
       .bar {
-        margin-left: 1em;
+        margin-left: 8px;
       }
     }
   }
