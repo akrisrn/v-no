@@ -74,7 +74,7 @@ export function stringifyAny(value: any) {
 
 let asyncScriptCount = 0;
 
-function isolationEval(str: string) {
+export function isolatedEval(str: string) {
   return eval(str);
 }
 
@@ -82,7 +82,7 @@ function evalIt(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[
   const paras = Object.keys(params).join();
   const args = Object.values(params);
   if (evalStr.indexOf('await ') >= 0) {
-    const func = isolationEval(`(async function(${paras}){${evalStr}})`);
+    const func = isolatedEval(`(async function(${paras}){${evalStr}})`);
     if (!asyncResults) {
       return stringifyAny(func);
     }
@@ -94,7 +94,7 @@ function evalIt(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[
     });
     return getSyncSpan(id);
   }
-  return stringifyAny(isolationEval(`(function(${paras}){${evalStr}})`)(...args));
+  return stringifyAny(isolatedEval(`(function(${paras}){${evalStr}})`)(...args));
 }
 
 export function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean] {
