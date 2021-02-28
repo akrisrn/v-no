@@ -153,7 +153,7 @@ export function addEventListener(element: Document | Element, type: string, list
   destructors.push(() => element.removeEventListener(type, listener));
 }
 
-export function callAndListen(callback: () => void, event: EEvent, element: Document | Element = document, reside = true) {
+export function callAndListen(callback: () => void, event: EEvent, element: Document | Element = document, reside = false) {
   callback();
   if (reside) {
     element.addEventListener(event, callback);

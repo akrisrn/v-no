@@ -291,7 +291,7 @@ declare namespace vno {
 
     function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject): void
 
-    function callAndListen(callback: () => void, event: enums.EEvent, element: Document | Element = document, reside = true): void
+    function callAndListen(callback: () => void, event: enums.EEvent, element: Document | Element = document, reside = false): void
 
     function encodeParam(value: string): string
 
