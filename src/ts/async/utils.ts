@@ -90,16 +90,16 @@ export function replaceByRegExp(regexp: RegExp, data: string, callback: (match: 
   return newData;
 }
 
-export async function waitFor(callback: () => void, maxCount = 100, timeout = 100) {
+export async function waitFor<T>(callback: () => T, maxCount = 100, timeout = 100) {
   return await (async () => {
+    const enableCount = isFinite(maxCount);
     let count = 0;
     for (; ;) {
       try {
-        callback();
-        return true;
+        return callback();
       } catch {
-        if (++count > maxCount) {
-          return false;
+        if (enableCount && ++count > maxCount) {
+          return undefined;
         }
         await sleep(timeout);
       }
@@ -107,8 +107,8 @@ export async function waitFor(callback: () => void, maxCount = 100, timeout = 10
   })();
 }
 
-export function waitForEvent(callback: () => any, event: EEvent, element: Document | Element = document) {
-  return new Promise<any>(resolve => {
+export function waitForEvent<T>(callback: () => T, event: EEvent, element: Document | Element = document) {
+  return new Promise<T>(resolve => {
     const listener = () => {
       resolve(callback());
       element.removeEventListener(event, listener);

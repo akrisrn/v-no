@@ -281,9 +281,9 @@ declare namespace vno {
 
     function replaceByRegExp(regexp: RegExp, data: string, callback: (match: RegExpExecArray) => string): string
 
-    function waitFor(callback: () => void, maxCount = 100, timeout = 100): Promise<boolean>
+    function waitFor<T>(callback: () => T, maxCount = 100, timeout = 100): Promise<T | undefined>
 
-    function waitForEvent(callback: () => any, event: enums.EEvent, element: Document | Element = document): Promise<any>
+    function waitForEvent<T>(callback: () => T, event: enums.EEvent, element: Document | Element = document): Promise<T>
 
     function addEventListener(element: Document | Element, type: string, listener: EventListenerOrEventListenerObject): void
 
