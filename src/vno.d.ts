@@ -275,6 +275,8 @@ declare namespace vno {
 
     function addCacheKey(path: string, needClean = true): string
 
+    function addCustomTag(href: string, reside: boolean, isScript: boolean): boolean
+
     function stringifyAny(value: any): string
 
     function evalFunction(evalStr: string, params: Dict<any>, asyncResults?: TAsyncResult[]): [string, boolean]

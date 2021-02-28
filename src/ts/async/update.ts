@@ -15,7 +15,7 @@ import { chopStr } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles, sortFiles } from '@/ts/async/file';
-import { addCacheKey, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
+import { addCustomTag, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
@@ -598,50 +598,22 @@ function updateLinkPath() {
   }
 }
 
-function updateCustom(links: NodeListOf<HTMLAnchorElement>, isScript: boolean) {
-  for (const a of links) {
-    if (!new RegExp(`${isScript ? '\\$' : '\\*'}+`).test(a.innerText)) {
-      continue;
-    }
-    let href = a.getAttribute('href')!;
-    let element;
-    if (isScript) {
-      element = document.querySelector<HTMLScriptElement>(`script[src^="${href}"]`);
-    } else {
-      element = document.querySelector<HTMLLinkElement>(`link[href^="${href}"]`);
-    }
-    if (element) {
-      const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
-      if (!nextChar || nextChar === '?') {
-        a.parentElement!.remove();
-        continue;
-      }
-    }
-    href = addCacheKey(href);
-    if (isScript) {
-      element = document.createElement('script');
-      element.charset = 'utf-8';
-      element.src = href;
-    } else {
-      element = document.createElement('link');
-      element.rel = 'stylesheet';
-      element.type = 'text/css';
-      element.href = href;
-    }
-    if (a.innerText.length === 1) {
-      element.classList.add('custom');
-    }
-    document.head.append(element);
-    a.parentElement!.remove();
-  }
-}
-
 function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
-  updateCustom(links, false);
+  links.forEach(a => {
+    if (/^\*+$/.test(a.innerText)) {
+      a.parentElement!.remove();
+      addCustomTag(a.getAttribute('href')!, a.innerText.length > 1, false);
+    }
+  });
 }
 
 function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
-  updateCustom(links, true);
+  links.forEach(a => {
+    if (/^\$+$/.test(a.innerText)) {
+      a.parentElement!.remove();
+      addCustomTag(a.getAttribute('href')!, a.innerText.length > 1, true);
+    }
+  });
 }
 
 const scrollOffset = 6;

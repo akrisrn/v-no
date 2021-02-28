@@ -23,6 +23,37 @@ export function addCacheKey(path: string, needClean = true) {
   return cacheKey ? `${path}?${cacheKey}` : path;
 }
 
+export function addCustomTag(href: string, reside: boolean, isScript: boolean) {
+  let element;
+  if (isScript) {
+    element = document.querySelector<HTMLScriptElement>(`script[src^="${href}"]`);
+  } else {
+    element = document.querySelector<HTMLLinkElement>(`link[href^="${href}"]`);
+  }
+  if (element) {
+    const nextChar = element.getAttribute(isScript ? 'src' : 'href')![href.length];
+    if (!nextChar || nextChar === '?') {
+      return false;
+    }
+  }
+  href = addCacheKey(href);
+  if (isScript) {
+    element = document.createElement('script');
+    element.charset = 'utf-8';
+    element.src = href;
+  } else {
+    element = document.createElement('link');
+    element.rel = 'stylesheet';
+    element.type = 'text/css';
+    element.href = href;
+  }
+  if (!reside) {
+    element.classList.add('custom');
+  }
+  document.head.append(element);
+  return true;
+}
+
 export function stringifyAny(value: any) {
   switch (typeof value) {
     case 'object':
