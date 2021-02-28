@@ -15,7 +15,7 @@ import { chopStr } from '@/ts/utils';
 import { importPrismjsTs } from '@/ts/async';
 import { formatDate } from '@/ts/async/date';
 import { getFile, getFiles, sortFiles } from '@/ts/async/file';
-import { addCustomTag, evalFunction, replaceByRegExp, trimList } from '@/ts/async/utils';
+import { addCustomTag, evalFunction, isolatedEval, replaceByRegExp, trimList, waitFor } from '@/ts/async/utils';
 import { escapeHtml, escapeRE } from 'markdown-it/lib/common/utils';
 import htmlBlocks from 'markdown-it/lib/common/html_blocks';
 
@@ -607,13 +607,18 @@ function updateCustomStyle(links: NodeListOf<HTMLAnchorElement>) {
   });
 }
 
-function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
-  links.forEach(a => {
-    if (/^\$+$/.test(a.innerText)) {
-      a.parentElement!.remove();
-      addCustomTag(a.getAttribute('href')!, a.innerText.length > 1, true);
+async function updateCustomScript(links: NodeListOf<HTMLAnchorElement>) {
+  for (const a of links) {
+    if (!/^\$+$/.test(a.innerText)) {
+      continue;
     }
-  });
+    a.parentElement!.remove();
+    const title = a.getAttribute('title');
+    if (title) {
+      await waitFor(() => isolatedEval(title), Infinity);
+    }
+    addCustomTag(a.getAttribute('href')!, a.innerText.length > 1, true);
+  }
 }
 
 const scrollOffset = 6;
@@ -989,7 +994,7 @@ export async function updateDom() {
   const styles = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".css"]');
   const scripts = document.querySelectorAll<HTMLAnchorElement>('article a[href$=".js"]');
   updateCustomStyle(styles);
-  updateCustomScript(scripts);
+  updateCustomScript(scripts).then();
   const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
   await updateHighlight();
