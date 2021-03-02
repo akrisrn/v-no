@@ -936,7 +936,7 @@ function updateHeading() {
   tocDiv.innerHTML = '';
   const transHeadingList = headingList.map(transHeading);
   const groupLength = headingLength > 11 ? 3 : (headingLength > 7 ? 2 : 1);
-  const groups: HTMLLIElement[][] = '.'.repeat(groupLength - 1).split('.').map(() => []);
+  const groups: HTMLLIElement[][] = [...Array(groupLength)].map(() => []);
   let maxCount = Math.ceil(headingLength / groupLength);
   let nextCount = 0;
   let i = 0;
