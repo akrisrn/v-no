@@ -41,11 +41,10 @@
       </div>
       <footer v-if="!isIndexFile">
         <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
-        <span v-if="!isError && startDate" class="date">{{
-            endDate !== startDate
-                ? endDate + lastUpdatedMessage
-                : startDate
-          }}</span>
+        <template v-if="!isError && startDate">
+          <span class="filler"></span>
+          <span class="date">{{ endDate !== startDate ? endDate + lastUpdatedMessage : startDate }}</span>
+        </template>
       </footer>
     </main>
     <div v-else-if="initing" class="lds-ellipsis initing">

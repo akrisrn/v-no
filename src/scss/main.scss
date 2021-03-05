@@ -95,7 +95,6 @@ main {
     opacity: 1;
 
     .home {
-      flex: 1 1 auto;
       min-width: 120px;
 
       &:before {
@@ -132,10 +131,6 @@ main {
         font-family: $arial-font-family;
         margin-right: 8px;
         content: "»";
-      }
-
-      > a {
-        flex: 1 1 auto;
       }
 
       .bar {
