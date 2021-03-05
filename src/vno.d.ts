@@ -307,6 +307,7 @@ declare namespace vno {
 declare class App extends vno.Vue {
   keyInput: string;
   selectConf: string;
+  links: string[];
   otherLinks: TAnchor[];
 
   get initing(): typeof vno.store.state.initing
@@ -318,8 +319,6 @@ declare class App extends vno.Vue {
   get confList(): typeof vno.config.confList
 
   get enableMultiConf(): typeof vno.config.enableMultiConf
-
-  get shortBaseFiles(): typeof vno.config.shortBaseFiles
 
   get favicon(): string
 

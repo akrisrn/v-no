@@ -5,18 +5,22 @@
         <img v-if="favicon" :src="favicon" alt="favicon"/>
         <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
         <span class="filler"></span>
-        <a :href="`#${shortBaseFiles.readme}`"></a>
-        <a :href="`#${shortBaseFiles.archive}`"></a>
-        <a :href="`#${shortBaseFiles.category}`"></a>
-        <a :href="`#${shortBaseFiles.search}`"></a>
-        <template v-for="(link, i) of otherLinks">
-          <a v-if="link.isExternal" :key="i" :href="link.href" rel="noopener noreferrer" target="_blank"
-             v-html="link.text + iconExternal"></a>
-          <a v-else :key="i" :href="link.href" :target="!link.isMarkdown ? '_blank' : null">{{ link.text }}</a>
+        <template v-for="(link, i) of links">
+          <a :key="i" :href="`#${link}`"></a>
+          <span v-if="i !== links.length - 1" :key="`${i}-0`" class="separator">|</span>
         </template>
-        <select v-if="enableMultiConf" v-model="selectConf">
-          <option v-for="(conf, i) of confList[0]" :key="i" :value="conf">{{ confList[1][i] }}</option>
-        </select>
+        <template v-for="(link, i) of otherLinks">
+          <span :key="`o-${i}-0`" class="separator">|</span>
+          <a v-if="link.isExternal" :key="`o-${i}`" :href="link.href" rel="noopener noreferrer" target="_blank"
+             v-html="link.text + iconExternal"></a>
+          <a v-else :key="`o-${i}`" :href="link.href" :target="!link.isMarkdown ? '_blank' : null">{{ link.text }}</a>
+        </template>
+        <template v-if="enableMultiConf">
+          <span class="separator">|</span>
+          <select v-model="selectConf">
+            <option v-for="(conf, i) of confList[0]" :key="i" :value="conf">{{ confList[1][i] }}</option>
+          </select>
+        </template>
       </div>
     </div>
     <div v-if="initing" class="lds-ellipsis initing">
@@ -45,6 +49,12 @@
   export default class App extends Vue {
     keyInput = '';
     selectConf = getSelectConf();
+    links = [
+      shortBaseFiles.readme,
+      shortBaseFiles.archive,
+      shortBaseFiles.category,
+      shortBaseFiles.search,
+    ];
     otherLinks: TAnchor[] = [];
 
     get initing() {
@@ -65,10 +75,6 @@
 
     get enableMultiConf() {
       return enableMultiConf;
-    }
-
-    get shortBaseFiles() {
-      return shortBaseFiles;
     }
 
     get favicon() {

@@ -36,11 +36,6 @@
           content: none;
         }
       }
-
-      &:after {
-        margin: 0 8px;
-        content: "|";
-      }
     }
 
     select {
@@ -49,6 +44,10 @@
       border: none;
       outline: none;
       background-color: $dark-main-background-color;
+    }
+
+    .separator {
+      margin: 0 8px;
     }
   }
 
