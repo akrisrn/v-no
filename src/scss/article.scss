@@ -152,12 +152,6 @@ article {
 
   img {
     max-width: 100%;
-
-    @for $i from 1 through 14 {
-      &.w#{$i * 50} {
-        max-width: #{$i * 50}px;
-      }
-    }
   }
 
   kbd {
