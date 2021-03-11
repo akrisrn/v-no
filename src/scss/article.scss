@@ -75,7 +75,9 @@ article {
 
   p {
     margin: 0 0 16px;
+  }
 
+  p, dl {
     &.left {
       float: left;
       margin-right: 16px;
@@ -92,32 +94,6 @@ article {
       @media screen and (max-width: $media-max-width) {
         float: none;
         margin: 0 0 16px;
-      }
-    }
-  }
-
-  ol, ul {
-    margin: 0 0 16px;
-    padding-left: 2em;
-
-    ol, ul {
-      margin-bottom: 0;
-
-      li:first-of-type {
-        margin-top: 0.5em;
-      }
-    }
-
-    li.article {
-      margin-left: -2em;
-
-      + blockquote {
-        margin: 8px 0 8px -1em;
-        padding-left: 0;
-
-        &:before {
-          content: none;
-        }
       }
     }
   }
@@ -146,6 +122,32 @@ article {
 
       p {
         display: inline-block;
+      }
+    }
+  }
+
+  ol, ul {
+    margin: 0 0 16px;
+    padding-left: 2em;
+
+    ol, ul {
+      margin-bottom: 0;
+
+      li:first-of-type {
+        margin-top: 0.5em;
+      }
+    }
+
+    li.article {
+      margin-left: -2em;
+
+      + blockquote {
+        margin: 8px 0 8px -1em;
+        padding-left: 0;
+
+        &:before {
+          content: none;
+        }
       }
     }
   }

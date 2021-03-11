@@ -735,13 +735,26 @@ function updateImagePath() {
       parent = parent.parentElement!;
     }
     img.classList.forEach(cls => {
-      if (['hidden', 'left', 'right'].includes(cls)) {
+      if (cls === 'hidden') {
         parent.classList.add(cls);
         removeClass(img, cls);
+      } else if (['left', 'right'].includes(cls)) {
+        if (parent.tagName === 'DT') {
+          parent.parentElement!.classList.add(cls);
+        } else {
+          parent.classList.add(cls);
+        }
+        removeClass(img, cls);
+      } else {
+        const match = cls.match(/^w(\d+)$/);
+        if (match) {
+          img.setAttribute('width', `${parseInt(match[1])}`);
+          removeClass(img, cls);
+        }
       }
     });
     if (parent.childNodes.length === 1) {
-      if (['DT', 'DD'].includes(parent.tagName)) {
+      if (parent.tagName === 'DT') {
         parent.parentElement!.classList.add('center');
       } else if (parent.tagName === 'P') {
         parent.classList.add('center');
