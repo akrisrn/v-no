@@ -454,12 +454,16 @@ article {
     margin: 0 8px 8px 0;
     padding: 8px 16px;
     cursor: pointer;
-    transition: color 0.5s, background-color 0.3s;
+    transition: color 0.5s, border-color 0.5s, background-color 0.3s;
     color: $font-color;
     border: none;
     border-bottom: 3px solid;
     outline: none;
     background-color: transparent;
+
+    &.bold {
+      font-weight: bold;
+    }
 
     @each $name, $colors in $color-sets {
       &#{if($name == "info", "", "." + $name)} {
@@ -473,10 +477,6 @@ article {
           background-color: nth($colors, 1);
         }
       }
-    }
-
-    &.bold {
-      font-weight: bold;
     }
 
     &:disabled {
@@ -499,13 +499,30 @@ article {
     width: 100%;
     margin: 24px 0;
     padding: 0 0 0 16px;
-    transition: color 0.5s;
+    transition: color 0.5s, border-color 0.5s;
     color: $font-color;
     border: none;
-    border-left: $border-width solid $info-color-s;
+    border-left: $border-width solid;
     border-radius: 0;
     outline: none;
     background-color: transparent;
+
+    @each $name, $colors in $color-sets {
+      &#{if($name == "info", "", "." + $name)} {
+        border-color: nth($colors, 1);
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: $gray-font-color;
+      border-color: $gray-font-color;
+    }
+  }
+
+  textarea.ipt {
+    min-height: 2em;
+    resize: vertical;
   }
 
   .folded {
