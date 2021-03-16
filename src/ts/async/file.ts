@@ -272,3 +272,5 @@ export function sortFiles(fileA: ISimpleFile, fileB: ISimpleFile) {
   }
   return x;
 }
+
+export { axios };

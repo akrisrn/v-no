@@ -21,34 +21,34 @@ export function bang() {
     ...enums,
     config, element, enums, path, regexp, storage, store, utils,
   });
-  importFileTs().then(file => exposeToWindow({ file }));
-  importMarkdownTs().then(markdown => {
-    exposeToWindow({
-      markdown,
-      markdownIt: markdown.markdownIt,
-      renderMD: async (path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]) => {
-        data = data.trim();
-        if (!data) {
-          return '';
-        }
-        data = markdown.updateInlineScript(path, title, data, isSnippet, asyncResults);
-        if (!data) {
-          return '';
-        }
-        data = await markdown.updateSnippet(data, [path], asyncResults);
-        if (!data) {
-          return '';
-        }
-        data = await markdown.updateList(data);
-        return data ? markdown.renderMD(data) : '';
-      },
-      updateDom: markdown.updateDom,
-    });
-  });
+  importFileTs().then(file => exposeToWindow({
+    file,
+    axios: file.axios,
+  }));
+  importMarkdownTs().then(markdown => exposeToWindow({
+    markdown,
+    markdownIt: markdown.markdownIt,
+    renderMD: async (path: string, title: string, data: string, isSnippet = false, asyncResults?: TAsyncResult[]) => {
+      data = data.trim();
+      if (!data) {
+        return '';
+      }
+      data = markdown.updateInlineScript(path, title, data, isSnippet, asyncResults);
+      if (!data) {
+        return '';
+      }
+      data = await markdown.updateSnippet(data, [path], asyncResults);
+      if (!data) {
+        return '';
+      }
+      data = await markdown.updateList(data);
+      return data ? markdown.renderMD(data) : '';
+    },
+    updateDom: markdown.updateDom,
+  }));
   importUtilsTs().then(utils => {
     exposeToWindow({ utils }, true);
     exposeToWindow({
-      axios: utils.axios,
       dayjs: utils.dayjs,
       waitFor: utils.waitFor,
       waitForEvent: utils.waitForEvent,

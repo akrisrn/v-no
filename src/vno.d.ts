@@ -5,9 +5,9 @@ declare let vnoConfig: IConfig;
 declare namespace vno {
   const VPD: VPD;
   const Vue: Vue;
-  const axios: typeof utils.axios;
-  const dayjs: typeof utils.dayjs;
+  const axios: typeof file.axios;
   const markdownIt: typeof markdown.markdownIt;
+  const dayjs: typeof utils.dayjs;
 
   const version: string;
 
@@ -51,6 +51,8 @@ declare namespace vno {
   const toBottom: typeof gadgetSelf.toBottom;
 
   namespace file {
+    const axios: axios;
+
     function createErrorFile(path: string): IFile
 
     function isCached(): boolean
@@ -258,7 +260,6 @@ declare namespace vno {
   }
 
   namespace utils {
-    const axios: axios;
     const dayjs: Dayjs;
 
     const definedFlags: enums.EFlag[];

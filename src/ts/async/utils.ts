@@ -5,7 +5,6 @@ import { cleanBaseUrl } from '@/ts/path';
 import { getParamRegExp } from '@/ts/regexp';
 import { chopStr, destructors, sleep } from '@/ts/utils';
 import { isCached } from '@/ts/async/file';
-import axios from 'axios';
 
 export function trimList(list: string[], distinct = true) {
   list = list.map(item => item.trim()).filter(item => item);
@@ -214,5 +213,4 @@ export function getMessage(key: string, params?: TMessage) {
   });
 }
 
-export { axios };
 export * from '@/ts/async/date';
