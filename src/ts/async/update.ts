@@ -124,18 +124,20 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
       return line;
     }
     const params: Dict<string> = {};
-    paramStr?.split('|').forEach((param, i) => {
-      const [key, value] = chopStr(param.trim(), '=');
-      param = key;
-      if (value !== null) {
-        param = value;
-        if (key) {
-          params[key] = param;
+    if (paramStr) {
+      paramStr.split('|').forEach((param, i) => {
+        const [key, value] = chopStr(param.trim(), '=');
+        param = key;
+        if (value !== null) {
+          param = value;
+          if (key) {
+            params[key] = param;
+          }
         }
-      }
-      params[i] = param;
-    });
-    snippetDict[match0] = [level?.length ?? 0, params, foldMark];
+        params[i] = param;
+      });
+    }
+    snippetDict[match0] = [level ? level.length : 0, params, foldMark];
     return line;
   }).join('\n');
   const paths = Object.keys(dict);
