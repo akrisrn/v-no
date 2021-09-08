@@ -114,21 +114,26 @@ async function parseData(path: string, data: string): Promise<IFile> {
   if (!data) {
     return { path, data, flags, links: {} };
   }
+  if (!markdownTs) {
+    markdownTs = await importMarkdownTs();
+  }
   const flagRegExp = getWrapRegExp(`^@(\\S+?):`, '$');
+  const headingRegExp = getHeadingRegExp(1, 1);
   data = data.split('\n').map((line, i) => {
     line = line.trimEnd();
     if (i === 0) {
-      const titleMatch = line.match(getHeadingRegExp(1, 1));
+      const titleMatch = line.match(headingRegExp);
       if (titleMatch) {
         if (titleMatch[2]) {
-          flags.title = titleMatch[2];
+          flags.title = markdownTs!.updateInlineScript(path, flags.title, titleMatch[2]);
         }
         return '';
       }
     }
     const flagMatch = line.match(flagRegExp);
     if (flagMatch) {
-      const [, flagMark, flagText] = flagMatch;
+      const [, flagMark, text] = flagMatch;
+      const flagText = markdownTs!.updateInlineScript(path, flags.title, text);
       if ([EFlag.tags, EFlag.updated].includes(flagMark as EFlag)) {
         flags[flagMark] = trimList(flagText.split(/[,，、]/)).sort();
       } else {
@@ -171,9 +176,6 @@ async function parseData(path: string, data: string): Promise<IFile> {
         flags.endDate = formatDate(new Date(times[length - 1]));
       }
     }
-  }
-  if (!markdownTs) {
-    markdownTs = await importMarkdownTs();
   }
   const tokens = markdownTs.parseMD(markdownTs.updateInlineScript(path, flags.title, data));
   return {
