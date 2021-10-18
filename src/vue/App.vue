@@ -3,7 +3,7 @@
     <div id="top">
       <div>
         <img v-if="favicon" :src="favicon" alt="favicon"/>
-        <a :href="homePath" @click.prevent="returnHome">{{ config.siteName || config.messages.home }}</a>
+        <a :href="homePath" @click.prevent="returnHome">{{ conf.siteName || conf.messages.home }}</a>
         <span class="filler"></span>
         <template v-for="(link, i) of links">
           <a :key="i" :href="`#${link}`"></a>
@@ -65,7 +65,7 @@
       return state.homePath;
     }
 
-    get config() {
+    get conf() {
       return config;
     }
 
@@ -78,7 +78,7 @@
     }
 
     get favicon() {
-      return this.config.paths.favicon ? addBaseUrl(this.config.paths.favicon) : '';
+      return this.conf.paths.favicon ? addBaseUrl(this.conf.paths.favicon) : '';
     }
 
     get iconExternal() {

@@ -17,11 +17,11 @@
         </code>
         <code v-for="(flag, i) of otherFlags" :key="i" :class="`item-${flag.key}`">{{ flag.value }}</code>
         <code class="item-raw">
-          <a :href="rawFilePath" target="_blank">{{ config.messages.raw }}</a>
+          <a :href="rawFilePath" target="_blank">{{ conf.messages.raw }}</a>
         </code>
       </div>
       <div v-if="!isRedirectPage && redirectFrom[0].length > 0" id="redirect-from">
-        <span>{{ config.messages.redirectFrom }}</span>
+        <span>{{ conf.messages.redirectFrom }}</span>
         <a v-for="(path, i) of redirectFrom[0]" :key="i" :href="`#${path}`">{{ redirectFrom[1][i] }}</a>
       </div>
       <header>{{ title }}</header>
@@ -30,17 +30,17 @@
       <div v-if="!isError" id="backlinks">
         <span v-if="!hasLoadedBacklinks" :class="['icon', { sync: isLoadingBacklinks }]"
               v-html="isLoadingBacklinks ? iconSync : iconBacklink"></span>
-        <span v-if="isLoadingBacklinks">{{ config.messages.loading }}</span>
-        <a v-else-if="!hasLoadedBacklinks" @click="loadBacklinks">{{ config.messages.showBacklinks }}</a>
+        <span v-if="isLoadingBacklinks">{{ conf.messages.loading }}</span>
+        <a v-else-if="!hasLoadedBacklinks" @click="loadBacklinks">{{ conf.messages.showBacklinks }}</a>
         <template v-else>
           <ul v-if="backlinkFiles.length > 0">
             <li v-for="(file, i) of backlinkFiles" :key="i" class="article" v-html="getListHtml(file)"></li>
           </ul>
-          <span v-else>{{ config.messages.noBacklinks }}</span>
+          <span v-else>{{ conf.messages.noBacklinks }}</span>
         </template>
       </div>
       <footer v-if="!isIndexFile">
-        <a :href="homePath" class="home" @click.prevent="returnHome">{{ config.messages.returnHome }}</a>
+        <a :href="homePath" class="home" @click.prevent="returnHome">{{ conf.messages.returnHome }}</a>
         <template v-if="!isError && startDate">
           <span class="filler"></span>
           <span class="date">{{ endDate !== startDate ? endDate + lastUpdatedMessage : startDate }}</span>
@@ -134,16 +134,16 @@
       return parseQuery(this.queryStr);
     }
 
-    get config() {
+    get conf() {
       return config;
     }
 
     get isIndexFile() {
-      return this.filePath === this.config.paths.index;
+      return this.filePath === this.conf.paths.index;
     }
 
     get lastUpdatedMessage() {
-      return ` | ${this.config.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
+      return ` | ${this.conf.messages.lastUpdated}${this.updater ? ` (${this.updater})` : ''}`;
     }
 
     get iconSync() {
@@ -189,7 +189,7 @@
       });
       this.$watch('title', () => {
         let title = this.title;
-        const siteName = this.config.siteName;
+        const siteName = this.conf.siteName;
         if (siteName && siteName !== this.title) {
           title += ` - ${siteName}`;
         }
@@ -260,7 +260,7 @@
       }
       const promises = [];
       promises.push(this.fileTs.getFile(filePath));
-      const commonPath = this.config.paths.common;
+      const commonPath = this.conf.paths.common;
       if (commonPath && filePath !== commonPath) {
         promises.push(this.fileTs.getFile(commonPath));
       }
