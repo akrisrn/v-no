@@ -419,23 +419,25 @@ article {
     top: 0;
     opacity: 1;
 
-    button {
-      cursor: pointer;
-      outline: none;
-    }
+    .toolbar-item {
+      button {
+        cursor: pointer;
+        outline: none;
+      }
 
-    button, span {
-      font-family: $mono-font-family;
-      font-size: $font-size-s;
-      font-weight: bold;
-      padding: 0 8px 0 0;
-      transition: color 0.5s;
-      color: $gray-font-color;
-      background: none;
-      box-shadow: none;
+      button, span {
+        font-family: $mono-font-family;
+        font-size: $font-size-s;
+        font-weight: bold;
+        padding: 0 8px 0 0;
+        transition: color 0.5s;
+        color: $gray-font-color;
+        background: none;
+        box-shadow: none;
 
-      &:hover {
-        color: $dark-font-color;
+        &:hover {
+          color: $dark-font-color;
+        }
       }
     }
   }
