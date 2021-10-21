@@ -1,4 +1,5 @@
 import * as config from '@/ts/config';
+import { config as conf } from '@/ts/config';
 import * as element from '@/ts/element';
 import * as enums from '@/ts/enums';
 import * as path from '@/ts/path';
@@ -15,10 +16,7 @@ export function bang() {
   exposeToWindow({
     VPD, Vue: VPD.Vue,
     version: process.env.VUE_APP_VERSION,
-    destructors,
-    addInputBinds,
-    sleep,
-    ...enums,
+    conf, destructors, addInputBinds, sleep, ...enums,
     config, element, enums, path, regexp, storage, store, utils,
   });
   importFileTs().then(file => exposeToWindow({

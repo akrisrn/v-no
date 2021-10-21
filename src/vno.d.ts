@@ -36,6 +36,7 @@ declare namespace vno {
   const articleSelf: Article;
   const gadgetSelf: Gadget;
 
+  const conf: typeof config.config;
   const selectConf: typeof appSelf.selectConf;
 
   const title: typeof mainSelf.title;
