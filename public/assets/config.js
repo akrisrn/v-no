@@ -1,5 +1,5 @@
 vnoConfig = {
-  siteName: '',
+  siteName: 'v-no',
   dateFormat: '',
   smartQuotes: '',
   replacer: [],
