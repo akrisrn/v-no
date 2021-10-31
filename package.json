@@ -11,7 +11,8 @@
     "build-modern+clean": "yarn run build-modern && yarn run clean-template",
     "test:install-browser": "node node_modules/puppeteer-core/install.js",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "typedoc": "typedoc"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -51,6 +52,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.32.6",
     "sass-loader": "^10.1.1",
+    "typedoc": "^0.22.7",
     "typescript": "^4.1.3",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.0.0"

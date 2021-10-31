@@ -1,0 +1,13 @@
+{
+  "entryPointStrategy": "Expand",
+  "entryPoints": [
+    "./src"
+  ],
+  "exclude": [
+    "./src/inject2html.ts",
+    "./src/router.ts",
+    "./src/shims-*.d.ts"
+  ],
+  "readme": "none",
+  "out": "docs"
+}
