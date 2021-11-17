@@ -21,7 +21,7 @@ vnoConfig = {
     returnHome: 'Return to home',
     lastUpdated: 'Last updated',
     untagged: 'untagged',
-    pageError: 'There is something wrong with this page.',
+    pageError: '[+](/error.md)',
     searching: 'Searching...',
     searchNothing: 'Nothing.',
     showBacklinks: 'Show backlinks',
