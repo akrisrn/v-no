@@ -76,3 +76,9 @@ yarn run serve
 yarn run test:install-browser
 yarn run test:unit
 ```
+
+## API
+
+Generate by typedoc: https://akrisrn.github.io/v-no/
+
+中文 API 文档（转换自 [vno.d.ts](/src/vno.d.ts)）：https://akrisrn.github.io/v-no-doc/-/#/zh/api/
