@@ -297,7 +297,7 @@ declare namespace vno {
 
     function encodeParam(value: string): string
 
-    function getMessage(key: string, params?: TMessage): string
+    function getMessage(key: string, params?: TMessage): string | undefined
 
     function parseDate(date: string | number): Date
 

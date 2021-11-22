@@ -169,7 +169,7 @@ export function getMessage(key: string, params?: TMessage) {
   let message: TMessage | undefined = config.messages;
   for (const k of trimList(key.split('.'), false)) {
     if (message === null || typeof message !== 'object') {
-      return stringifyAny(undefined);
+      return undefined;
     }
     if (!Array.isArray(message)) {
       message = message[k];
@@ -178,7 +178,10 @@ export function getMessage(key: string, params?: TMessage) {
     const num = parseInt(k);
     message = !isNaN(num) ? message[num] : undefined;
   }
-  if (message === undefined || typeof message === 'object' || typeof message !== 'string') {
+  if (message === undefined || message === null) {
+    return undefined;
+  }
+  if (typeof message === 'object' || typeof message !== 'string') {
     return stringifyAny(message);
   }
   if (params === undefined) {
