@@ -93,7 +93,7 @@ declare namespace vno {
 
     function updateHighlight(): Promise<void>
 
-    function updateDom(): Promise<void>
+    function updateDom(): Promise<THeading>
   }
 
   namespace config {
@@ -362,6 +362,7 @@ declare class Article extends vno.Vue {
   renderData: string;
   asyncResults: TAsyncResult[];
   resultsBeforeRendered: TAsyncResult[];
+  heading: THeading | undefined;
 
   get filePath(): typeof vno.store.state.filePath
 
@@ -380,6 +381,8 @@ declare class Article extends vno.Vue {
   renderComplete(): void
 
   scrollToAnchor(): void
+
+  updateHeading(heading: THeading): void
 }
 
 // noinspection JSUnusedGlobalSymbols

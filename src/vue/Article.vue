@@ -27,6 +27,7 @@
     renderData = '';
     asyncResults: TAsyncResult[] = [];
     resultsBeforeRendered: TAsyncResult[] = [];
+    heading: THeading | undefined;
 
     get filePath() {
       return state.filePath;
@@ -67,7 +68,7 @@
           this.resultsBeforeRendered.push(result);
         }
         if (this.markdownTs.updateAsyncScript(result)) {
-          this.markdownTs.updateDom();
+          this.markdownTs.updateDom().then(this.updateHeading);
         }
       });
       this.$watch('anchor', () => this.scrollToAnchor());
@@ -104,7 +105,7 @@
           .replace(getMarkRegExp(`(${[EMark.list, EMark.input, EMark.result].join('|')})`, true, 'img'), span)
           .replace(getMarkRegExp(`(${[EMark.number, EMark.count, EMark.time].join('|')})`, false, 'ig'), span);
       this.updateRenderData(loadingData).then(() => {
-        this.markdownTs.updateDom();
+        this.markdownTs.updateDom().then(this.updateHeading);
         this.markdownTs.updateSnippet(data, [this.filePath], this.asyncResults).then(data => {
           if (!data) {
             this.updateRenderData().then(() => this.renderComplete());
@@ -117,7 +118,9 @@
             }
             this.updateRenderData(this.markdownTs.preprocessSearchPage(data)).then(() => {
               this.renderComplete();
-              this.markdownTs.updateSearchPage(this.queryContent).then(() => this.markdownTs.updateDom());
+              this.markdownTs.updateSearchPage(this.queryContent).then(() => {
+                this.markdownTs.updateDom().then(this.updateHeading);
+              });
             });
           });
         });
@@ -130,7 +133,7 @@
     }
 
     renderComplete() {
-      this.markdownTs.updateDom().then(() => {
+      this.markdownTs.updateDom().then(this.updateHeading).then(() => {
         this.isRendering = false;
         this.$nextTick(() => {
           removeClass(this.$el);
@@ -149,7 +152,7 @@
           result = this.resultsBeforeRendered.shift();
         }
         if (needUpdate) {
-          this.markdownTs.updateDom();
+          this.markdownTs.updateDom().then(this.updateHeading);
         }
       });
     }
@@ -163,6 +166,10 @@
         scroll(element.offsetTop - 6);
         changeAnchor(this.anchor);
       }
+    }
+
+    updateHeading(heading: THeading) {
+      this.heading = heading;
     }
   }
 </script>

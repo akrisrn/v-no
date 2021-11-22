@@ -919,7 +919,7 @@ function updateHeading() {
     if (tocDiv) {
       tocDiv.remove();
     }
-    return;
+    return header;
   }
   const headingList: THeading[] = [];
   for (const heading of (header.children as THeading[])) {
@@ -946,7 +946,7 @@ function updateHeading() {
     addEventListener(headingTag, 'click', toggleFold);
   }
   if (!tocDiv) {
-    return;
+    return header;
   }
   tocDiv.innerHTML = '';
   const transHeadingList = headingList.map(transHeading);
@@ -1000,6 +1000,7 @@ function updateHeading() {
     group.forEach(li => ul.append(li));
     tocDiv.append(ul);
   }
+  return header;
 }
 
 export async function updateDom() {
@@ -1013,6 +1014,7 @@ export async function updateDom() {
   const [anchorRegExp, anchorDict] = updateAnchor();
   updateImagePath();
   await updateHighlight();
-  updateHeading();
+  const heading = updateHeading();
   updateLinkAnchor(anchorRegExp, anchorDict, document.querySelectorAll(`article #toc a[href^="#h"]`));
+  return heading;
 }
