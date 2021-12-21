@@ -1,9 +1,19 @@
 import preact from '@preact/preset-vite';
+import eslintPlugin from '@rollup/plugin-eslint';
 import { defineConfig } from 'vite';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
-  plugins: [preact()],
+  plugins: [
+    {
+      ...eslintPlugin({
+        include: 'src/{**/*,*}.{ts,tsx}',
+        throwOnError: true,
+      }),
+      enforce: 'pre',
+    },
+    preact(),
+  ],
   resolve: {
     alias: [
       {

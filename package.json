@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint {src,types}/{**/*,*}.{ts,tsx}"
   },
   "dependencies": {
     "preact": "^10.0.0",
@@ -14,6 +15,13 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@preact/preset-vite": "^2.0.0",
+    "@rollup/plugin-eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^7.0.0",
+    "eslint-config-preact": "^1.0.0",
+    "jest": "^27.0.0",
+    "rollup": "^2.0.0",
     "sass": "^1.0.0",
     "typescript": "^4.0.0",
     "vite": "^2.0.0"
