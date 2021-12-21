@@ -100,7 +100,7 @@ declare namespace vno {
     function getSelectConf(): string
 
     const config: IConfig;
-    const confList: TConfList | null;
+    const confList: TConfList;
     const enableMultiConf: boolean;
 
     const baseFiles: string[];

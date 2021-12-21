@@ -44,14 +44,14 @@ export const config = (() => {
 export const confList = (() => {
   const multiConf = config.multiConf;
   if (!multiConf) {
-    return null;
+    return [[], []] as TConfList;
   }
   const keys = Object.keys(multiConf).sort();
   const alias = keys.map(key => multiConf[key].alias || key);
   return [keys, alias] as TConfList;
 })();
 
-export const enableMultiConf = !!(selectConf && confList && confList[0].length > 1);
+export const enableMultiConf = !!(selectConf && confList[0].length > 1);
 
 export const baseFiles = [
   config.paths.index,

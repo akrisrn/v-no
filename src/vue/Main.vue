@@ -176,7 +176,7 @@
       }
       if (enableMultiConf) {
         const conf = this.query.conf;
-        if (conf && confList![0].includes(conf) && getSelectConf() !== conf) {
+        if (conf && confList[0].includes(conf) && getSelectConf() !== conf) {
           localStorage.setItem('conf', conf);
           location.reload();
           return;
