@@ -1,6 +1,7 @@
 import preact from '@preact/preset-vite';
 import eslintPlugin from '@rollup/plugin-eslint';
 import { defineConfig } from 'vite';
+import { name, version } from './package.json';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
@@ -14,6 +15,10 @@ export default defineConfig({
     },
     preact(),
   ],
+  define: {
+    'import.meta.env.__NAME__': JSON.stringify(name || ''),
+    'import.meta.env.__VERSION__': JSON.stringify(version || ''),
+  },
   resolve: {
     alias: [
       {
