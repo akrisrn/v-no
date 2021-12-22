@@ -1,3 +1,4 @@
+import App from '@/components/App';
 import { render } from 'preact';
 
-render(<div />, document.getElementById('app')!);
+render(<App />, document.getElementById('app')!);
