@@ -33,3 +33,14 @@ export function useRegistry<T>(name: string, setter: StateUpdater<T>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
+
+export function useLocalStorage(key: string, value: string) {
+  useEffect(() => {
+    if (value) {
+      localStorage.setItem(key, value);
+    } else {
+      localStorage.removeItem(key);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+}
