@@ -35,3 +35,7 @@ export function classNames(...args: (CanBeFalsy | Record<string, CanBeFalsy>)[])
   }
   return trimList(cls).join(' ');
 }
+
+export function sequence(length: number, start = 0) {
+  return Array<number>(length).fill(start).map((num, i) => num + i);
+}
