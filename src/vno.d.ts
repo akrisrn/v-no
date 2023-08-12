@@ -215,6 +215,8 @@ declare namespace vno {
 
     function changeAnchor(anchor: string): void
 
+    function changeQuery(query: string): void
+
     function changeQueryContent(content: string): void
 
     function parseRoute(route: Route): THashPath
