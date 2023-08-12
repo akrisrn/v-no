@@ -199,15 +199,33 @@ export async function updateSnippet(data: string, updatedPaths: string[], asyncR
               slips[index++] = lastSlip;
             }
 
-            let sliceIndex: number | string = parseInt(slice);
-            if (isNaN(sliceIndex)) {
+            let sliceIndex: number | string | [number, number] = parseInt(slice);
+            if (/^\d+-\d+$/.test(slice)) {
+              let [start, end] = slice.split('-').map(num => parseInt(num)).sort();
+              if (start < 0) {
+                start = 0;
+              }
+              if (end > index) {
+                end = index;
+              }
+              sliceIndex = [start, end];
+            } else if (isNaN(sliceIndex)) {
               sliceIndex = slice === 'random' ? Math.floor(Math.random() * index) : slice;
             } else if (sliceIndex < 0) {
               sliceIndex = 0;
             } else if (sliceIndex >= index) {
               sliceIndex = index - 1;
             }
-            const sliceData = slips[sliceIndex];
+            const sliceData = (() => {
+              if (!Array.isArray(sliceIndex)) {
+                return slips[sliceIndex];
+              }
+              const list: string[] = [];
+              for (let i = sliceIndex[0]; i < sliceIndex[1]; i++) {
+                list.push(slips[i]);
+              }
+              return list.join('\n');
+            })();
             snippetData = sliceData === undefined ? '' : sliceData.trim();
           }
         }
