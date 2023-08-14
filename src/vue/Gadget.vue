@@ -50,11 +50,11 @@
       addInputBinds({
         dark: this.toggleDark,
         zen: this.toggleZen,
-        G: this.toTop,
         gg: () => {
-          this.toBottom();
+          this.toTop();
           this.addToKeyInput('_');
         },
+        G: this.toBottom,
       });
       this.$watch('isDark', () => {
         this.metaTheme.setAttribute('content', this.metaThemeColor);
